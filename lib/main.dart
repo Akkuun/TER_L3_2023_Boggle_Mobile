@@ -1,8 +1,6 @@
 import 'package:bouggr/pages/home.dart';
-import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/state.dart';
 import 'package:flutter/material.dart';
-import 'package:bouggr/page1.dart';
 import 'package:bouggr/page2.dart';
 import 'package:provider/provider.dart';
 
@@ -48,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (selectedIndex) {
       //switch pour afficher la page correspondante
       case 0:
-        page = HomePage();
+        page = const HomePage();
         break;
       case 1:
         page = const Page2();

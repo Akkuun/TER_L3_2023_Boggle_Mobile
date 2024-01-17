@@ -48,14 +48,14 @@ class BtnBoggle extends StatelessWidget {
       /// value to the `fillColor` property in order to set the button's background color.
       fillColor: btnType == BtnType.primary
           ? const Color.fromARGB(255, 47, 130, 255)
-          : Color.fromARGB(255, 255, 255, 255),
+          : const Color.fromARGB(255, 255, 255, 255),
       shape: RoundedRectangleBorder(
           side: btnType == BtnType.primary
               ? BorderSide(
                   color: const Color.fromARGB(255, 47, 130, 255),
                   width: borderLineWidth)
               : BorderSide(
-                  color: Color.fromARGB(255, 255, 255, 255),
+                  color: const Color.fromARGB(255, 255, 255, 255),
                   width: borderLineWidth),
           borderRadius: BorderRadius.all(
               Radius.circular(size == BtnSize.small ? 12 : 16))),
