@@ -27,6 +27,7 @@ class BtnBoggle extends StatelessWidget {
 
   get size => null;
 
+  @override
   Widget build(BuildContext context) {
     // Define a list to store our button's inner elements
     var children = <Widget>[];
