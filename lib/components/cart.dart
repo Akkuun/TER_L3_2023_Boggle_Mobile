@@ -2,44 +2,35 @@ import 'package:bouggr/components/btn.dart';
 import 'package:flutter/material.dart';
 
 class BoggleCart extends StatelessWidget {
+  final String title;
+  final String action;
+  final VoidCallback onPressed;
 
-  String title;
-  String action;
-  VoidCallback onPressed;
+  final Widget? child;
 
-  Widget? child;
-
-
-  BoggleCart({
+  const BoggleCart({
     super.key,
     required this.title,
     required this.action,
-    required  this.onPressed,
+    required this.onPressed,
     this.child,
-  }
-  )
-
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5),color: Colors.white),
-      child: Center(child: Column(
-        children: [Text(title),
-        child!,
-          BtnBoggle(onPressed: onPressed)
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5), color: Colors.white),
+      child: Center(
+          child: Column(
+        children: [
+          Text(title),
+          BtnBoggle(
+            onPressed: onPressed,
+            text: action,
+          )
         ],
       )),
     );
   }
-
-
-
-
-
-
-
-
-
-
 }

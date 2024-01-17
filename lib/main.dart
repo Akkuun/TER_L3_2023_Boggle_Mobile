@@ -53,6 +53,8 @@ class _MyHomePageState extends State<MyHomePage> {
       case 1:
         page = const Page2();
         break;
+      case 2:
+        page = const Page2();
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
