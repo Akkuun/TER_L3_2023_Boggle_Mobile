@@ -42,13 +42,20 @@ class BtnBoggle extends StatelessWidget {
     // Return the final button
     return RawMaterialButton(
       onPressed: onPressed,
+
+      /// The line `fillColor: ,` is incomplete and does not have a value assigned to it. It seems to be
+      /// a placeholder for specifying the fill color of the button. You need to provide a valid color
+      /// value to the `fillColor` property in order to set the button's background color.
+      fillColor: btnType == BtnType.primary
+          ? const Color.fromARGB(255, 47, 130, 255)
+          : Color.fromARGB(255, 255, 255, 255),
       shape: RoundedRectangleBorder(
           side: btnType == BtnType.primary
               ? BorderSide(
                   color: const Color.fromARGB(255, 47, 130, 255),
                   width: borderLineWidth)
               : BorderSide(
-                  color: const Color.fromARGB(31, 255, 255, 255),
+                  color: Color.fromARGB(255, 255, 255, 255),
                   width: borderLineWidth),
           borderRadius: BorderRadius.all(
               Radius.circular(size == BtnSize.small ? 12 : 16))),
