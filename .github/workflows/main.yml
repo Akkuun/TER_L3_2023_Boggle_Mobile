@@ -1,23 +1,27 @@
 name: CI/CD Flutter Projet
-
 on:
   push:
     branches:
       - main
 
 jobs:
+
   build:
-    runs-on: ubuntu-latest # utilisation image Ubuntu pour les pipelines sur le serveur
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: flutter pub get        
+ 
+  Anlyse:
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
+      - name: Analyze project source
+        run: dart analyze
+  tests:
+    runs-on: ubuntu-latest
 
-    - name: Install Dependencies
-      run: flutter pub get
-
-    - name: Run Tests
-      run: flutter test
-
-    - name: Build APK
-      run: flutter build apk
+    steps:
+      - name: Run tests
+        run: flutter test
