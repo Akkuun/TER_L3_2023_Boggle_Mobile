@@ -1,0 +1,23 @@
+name: CI/CD Flutter Projet
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # utilisation image Ubuntu pour les pipelines sur le serveur
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Install Dependencies
+      run: flutter pub get
+
+    - name: Run Tests
+      run: flutter test
+
+    - name: Build APK
+      run: flutter build apk
