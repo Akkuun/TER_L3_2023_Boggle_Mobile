@@ -5,5 +5,5 @@ enum PageName {
   final int n;
   const PageName({required this.n});
 
-  int get() => n;
+  int id() => n;
 }

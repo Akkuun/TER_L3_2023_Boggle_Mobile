@@ -17,14 +17,14 @@ class HomePage extends StatelessWidget {
         Text("BOUGGR"),
         BtnBoggle(
           onPressed: () {
-            appState.goToPage(PageName.game.get());
+            appState.goToPage(PageName.game.id());
           },
           btnSize: BtnSize.large,
           text: "SinglePlayer",
         ),
         BtnBoggle(
           onPressed: () {
-            appState.goToPage(PageName.game.get());
+            appState.goToPage(PageName.game.id());
           },
           btnType: BtnType.secondary,
           btnSize: BtnSize.large,
