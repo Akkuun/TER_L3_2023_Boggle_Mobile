@@ -11,8 +11,15 @@ class HomePage extends StatelessWidget {
           children: [],
         ),
         Text("BOUGGR"),
-        BtnBoggle(onPressed: onPressed),
-        BtnBoggle(onPressed: onPressed)
+        BtnBoggle(
+          onPressed: onPressed,
+          btnSize: BtnSize.large,
+        ),
+        BtnBoggle(
+          onPressed: onPressed,
+          btnType: BtnType.secondary,
+          btnSize: BtnSize.large,
+        )
       ],
     );
   }
