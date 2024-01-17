@@ -1,4 +1,5 @@
 name: CI/CD Flutter Projet
+
 on:
   push:
     branches:
@@ -10,18 +11,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.8.1' 
       - name: Install dependencies
-        run: flutter pub get        
- 
+        run: flutter pub get
+
   Anlyse:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.8.1' 
       - name: Analyze project source
         run: dart analyze
+
   tests:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '2.8.1' 
       - name: Run tests
         run: flutter test
