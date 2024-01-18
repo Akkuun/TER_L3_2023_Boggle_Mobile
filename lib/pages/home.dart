@@ -13,26 +13,35 @@ class HomePage extends StatelessWidget {
     var appState = context.watch<MyAppState>();
     return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          BtnBoggle(
-            onPressed: () {},
-            btnType: BtnType.secondary,
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               BoggleCard(
                 onPressed: () {
-                  appState.goToPage(PageName.rules.id());
+                  appState.goToPage(PageName.rules);
                 },
                 title: "Rules",
                 action: 'read',
+                child: const Text(
+                  'Find words\n&\nearn points',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 22,
+                    fontFamily: 'Jua',
+                    fontWeight: FontWeight.w400,
+                    height: 0,
+                  ),
+                ),
               ),
               BoggleCard(
                 title: "SoonTm",
                 action: 'play',
                 onPressed: () {
-                  appState.goToPage(PageName.rules.id());
+                  appState.goToPage(PageName.rules);
                 },
               )
             ],
@@ -80,14 +89,14 @@ class HomePage extends StatelessWidget {
           ),
           BtnBoggle(
             onPressed: () {
-              appState.goToPage(PageName.game.id());
+              appState.goToPage(PageName.game);
             },
             btnSize: BtnSize.large,
             text: "SinglePlayer",
           ),
           BtnBoggle(
             onPressed: () {
-              appState.goToPage(PageName.game.id());
+              appState.goToPage(PageName.game);
             },
             btnType: BtnType.secondary,
             btnSize: BtnSize.large,
