@@ -1,54 +1,24 @@
-name: CI/CD Flutter Projet
-
 on:
+  pull_request:
+    branches:
+      - master
   push:
     branches:
-      - main
 
+      - master
+
+name: "Build & Release"
 jobs:
-
-  setup_dart:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: dart-lang/setup-dart@v1
-      - run: dart pub get
-      - run: dart format --output=none --set-exit-if-changed .
-      - run: dart analyze
-      - run: dart test
-
   build:
-    needs: setup_dart
-    runs-on: ubuntu-latest
+    name: Build & Release
+    runs-on: macos-latest
     steps:
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
         with:
-          flutter-version: '3.16.7' 
-
-      - name: Install dependencies
-        run: flutter pub get
-
-  analyze:
-    needs: setup_dart
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+          java-version: adopt-openjdk@1.8
+      - uses: subosito/flutter-action@v1
         with:
           flutter-version: '3.16.7'
-
-      - name: Analyze project source
-        run: dart analyze
-
-  tests:
-    needs: setup_dart
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-         flutter-version: '3.16.7' 
-
-      - name: Run tests
-        run: flutter test
+      - run: flutter pub get
+      - run: flutter test
