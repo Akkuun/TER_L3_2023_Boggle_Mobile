@@ -27,7 +27,7 @@ class BoggleCard extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Container(
           height: 260,
-          width: 160,
+          width: 180,
           decoration: ShapeDecoration(
             color: Colors.white,
             shape: RoundedRectangleBorder(
@@ -50,7 +50,9 @@ class BoggleCard extends StatelessWidget {
                 Text(
                   title,
                   style: const TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold),
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 28),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

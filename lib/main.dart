@@ -1,4 +1,5 @@
 import 'package:bouggr/pages/home.dart';
+import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/state.dart';
 import 'package:flutter/material.dart';
 import 'package:bouggr/page2.dart';
@@ -45,13 +46,13 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget page;
     switch (selectedIndex) {
       //switch pour afficher la page correspondante
-      case 0:
+      case PageName.home:
         page = const HomePage();
         break;
-      case 1:
+      case PageName.game:
         page = const Page2();
         break;
-      case 2:
+      case PageName.rules:
         page = const Page2();
       default:
         throw UnimplementedError('no widget for $selectedIndex');

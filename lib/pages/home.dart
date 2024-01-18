@@ -21,12 +21,12 @@ class HomePage extends StatelessWidget {
             children: [
               BoggleCard(
                 onPressed: () {
-                  appState.goToPage(PageName.rules.id());
+                  appState.goToPage(PageName.rules);
                 },
                 title: "Rules",
                 action: 'read',
                 child: const Text(
-                  'Found words\n&\nearn points',
+                  'Find words\n&\nearn points',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Colors.black,
@@ -41,7 +41,7 @@ class HomePage extends StatelessWidget {
                 title: "SoonTm",
                 action: 'play',
                 onPressed: () {
-                  appState.goToPage(PageName.rules.id());
+                  appState.goToPage(PageName.rules);
                 },
               )
             ],
@@ -89,14 +89,14 @@ class HomePage extends StatelessWidget {
           ),
           BtnBoggle(
             onPressed: () {
-              appState.goToPage(PageName.game.id());
+              appState.goToPage(PageName.game);
             },
             btnSize: BtnSize.large,
             text: "SinglePlayer",
           ),
           BtnBoggle(
             onPressed: () {
-              appState.goToPage(PageName.game.id());
+              appState.goToPage(PageName.game);
             },
             btnType: BtnType.secondary,
             btnSize: BtnSize.large,
