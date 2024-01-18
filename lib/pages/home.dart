@@ -27,6 +27,17 @@ class HomePage extends StatelessWidget {
                 },
                 title: "Rules",
                 action: 'read',
+                child: const Text(
+                  'Found words\n&\nearn points',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 22,
+                    fontFamily: 'Jua',
+                    fontWeight: FontWeight.w400,
+                    height: 0,
+                  ),
+                ),
               ),
               BoggleCard(
                 title: "SoonTm",

@@ -18,6 +18,11 @@ class BoggleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> children = <Widget>[];
+    if (child != null) {
+      children.add(child!);
+    }
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -44,8 +49,13 @@ class BoggleCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                       color: Colors.black, fontWeight: FontWeight.bold),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: children,
                 ),
                 BtnBoggle(
                   onPressed: onPressed,
