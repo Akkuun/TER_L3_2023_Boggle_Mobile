@@ -10,16 +10,12 @@ jobs:
   setup_dart:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Download and extract Dart SDK
-        run: |
-          mkdir -p $HOME/dart-sdk
-          curl -fsSL https://dart-sdk.dev/install.sh | sh
-          echo "export PATH=$HOME/dart-sdk/bin:$PATH" >> $HOME/.bashrc
-          source $HOME/.bashrc
-          dart --version
+      - uses: actions/checkout@v4
+      - uses: dart-lang/setup-dart@v1
+      - run: dart pub get
+      - run: dart format --output=none --set-exit-if-changed .
+      - run: dart analyze
+      - run: dart test
 
   build:
     needs: setup_dart
