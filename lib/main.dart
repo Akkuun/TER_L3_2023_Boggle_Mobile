@@ -1,9 +1,8 @@
+import 'package:bouggr/pages/home.dart';
 import 'package:bouggr/state.dart';
 import 'package:flutter/material.dart';
-import 'package:bouggr/page1.dart';
 import 'package:bouggr/page2.dart';
 import 'package:provider/provider.dart';
-
 
 void main() {
   runApp(const MyApp());
@@ -40,16 +39,20 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>(); //écoute du listener de MyAppState
+    var appState =
+        context.watch<MyAppState>(); //écoute du listener de MyAppState
     var selectedIndex = appState.index; //récupération de l'index de la page
     Widget page;
-    switch (selectedIndex) { //switch pour afficher la page correspondante
+    switch (selectedIndex) {
+      //switch pour afficher la page correspondante
       case 0:
-        page = const Page1();
+        page = const HomePage();
         break;
       case 1:
         page = const Page2();
         break;
+      case 2:
+        page = const Page2();
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -60,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
           appBar: AppBar(
             title: const Text('Bouggr'),
           ),
-          body:Center(
+          body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
