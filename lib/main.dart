@@ -1,5 +1,6 @@
 import 'package:bouggr/pages/home.dart';
 import 'package:bouggr/pages/page_name.dart';
+import 'package:bouggr/pages/rulepage.dart';
 import 'package:bouggr/state.dart';
 import 'package:flutter/material.dart';
 import 'package:bouggr/page2.dart';
@@ -53,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = const Page2();
         break;
       case PageName.rules:
-        page = const Page2();
+        page = const RulePage();
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -61,9 +62,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Scaffold(
-          appBar: AppBar(
-            title: const Text('Bouggr'),
-          ),
           body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
