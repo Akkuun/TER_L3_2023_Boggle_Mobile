@@ -10,7 +10,7 @@ name: "Build & Release"
 
 jobs:
   setup_pipeline:
-    name: Clonning code for the pipeline setup #clonning of the code for the pipeline
+    name: Cloning code for the pipeline setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -49,12 +49,18 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.16.7'
+      - name: Cache Flutter packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.pub-cache
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
       - run: flutter pub get
 
   tests:
     name: Run Tests
     runs-on: macos-latest
-    needs: [setup_java,setup_flutter,install_dependencies]
+    needs: [setup_java, setup_flutter, install_dependencies]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v1
