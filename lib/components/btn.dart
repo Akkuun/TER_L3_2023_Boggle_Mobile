@@ -9,7 +9,6 @@ class BtnBoggle extends StatelessWidget {
   final BtnSize btnSize;
   final String? text;
   final GestureTapCallback onPressed;
-  final bool autoResize;
   final double borderLineWidth;
   final bool removePaddings;
   final MainAxisAlignment horizontalAlignment;
@@ -20,7 +19,6 @@ class BtnBoggle extends StatelessWidget {
       required this.onPressed,
       this.btnType = BtnType.primary,
       this.btnSize = BtnSize.medium,
-      this.autoResize = true,
       this.borderLineWidth = 1,
       this.removePaddings = false,
       this.horizontalAlignment = MainAxisAlignment.center});
@@ -34,36 +32,32 @@ class BtnBoggle extends StatelessWidget {
 
     // If text is provided, add it to the button
     if (text != null) {
-      children.add(Text(
-        text!,
-      ));
+      children.add(Text(text!,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontFamily: 'Jua',
+            fontWeight: FontWeight.w400,
+            height: 0,
+          )));
     }
 
     // Return the final button
-    return RawMaterialButton(
-      onPressed: onPressed,
-
-      /// The line `fillColor: ,` is incomplete and does not have a value assigned to it. It seems to be
-      /// a placeholder for specifying the fill color of the button. You need to provide a valid color
-      /// value to the `fillColor` property in order to set the button's background color.
-      fillColor: btnType == BtnType.primary
-          ? const Color.fromARGB(255, 47, 130, 255)
-          : const Color.fromARGB(255, 255, 255, 255),
-      shape: RoundedRectangleBorder(
-          side: btnType == BtnType.primary
-              ? BorderSide(
-                  color: const Color.fromARGB(255, 47, 130, 255),
-                  width: borderLineWidth)
-              : BorderSide(
-                  color: const Color.fromARGB(255, 255, 255, 255),
-                  width: borderLineWidth),
-          borderRadius: BorderRadius.all(
-              Radius.circular(size == BtnSize.small ? 12 : 16))),
-      child: Row(
-          mainAxisSize: autoResize ? MainAxisSize.min : MainAxisSize.max,
-          mainAxisAlignment: horizontalAlignment,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: children),
+    return SizedBox(
+      width: 330,
+      height: 45,
+      child: ElevatedButton(
+          onPressed: onPressed,
+          style: ButtonStyle(
+              backgroundColor: MaterialStateColor.resolveWith((states) =>
+                  BtnType.primary == btnType
+                      ? Color.fromARGB(255, 91, 157, 255)
+                      : Colors.white)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: children,
+          )),
     );
   }
 }
