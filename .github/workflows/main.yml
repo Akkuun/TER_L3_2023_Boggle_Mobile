@@ -15,6 +15,8 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.16.7'
+      - name: Set up Dart
+        run: flutter pub global activate dart
       - name: Install dependencies
         run: flutter pub get
 
@@ -25,7 +27,9 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.7' 
+          flutter-version: '3.16.7'
+      - name: Set up Dart
+        run: flutter pub global activate dart
       - name: Analyze project source
         run: dart analyze
 
@@ -36,6 +40,8 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-         flutter-version: '3.16.7'
+         flutter-version: '3.16.7' 
+      - name: Set up Dart
+        run: flutter pub global activate dart
       - name: Run tests
         run: flutter test
