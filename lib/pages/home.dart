@@ -37,10 +37,45 @@ class HomePage extends StatelessWidget {
               )
             ],
           ),
-          const Text(
-            "BOUGGR",
-            style: TextStyle(
-              fontSize: 48,
+          const SizedBox(
+            width: 430,
+            height: 113,
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'B',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 96,
+                      fontFamily: 'Jua',
+                      fontWeight: FontWeight.w400,
+                      height: 0,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'OU',
+                    style: TextStyle(
+                      color: Color(0xFF1E86B3),
+                      fontSize: 96,
+                      fontFamily: 'Jua',
+                      fontWeight: FontWeight.w400,
+                      height: 0,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'GGR',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 96,
+                      fontFamily: 'Jua',
+                      fontWeight: FontWeight.w400,
+                      height: 0,
+                    ),
+                  ),
+                ],
+              ),
+              textAlign: TextAlign.center,
             ),
           ),
           BtnBoggle(
