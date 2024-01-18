@@ -42,7 +42,11 @@ class BoggleCard extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text(title),
+                Text(
+                  title,
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.bold),
+                ),
                 BtnBoggle(
                   onPressed: onPressed,
                   text: action,

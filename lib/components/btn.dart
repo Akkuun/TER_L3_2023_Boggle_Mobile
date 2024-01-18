@@ -44,20 +44,24 @@ class BtnBoggle extends StatelessWidget {
     }
 
     // Return the final button
-    return SizedBox(
-      width: 330,
-      height: 45,
-      child: ElevatedButton(
-          onPressed: onPressed,
-          style: ButtonStyle(
-              backgroundColor: MaterialStateColor.resolveWith((states) =>
-                  BtnType.primary == btnType
-                      ? Color.fromARGB(255, 91, 157, 255)
-                      : Colors.white)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: children,
-          )),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SizedBox(
+        width: 330,
+        height: 45,
+        child: ElevatedButton(
+            onPressed: onPressed,
+            style: ButtonStyle(
+                backgroundColor: MaterialStateColor.resolveWith((states) =>
+                    BtnType.primary == btnType
+                        ? Color.fromARGB(255, 91, 157, 255)
+                        : Colors.white)),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: children,
+            )),
+      ),
     );
   }
 }
