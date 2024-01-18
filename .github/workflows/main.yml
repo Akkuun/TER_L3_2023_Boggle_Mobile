@@ -7,41 +7,52 @@ on:
 
 jobs:
 
-  build:
+  setup_dart:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download and extract Dart SDK
+        run: |
+          mkdir -p $HOME/dart-sdk
+          curl -fsSL https://dart-sdk.dev/install.sh | sh
+          echo "export PATH=$HOME/dart-sdk/bin:$PATH" >> $HOME/.bashrc
+          source $HOME/.bashrc
+          dart --version
+
+  build:
+    needs: setup_dart
+    runs-on: ubuntu-latest
+    steps:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.7'
-      - name: Set up Dart
-        run: flutter pub global activate dart
+          flutter-version: '3.16.7' 
+
       - name: Install dependencies
         run: flutter pub get
 
-  Analyse:
+  analyze:
+    needs: setup_dart
     runs-on: ubuntu-latest
-
     steps:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.16.7'
-      - name: Set up Dart
-        run: flutter pub global activate dart
+
       - name: Analyze project source
         run: dart analyze
 
   tests:
+    needs: setup_dart
     runs-on: ubuntu-latest
-
     steps:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
          flutter-version: '3.16.7' 
-      - name: Set up Dart
-        run: flutter pub global activate dart
+
       - name: Run tests
         run: flutter test
