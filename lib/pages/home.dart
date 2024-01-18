@@ -13,11 +13,9 @@ class HomePage extends StatelessWidget {
     var appState = context.watch<MyAppState>();
     return Center(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          BtnBoggle(
-            onPressed: () {},
-            btnType: BtnType.secondary,
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
