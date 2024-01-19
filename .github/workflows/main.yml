@@ -70,3 +70,18 @@ jobs:
         with:
           flutter-version: '3.16.7'
       - run: flutter test
+      
+  build_apk:
+    name: Build the APK Version
+    runs-on: macos-latest
+    needs: tests
+    steps:
+      - run : flutter build apk --split-per-abi
+  push_to_release:
+    runs-on: macos-latest
+    steps:
+    - uses: ncipollo/release-action@v1
+      with:
+        artefacts: "build/app/outputs/apk/debug/*"
+        tag: v1.0.${{github.run_number}}
+        token : ${{secrets.PIPELINE_SECRET_BOOGLE_L3}}
