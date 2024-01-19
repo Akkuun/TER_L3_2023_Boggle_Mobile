@@ -69,6 +69,7 @@ jobs:
             path: build/app/outputs/flutter-apk/app-debug.apk
 
   push_to_release:
+    name: Push to release
     runs-on: macos-latest
     needs: build_apk
     steps:
@@ -88,6 +89,7 @@ jobs:
       - name: Push to Release
         uses: ncipollo/release-action@v1
         with:
-          artefacts: "app-debug"
+          asset_path: build/app/outputs/flutter-apk/app-debug.apk
+          asset_name: app-debug.apk
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.PIPELINE_SECRET_BOOGLE_L3 }}
