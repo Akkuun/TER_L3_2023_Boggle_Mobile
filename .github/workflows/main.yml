@@ -79,6 +79,7 @@ jobs:
       - run : flutter build apk --split-per-abi
   push_to_release:
     runs-on: macos-latest
+    needs: build_apk
     steps:
     - uses: ncipollo/release-action@v1
       with:
