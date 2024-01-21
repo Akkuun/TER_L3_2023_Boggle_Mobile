@@ -4,7 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 class BoggleGrille extends StatefulWidget {
-  const BoggleGrille({super.key});
+  final List<String> letters;
+  final bool Function(String) onWordSelectionEnd;
+
+  const BoggleGrille({
+    super.key,
+    required this.letters,
+    required this.onWordSelectionEnd,
+  });
 
   @override
   BoggleGrilleState createState() {
@@ -16,8 +23,13 @@ class BoggleGrilleState extends State<BoggleGrille> {
   final Set<int> selectedIndexes = <int>{};
   final key = GlobalKey();
   final Set<_BoggleDice> _trackTaped = <_BoggleDice>{};
+  String currentWord = "";
+  bool lock = false;
 
   _detectTapedItem(PointerEvent event) {
+    if (lock) {
+      return;
+    }
     final RenderBox box = key.currentContext!.findAncestorRenderObjectOfType<RenderBox>()!;
     final result = BoxHitTestResult();
     Offset local = box.globalToLocal(event.position);
@@ -26,63 +38,108 @@ class BoggleGrilleState extends State<BoggleGrille> {
         /// temporary variable so that the [is] allows access of [index]
         final target = hit.target;
         if (target is _BoggleDice && !_trackTaped.contains(target)) {
-          _trackTaped.add(target);
-          _selectIndex(target.index);
+          String newWord = currentWord + widget.letters[target.index];
+          if (_trackTaped.isNotEmpty) {
+            final last = _trackTaped.last;
+            if ((target.index == last.index + 1 || target.index == last.index - 1 || target.index == last.index + 4 || target.index == last.index - 4)
+            && true /* TODO : valider le mot ? */) {
+              _trackTaped.add(target);
+              _selectIndex(target.index);
+            } else {
+              _trackTaped.clear();
+              setState(() {
+                selectedIndexes.clear();
+                lock = true;
+                currentWord = "";
+              });
+              return;
+            }
+          } else {
+            _trackTaped.add(target);
+            _selectIndex(target.index);
+          }
+          setState(() {
+            currentWord = newWord;
+          });
         }
       }
     }
   }
 
-  _selectIndex(int index) {
+  void _selectIndex(int index) {
     setState(() {
       selectedIndexes.add(index);
     });
   }
 
+  void _clearSelection(PointerUpEvent event) {
+    widget.onWordSelectionEnd(currentWord);
+    _trackTaped.clear();
+    setState(() {
+      selectedIndexes.clear();
+      lock = false;
+      currentWord = "";
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 400,
-      child: Listener(
-        onPointerDown: _detectTapedItem,
-        onPointerMove: _detectTapedItem,
-        onPointerUp: _clearSelection,
-        child: GridView.builder(
-          key: key,
-          itemCount: 16,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            childAspectRatio: 1.0,
-            crossAxisSpacing: 5.0,
-            mainAxisSpacing: 5.0,
+    return Container(
+      color: Theme.of(context).secondaryHeaderColor,
+      child: SizedBox(
+        height: 400,
+        child: Listener(
+          onPointerDown: _detectTapedItem,
+          onPointerMove: _detectTapedItem,
+          onPointerUp: _clearSelection,
+          child: GridView.builder(
+            key: key,
+            itemCount: 16,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              childAspectRatio: 1.0,
+              crossAxisSpacing: 5.0,
+              mainAxisSpacing: 5.0,
+            ),
+            itemBuilder: (context, index) {
+              return BoggleDice(
+                index: index,
+                letter: widget.letters[index],
+                child: Container(
+                  color: selectedIndexes.contains(index) ? Theme.of(context).primaryColor : Colors.white,
+                  child: Center(
+                    child: Text(
+                      widget.letters[index],
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 32,
+                        fontWeight: FontWeight.w400,
+                        height: 0,
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
-          itemBuilder: (context, index) {
-            return BoggleDice(
-              index: index,
-              child: Container(
-                color: selectedIndexes.contains(index) ? Colors.red : Colors.blue,
-              ),
-            );
-          },
         ),
       ),
     );
   }
 
-  void _clearSelection(PointerUpEvent event) {
-    _trackTaped.clear();
-    setState(() {
-      selectedIndexes.clear();
-    });
-  }
 }
 
 
 class BoggleDice extends SingleChildRenderObjectWidget {
   final int index;
+  final String letter;
 
-  const BoggleDice({required Widget child, required this.index, Key? key}) : super(child: child, key: key);
+  const BoggleDice({
+    required Widget child,
+    required this.index,
+    required this.letter,
+    Key? key}) : super(child: child, key: key);
 
   @override
   _BoggleDice createRenderObject(BuildContext context) {
