@@ -1,6 +1,7 @@
 import 'package:bouggr/pages/home.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/pages/rulepage.dart';
+import 'package:bouggr/pages/game.dart';
 import 'package:bouggr/state.dart';
 import 'package:flutter/material.dart';
 import 'package:bouggr/page2.dart';
@@ -51,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = const HomePage();
         break;
       case PageName.game:
-        page = const Page2();
+        page = const GamePage();
         break;
       case PageName.rules:
         page = const RulePage();
