@@ -1,5 +1,6 @@
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/card.dart';
+import 'package:bouggr/components/title.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/state.dart';
 import 'package:flutter/material.dart';
@@ -49,43 +50,7 @@ class HomePage extends StatelessWidget {
           const SizedBox(
             width: 430,
             height: 113,
-            child: Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'B',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 96,
-                      fontFamily: 'Jua',
-                      fontWeight: FontWeight.w400,
-                      height: 0,
-                    ),
-                  ),
-                  TextSpan(
-                    text: 'OU',
-                    style: TextStyle(
-                      color: Color(0xFF1E86B3),
-                      fontSize: 96,
-                      fontFamily: 'Jua',
-                      fontWeight: FontWeight.w400,
-                      height: 0,
-                    ),
-                  ),
-                  TextSpan(
-                    text: 'GGR',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 96,
-                      fontFamily: 'Jua',
-                      fontWeight: FontWeight.w400,
-                      height: 0,
-                    ),
-                  ),
-                ],
-              ),
-              textAlign: TextAlign.center,
-            ),
+            child: AppTitle(),
           ),
           BtnBoggle(
             onPressed: () {

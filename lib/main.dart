@@ -4,7 +4,6 @@ import 'package:bouggr/pages/rulepage.dart';
 import 'package:bouggr/pages/game.dart';
 import 'package:bouggr/state.dart';
 import 'package:flutter/material.dart';
-import 'package:bouggr/page2.dart';
 import 'package:provider/provider.dart';
 
 void main() {
