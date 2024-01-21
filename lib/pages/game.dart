@@ -24,7 +24,8 @@ class _GamePageState extends State<GamePage> {
   @override
   void initState() {
     super.initState();
-    boggleGrille = BoggleGrille(letters: letters, updateWord: updateWord, onPanEnd: endWordSelection);
+    //boggleGrille = BoggleGrille(letters: letters, updateWord: updateWord, onPanEnd: endWordSelection);
+    boggleGrille = BoggleGrille();
   }
 
   bool isValid(String word) {
