@@ -30,7 +30,8 @@ class BoggleGrilleState extends State<BoggleGrille> {
     if (lock) {
       return;
     }
-    final RenderBox box = key.currentContext!.findAncestorRenderObjectOfType<RenderBox>()!;
+    final RenderBox box =
+        key.currentContext!.findAncestorRenderObjectOfType<RenderBox>()!;
     final result = BoxHitTestResult();
     Offset local = box.globalToLocal(event.position);
     if (box.hitTest(result, position: local)) {
@@ -41,9 +42,15 @@ class BoggleGrilleState extends State<BoggleGrille> {
           String newWord = currentWord + widget.letters[target.index];
           if (_trackTaped.isNotEmpty) {
             final last = _trackTaped.last;
-            if ((target.index == last.index + 1 || target.index == last.index - 1 || target.index == last.index + 4 || target.index == last.index - 4 ||
-                target.index == last.index + 3 || target.index == last.index - 3 || target.index == last.index + 5 || target.index == last.index - 5)
-            && true /* TODO : valider le mot ? */) {
+            if ((target.index == last.index + 1 ||
+                    target.index == last.index - 1 ||
+                    target.index == last.index + 4 ||
+                    target.index == last.index - 4 ||
+                    target.index == last.index + 3 ||
+                    target.index == last.index - 3 ||
+                    target.index == last.index + 5 ||
+                    target.index == last.index - 5) &&
+                true /* TODO : valider le mot ? */) {
               _trackTaped.add(target);
               _selectIndex(target.index);
             } else {
@@ -104,19 +111,24 @@ class BoggleGrilleState extends State<BoggleGrille> {
               mainAxisSpacing: 5.0,
             ),
             itemBuilder: (context, index) {
-              return BoggleDice(
-                index: index,
-                letter: widget.letters[index],
-                child: Container(
-                  color: selectedIndexes.contains(index) ? Theme.of(context).primaryColor : Colors.white,
-                  child: Center(
-                    child: Text(
-                      widget.letters[index],
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 32,
-                        fontWeight: FontWeight.w400,
-                        height: 0,
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: BoggleDice(
+                  index: index,
+                  letter: widget.letters[index],
+                  child: Container(
+                    color: selectedIndexes.contains(index)
+                        ? Theme.of(context).primaryColor
+                        : Colors.white,
+                    child: Center(
+                      child: Text(
+                        widget.letters[index],
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 32,
+                          fontWeight: FontWeight.w400,
+                          height: 0,
+                        ),
                       ),
                     ),
                   ),
@@ -128,19 +140,18 @@ class BoggleGrilleState extends State<BoggleGrille> {
       ),
     );
   }
-
 }
-
 
 class BoggleDice extends SingleChildRenderObjectWidget {
   final int index;
   final String letter;
 
-  const BoggleDice({
-    required Widget child,
-    required this.index,
-    required this.letter,
-    Key? key}) : super(child: child, key: key);
+  const BoggleDice(
+      {required Widget child,
+      required this.index,
+      required this.letter,
+      Key? key})
+      : super(child: child, key: key);
 
   @override
   _BoggleDice createRenderObject(BuildContext context) {
