@@ -117,9 +117,12 @@ class BoggleGrilleState extends State<BoggleGrille> {
                   index: index,
                   letter: widget.letters[index],
                   child: Container(
-                    color: selectedIndexes.contains(index)
-                        ? Theme.of(context).primaryColor
-                        : Colors.white,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: selectedIndexes.contains(index)
+                          ? Theme.of(context).primaryColor
+                          : Colors.white,
+                    ),
                     child: Center(
                       child: Text(
                         widget.letters[index],
