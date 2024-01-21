@@ -16,8 +16,6 @@ class GamePage extends StatefulWidget {
 class _GamePageState extends State<GamePage> {
   late BoggleGrille boggleGrille;
   List<String> previousWords = [];
-  int rows = 4;
-  int cols = 4;
   int score = 0;
   int lastSelectedPosition = -1;
 
@@ -75,13 +73,12 @@ class _GamePageState extends State<GamePage> {
   }
 
   int wordScore(String word) {
-    return word.length; // TODO: calculer score
+    return word.length; // TODO: calculer score d'un mot
   }
 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    var bg_blue = const Color.fromRGBO(19, 42, 64, 57);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Center(
@@ -104,16 +101,16 @@ class _GamePageState extends State<GamePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('rang'),
-                Text(' score '),
-                Text('strike'),
+                Text('rang'), // Rang placeholder
+                Text(' score '), // Score placeholder
+                Text('strike'), // Strike placeholder
               ],
             ),
             boggleGrille,
-            Text('mots sélectionnés : '),
+            Text('mots sélectionnés : '), // TODO : remplacer par le mot courant
             for (var word in previousWords)
               Text(' $word '),
-            Text('3:00'),
+            Text('3:00'), // Timer placeholder
           ],
         ),
       ),
