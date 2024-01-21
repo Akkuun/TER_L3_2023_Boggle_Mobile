@@ -1,3 +1,4 @@
+import 'package:bouggr/components/dices.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -12,15 +13,15 @@ class BoggleGrille extends StatefulWidget {
   });
 
   @override
-  BoggleGrilleState createState() {
-    return BoggleGrilleState();
+  _BoggleGrilleState createState() {
+    return _BoggleGrilleState();
   }
 }
 
-class BoggleGrilleState extends State<BoggleGrille> {
+class _BoggleGrilleState extends State<BoggleGrille> {
   final Set<int> selectedIndexes = <int>{};
   final key = GlobalKey();
-  final Set<_BoggleDice> _trackTaped = <_BoggleDice>{};
+  final Set<BoggleDiceRender> _trackTaped = <BoggleDiceRender>{};
   String currentWord = "";
   bool lock = false;
 
@@ -36,7 +37,7 @@ class BoggleGrilleState extends State<BoggleGrille> {
       for (final hit in result.path) {
         /// temporary variable so that the [is] allows access of [index]
         final target = hit.target;
-        if (target is _BoggleDice && !_trackTaped.contains(target)) {
+        if (target is BoggleDiceRender && !_trackTaped.contains(target)) {
           String newWord = currentWord + widget.letters[target.index];
           if (_trackTaped.isNotEmpty) {
             final last = _trackTaped.last;
@@ -105,35 +106,16 @@ class BoggleGrilleState extends State<BoggleGrille> {
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4,
               childAspectRatio: 1.0,
-              crossAxisSpacing: 5.0,
-              mainAxisSpacing: 5.0,
+              crossAxisSpacing: 16.0,
+              mainAxisSpacing: 16.0,
             ),
             itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: BoggleDice(
-                  index: index,
-                  letter: widget.letters[index],
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: selectedIndexes.contains(index)
-                          ? Theme.of(context).primaryColor
-                          : Colors.white,
-                    ),
-                    child: Center(
-                      child: Text(
-                        widget.letters[index],
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 32,
-                          fontWeight: FontWeight.w400,
-                          height: 0,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+              return BoggleDice(
+                index: index,
+                letter: widget.letters[index],
+                color: selectedIndexes.contains(index)
+                    ? Theme.of(context).primaryColor
+                    : Colors.white,
               );
             },
           ),
@@ -141,31 +123,4 @@ class BoggleGrilleState extends State<BoggleGrille> {
       ),
     );
   }
-}
-
-class BoggleDice extends SingleChildRenderObjectWidget {
-  final int index;
-  final String letter;
-
-  const BoggleDice(
-      {required Widget child,
-      required this.index,
-      required this.letter,
-      Key? key})
-      : super(child: child, key: key);
-
-  @override
-  _BoggleDice createRenderObject(BuildContext context) {
-    return _BoggleDice(index);
-  }
-
-  @override
-  void updateRenderObject(BuildContext context, _BoggleDice renderObject) {
-    renderObject.index = index;
-  }
-}
-
-class _BoggleDice extends RenderProxyBox {
-  int index;
-  _BoggleDice(this.index);
 }
