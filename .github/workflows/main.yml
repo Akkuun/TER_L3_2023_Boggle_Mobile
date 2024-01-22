@@ -87,9 +87,10 @@ jobs:
           flutter-version: '3.16.7'
 
       - name: Push to Release
+      
         uses: ncipollo/release-action@v1
         with:
-          asset_path: build/app/outputs/flutter-apk/app-release.apk
-          asset_name: app-release.apk
+          run : ls
+          artefacts : build/app/outputs/flutter-apk/app-release.apk
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.PIPELINE_SECRET_BOOGLE_L3 }}
