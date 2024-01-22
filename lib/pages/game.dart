@@ -1,5 +1,6 @@
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/grille.dart';
+import 'package:bouggr/components/timer.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/state.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +111,7 @@ class _GamePageState extends State<GamePage> {
             Text('mots sélectionnés : '), // TODO : remplacer par le mot courant
             for (var word in previousWords)
               Text(' $word '),
-            Text('3:00'), // Timer placeholder
+            BoggleTimer(), // Timer placeholder
           ],
         ),
       ),

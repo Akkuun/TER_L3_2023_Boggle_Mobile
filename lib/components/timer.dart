@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:flutter/rendering.dart';
 
 class BoggleTimer extends StatefulWidget {
   const BoggleTimer({Key? key}) : super(key: key);
 
   @override
-  State<BoggleTimer> createState() => _BoggleTimerState();
+  State<BoggleTimer> createState() {
+    return _BoggleTimerState();
+  }
 }
 
 class _BoggleTimerState extends State<BoggleTimer> {
-  int seconds = 180;
+  int seconds = 0;
   int minutes = 3;
   bool running = false;
-  Timer? timer; //? pour pas qu'il soit null
+  late Timer timer; // late car on ne l'a pas encore initialisé
 
-  /// Démare le timer
-  void startTimer() {
-    setState(() {
-      running = true;
-    });
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+  /// Initialise le timer
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
+      if (!running) {
+        return;
+      }
       setState(() {
         if (seconds > 0) {
           seconds--;
@@ -29,7 +32,6 @@ class _BoggleTimerState extends State<BoggleTimer> {
             minutes--;
             seconds = 59;
           } else {
-            timer.cancel();
             running = false;
           }
         }
@@ -37,16 +39,29 @@ class _BoggleTimerState extends State<BoggleTimer> {
     });
   }
 
+  /// Arrête le timer quand on quitte la page
+  @override
+  void dispose() {
+    timer.cancel();
+    super.dispose();
+  }
+
+  /// Démarre le timer
+  void startTimer() {
+    setState(() {
+      running = true;
+    });
+  }
+
   /// Arrête le timer
-  void stopTimer(){
+  void stopTimer() {
     setState(() {
       running = false;
     });
-    timer?.cancel();
   }
 
   /// Remet le timer à 3 minutes
-  void resetTimer(){
+  void resetTimer() {
     setState(() {
       seconds = 180;
       minutes = 3;
@@ -55,7 +70,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
   }
 
   /// Met le timer a 0
-  void setTimerToZero(){
+  void setTimerToZero() {
     setState(() {
       seconds = 0;
       minutes = 0;
@@ -63,8 +78,25 @@ class _BoggleTimerState extends State<BoggleTimer> {
     });
   }
 
+  /// Affiche le timer
+  String displayTimer() {
+    String displaySeconds = seconds.toString();
+    String displayMinutes = minutes.toString();
+    if (seconds < 10) {
+      displaySeconds = '0$seconds';
+    }
+    return '$displayMinutes:$displaySeconds';
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    startTimer();
+    return Text(
+      displayTimer(),
+      style: const TextStyle(
+        fontSize: 30,
+        fontWeight: FontWeight.bold,
+      ),
+    );
   }
 }
