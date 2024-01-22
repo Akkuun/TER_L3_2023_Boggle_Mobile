@@ -47,17 +47,19 @@ class _GamePageState extends State<GamePage> {
     boggleGrille = BoggleGrille(
       letters: usedLetters,
       onWordSelectionEnd: endWordSelection,
+      isWordValid: isWordValid,
     );
   }
 
   bool isWordValid(String word) {
-    // throw UnimplementedError();
+    if (word.length < 3) {
+      return false;
+    }
     return true; // TODO: vérifier validité mot
   }
 
-
   bool endWordSelection(String word) {
-    if (!isWordValid(word)) {
+    if (previousWords.contains(word) || !isWordValid(word)) {
       return false;
     }
     updateScore(wordScore(word));
@@ -90,7 +92,7 @@ class _GamePageState extends State<GamePage> {
               },
               text: 'home',
             ),
-            Text(
+            const Text(
               'BOUGGR',
               style: TextStyle(
                 color: Colors.black,
@@ -98,7 +100,7 @@ class _GamePageState extends State<GamePage> {
                 fontWeight: FontWeight.w400,
               ),
             ),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('rang'), // Rang placeholder
@@ -107,10 +109,10 @@ class _GamePageState extends State<GamePage> {
               ],
             ),
             boggleGrille,
-            Text('mots sélectionnés : '), // TODO : remplacer par le mot courant
+            const Text('mots sélectionnés : '), // TODO : remplacer par le mot courant
             for (var word in previousWords)
               Text(' $word '),
-            Text('3:00'), // Timer placeholder
+            const Text('3:00'), // Timer placeholder
           ],
         ),
       ),
