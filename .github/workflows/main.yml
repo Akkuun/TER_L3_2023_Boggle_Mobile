@@ -66,7 +66,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
             name: release-apk
-            path: build/app/outputs/apk/release/app-release.apk
+            path: build/app/outputs/apk/release/app-x86_64-release.apk
 
   push_to_release:
     name: Push to release
@@ -90,6 +90,6 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           asset_path: build/app/outputs/apk/release/app-x86_64-release.apk 
-          asset_name: app-debug.apk
+          asset_name: app-x86_64-release.apk
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.PIPELINE_SECRET_BOOGLE_L3 }}
