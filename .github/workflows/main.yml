@@ -90,7 +90,7 @@ jobs:
       
         uses: ncipollo/release-action@v1
         with:
-          asset_path: build/app/outputs/flutter-apk/app-release.apk
+          asset_path: build/app/outputs/flutter-apk/
           asset_name: app-release.apk
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.PIPELINE_SECRET_BOOGLE_L3 }}
