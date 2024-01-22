@@ -32,8 +32,7 @@ class _BoggleGrilleState extends State<BoggleGrille> {
     if (lock) {
       return;
     }
-    final RenderBox box =
-        key.currentContext!.findAncestorRenderObjectOfType<RenderBox>()!;
+    final RenderBox box = key.currentContext!.findAncestorRenderObjectOfType<RenderBox>()!;
     final result = BoxHitTestResult();
     Offset local = box.globalToLocal(event.position);
     if (box.hitTest(result, position: local)) {
@@ -44,24 +43,12 @@ class _BoggleGrilleState extends State<BoggleGrille> {
           String newWord = currentWord + widget.letters[target.index];
           if (_trackTaped.isNotEmpty) {
             final last = _trackTaped.last;
-            if (target.index == last.index + 1 ||
-                    target.index == last.index - 1 ||
-                    target.index == last.index + 4 ||
-                    target.index == last.index - 4 ||
-                    target.index == last.index + 3 ||
-                    target.index == last.index - 3 ||
-                    target.index == last.index + 5 ||
-                    target.index == last.index - 5) {
+            if (isAdjacent(target, last)) {
               isCurrentWordValid = widget.isWordValid(newWord);
               _trackTaped.add(target);
               _selectIndex(target.index);
             } else {
-              _trackTaped.clear();
-              setState(() {
-                selectedIndexes.clear();
-                lock = true;
-                currentWord = "";
-              });
+              _clearSelection();
               return;
             }
           } else {
@@ -76,16 +63,31 @@ class _BoggleGrilleState extends State<BoggleGrille> {
     }
   }
 
+  bool isAdjacent(BoggleDiceRender target, BoggleDiceRender last) {
+    return target.index == last.index + 1 ||
+                  target.index == last.index - 1 ||
+                  target.index == last.index + 4 ||
+                  target.index == last.index - 4 ||
+                  target.index == last.index + 3 ||
+                  target.index == last.index - 3 ||
+                  target.index == last.index + 5 ||
+                  target.index == last.index - 5;
+  }
+
   void _selectIndex(int index) {
     setState(() {
       selectedIndexes.add(index);
     });
   }
 
-  void _clearSelection(PointerUpEvent event) {
+  void _sendWordToGameLogicAndClear(PointerUpEvent event) {
     if (currentWord.length >= 3) {
       widget.onWordSelectionEnd(currentWord);
     }
+    _clearSelection();
+  }
+
+  void _clearSelection() {
     _trackTaped.clear();
     setState(() {
       selectedIndexes.clear();
@@ -104,7 +106,7 @@ class _BoggleGrilleState extends State<BoggleGrille> {
         child: Listener(
           onPointerDown: _detectTapedItem,
           onPointerMove: _detectTapedItem,
-          onPointerUp: _clearSelection,
+          onPointerUp: _sendWordToGameLogicAndClear,
           child: GridView.builder(
             key: key,
             itemCount: 16,
