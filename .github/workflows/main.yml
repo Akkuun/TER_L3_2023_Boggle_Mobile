@@ -66,7 +66,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
             name: release-apk
-            path: build/app/outputs/flutter-apk/app-release.apk
+            path: build/app/outputs/flutter-apk/
 
   push_to_release:
     name: Push to release
@@ -90,7 +90,7 @@ jobs:
       
         uses: ncipollo/release-action@v1
         with:
-          run : ls
-          artefacts : build/app/outputs/flutter-apk/app-release.apk
+          asset_path: build/app/outputs/flutter-apk/app-release.apk
+          asset_name: app-release.apk
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.PIPELINE_SECRET_BOOGLE_L3 }}
