@@ -79,8 +79,7 @@ jobs:
         with:
           tag_name: v1.0.${{ github.run_number }}
           release_name: Release v1.0.${{ github.run_number }}
-          draft: false
-          prerelease: false
+        
 
       - name: Upload APK
         id: upload-apk
