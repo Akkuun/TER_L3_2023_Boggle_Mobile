@@ -28,7 +28,6 @@ class Dictionary {
     int count = word.length;
     for (final l in word.runes) {
       count--;
-
       if (temp.length > 1) {
         dynamic children = temp[1];
         // the current node has children
@@ -37,6 +36,7 @@ class Dictionary {
           return count == 0 && decoder.isEndingAWord(temp[1]);
           //check if last letter of the word & if is completing a word
         } else {
+          bool update = false;
           for (int i = 0; i < children.length; i++) {
             if (children[i].runtimeType == int) {
               //is a leaf
@@ -47,13 +47,17 @@ class Dictionary {
             } else {
               if (decoder.getRunesFrom(children[i][0]) == Int8(l)) {
                 temp = children[i];
+                update = true;
                 break;
               }
             }
           }
+          if (!update) {
+            return false;
+          }
         }
       } else {
-        return count == 0; // more letter than node for this word
+        return false; // more letter than node for this word
       }
     }
 
