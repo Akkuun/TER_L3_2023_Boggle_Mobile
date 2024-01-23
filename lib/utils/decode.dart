@@ -6,7 +6,7 @@ class Decoded {
   Decoded({required this.lang});
 
   bool isEndingAWord(int code) {
-    return code & 1 << 8 > 0;
+    return code & (1 << 8) > 0;
   }
 
   bool isFrom(int code, LangCode langCode) {
@@ -14,7 +14,7 @@ class Decoded {
   }
 
   Int8 getRunesFrom(int code) {
-    return Int8(code);
+    return Int8(code.toUnsigned(8));
   }
 }
 
