@@ -5,11 +5,13 @@ import 'package:flutter/rendering.dart';
 class BoggleGrille extends StatefulWidget {
   final List<String> letters;
   final bool Function(String) onWordSelectionEnd;
+  final bool Function(String) isWordValid;
 
   const BoggleGrille({
     super.key,
     required this.letters,
     required this.onWordSelectionEnd,
+    required this.isWordValid,
   });
 
   @override
@@ -23,14 +25,14 @@ class _BoggleGrilleState extends State<BoggleGrille> {
   final key = GlobalKey();
   final Set<BoggleDiceRender> _trackTaped = <BoggleDiceRender>{};
   String currentWord = "";
+  bool isCurrentWordValid = false;
   bool lock = false;
 
   _detectTapedItem(PointerEvent event) {
     if (lock) {
       return;
     }
-    final RenderBox box =
-        key.currentContext!.findAncestorRenderObjectOfType<RenderBox>()!;
+    final RenderBox box = key.currentContext!.findAncestorRenderObjectOfType<RenderBox>()!;
     final result = BoxHitTestResult();
     Offset local = box.globalToLocal(event.position);
     if (box.hitTest(result, position: local)) {
@@ -41,24 +43,12 @@ class _BoggleGrilleState extends State<BoggleGrille> {
           String newWord = currentWord + widget.letters[target.index];
           if (_trackTaped.isNotEmpty) {
             final last = _trackTaped.last;
-            if ((target.index == last.index + 1 ||
-                    target.index == last.index - 1 ||
-                    target.index == last.index + 4 ||
-                    target.index == last.index - 4 ||
-                    target.index == last.index + 3 ||
-                    target.index == last.index - 3 ||
-                    target.index == last.index + 5 ||
-                    target.index == last.index - 5) &&
-                true /* <- TODO : valider le mot ? */) {
+            if (isAdjacent(target, last)) {
+              isCurrentWordValid = widget.isWordValid(newWord);
               _trackTaped.add(target);
               _selectIndex(target.index);
             } else {
-              _trackTaped.clear();
-              setState(() {
-                selectedIndexes.clear();
-                lock = true;
-                currentWord = "";
-              });
+              _clearSelection();
               return;
             }
           } else {
@@ -73,19 +63,37 @@ class _BoggleGrilleState extends State<BoggleGrille> {
     }
   }
 
+  bool isAdjacent(BoggleDiceRender target, BoggleDiceRender last) {
+    return target.index == last.index + 1 ||
+                  target.index == last.index - 1 ||
+                  target.index == last.index + 4 ||
+                  target.index == last.index - 4 ||
+                  target.index == last.index + 3 ||
+                  target.index == last.index - 3 ||
+                  target.index == last.index + 5 ||
+                  target.index == last.index - 5;
+  }
+
   void _selectIndex(int index) {
     setState(() {
       selectedIndexes.add(index);
     });
   }
 
-  void _clearSelection(PointerUpEvent event) {
-    widget.onWordSelectionEnd(currentWord);
+  void _sendWordToGameLogicAndClear(PointerUpEvent event) {
+    if (currentWord.length >= 3) {
+      widget.onWordSelectionEnd(currentWord);
+    }
+    _clearSelection();
+  }
+
+  void _clearSelection() {
     _trackTaped.clear();
     setState(() {
       selectedIndexes.clear();
       lock = false;
       currentWord = "";
+      isCurrentWordValid = false;
     });
   }
 
@@ -98,7 +106,7 @@ class _BoggleGrilleState extends State<BoggleGrille> {
         child: Listener(
           onPointerDown: _detectTapedItem,
           onPointerMove: _detectTapedItem,
-          onPointerUp: _clearSelection,
+          onPointerUp: _sendWordToGameLogicAndClear,
           child: GridView.builder(
             key: key,
             itemCount: 16,
@@ -114,7 +122,9 @@ class _BoggleGrilleState extends State<BoggleGrille> {
                 index: index,
                 letter: widget.letters[index],
                 color: selectedIndexes.contains(index)
-                    ? Theme.of(context).primaryColor
+                    ? isCurrentWordValid
+                        ? Theme.of(context).primaryColor
+                        : Colors.red
                     : Colors.white,
               );
             },
