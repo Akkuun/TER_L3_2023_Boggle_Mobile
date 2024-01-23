@@ -5,7 +5,7 @@ class Decoded {
 
   Decoded({required this.lang});
 
-  bool endAWord(int code) {
+  bool isEndingAWord(int code) {
     return code & 1 << 8 > 0;
   }
 

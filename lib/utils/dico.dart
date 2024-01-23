@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:html';
 
 import 'package:binary/binary.dart';
 import 'package:bouggr/utils/decode.dart';
@@ -30,16 +29,18 @@ class Dictionary {
     for (final l in word.runes) {
       count--;
       if (temp.length > 1) {
+        // the current node has children
         if (temp[1] is int) {
+          // is a leaf
+          return count == 0 && decoder.isEndingAWord(temp[1]);
+          //check if last letter of the word & if is completing a word
         } else {
           for (int i = 1; i < temp.length; i++) {
             if (temp[i] is int) {
+              //is a leaf
               if (decoder.getRunesFrom(temp[i]) == Int8(l)) {
-                if (count != 0) {
-                  return false;
-                } else {
-                  return decoder.endAWord(temp[i]);
-                }
+                return count == 0 && decoder.isEndingAWord(temp[i]);
+                //check if last letter of the word & if is completing a word
               }
             } else {
               if (decoder.getRunesFrom(temp[i][0]) == Int8(l)) {
@@ -48,9 +49,11 @@ class Dictionary {
             }
           }
         }
+      } else {
+        return false; // more letter than node for this word
       }
     }
 
-    return decoder.endAWord(temp[0]);
+    return decoder.isEndingAWord(temp[0]);
   }
 }
