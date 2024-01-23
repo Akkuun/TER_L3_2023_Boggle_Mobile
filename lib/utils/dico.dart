@@ -56,4 +56,41 @@ class Dictionary {
 
     return decoder.isEndingAWord(temp[0]);
   }
+
+  bool canCreate(String word) {
+    if (dictionary == null) {
+      return false;
+    }
+    List<dynamic> temp = dictionary!;
+    int count = word.length;
+    for (final l in word.runes) {
+      count--;
+      if (temp.length > 1) {
+        // the current node has children
+        if (temp[1] is int) {
+          // is a leaf
+          return count == 0;
+          //check if last letter of the word
+        } else {
+          for (int i = 1; i < temp.length; i++) {
+            if (temp[i] is int) {
+              //is a leaf
+              if (decoder.getRunesFrom(temp[i]) == Int8(l)) {
+                return count == 0;
+                //check if last letter of the word
+              }
+            } else {
+              if (decoder.getRunesFrom(temp[i][0]) == Int8(l)) {
+                temp = temp[i][0];
+              }
+            }
+          }
+        }
+      } else {
+        return false; // more letter than node for this word
+      }
+    }
+
+    return true;
+  }
 }
