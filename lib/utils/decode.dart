@@ -19,3 +19,13 @@ class Decoded {
 }
 
 enum LangCode { FR, RM, EN, SP }
+
+Map<LangCode, int> generateLangCode() {
+  Map<LangCode, int> res = {};
+  int i = 9;
+  for (LangCode lc in LangCode.values) {
+    res[lc] = 1 << i;
+    i++;
+  }
+  return res;
+}
