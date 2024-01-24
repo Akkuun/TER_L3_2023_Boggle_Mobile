@@ -25,6 +25,10 @@ void main() {
       expect(dictionary.canCreate("BA"), true);
     });
 
+    test('FUN can be completed', () {
+      expect(dictionary.canCreate("FUN"), true);
+    });
+
     test("ZZ can't be completed", () {
       expect(dictionary.canCreate("ZZ"), false);
     });
