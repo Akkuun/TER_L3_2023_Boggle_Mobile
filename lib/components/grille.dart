@@ -102,7 +102,8 @@ class _BoggleGrilleState extends State<BoggleGrille> {
     return Container(
       color: Theme.of(context).secondaryHeaderColor,
       child: SizedBox(
-        height: 400,
+        height: MediaQuery.of(context).size.width * 0.95,
+        width: MediaQuery.of(context).size.width * 0.95,
         child: Listener(
           onPointerDown: _detectTapedItem,
           onPointerMove: _detectTapedItem,
@@ -110,6 +111,7 @@ class _BoggleGrilleState extends State<BoggleGrille> {
           child: GridView.builder(
             key: key,
             itemCount: 16,
+            padding: const EdgeInsets.all(16),
             physics: const NeverScrollableScrollPhysics(),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 4,
