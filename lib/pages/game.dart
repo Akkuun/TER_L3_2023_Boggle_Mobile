@@ -23,7 +23,6 @@ class _GamePageState extends State<GamePage> {
   List<String> previousWords = [];
   int score = 0;
   int strikes = 0;
-  //String scoreText = 'Score: 0';
   int lastSelectedPosition = -1;
   late Dictionary dictionary;
 
