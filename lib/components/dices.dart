@@ -4,7 +4,7 @@ import 'package:flutter/rendering.dart';
 class BoggleDice extends SingleChildRenderObjectWidget {
   final int index;
   final String letter;
-  Color color;
+  final Color color;
 
   BoggleDice(
       {required this.index,
