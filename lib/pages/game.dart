@@ -103,9 +103,16 @@ class _GamePageState extends State<GamePage> {
               ],
             ),
             boggleGrille,
-            const Text('mots sélectionnés : '), // TODO : remplacer par le mot courant
-            for (var word in previousWords)
-              Text(' $word '),
+            SizedBox(
+              height: 150,
+              child: ListView(
+                children: [
+                  const Text('Mots selectionnés :'),
+                  for (var word in previousWords)
+                    Text(word),
+                ],
+              ),
+            ),
             const Text('3:00'), // Timer placeholder
           ],
         ),

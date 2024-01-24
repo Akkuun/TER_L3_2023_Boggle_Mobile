@@ -100,7 +100,17 @@ class _BoggleGrilleState extends State<BoggleGrille> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).secondaryHeaderColor,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Theme.of(context).secondaryHeaderColor,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.25),
+              blurRadius: 4,
+              offset: const Offset(4, 4),
+            ),
+          ]
+      ),
       child: SizedBox(
         height: MediaQuery.of(context).size.width * 0.95,
         width: MediaQuery.of(context).size.width * 0.95,
