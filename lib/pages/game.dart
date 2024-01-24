@@ -1,5 +1,6 @@
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/grille.dart';
+import 'package:bouggr/components/title.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/state.dart';
 import 'package:flutter/material.dart';
@@ -92,14 +93,7 @@ class _GamePageState extends State<GamePage> {
               },
               text: 'home',
             ),
-            const Text(
-              'BOUGGR',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 42,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
+            const AppTitle(fontSize: 56),
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
