@@ -68,9 +68,12 @@ jobs:
           path: build/app/outputs/flutter-apk/
 
   push_to_release:
-   - name: Upload Release Artifact
-     uses: actions/upload-artifact@v2
-      with:
+    runs-on: macos-latest
+    needs: build_apk
+    steps:
+     - name: Upload Release Artifact
+       uses: actions/upload-artifact@v2
+       with:
         name: release-artifact
         path: build/app/outputs/flutter-apk/
       
