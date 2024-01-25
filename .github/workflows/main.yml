@@ -79,13 +79,15 @@ jobs:
       with:
         java-version: '11.x'
 
-    - name: Set up Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.16.7'
-    - name: Release
-      uses: softprops/action-gh-release@v1
-      with:
-          files: build/app/outputs/flutter-apk/
+    - name: Create release and upload apk
+      uses: underwindfall/create-release-with-debugapk@v2.0.0
       env:
-          GITHUB_TOKEN: ${{ secrets.PIPELINE_SECRET_BOOGLE_L3 }}
+            GITHUB_TOKEN: ${{ secrets.PIPELINE_SECRET_BOOGLE_L3 }}
+      with:
+        tag_name: v1.0.${{ github.run_number }}
+        asset_path: build/app/outputs/flutter-apk/
+        asset_name: Example.apk
+        asset_content_type: application/zip
+
+      
+          
