@@ -1,5 +1,6 @@
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/grille.dart';
+import 'package:bouggr/components/title.dart';
 import 'package:bouggr/components/timer.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/state.dart';
@@ -93,14 +94,7 @@ class _GamePageState extends State<GamePage> {
               },
               text: 'home',
             ),
-            const Text(
-              'BOUGGR',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 42,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
+            const AppTitle(fontSize: 56),
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -110,10 +104,19 @@ class _GamePageState extends State<GamePage> {
               ],
             ),
             boggleGrille,
-            const Text('mots sélectionnés : '), // TODO : remplacer par le mot courant
-            for (var word in previousWords)
-              Text(' $word '),
+
+            SizedBox(
+              height: 150,
+              child: ListView(
+                children: [
+                  const Text('Mots selectionnés :'),
+                  for (var word in previousWords)
+                    Text(word),
+                ],
+              ),
+            ),
             BoggleTimer(), // Timer placeholder
+
           ],
         ),
       ),

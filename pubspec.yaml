@@ -60,8 +60,17 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+
+  fonts:
+    - family: Jua
+      fonts:
+        - asset: fonts/Jua-Regular.ttf
+          style: normal
+
+
   assets:
     - assets/dictionary/global.json
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
