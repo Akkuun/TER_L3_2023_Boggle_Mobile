@@ -73,20 +73,32 @@ jobs:
     runs-on: ubuntu-latest
     needs: build_apk
     steps:
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: v1.0.${{ github.run_number }}
-          release_name: Release v1.0.${{ github.run_number }}
-        
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Upload APK
-        id: upload-apk
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build/app/outputs/flutter-apk/app-release.apk
-          asset_name: app-release.apk
-          asset_content_type: application/vnd.android.package-archive
-          token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Set up Java
+      uses: actions/setup-java@v1
+      with:
+        java-version: '11.x'
+
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.16.7'
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      with:
+        tag_name: v1.0.${{ github.run_number }}
+        release_name: Release v1.0.${{ github.run_number }}
+
+    - name: Upload APK
+      id: upload-apk
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: build/app/outputs/flutter-apk/app-release.apk
+        asset_name: app-release.apk
+        asset_content_type: application/vnd.android.package-archive
+        token: ${{ secrets.GITHUB_TOKEN }}
