@@ -71,10 +71,23 @@ jobs:
     runs-on: macos-latest
     needs: build_apk
     steps:
-     - name: Upload Release Artifact
-       uses: actions/upload-artifact@v2
-       with:
-        name: release-artifact
+    - name: Download APK artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: release-apk
         path: build/app/outputs/flutter-apk/
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          build/app/outputs/flutter-apk/*.apk
+        token: ${{ secrets.PIPELINE_SECRET_BOOGLE_L3 }}
+        tag_name: v1.0.${{ github.run_number }}
+        release_name: Release v1.0.${{ github.run_number }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.PIPELINE_SECRET_BOOGLE_L3 }}
+
+    
       
           
