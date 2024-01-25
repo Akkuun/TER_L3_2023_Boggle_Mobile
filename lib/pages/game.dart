@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/grille.dart';
 import 'package:bouggr/components/title.dart';
@@ -7,6 +9,8 @@ import 'package:bouggr/state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
+import 'package:bouggr/utils/decode.dart';
+import 'package:bouggr/utils/dico.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key});
@@ -19,7 +23,9 @@ class _GamePageState extends State<GamePage> {
   late BoggleGrille boggleGrille;
   List<String> previousWords = [];
   int score = 0;
+  int strikes = 0;
   int lastSelectedPosition = -1;
+  late Dictionary dictionary;
 
   @override
   void initState() {
@@ -51,17 +57,24 @@ class _GamePageState extends State<GamePage> {
       onWordSelectionEnd: endWordSelection,
       isWordValid: isWordValid,
     );
+    dictionary = Dictionary(
+        path: 'assets/dictionary/global.json',
+        decoder: Decoded(lang: generateLangCode()));
+    dictionary.load();
   }
 
   bool isWordValid(String word) {
     if (word.length < 3) {
       return false;
     }
-    return true; // TODO: vérifier validité mot
+    return dictionary.contain(word);
   }
 
   bool endWordSelection(String word) {
     if (previousWords.contains(word) || !isWordValid(word)) {
+      setState(() {
+        strikes++;
+      });
       return false;
     }
     updateScore(wordScore(word));
@@ -77,7 +90,20 @@ class _GamePageState extends State<GamePage> {
   }
 
   int wordScore(String word) {
-    return word.length; // TODO: calculer score d'un mot
+    int wordLength = word.length;
+    if (wordLength == 3 || wordLength == 4) {
+      return 1;
+    } else if (wordLength == 5) {
+      return 2;
+    } else if (wordLength == 6) {
+      return 3;
+    } else if (wordLength == 7) {
+      return 5;
+    } else if (wordLength >= 8) {
+      return 11;
+    } else {
+      return 0;
+    }
   }
 
   @override
@@ -94,16 +120,32 @@ class _GamePageState extends State<GamePage> {
               },
               text: 'home',
             ),
+
             const AppTitle(fontSize: 56),
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('rang'), // Rang placeholder
-                Text(' score '), // Score placeholder
-                Text('strike'), // Strike placeholder
+                const Text(
+                  'rang: 1',
+                  style: TextStyle(fontSize: 18, color: Colors.blue),
+                ),
+                SizedBox(width: 50),
+                Text(
+                  'Score: $score',
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green),
+                ),
+                SizedBox(width: 50),
+                Text(
+                  'Strike: $strikes',
+                  style: TextStyle(fontSize: 18, color: Colors.red),
+                ),
               ],
             ),
             boggleGrille,
+
 
             SizedBox(
               height: 150,
