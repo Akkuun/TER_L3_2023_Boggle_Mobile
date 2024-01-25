@@ -122,7 +122,7 @@ class _GamePageState extends State<GamePage> {
             ),
 
             const AppTitle(fontSize: 56),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
@@ -146,19 +146,16 @@ class _GamePageState extends State<GamePage> {
             ),
             boggleGrille,
 
-
             SizedBox(
               height: 150,
               child: ListView(
                 children: [
                   const Text('Mots selectionnés :'),
-                  for (var word in previousWords)
-                    Text(word),
+                  for (var word in previousWords) Text(word),
                 ],
               ),
             ),
             BoggleTimer(), // Timer placeholder
-
           ],
         ),
       ),
