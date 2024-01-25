@@ -68,29 +68,10 @@ jobs:
           path: build/app/outputs/flutter-apk/
 
   push_to_release:
-    name: Push to release
-    runs-on: ubuntu-latest
-    needs: build_apk
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Set up Java
-      uses: actions/setup-java@v1
+   - name: Upload Release Artifact
+     uses: actions/upload-artifact@v2
       with:
-        java-version: '11.x'
-    - name : ls
-      run : ls
-
-    - name: Create release and upload apk
-      uses: underwindfall/create-release-with-debugapk@v2.0.0
-      env:
-            GITHUB_TOKEN: ${{ secrets.PIPELINE_SECRET_BOOGLE_L3 }}
-      with:
-        tag_name: v1.0.${{ github.run_number }}
-        asset_path: build/app/outputs/flutter-apk/*.apk
-        asset_name: app-release.apk
-        asset_content_type: application/zip
-
+        name: release-artifact
+        path: build/app/outputs/flutter-apk/
       
           
