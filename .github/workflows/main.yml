@@ -46,8 +46,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name : ls
-        run : ls
+     
 
       - name: Set up Java
         uses: actions/setup-java@v1
@@ -80,6 +79,8 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: '11.x'
+    - name : ls
+      run : ls
 
     - name: Create release and upload apk
       uses: underwindfall/create-release-with-debugapk@v2.0.0
