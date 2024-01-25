@@ -85,8 +85,8 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.PIPELINE_SECRET_BOOGLE_L3 }}
       with:
         tag_name: v1.0.${{ github.run_number }}
-        asset_path: build/app/outputs/flutter-apk/
-        asset_name: Example.apk
+        asset_path: build/app/outputs/flutter-apk/*.apk
+        asset_name: app-release.apk
         asset_content_type: application/zip
 
       
