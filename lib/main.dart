@@ -4,6 +4,7 @@ import 'package:bouggr/pages/rulepage.dart';
 import 'package:bouggr/pages/game.dart';
 import 'package:bouggr/state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(

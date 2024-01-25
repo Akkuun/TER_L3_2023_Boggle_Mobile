@@ -1,6 +1,7 @@
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/grille.dart';
 import 'package:bouggr/components/title.dart';
+import 'package:bouggr/components/timer.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/state.dart';
 import 'package:flutter/material.dart';
@@ -103,6 +104,7 @@ class _GamePageState extends State<GamePage> {
               ],
             ),
             boggleGrille,
+
             SizedBox(
               height: 150,
               child: ListView(
@@ -113,7 +115,8 @@ class _GamePageState extends State<GamePage> {
                 ],
               ),
             ),
-            const Text('3:00'), // Timer placeholder
+            BoggleTimer(), // Timer placeholder
+
           ],
         ),
       ),

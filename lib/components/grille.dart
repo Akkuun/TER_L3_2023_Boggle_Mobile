@@ -29,9 +29,11 @@ class _BoggleGrilleState extends State<BoggleGrille> {
   bool lock = false;
 
   _detectTapedItem(PointerEvent event) {
+
     if (lock) return;
 
     final RenderBox box = key.currentContext!.findAncestorRenderObjectOfType<RenderBox>()!;
+
     final result = BoxHitTestResult();
     Offset local = box.globalToLocal(event.position);
 
@@ -69,13 +71,13 @@ class _BoggleGrilleState extends State<BoggleGrille> {
 
   bool isAdjacent(BoggleDiceRender target, BoggleDiceRender last) {
     return target.index == last.index + 1 ||
-                  target.index == last.index - 1 ||
-                  target.index == last.index + 4 ||
-                  target.index == last.index - 4 ||
-                  target.index == last.index + 3 ||
-                  target.index == last.index - 3 ||
-                  target.index == last.index + 5 ||
-                  target.index == last.index - 5;
+        target.index == last.index - 1 ||
+        target.index == last.index + 4 ||
+        target.index == last.index - 4 ||
+        target.index == last.index + 3 ||
+        target.index == last.index - 3 ||
+        target.index == last.index + 5 ||
+        target.index == last.index - 5;
   }
 
   void _selectIndex(int index) {
@@ -103,47 +105,52 @@ class _BoggleGrilleState extends State<BoggleGrille> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
+
+    return Center(
+      child: Container(
+        decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           color: Theme.of(context).secondaryHeaderColor,
-          boxShadow: [
-            BoxShadow(
+           boxShadow: [
+              BoxShadow(
               color: Colors.black.withOpacity(0.25),
               blurRadius: 4,
               offset: const Offset(4, 4),
             ),
           ]
-      ),
-      child: SizedBox(
-        height: MediaQuery.of(context).size.width * 0.95,
-        width: MediaQuery.of(context).size.width * 0.95,
-        child: Listener(
-          onPointerDown: _detectTapedItem,
-          onPointerMove: _detectTapedItem,
-          onPointerUp: _sendWordToGameLogicAndClear,
-          child: GridView.builder(
-            key: key,
-            itemCount: 16,
-            padding: const EdgeInsets.all(16),
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              childAspectRatio: 1.0,
-              crossAxisSpacing: 16.0,
-              mainAxisSpacing: 16.0,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.width,
+            width: MediaQuery.of(context).size.width - 50,
+            child: Listener(
+              onPointerDown: _detectTapedItem,
+              onPointerMove: _detectTapedItem,
+              onPointerUp: _sendWordToGameLogicAndClear,
+              child: GridView.builder(
+                key: key,
+                itemCount: 16,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  childAspectRatio: 1.0,
+                  crossAxisSpacing: 16.0,
+                  mainAxisSpacing: 16.0,
+                ),
+                itemBuilder: (context, index) {
+                  return BoggleDice(
+                    index: index,
+                    letter: widget.letters[index],
+                    color: selectedIndexes.contains(index)
+                        ? isCurrentWordValid
+                            ? Theme.of(context).primaryColor
+                            : Colors.red
+                        : Colors.white,
+                  );
+                },
+              ),
             ),
-            itemBuilder: (context, index) {
-              return BoggleDice(
-                index: index,
-                letter: widget.letters[index],
-                color: selectedIndexes.contains(index)
-                    ? isCurrentWordValid
-                        ? Theme.of(context).primaryColor
-                        : Colors.red
-                    : Colors.white,
-              );
-            },
           ),
         ),
       ),
