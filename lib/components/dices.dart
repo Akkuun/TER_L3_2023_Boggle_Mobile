@@ -4,7 +4,7 @@ import 'package:flutter/rendering.dart';
 class BoggleDice extends SingleChildRenderObjectWidget {
   final int index;
   final String letter;
-  Color color;
+  final Color color;
 
   BoggleDice(
       {required this.index,
@@ -14,13 +14,23 @@ class BoggleDice extends SingleChildRenderObjectWidget {
       : super(
             child: Container(
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10), color: color),
+                  borderRadius: BorderRadius.circular(10),
+                  color: color,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.25),
+                      offset: const Offset(4, 4),
+                      blurRadius: 4,
+                    )
+                  ]
+              ),
               child: Center(
                 child: Text(
                   letter,
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 32,
+                    fontFamily: "Jua",
                     fontWeight: FontWeight.w400,
                     height: 0,
                   ),

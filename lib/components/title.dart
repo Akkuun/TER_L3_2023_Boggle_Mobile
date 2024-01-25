@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 
 class AppTitle extends StatelessWidget {
+  final double fontSize;
   const AppTitle({
     super.key,
+    this.fontSize = 96,
   });
 
   @override
   Widget build(BuildContext context) {
-    return const Text.rich(
+    return Text.rich(
       TextSpan(
         children: [
           TextSpan(
             text: 'B',
             style: TextStyle(
               color: Colors.black,
-              fontSize: 96,
+              fontSize: fontSize,
               fontFamily: 'Jua',
               fontWeight: FontWeight.w400,
               height: 0,
@@ -24,7 +26,7 @@ class AppTitle extends StatelessWidget {
             text: 'OU',
             style: TextStyle(
               color: Color(0xFF1E86B3),
-              fontSize: 96,
+              fontSize: fontSize,
               fontFamily: 'Jua',
               fontWeight: FontWeight.w400,
               height: 0,
@@ -34,7 +36,7 @@ class AppTitle extends StatelessWidget {
             text: 'GGR',
             style: TextStyle(
               color: Colors.black,
-              fontSize: 96,
+              fontSize: fontSize,
               fontFamily: 'Jua',
               fontWeight: FontWeight.w400,
               height: 0,
