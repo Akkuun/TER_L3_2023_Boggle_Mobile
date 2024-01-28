@@ -2,7 +2,9 @@ import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/card.dart';
 import 'package:bouggr/components/title.dart';
 import 'package:bouggr/pages/page_name.dart';
-import 'package:bouggr/state.dart';
+import 'package:bouggr/providers/game.dart';
+import 'package:bouggr/providers/navigation.dart';
+import 'package:bouggr/utils/decode.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +13,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
+    var appState = context.watch<NavigationServices>();
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -54,14 +56,20 @@ class HomePage extends StatelessWidget {
           ),
           BtnBoggle(
             onPressed: () {
-              appState.goToPage(PageName.game);
+              if (Provider.of<GameServices>(context, listen: false)
+                  .start(LangCode.FR, GameType.solo)) {
+                appState.goToPage(PageName.game);
+              }
             },
             btnSize: BtnSize.large,
             text: "SinglePlayer",
           ),
           BtnBoggle(
             onPressed: () {
-              appState.goToPage(PageName.game);
+              if (Provider.of<GameServices>(context, listen: false)
+                  .start(LangCode.FR, GameType.multi)) {
+                appState.goToPage(PageName.game);
+              }
             },
             btnType: BtnType.secondary,
             btnSize: BtnSize.large,

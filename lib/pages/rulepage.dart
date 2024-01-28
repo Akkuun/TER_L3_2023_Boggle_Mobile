@@ -1,4 +1,4 @@
-import 'package:bouggr/state.dart';
+import 'package:bouggr/providers/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bouggr/components/btn.dart';
@@ -11,7 +11,7 @@ class RulePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState =
-        context.watch<MyAppState>(); //écoute du listener de MyAppState
+        context.watch<NavigationServices>(); //écoute du listener de MyAppState
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [

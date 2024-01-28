@@ -1,5 +1,8 @@
+import 'package:bouggr/providers/game.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+
+import 'package:provider/provider.dart';
 
 class BoggleTimer extends StatefulWidget {
   const BoggleTimer({Key? key}) : super(key: key);
@@ -22,6 +25,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
     super.initState();
     timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
       if (!running) {
+        Provider.of<GameServices>(context, listen: false).stop();
         return;
       }
       setState(() {

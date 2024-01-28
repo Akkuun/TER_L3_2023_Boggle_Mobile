@@ -2,14 +2,15 @@
 
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/grille.dart';
+import 'package:bouggr/components/scoreboard.dart';
 import 'package:bouggr/components/title.dart';
 import 'package:bouggr/components/timer.dart';
+import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
-import 'package:bouggr/state.dart';
+import 'package:bouggr/providers/game.dart';
+import 'package:bouggr/providers/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'dart:math';
-import 'package:bouggr/utils/decode.dart';
 import 'package:bouggr/utils/dico.dart';
 
 class GamePage extends StatefulWidget {
@@ -27,27 +28,11 @@ class _GamePageState extends State<GamePage> {
   int lastSelectedPosition = -1;
   late Dictionary dictionary;
 
+  /*
   @override
   void initState() {
     super.initState();
-    List<List<String>> letters = [
-      ["E", "T", "U", "K", "N", "O"],
-      ["E", "V", "G", "T", "I", "N"],
-      ["D", "E", "C", "A", "M", "P"],
-      ["I", "E", "L", "R", "U", "W"],
-      ["E", "H", "I", "F", "S", "E"],
-      ["R", "E", "C", "A", "L", "S"],
-      ["E", "N", "T", "D", "O", "S"],
-      ["O", "F", "X", "R", "I", "A"],
-      ["N", "A", "V", "E", "D", "Z"],
-      ["E", "I", "O", "A", "T", "A"],
-      ["G", "L", "E", "N", "Y", "U"],
-      ["B", "M", "A", "Q", "J", "O"],
-      ["T", "L", "I", "B", "R", "A"],
-      ["S", "P", "U", "L", "T", "E"],
-      ["A", "I", "M", "S", "O", "R"],
-      ["E", "N", "H", "R", "I", "S"]
-    ];
+    List<List<String>> letters = ;
     List<String> usedLetters = [];
     for (var row in letters) {
       usedLetters.add(row[Random().nextInt(row.length)]);
@@ -57,11 +42,10 @@ class _GamePageState extends State<GamePage> {
       onWordSelectionEnd: endWordSelection,
       isWordValid: isWordValid,
     );
-    dictionary = Dictionary(
-        path: 'assets/dictionary/global.json',
-        decoder: Decoded(lang: generateLangCode()));
-    dictionary.load();
-  }
+    /*
+    */
+    //dictionary.load();
+  }*/
 
   bool isWordValid(String word) {
     if (word.length < 3) {
@@ -89,76 +73,76 @@ class _GamePageState extends State<GamePage> {
     return score;
   }
 
-  int wordScore(String word) {
-    int wordLength = word.length;
-    if (wordLength == 3 || wordLength == 4) {
-      return 1;
-    } else if (wordLength == 5) {
-      return 2;
-    } else if (wordLength == 6) {
-      return 3;
-    } else if (wordLength == 7) {
-      return 5;
-    } else if (wordLength >= 8) {
-      return 11;
-    } else {
-      return 0;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Center(
-        child: Column(
-          children: [
-            BtnBoggle(
-              onPressed: () {
-                appState.goToPage(PageName.home);
-              },
-              text: 'home',
-            ),
+    return Globals(child: Builder(builder: (BuildContext innerContext) {
+      var lang = Provider.of<GameServices>(context, listen: false).language;
 
-            const AppTitle(fontSize: 56),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'rang: 1',
-                  style: TextStyle(fontSize: 18, color: Colors.blue),
-                ),
-                SizedBox(width: 50),
-                Text(
-                  'Score: $score',
-                  style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green),
-                ),
-                SizedBox(width: 50),
-                Text(
-                  'Strike: $strikes',
-                  style: TextStyle(fontSize: 18, color: Colors.red),
-                ),
-              ],
-            ),
-            boggleGrille,
+      dictionary = Globals.of(innerContext)!.selectDictionary(lang);
+      dictionary.load();
+      List<String> selectedLetter =
+          Globals.of(innerContext)!.selectDiceSet(lang).roll();
 
-            SizedBox(
-              height: 150,
-              child: ListView(
-                children: [
-                  const Text('Mots selectionnés :'),
-                  for (var word in previousWords) Text(word),
-                ],
+      boggleGrille = BoggleGrille(
+          letters: selectedLetter,
+          onWordSelectionEnd: endWordSelection,
+          isWordValid: isWordValid);
+
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: Column(
+            children: [
+              BtnBoggle(
+                onPressed: () {
+                  Provider.of<GameServices>(context, listen: false).stop();
+                  Provider.of<NavigationServices>(context, listen: false)
+                      .goToPage(PageName.home);
+                },
+                text: 'home',
               ),
-            ),
-            BoggleTimer(), // Timer placeholder
-          ],
+
+              const AppTitle(fontSize: 56),
+              ScoreBoard(score: score, strikes: strikes),
+              boggleGrille,
+
+              SizedBox(
+                height: 150,
+                child: ListView(
+                  children: [
+                    const Text('Mots selectionnés :'),
+                    for (var word in previousWords) Text(word),
+                  ],
+                ),
+              ),
+              BoggleTimer(), // Timer placeholder
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }));
+  }
+}
+
+int wordScore(String word) {
+  int wordLength = word.length;
+
+  if (wordLength < 3) {
+    return 0;
+  }
+
+  switch (wordLength) {
+    case 3:
+      return 1;
+    case 4:
+      return 1;
+    case 5:
+      return 2;
+    case 6:
+      return 3;
+    case 7:
+      return 5;
+    default:
+      return 11;
   }
 }
