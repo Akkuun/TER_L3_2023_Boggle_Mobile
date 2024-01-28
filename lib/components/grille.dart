@@ -1,8 +1,7 @@
 import 'package:bouggr/components/dices.dart';
-import 'package:bouggr/providers/game.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:provider/provider.dart';
 
 class BoggleGrille extends StatefulWidget {
   final List<String> letters;
@@ -17,7 +16,7 @@ class BoggleGrille extends StatefulWidget {
   });
 
   @override
-  _BoggleGrilleState createState() {
+  State<BoggleGrille> createState() {
     return _BoggleGrilleState();
   }
 }
@@ -31,9 +30,9 @@ class _BoggleGrilleState extends State<BoggleGrille> {
   bool lock = false;
 
   _detectTapedItem(PointerEvent event) {
-    if (lock || !Provider.of<GameServices>(context, listen: false).canPlay)
+    if (lock) {
       return;
-
+    }
     final RenderBox box =
         key.currentContext!.findAncestorRenderObjectOfType<RenderBox>()!;
 

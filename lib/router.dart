@@ -1,4 +1,3 @@
-import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/home.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/pages/rulepage.dart';

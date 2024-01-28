@@ -28,24 +28,20 @@ class _GamePageState extends State<GamePage> {
   int lastSelectedPosition = -1;
   late Dictionary dictionary;
 
-  /*
   @override
   void initState() {
     super.initState();
-    List<List<String>> letters = ;
-    List<String> usedLetters = [];
-    for (var row in letters) {
-      usedLetters.add(row[Random().nextInt(row.length)]);
-    }
+    var lang = Provider.of<GameServices>(context, listen: false).language;
+
+    dictionary = Globals.selectDictionary(lang);
+    dictionary.load();
+    List<String> selectedLetter = Globals.selectDiceSet(lang).roll();
+
     boggleGrille = BoggleGrille(
-      letters: usedLetters,
-      onWordSelectionEnd: endWordSelection,
-      isWordValid: isWordValid,
-    );
-    /*
-    */
-    //dictionary.load();
-  }*/
+        letters: selectedLetter,
+        onWordSelectionEnd: endWordSelection,
+        isWordValid: isWordValid);
+  }
 
   bool isWordValid(String word) {
     if (word.length < 3) {
@@ -76,18 +72,6 @@ class _GamePageState extends State<GamePage> {
   @override
   Widget build(BuildContext context) {
     return Globals(child: Builder(builder: (BuildContext innerContext) {
-      var lang = Provider.of<GameServices>(context, listen: false).language;
-
-      dictionary = Globals.of(innerContext)!.selectDictionary(lang);
-      dictionary.load();
-      List<String> selectedLetter =
-          Globals.of(innerContext)!.selectDiceSet(lang).roll();
-
-      boggleGrille = BoggleGrille(
-          letters: selectedLetter,
-          onWordSelectionEnd: endWordSelection,
-          isWordValid: isWordValid);
-
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Center(

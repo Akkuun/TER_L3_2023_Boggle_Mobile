@@ -41,11 +41,11 @@ class Globals extends InheritedWidget {
   static Globals? of(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<Globals>();
 
-  Dictionary selectDictionary(LangCode lang) {
+  static Dictionary selectDictionary(LangCode lang) {
     return dictionaries[lang]!;
   }
 
-  DiceSet selectDiceSet(LangCode lang) {
+  static DiceSet selectDiceSet(LangCode lang) {
     return diceSets[lang]!;
   }
 
