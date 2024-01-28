@@ -14,7 +14,7 @@ class Decoded {
   }
 
   Int8 getRunesFrom(int code) {
-    return Int8(code.toUnsigned(8));
+    return Int8(code & ((1 << 8) - 1));
   }
 }
 

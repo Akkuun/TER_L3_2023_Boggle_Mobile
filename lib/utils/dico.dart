@@ -12,9 +12,10 @@ class Dictionary {
   Dictionary({required this.path, required this.decoder});
 
   /// The function loads a JSON file from the specified path and decodes it into a dictionary.
-  Future load() async {
-    final jsonString = await rootBundle.loadString(path);
-    dictionary = jsonDecode(jsonString);
+  load() {
+    rootBundle
+        .loadString(path)
+        .then((value) => {dictionary = jsonDecode(value)});
   }
 
   /// The function "unload" sets the variable "dictionary" to null.
