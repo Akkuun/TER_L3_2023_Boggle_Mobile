@@ -15,6 +15,7 @@ import 'package:bouggr/providers/navigation.dart';
 
 //utils
 import 'package:bouggr/pages/page_name.dart';
+import 'package:bouggr/providers/timer.dart';
 import 'package:bouggr/utils/word_score.dart';
 import 'package:bouggr/utils/dico.dart';
 //flutter
@@ -79,6 +80,7 @@ class _GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
+    var timerServices = context.watch<TimerServices>();
     return Globals(child: Builder(builder: (BuildContext innerContext) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
@@ -98,7 +100,8 @@ class _GamePageState extends State<GamePage> {
               ScoreBoard(score: score, strikes: strikes),
               boggleGrille,
               WordsFound(previousWords: previousWords),
-              const BoggleTimer(), // Timer placeholder
+              const BoggleTimer(),
+              Text(timerServices.seconds.toString()) // Timer placeholder
             ],
           ),
         ),
