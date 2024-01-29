@@ -1,19 +1,25 @@
-// ignore_for_file: prefer_const_constructors
-
+//components
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/grille.dart';
 import 'package:bouggr/components/scoreboard.dart';
+import 'package:bouggr/components/words_found.dart';
 import 'package:bouggr/components/title.dart';
 import 'package:bouggr/components/timer.dart';
+
+//globals
 import 'package:bouggr/global.dart';
-import 'package:bouggr/pages/page_name.dart';
+
+//services
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
+
+//utils
+import 'package:bouggr/pages/page_name.dart';
+import 'package:bouggr/utils/word_score.dart';
+import 'package:bouggr/utils/dico.dart';
+//flutter
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:bouggr/utils/dico.dart';
-
-import '../components/words_found.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key});
@@ -92,34 +98,11 @@ class _GamePageState extends State<GamePage> {
               ScoreBoard(score: score, strikes: strikes),
               boggleGrille,
               WordsFound(previousWords: previousWords),
-              BoggleTimer(), // Timer placeholder
+              const BoggleTimer(), // Timer placeholder
             ],
           ),
         ),
       );
     }));
-  }
-}
-
-int wordScore(String word) {
-  int wordLength = word.length;
-
-  if (wordLength < 3) {
-    return 0;
-  }
-
-  switch (wordLength) {
-    case 3:
-      return 1;
-    case 4:
-      return 1;
-    case 5:
-      return 2;
-    case 6:
-      return 3;
-    case 7:
-      return 5;
-    default:
-      return 11;
   }
 }
