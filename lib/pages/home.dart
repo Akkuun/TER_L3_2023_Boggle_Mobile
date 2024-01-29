@@ -13,7 +13,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<NavigationServices>();
+    final router = Provider.of<NavigationServices>(context, listen: false);
+    final gameServices = Provider.of<GameServices>(context, listen: false);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -24,7 +25,7 @@ class HomePage extends StatelessWidget {
             children: [
               BoggleCard(
                 onPressed: () {
-                  appState.goToPage(PageName.rules);
+                  router.goToPage(PageName.rules);
                 },
                 title: "Rules",
                 action: 'read',
@@ -44,7 +45,7 @@ class HomePage extends StatelessWidget {
                 title: "SoonTm",
                 action: 'play',
                 onPressed: () {
-                  appState.goToPage(PageName.rules);
+                  router.goToPage(PageName.rules);
                 },
               )
             ],
@@ -56,9 +57,8 @@ class HomePage extends StatelessWidget {
           ),
           BtnBoggle(
             onPressed: () {
-              if (Provider.of<GameServices>(context, listen: false)
-                  .start(LangCode.FR, GameType.solo)) {
-                appState.goToPage(PageName.game);
+              if (gameServices.start(LangCode.FR, GameType.solo)) {
+                router.goToPage(PageName.game);
               }
             },
             btnSize: BtnSize.large,
@@ -66,9 +66,8 @@ class HomePage extends StatelessWidget {
           ),
           BtnBoggle(
             onPressed: () {
-              if (Provider.of<GameServices>(context, listen: false)
-                  .start(LangCode.FR, GameType.multi)) {
-                appState.goToPage(PageName.game);
+              if (gameServices.start(LangCode.FR, GameType.multi)) {
+                router.goToPage(PageName.game);
               }
             },
             btnType: BtnType.secondary,

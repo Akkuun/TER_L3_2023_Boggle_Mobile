@@ -121,7 +121,7 @@ class _BoggleGrilleState extends State<BoggleGrille> {
               ),
             ]),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           child: SizedBox(
             height: MediaQuery.of(context).size.width,
             width: MediaQuery.of(context).size.width - 50,

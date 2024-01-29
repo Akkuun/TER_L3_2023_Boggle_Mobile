@@ -16,9 +16,9 @@ class BouggrRouter extends StatefulWidget {
 class _BouggrRouter extends State<BouggrRouter> {
   @override
   Widget build(BuildContext context) {
-    var appState = context
+    var router = context
         .watch<NavigationServices>(); //écoute du listener de NavigationServices
-    var selectedIndex = appState.index; //récupération de l'index de la page
+    var selectedIndex = router.index; //récupération de l'index de la page
     Widget page;
     switch (selectedIndex) {
       //switch pour afficher la page correspondante

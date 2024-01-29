@@ -13,6 +13,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bouggr/utils/dico.dart';
 
+import '../components/words_found.dart';
+
 class GamePage extends StatefulWidget {
   const GamePage({super.key});
 
@@ -89,16 +91,7 @@ class _GamePageState extends State<GamePage> {
               const AppTitle(fontSize: 56),
               ScoreBoard(score: score, strikes: strikes),
               boggleGrille,
-
-              SizedBox(
-                height: 150,
-                child: ListView(
-                  children: [
-                    const Text('Mots selectionnés :'),
-                    for (var word in previousWords) Text(word),
-                  ],
-                ),
-              ),
+              WordsFound(previousWords: previousWords),
               BoggleTimer(), // Timer placeholder
             ],
           ),

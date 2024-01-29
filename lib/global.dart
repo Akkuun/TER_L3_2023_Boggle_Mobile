@@ -3,8 +3,8 @@ import 'package:bouggr/utils/dice_set.dart';
 import 'package:bouggr/utils/dico.dart';
 import 'package:flutter/material.dart';
 
-/// The `Globals` class is an inherited widget that provides access to global variables such as
-/// `diceSets` and `dictionaries`.
+/// The `Globals` class is an inherited widget that provides access to global variables
+/// the variable can be define for specific context or not
 class Globals extends InheritedWidget {
   static final Map<LangCode, DiceSet> diceSets = {
     LangCode.FR: DiceSet(dices: [
