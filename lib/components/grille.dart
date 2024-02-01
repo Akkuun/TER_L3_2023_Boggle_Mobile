@@ -1,7 +1,9 @@
 import 'package:bouggr/components/dices.dart';
+import 'package:bouggr/providers/game.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 
 class BoggleGrille extends StatefulWidget {
   final List<String> letters;
@@ -108,6 +110,8 @@ class _BoggleGrilleState extends State<BoggleGrille> {
 
   @override
   Widget build(BuildContext context) {
+    GameServices gameServices = context.watch<GameServices>();
+
     return Center(
       child: Container(
         decoration: BoxDecoration(
@@ -126,8 +130,8 @@ class _BoggleGrilleState extends State<BoggleGrille> {
             height: MediaQuery.of(context).size.width,
             width: MediaQuery.of(context).size.width - 50,
             child: Listener(
-              onPointerDown: _detectTapedItem,
-              onPointerMove: _detectTapedItem,
+              onPointerDown: gameServices.canPlay ? _detectTapedItem : null,
+              onPointerMove: gameServices.canPlay ? _detectTapedItem : null,
               onPointerUp: _sendWordToGameLogicAndClear,
               child: GridView.builder(
                 key: key,

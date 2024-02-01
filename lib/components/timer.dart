@@ -43,6 +43,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
           } else {
             running = false;
             timerServices.stop();
+            Provider.of<GameServices>(context, listen: false).stop();
           }
         }
       });

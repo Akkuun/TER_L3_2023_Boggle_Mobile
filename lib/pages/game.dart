@@ -81,6 +81,7 @@ class _GamePageState extends State<GamePage> {
   @override
   Widget build(BuildContext context) {
     var timerServices = context.watch<TimerServices>();
+    var gameServices = context.watch<GameServices>();
     return Globals(child: Builder(builder: (BuildContext innerContext) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
@@ -95,13 +96,13 @@ class _GamePageState extends State<GamePage> {
                 },
                 text: 'home',
               ),
-
               const AppTitle(fontSize: 56),
               ScoreBoard(score: score, strikes: strikes),
               boggleGrille,
               WordsFound(previousWords: previousWords),
               const BoggleTimer(),
-              Text(timerServices.seconds.toString()) // Timer placeholder
+              Text(timerServices.seconds.toString()),
+              Text(gameServices.canPlay.toString())
             ],
           ),
         ),
