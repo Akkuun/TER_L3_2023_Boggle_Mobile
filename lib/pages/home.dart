@@ -2,7 +2,9 @@ import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/card.dart';
 import 'package:bouggr/components/title.dart';
 import 'package:bouggr/pages/page_name.dart';
-import 'package:bouggr/state.dart';
+import 'package:bouggr/providers/game.dart';
+import 'package:bouggr/providers/navigation.dart';
+import 'package:bouggr/utils/decode.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,7 +13,8 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
+    final router = Provider.of<NavigationServices>(context, listen: false);
+    final gameServices = Provider.of<GameServices>(context, listen: false);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -22,7 +25,7 @@ class HomePage extends StatelessWidget {
             children: [
               BoggleCard(
                 onPressed: () {
-                  appState.goToPage(PageName.rules);
+                  router.goToPage(PageName.rules);
                 },
                 title: "Rules",
                 action: 'read',
@@ -42,7 +45,7 @@ class HomePage extends StatelessWidget {
                 title: "SoonTm",
                 action: 'play',
                 onPressed: () {
-                  appState.goToPage(PageName.rules);
+                  router.goToPage(PageName.rules);
                 },
               )
             ],
@@ -54,14 +57,18 @@ class HomePage extends StatelessWidget {
           ),
           BtnBoggle(
             onPressed: () {
-              appState.goToPage(PageName.game);
+              if (gameServices.start(LangCode.FR, GameType.solo)) {
+                router.goToPage(PageName.game);
+              }
             },
             btnSize: BtnSize.large,
             text: "SinglePlayer",
           ),
           BtnBoggle(
             onPressed: () {
-              appState.goToPage(PageName.game);
+              if (gameServices.start(LangCode.FR, GameType.multi)) {
+                router.goToPage(PageName.game);
+              }
             },
             btnType: BtnType.secondary,
             btnSize: BtnSize.large,

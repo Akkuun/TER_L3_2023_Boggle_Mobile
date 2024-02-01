@@ -17,6 +17,12 @@ void main() {
       expect(dictionary.contain("FUN"), true);
     });
 
+    test(
+        "RUE is in the dictionary -> provided an exception assert that the dictionnary isn't the src",
+        () {
+      expect(dictionary.contain("RUE"), true);
+    });
+
     test('ZEFOB is not in the dictionary', () {
       expect(dictionary.contain("ZEFOB"), false);
     });

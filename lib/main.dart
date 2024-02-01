@@ -1,24 +1,33 @@
-import 'package:bouggr/pages/home.dart';
-import 'package:bouggr/pages/page_name.dart';
-import 'package:bouggr/pages/rulepage.dart';
-import 'package:bouggr/pages/game.dart';
-import 'package:bouggr/state.dart';
+import 'package:bouggr/providers/game.dart';
+import 'package:bouggr/providers/navigation.dart';
+import 'package:bouggr/providers/timer.dart';
+import 'package:bouggr/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(const App());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
-    return ChangeNotifierProvider(
-      create: (context) => MyAppState(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => NavigationServices()),
+        ChangeNotifierProvider(create: (context) => GameServices()),
+        ChangeNotifierProvider(create: (context) => TimerServices())
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Bouggr',
@@ -27,53 +36,8 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(
               seedColor: const Color.fromARGB(255, 80, 190, 253)),
         ),
-        home: const MyHomePage(),
+        home: const BouggrRouter(),
       ),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    var appState =
-        context.watch<MyAppState>(); //écoute du listener de MyAppState
-    var selectedIndex = appState.index; //récupération de l'index de la page
-    Widget page;
-    switch (selectedIndex) {
-      //switch pour afficher la page correspondante
-      case PageName.home:
-        page = const HomePage();
-        break;
-      case PageName.game:
-        page = const GamePage();
-        break;
-      case PageName.rules:
-        page = const RulePage();
-      default:
-        throw UnimplementedError('no widget for $selectedIndex');
-    }
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                page, //affichage de la page
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }

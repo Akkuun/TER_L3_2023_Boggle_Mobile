@@ -1,6 +1,9 @@
 import 'package:bouggr/components/dices.dart';
+import 'package:bouggr/providers/game.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 
 class BoggleGrille extends StatefulWidget {
   final List<String> letters;
@@ -15,7 +18,7 @@ class BoggleGrille extends StatefulWidget {
   });
 
   @override
-  _BoggleGrilleState createState() {
+  State<BoggleGrille> createState() {
     return _BoggleGrilleState();
   }
 }
@@ -29,17 +32,19 @@ class _BoggleGrilleState extends State<BoggleGrille> {
   bool lock = false;
 
   _detectTapedItem(PointerEvent event) {
-
-    if (lock) return;
-
-    final RenderBox box = key.currentContext!.findAncestorRenderObjectOfType<RenderBox>()!;
+    if (lock) {
+      return;
+    }
+    final RenderBox box =
+        key.currentContext!.findAncestorRenderObjectOfType<RenderBox>()!;
 
     final result = BoxHitTestResult();
     Offset local = box.globalToLocal(event.position);
 
     if (box.hitTest(result, position: local)) {
       for (final hit in result.path) {
-        if (hit.target is BoggleDiceRender && !_trackTaped.contains(hit.target)) {
+        if (hit.target is BoggleDiceRender &&
+            !_trackTaped.contains(hit.target)) {
           _handleSelectedDice(hit.target as BoggleDiceRender);
         }
       }
@@ -49,7 +54,7 @@ class _BoggleGrilleState extends State<BoggleGrille> {
   void _handleSelectedDice(BoggleDiceRender target) {
     String newWord = currentWord + widget.letters[target.index];
 
-    if (_trackTaped.isNotEmpty){
+    if (_trackTaped.isNotEmpty) {
       final last = _trackTaped.last;
       if (isAdjacent(target, last)) {
         isCurrentWordValid = widget.isWordValid(newWord);
@@ -105,28 +110,30 @@ class _BoggleGrilleState extends State<BoggleGrille> {
 
   @override
   Widget build(BuildContext context) {
+    GameServices gameServices = context.watch<GameServices>();
 
     return Center(
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Theme.of(context).secondaryHeaderColor,
-           boxShadow: [
+            borderRadius: BorderRadius.circular(10),
+            color: Theme.of(context).secondaryHeaderColor,
+            boxShadow: [
               BoxShadow(
-              color: Colors.black.withOpacity(0.25),
-              blurRadius: 4,
-              offset: const Offset(4, 4),
-            ),
-          ]
-        ),
+                color: Colors.black.withOpacity(0.25),
+                blurRadius: 4,
+                offset: const Offset(4, 4),
+              ),
+            ]),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           child: SizedBox(
             height: MediaQuery.of(context).size.width,
             width: MediaQuery.of(context).size.width - 50,
             child: Listener(
-              onPointerDown: _detectTapedItem,
-              onPointerMove: _detectTapedItem,
+              onPointerDown:
+                  !gameServices.triggerPopUp ? _detectTapedItem : null,
+              onPointerMove:
+                  !gameServices.triggerPopUp ? _detectTapedItem : null,
               onPointerUp: _sendWordToGameLogicAndClear,
               child: GridView.builder(
                 key: key,

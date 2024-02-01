@@ -1,5 +1,9 @@
+import 'package:bouggr/providers/game.dart';
+import 'package:bouggr/providers/timer.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+
+import 'package:provider/provider.dart';
 
 class BoggleTimer extends StatefulWidget {
   const BoggleTimer({Key? key}) : super(key: key);
@@ -20,19 +24,26 @@ class _BoggleTimerState extends State<BoggleTimer> {
   @override
   void initState() {
     super.initState();
+    TimerServices timerServices =
+        Provider.of<TimerServices>(context, listen: false);
     timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
       if (!running) {
+        Provider.of<GameServices>(context, listen: false).stop();
         return;
       }
       setState(() {
         if (seconds > 0) {
           seconds--;
+          timerServices.update(seconds, minutes);
         } else {
           if (minutes > 0) {
             minutes--;
             seconds = 59;
+            timerServices.update(seconds, minutes);
           } else {
             running = false;
+            timerServices.stop();
+            Provider.of<GameServices>(context, listen: false).stop();
           }
         }
       });
@@ -43,6 +54,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
   @override
   void dispose() {
     timer.cancel();
+
     super.dispose();
   }
 
@@ -91,6 +103,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
   @override
   Widget build(BuildContext context) {
     startTimer();
+
     return Text(
       displayTimer(),
       style: const TextStyle(
