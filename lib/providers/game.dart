@@ -1,3 +1,4 @@
+import 'package:bouggr/components/popup.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:flutter/material.dart';
 
@@ -6,15 +7,11 @@ enum GameType {
   multi;
 }
 
-class GameServices extends ChangeNotifier {
+class GameServices extends ChangeNotifier with TriggerPopUp {
   LangCode _lang = LangCode.FR;
   //List<String> _words = List<String>.empty();
-  bool _canPlay = false;
-  GameType _type = GameType.solo;
 
-  bool get canPlay {
-    return _canPlay;
-  }
+  GameType _type = GameType.solo;
 
   LangCode get language {
     return _lang;
@@ -25,12 +22,11 @@ class GameServices extends ChangeNotifier {
   }
 
   void stop() {
-    _canPlay = false;
-    notifyListeners();
+    super.toggle(true);
   }
 
   bool start(LangCode lang, GameType type) {
-    _canPlay = true;
+    super.toggle(false);
     _lang = lang;
     _type = type;
     notifyListeners();

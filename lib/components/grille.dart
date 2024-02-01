@@ -130,8 +130,10 @@ class _BoggleGrilleState extends State<BoggleGrille> {
             height: MediaQuery.of(context).size.width,
             width: MediaQuery.of(context).size.width - 50,
             child: Listener(
-              onPointerDown: gameServices.canPlay ? _detectTapedItem : null,
-              onPointerMove: gameServices.canPlay ? _detectTapedItem : null,
+              onPointerDown:
+                  !gameServices.triggerPopUp ? _detectTapedItem : null,
+              onPointerMove:
+                  !gameServices.triggerPopUp ? _detectTapedItem : null,
               onPointerUp: _sendWordToGameLogicAndClear,
               child: GridView.builder(
                 key: key,

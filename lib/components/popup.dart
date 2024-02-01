@@ -6,8 +6,8 @@ class PupUp<T extends TriggerPopUp> extends StatelessWidget {
 
   const PupUp({super.key, required this.child});
 
-  showDataAlert(BuildContext context) {
-    showDialog(
+  Future<void> _showAlert() async {
+    return showDialog<void>(
         context: context,
         builder: (context) {
           return AlertDialog(
@@ -21,10 +21,6 @@ class PupUp<T extends TriggerPopUp> extends StatelessWidget {
             contentPadding: const EdgeInsets.only(
               top: 10.0,
             ),
-            title: const Text(
-              "Create ID",
-              style: TextStyle(fontSize: 24.0),
-            ),
             content: child,
           );
         });
@@ -35,7 +31,7 @@ class PupUp<T extends TriggerPopUp> extends StatelessWidget {
     T trigger = context.watch<T>();
 
     if (trigger.triggerPopUp) {
-      showAboutDialog(context: context);
+      _showAlert();
     }
 
     return const SizedBox.shrink();
@@ -45,8 +41,8 @@ class PupUp<T extends TriggerPopUp> extends StatelessWidget {
 mixin TriggerPopUp on ChangeNotifier {
   bool _trigger = false;
 
-  toggle() {
-    _trigger = !_trigger;
+  toggle(bool value) {
+    _trigger = value;
     notifyListeners();
   }
 
