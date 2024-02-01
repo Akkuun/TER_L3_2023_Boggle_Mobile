@@ -5,7 +5,7 @@ class PupUp<T extends TriggerPopUp> extends StatelessWidget {
   final Widget child;
 
   const PupUp({super.key, required this.child});
-
+  /*
   Future<void> _showAlert() async {
     return showDialog<void>(
         context: context,
@@ -25,13 +25,13 @@ class PupUp<T extends TriggerPopUp> extends StatelessWidget {
           );
         });
   }
-
+*/
   @override
   Widget build(BuildContext context) {
     T trigger = context.watch<T>();
 
     if (trigger.triggerPopUp) {
-      _showAlert();
+      //_showAlert();
     }
 
     return const SizedBox.shrink();

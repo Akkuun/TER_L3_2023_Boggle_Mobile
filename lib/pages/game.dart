@@ -102,7 +102,7 @@ class _GamePageState extends State<GamePage> {
               WordsFound(previousWords: previousWords),
               const BoggleTimer(),
               Text(timerServices.seconds.toString()),
-              Text(gameServices.canPlay.toString())
+              Text(gameServices.triggerPopUp.toString())
             ],
           ),
         ),
