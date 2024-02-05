@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 enum BtnSize { small, medium, large }
 
-enum BtnType { primary, secondary }
+enum BtnType { primary, secondary,square }
 
 class BtnBoggle extends StatelessWidget {
   final BtnType btnType;
@@ -47,8 +47,8 @@ class BtnBoggle extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
-        width: 330,
-        height: 45,
+        width:BtnType.square == btnType ? 64 : 330,
+        height: BtnType.square == btnType ? 64 : 45,
         child: ElevatedButton(
             onPressed: onPressed,
             style: ButtonStyle(

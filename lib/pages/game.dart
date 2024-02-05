@@ -88,7 +88,6 @@ class _GamePageState extends State<GamePage> {
     return Globals(child: Builder(builder: (BuildContext innerContext) {
       return Stack(
         children: [
-
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Center(
@@ -106,33 +105,77 @@ class _GamePageState extends State<GamePage> {
                   ScoreBoard(score: score, strikes: strikes),
                   boggleGrille,
                   WordsFound(previousWords: previousWords),
-                  const BoggleTimer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      BtnBoggle(
+                          onPressed: () {
+                            Provider.of<GameServices>(context, listen: false)
+                                .stop();
+                          },
+                          btnType: BtnType.square,
+                          text: "pause"),
+                      const BoggleTimer(),
+                      BtnBoggle(
+                        onPressed: () {
+                          Provider.of<GameServices>(context, listen: false)
+                              .stop();
+                        },
+                        btnType: BtnType.square,
+                        text: "pause",
+                      )
+                    ],
+                  ),
                   Text(timerServices.seconds.toString()),
                   Text(gameServices.triggerPopUp.toString())
                 ],
               ),
             ),
           ),
-                    PopUp<GameServices>(
-            child: Container(
-              height: min(MediaQuery.of(context).size.width * 0.8,
-                  MediaQuery.of(context).size.height * 0.8),
-              width: min(MediaQuery.of(context).size.width * 0.8,
-                  MediaQuery.of(context).size.height * 0.8),
-              decoration: BoxDecoration(
-                  color: const Color.fromARGB(1, 181, 224, 255),
-                  borderRadius: BorderRadius.circular(10)),
-              child: Column(
-                children: [
-                  BtnBoggle(
+          PopUp<GameServices>(
+            child: Center(
+              child: Container(
+                height: min(MediaQuery.of(context).size.width * 0.8,
+                    MediaQuery.of(context).size.height * 0.8),
+                width: min(MediaQuery.of(context).size.width * 0.8,
+                    MediaQuery.of(context).size.height * 0.8),
+                decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 181, 224, 255),
+                    borderRadius: BorderRadius.circular(10)),
+                child: Column(
+                  children: [
+                    BtnBoggle(
+                      onPressed: () {
+                        Provider.of<GameServices>(context, listen: false)
+                            .toggle(false);
+
+
+                      },
+                      text: "X",
+                      btnType: BtnType.square,
+                    ),
+                    BtnBoggle(
                       onPressed: () {
                         Provider.of<GameServices>(context, listen: false)
                             .stop();
                         Provider.of<NavigationServices>(context, listen: false)
                             .goToPage(PageName.home);
                       },
-                      text: "Home"),
-                ],
+                      text: "new game",
+                    ),
+                    BtnBoggle(
+                        onPressed: () {
+                          Provider.of<GameServices>(context, listen: false)
+                              .stop();
+                          Provider.of<NavigationServices>(context,
+                                  listen: false)
+                              .goToPage(PageName.home);
+                        },
+                        text: "Home",
+                        btnType: BtnType.secondary),
+                  ],
+                ),
               ),
             ),
           ),
