@@ -1,37 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class PupUp<T extends TriggerPopUp> extends StatelessWidget {
+class PopUp<T extends TriggerPopUp> extends StatelessWidget {
   final Widget child;
 
-  const PupUp({super.key, required this.child});
-  /*
-  Future<void> _showAlert() async {
-    return showDialog<void>(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(
-                  20.0,
-                ),
-              ),
-            ),
-            contentPadding: const EdgeInsets.only(
-              top: 10.0,
-            ),
-            content: child,
-          );
-        });
-  }
-*/
+  const PopUp({super.key, required this.child});
+
   @override
   Widget build(BuildContext context) {
     T trigger = context.watch<T>();
 
     if (trigger.triggerPopUp) {
-      //_showAlert();
+      return child;
     }
 
     return const SizedBox.shrink();

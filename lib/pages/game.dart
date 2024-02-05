@@ -1,6 +1,9 @@
 //components
+import 'dart:math';
+
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/grille.dart';
+import 'package:bouggr/components/popup.dart';
 import 'package:bouggr/components/scoreboard.dart';
 import 'package:bouggr/components/words_found.dart';
 import 'package:bouggr/components/title.dart';
@@ -83,29 +86,57 @@ class _GamePageState extends State<GamePage> {
     var timerServices = context.watch<TimerServices>();
     var gameServices = context.watch<GameServices>();
     return Globals(child: Builder(builder: (BuildContext innerContext) {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: Column(
-            children: [
-              BtnBoggle(
-                onPressed: () {
-                  Provider.of<GameServices>(context, listen: false).stop();
-                  Provider.of<NavigationServices>(context, listen: false)
-                      .goToPage(PageName.home);
-                },
-                text: 'home',
+      return Stack(
+        children: [
+
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: Column(
+                children: [
+                  BtnBoggle(
+                    onPressed: () {
+                      Provider.of<GameServices>(context, listen: false).stop();
+                      Provider.of<NavigationServices>(context, listen: false)
+                          .goToPage(PageName.home);
+                    },
+                    text: 'home',
+                  ),
+                  const AppTitle(fontSize: 56),
+                  ScoreBoard(score: score, strikes: strikes),
+                  boggleGrille,
+                  WordsFound(previousWords: previousWords),
+                  const BoggleTimer(),
+                  Text(timerServices.seconds.toString()),
+                  Text(gameServices.triggerPopUp.toString())
+                ],
               ),
-              const AppTitle(fontSize: 56),
-              ScoreBoard(score: score, strikes: strikes),
-              boggleGrille,
-              WordsFound(previousWords: previousWords),
-              const BoggleTimer(),
-              Text(timerServices.seconds.toString()),
-              Text(gameServices.triggerPopUp.toString())
-            ],
+            ),
           ),
-        ),
+                    PopUp<GameServices>(
+            child: Container(
+              height: min(MediaQuery.of(context).size.width * 0.8,
+                  MediaQuery.of(context).size.height * 0.8),
+              width: min(MediaQuery.of(context).size.width * 0.8,
+                  MediaQuery.of(context).size.height * 0.8),
+              decoration: BoxDecoration(
+                  color: const Color.fromARGB(1, 181, 224, 255),
+                  borderRadius: BorderRadius.circular(10)),
+              child: Column(
+                children: [
+                  BtnBoggle(
+                      onPressed: () {
+                        Provider.of<GameServices>(context, listen: false)
+                            .stop();
+                        Provider.of<NavigationServices>(context, listen: false)
+                            .goToPage(PageName.home);
+                      },
+                      text: "Home"),
+                ],
+              ),
+            ),
+          ),
+        ],
       );
     }));
   }
