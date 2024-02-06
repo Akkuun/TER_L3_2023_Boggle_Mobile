@@ -4,48 +4,48 @@ NDK_BIN=$(ANDROID_SDK)/ndk/23.1.7779620/toolchains/llvm/prebuilt/darwin-x86_64/b
 LIB_NAME=libsum
 
 android-armv7a:
-	CGO_ENABLED=1 \
-	GOOS=android \
-	GOARCH=arm \
-	GOARM=7 \
-	CC=$(NDK_BIN)/armv7a-linux-androideabi21-clang \
+	set CGO_ENABLED=1 \
+	set GOOS=android \
+	set GOARCH=arm \
+	set GOARM=7 \
+	set CC=$(NDK_BIN)/armv7a-linux-androideabi21-clang
 	go build -buildmode=c-shared -o $(ANDROID_OUT)/armeabi-v7a/${LIB_NAME}.so .
 
 android-arm64:
-	CGO_ENABLED=1 \
-	GOOS=android \
-	GOARCH=arm64 \
-	CC=$(NDK_BIN)/aarch64-linux-android21-clang \
+	set CGO_ENABLED=1 \
+	set GOOS=android \
+	set GOARCH=arm64 \
+	set CC=$(NDK_BIN)/aarch64-linux-android21-clang \
 	go build -buildmode=c-shared -o $(ANDROID_OUT)/arm64-v8a/${LIB_NAME}.so .
 
 android-x86:
-	CGO_ENABLED=1 \
-	GOOS=android \
-	GOARCH=386 \
-	CC=$(NDK_BIN)/i686-linux-android21-clang \
+	set CGO_ENABLED=1 \
+	set GOOS=android \
+	set GOARCH=386 \
+	set CC=$(NDK_BIN)/i686-linux-android21-clang \
 	go build -buildmode=c-shared -o $(ANDROID_OUT)/x86/${LIB_NAME}.so .
 
 android-x86_64:
-	CGO_ENABLED=1 \
-	GOOS=android \
-	GOARCH=amd64 \
-	CC=$(NDK_BIN)/x86_64-linux-android21-clang \
+	set CGO_ENABLED=1 \
+	set GOOS=android \
+	set GOARCH=amd64 \
+	set CC=$(NDK_BIN)/x86_64-linux-android21-clang \
 	go build -buildmode=c-shared -o $(ANDROID_OUT)/x86_64/${LIB_NAME}.so .
 
 ios-x86_64-sim:
-	GOARCH=amd64 \
-	SDK=iphonesimulator \
-	LIB_NAME=${LIB_NAME} \
+	set GOARCH=amd64 \
+	set SDK=iphonesimulator \
+	set LIB_NAME=${LIB_NAME} \
 	./build_ios.sh
 
 ios-arm64-sim:
-	GOARCH=arm64 \
+	set GOARCH=arm64 \
 	SDK=iphonesimulator \
 	LIB_NAME=${LIB_NAME} \
 	./build_ios.sh
 
 ios-arm64:
-	GOARCH=arm64 \
+	set GOARCH=arm64 \
 	SDK=iphoneos \
 	LIB_NAME=${LIB_NAME} \
 	./build_ios.sh
