@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 enum BtnSize { small, medium, large }
 
-enum BtnType { primary, secondary,square }
+enum BtnType { primary, secondary, square }
 
 class BtnBoggle extends StatelessWidget {
   final BtnType btnType;
@@ -47,20 +47,59 @@ class BtnBoggle extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: SizedBox(
-        width:BtnType.square == btnType ? 64 : 330,
+        width: BtnType.square == btnType ? 64 : 330,
         height: BtnType.square == btnType ? 64 : 45,
         child: ElevatedButton(
             onPressed: onPressed,
             style: ButtonStyle(
                 backgroundColor: MaterialStateColor.resolveWith((states) =>
                     BtnType.primary == btnType
-                        ? Color.fromARGB(255, 91, 157, 255)
+                        ? const Color.fromARGB(255, 91, 157, 255)
                         : Colors.white)),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: children,
             )),
+      ),
+    );
+  }
+}
+
+class IconBtnBoggle extends StatelessWidget {
+  final BtnType btnType;
+  final BtnSize btnSize;
+  final Icon icon;
+  final GestureTapCallback onPressed;
+  final MainAxisAlignment horizontalAlignment;
+
+  const IconBtnBoggle(
+      {super.key,
+      required this.icon,
+      required this.onPressed,
+      this.btnType = BtnType.primary,
+      this.btnSize = BtnSize.medium,
+      this.horizontalAlignment = MainAxisAlignment.center});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 64,
+      width: 64,
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(5),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x3F000000),
+              blurRadius: 4,
+              offset: Offset(0, 4),
+              spreadRadius: 0,
+            ),
+          ]),
+      child: IconButton(
+        icon: icon,
+        onPressed: onPressed,
       ),
     );
   }

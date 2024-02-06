@@ -93,14 +93,6 @@ class _GamePageState extends State<GamePage> {
             child: Center(
               child: Column(
                 children: [
-                  BtnBoggle(
-                    onPressed: () {
-                      Provider.of<GameServices>(context, listen: false).stop();
-                      Provider.of<NavigationServices>(context, listen: false)
-                          .goToPage(PageName.home);
-                    },
-                    text: 'home',
-                  ),
                   const AppTitle(fontSize: 56),
                   ScoreBoard(score: score, strikes: strikes),
                   boggleGrille,
@@ -109,22 +101,33 @@ class _GamePageState extends State<GamePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      BtnBoggle(
-                          onPressed: () {
-                            Provider.of<GameServices>(context, listen: false)
-                                .stop();
-                          },
-                          btnType: BtnType.square,
-                          text: "pause"),
+                      IconBtnBoggle(
+                        onPressed: () {
+                          Provider.of<GameServices>(context, listen: false)
+                              .toggle(!gameServices.triggerPopUp);
+                        },
+                        icon: Icon(
+                          gameServices.triggerPopUp
+                              ? Icons.play_arrow
+                              : Icons.pause,
+                          color: Colors.black,
+                          size: 48,
+                          semanticLabel: "pause",
+                        ),
+                      ),
                       const BoggleTimer(),
-                      BtnBoggle(
+                      IconBtnBoggle(
                         onPressed: () {
                           Provider.of<GameServices>(context, listen: false)
                               .stop();
                         },
-                        btnType: BtnType.square,
-                        text: "pause",
-                      )
+                        icon: const Icon(
+                          Icons.pause,
+                          color: Colors.black,
+                          size: 48,
+                          semanticLabel: "pause",
+                        ),
+                      ),
                     ],
                   ),
                   Text(timerServices.seconds.toString()),
@@ -149,8 +152,6 @@ class _GamePageState extends State<GamePage> {
                       onPressed: () {
                         Provider.of<GameServices>(context, listen: false)
                             .toggle(false);
-
-
                       },
                       text: "X",
                       btnType: BtnType.square,
