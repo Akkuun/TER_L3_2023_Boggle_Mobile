@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class BouggrRouter extends StatefulWidget {
-  const BouggrRouter({Key? key}) : super(key: key);
+  const BouggrRouter({super.key});
 
   @override
   State<BouggrRouter> createState() => _BouggrRouter();

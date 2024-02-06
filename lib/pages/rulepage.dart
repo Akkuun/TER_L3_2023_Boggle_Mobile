@@ -7,7 +7,7 @@ import 'package:bouggr/pages/page_name.dart';
 /// Page des règles du jeu
 
 class RulePage extends StatelessWidget {
-  const RulePage({Key? key}) : super(key: key);
+  const RulePage({super.key});
   @override
   Widget build(BuildContext context) {
     var router = Provider.of<NavigationServices>(context,

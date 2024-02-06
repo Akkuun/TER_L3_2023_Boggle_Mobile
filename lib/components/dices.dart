@@ -10,34 +10,32 @@ class BoggleDice extends SingleChildRenderObjectWidget {
       {required this.index,
       required this.letter,
       required this.color,
-      Key? key})
+      super.key})
       : super(
             child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: color,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.25),
-                      offset: const Offset(4, 4),
-                      blurRadius: 4,
-                    )
-                  ]
-              ),
-              child: Center(
-                child: Text(
-                  letter,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 32,
-                    fontFamily: "Jua",
-                    fontWeight: FontWeight.w400,
-                    height: 0,
-                  ),
-                ),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: color,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.25),
+                  offset: const Offset(4, 4),
+                  blurRadius: 4,
+                )
+              ]),
+          child: Center(
+            child: Text(
+              letter,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 32,
+                fontFamily: "Jua",
+                fontWeight: FontWeight.w400,
+                height: 0,
               ),
             ),
-            key: key);
+          ),
+        ));
 
   @override
   BoggleDiceRender createRenderObject(BuildContext context) {

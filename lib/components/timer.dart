@@ -6,7 +6,7 @@ import 'dart:async';
 import 'package:provider/provider.dart';
 
 class BoggleTimer extends StatefulWidget {
-  const BoggleTimer({Key? key}) : super(key: key);
+  const BoggleTimer({super.key});
 
   @override
   State<BoggleTimer> createState() {
@@ -24,29 +24,37 @@ class _BoggleTimerState extends State<BoggleTimer> {
   @override
   void initState() {
     super.initState();
+    startTimer();
+    setState(() {
+      timer = Timer.periodic(const Duration(seconds: 1), _timerCallBack);
+    });
+  }
+
+  void _timerCallBack(Timer t) {
+    // if (!running) {
+    //   Provider.of<GameServices>(context, listen: false).stop();
+    //   return;
+    // }
     TimerServices timerServices =
         Provider.of<TimerServices>(context, listen: false);
-    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
-      if (!running) {
-        Provider.of<GameServices>(context, listen: false).stop();
-        return;
-      }
-      setState(() {
-        if (seconds > 0) {
-          seconds--;
+    if (!running) {
+      return;
+    }
+    setState(() {
+      if (seconds > 0) {
+        seconds--;
+        timerServices.update(seconds, minutes);
+      } else {
+        if (minutes > 0) {
+          minutes--;
+          seconds = 59;
           timerServices.update(seconds, minutes);
         } else {
-          if (minutes > 0) {
-            minutes--;
-            seconds = 59;
-            timerServices.update(seconds, minutes);
-          } else {
-            running = false;
-            timerServices.stop();
-            Provider.of<GameServices>(context, listen: false).stop();
-          }
+          //running = false;
+          timerServices.stop();
+          Provider.of<GameServices>(context, listen: false).stop();
         }
-      });
+      }
     });
   }
 
@@ -102,7 +110,11 @@ class _BoggleTimerState extends State<BoggleTimer> {
 
   @override
   Widget build(BuildContext context) {
-    startTimer();
+    if (context.watch<GameServices>().triggerPopUp) {
+      stopTimer();
+    } else {
+      startTimer();
+    }
 
     return Text(
       displayTimer(),

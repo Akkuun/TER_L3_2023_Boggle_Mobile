@@ -1,29 +1,27 @@
 //components
-import 'dart:math';
 
-import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/grille.dart';
-import 'package:bouggr/components/popup.dart';
+
 import 'package:bouggr/components/scoreboard.dart';
 import 'package:bouggr/components/words_found.dart';
 import 'package:bouggr/components/title.dart';
-import 'package:bouggr/components/timer.dart';
 
 //globals
 import 'package:bouggr/global.dart';
 
 //services
 import 'package:bouggr/providers/game.dart';
-import 'package:bouggr/providers/navigation.dart';
 
 //utils
-import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/timer.dart';
 import 'package:bouggr/utils/word_score.dart';
 import 'package:bouggr/utils/dico.dart';
 //flutter
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../components/action_and_timer.dart';
+import '../components/pop_up_game_menu.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key});
@@ -97,89 +95,14 @@ class _GamePageState extends State<GamePage> {
                   ScoreBoard(score: score, strikes: strikes),
                   boggleGrille,
                   WordsFound(previousWords: previousWords),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      IconBtnBoggle(
-                        onPressed: () {
-                          Provider.of<GameServices>(context, listen: false)
-                              .toggle(!gameServices.triggerPopUp);
-                        },
-                        icon: Icon(
-                          gameServices.triggerPopUp
-                              ? Icons.play_arrow
-                              : Icons.pause,
-                          color: Colors.black,
-                          size: 48,
-                          semanticLabel: "pause",
-                        ),
-                      ),
-                      const BoggleTimer(),
-                      IconBtnBoggle(
-                        onPressed: () {
-                          Provider.of<GameServices>(context, listen: false)
-                              .stop();
-                        },
-                        icon: const Icon(
-                          Icons.pause,
-                          color: Colors.black,
-                          size: 48,
-                          semanticLabel: "pause",
-                        ),
-                      ),
-                    ],
-                  ),
+                  ActionAndTimer(gameServices: gameServices),
                   Text(timerServices.seconds.toString()),
                   Text(gameServices.triggerPopUp.toString())
                 ],
               ),
             ),
           ),
-          PopUp<GameServices>(
-            child: Center(
-              child: Container(
-                height: min(MediaQuery.of(context).size.width * 0.8,
-                    MediaQuery.of(context).size.height * 0.8),
-                width: min(MediaQuery.of(context).size.width * 0.8,
-                    MediaQuery.of(context).size.height * 0.8),
-                decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 181, 224, 255),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Column(
-                  children: [
-                    BtnBoggle(
-                      onPressed: () {
-                        Provider.of<GameServices>(context, listen: false)
-                            .toggle(false);
-                      },
-                      text: "X",
-                      btnType: BtnType.square,
-                    ),
-                    BtnBoggle(
-                      onPressed: () {
-                        Provider.of<GameServices>(context, listen: false)
-                            .stop();
-                        Provider.of<NavigationServices>(context, listen: false)
-                            .goToPage(PageName.home);
-                      },
-                      text: "new game",
-                    ),
-                    BtnBoggle(
-                        onPressed: () {
-                          Provider.of<GameServices>(context, listen: false)
-                              .stop();
-                          Provider.of<NavigationServices>(context,
-                                  listen: false)
-                              .goToPage(PageName.home);
-                        },
-                        text: "Home",
-                        btnType: BtnType.secondary),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          const PopUpGameMenu(),
         ],
       );
     }));
