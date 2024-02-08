@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^6.0.0
+  plugin_platform_interface: ^2.0.2
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -41,6 +42,8 @@ dependencies:
   sign_in_with_apple: ^5.0.0
 
 dev_dependencies:
+  ffi: ^2.0.2
+  ffigen: ^11.0.0
   flutter_test:
     sdk: flutter
 
@@ -73,6 +76,18 @@ flutter:
   assets:
     - assets/dictionary/global.json
 
+  plugin:
+    platforms:
+      android:
+        ffiPlugin: true
+      ios:
+        ffiPlugin: true
+      linux:
+        ffiPlugin: true
+      macos:
+        ffiPlugin: true
+      windows:
+        ffiPlugin: true
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -99,3 +114,4 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+

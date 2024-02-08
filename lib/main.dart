@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/timer.dart';
@@ -9,6 +11,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 void main() async {
+  //DynamicLibrary.open('libsum.so');
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

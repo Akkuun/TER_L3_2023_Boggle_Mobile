@@ -18,6 +18,7 @@ class Decoded {
   }
 }
 
+// ignore: constant_identifier_names
 enum LangCode { FR, RM, EN, SP }
 
 Map<LangCode, int> generateLangCode() {

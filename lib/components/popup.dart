@@ -1,43 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class PupUp<T extends TriggerPopUp> extends StatelessWidget {
+/// The `PopUp` class is a generic widget that conditionally displays its child widget based on the
+/// value of a trigger.
+class PopUp<T extends TriggerPopUp> extends StatelessWidget {
   final Widget child;
 
-  const PupUp({super.key, required this.child});
-  /*
-  Future<void> _showAlert() async {
-    return showDialog<void>(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(
-                Radius.circular(
-                  20.0,
-                ),
-              ),
-            ),
-            contentPadding: const EdgeInsets.only(
-              top: 10.0,
-            ),
-            content: child,
-          );
-        });
-  }
-*/
+  const PopUp({super.key, required this.child});
+
   @override
   Widget build(BuildContext context) {
     T trigger = context.watch<T>();
 
     if (trigger.triggerPopUp) {
-      //_showAlert();
+      return child;
     }
 
+    /// The line `return const SizedBox.shrink();` is returning an empty `SizedBox` widget with zero
+    /// width and height. This is used as a placeholder when the `triggerPopUp` value is `false`,
+    /// indicating that the child widget should not be displayed.
     return const SizedBox.shrink();
   }
 }
 
+/// The `mixin TriggerPopUp on ChangeNotifier` defines a mixin named `TriggerPopUp` that extends the
+/// `ChangeNotifier` class.
 mixin TriggerPopUp on ChangeNotifier {
   bool _trigger = false;
 

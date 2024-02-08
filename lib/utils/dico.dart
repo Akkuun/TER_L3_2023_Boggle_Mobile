@@ -1,4 +1,8 @@
 import 'dart:convert';
+import 'dart:ffi';
+import 'dart:io';
+
+import '../generated_bindings.dart';
 
 import 'package:binary/binary.dart';
 import 'package:bouggr/utils/decode.dart';
