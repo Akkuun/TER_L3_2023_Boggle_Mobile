@@ -8,8 +8,6 @@ import 'package:binary/binary.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:flutter/services.dart';
 
-Set<String> AllWord(Set<int> grid,dynamic dico) => _bindings.AllWordFrom(grid,dico);
-
 class Dictionary {
   final String path;
   final Decoded decoder;
@@ -110,9 +108,5 @@ class Dictionary {
     }
 
     return true;
-  }
-
-  dynamic allWordFrom([]int grid) {
-
   }
 }

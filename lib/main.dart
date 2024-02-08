@@ -11,7 +11,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  DynamicLibrary.open('libsum.so');
+  //DynamicLibrary.open('libsum.so');
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
