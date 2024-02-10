@@ -15,21 +15,21 @@ android-arm64:
 	set CGO_ENABLED=1 \
 	set GOOS=android \
 	set GOARCH=arm64 \
-	set CC=$(NDK_BIN)/aarch64-linux-android21-clang \
+	set CC=$(NDK_BIN)/aarch64-linux-android21-clang
 	go build -buildmode=c-shared -o $(ANDROID_OUT)/arm64-v8a/${LIB_NAME}.so .
 
 android-x86:
 	set CGO_ENABLED=1 \
 	set GOOS=android \
 	set GOARCH=386 \
-	set CC=$(NDK_BIN)/i686-linux-android21-clang \
+	set CC=$(NDK_BIN)/i686-linux-android21-clang
 	go build -buildmode=c-shared -o $(ANDROID_OUT)/x86/${LIB_NAME}.so .
 
 android-x86_64:
 	set CGO_ENABLED=1 \
 	set GOOS=android \
 	set GOARCH=amd64 \
-	set CC=$(NDK_BIN)/x86_64-linux-android21-clang \
+	set CC=$(NDK_BIN)/x86_64-linux-android21-clang
 	go build -buildmode=c-shared -o $(ANDROID_OUT)/x86_64/${LIB_NAME}.so .
 
 ios-x86_64-sim:
