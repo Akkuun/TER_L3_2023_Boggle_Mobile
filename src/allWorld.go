@@ -2,13 +2,16 @@ package main
 
 import (
 	"C"
+	"fmt"
 	"sync"
 	"utils"
 )
 
-const (
-	n C.int = 4
-)
+//export TestGo
+func TestGo() {
+	fmt.Println("Hello from go")
+	return
+}
 
 //export AllWordFrom
 func AllWordFrom(Grid []C.int, dico []interface{}) []string {
@@ -82,13 +85,13 @@ func aawfp(res chan string,
 		for _, b := range []C.int{-1, 0, 1} {
 			possitive := (i+a >= 0 && j+b >= 0)
 			notOutOfRange := (i+a < 4 && j+b < 4)
-			if possitive && notOutOfRange && !used[(i+a)*n+j+b] {
-				used[(i+a)*n+j+b] = true
-				word += string(G[(i+a)*n+j+b])
+			if possitive && notOutOfRange && !used[(i+a)*4+j+b] {
+				used[(i+a)*4+j+b] = true
+				word += string(G[(i+a)*4+j+b])
 
 				aawfp(res, G, dico, word, i+a, j+b, used)
 				word = word[:len(word)-1]
-				used[(i+a)*n+j+b] = false
+				used[(i+a)*4+j+b] = false
 			}
 		}
 	}
@@ -99,8 +102,8 @@ func cpal(i C.int, j C.int, used []bool) bool {
 	possible := false
 	for _, a := range []C.int{-1, 0, 1} {
 		for _, b := range []C.int{-1, 0, 1} {
-			if i+a >= 0 && j+b >= 0 && i+a < n && j+b < n {
-				possible = possible || !used[(i+a)*n+j+b]
+			if i+a >= 0 && j+b >= 0 && i+a < 4 && j+b < 4 {
+				possible = possible || !used[(i+a)*4+j+b]
 			}
 		}
 	}

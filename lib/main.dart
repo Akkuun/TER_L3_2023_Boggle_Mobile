@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:bouggr/native_function.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/timer.dart';
@@ -16,6 +17,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  testGo();
   runApp(const App());
 }
 

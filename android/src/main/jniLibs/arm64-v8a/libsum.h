@@ -74,6 +74,7 @@ typedef struct { void *data; GoInt len; GoInt cap; } GoSlice;
 extern "C" {
 #endif
 
+extern void TestGo();
 extern GoSlice AllWordFrom(GoSlice Grid, GoSlice dico);
 extern void enforce_binding();
 

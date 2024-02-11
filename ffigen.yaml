@@ -4,7 +4,10 @@ description: Bindings to `src/allWord.h`.
 output: 'lib/generated_bindings.dart'
 headers:
   entry-points:
-    - 'src/libsum.h'
+    - 'android/src/main/jniLibs/arm64-v8a/libsum.h'
+    - 'android/src/main/jniLibs/armeabi-v7a/libsum.h'
+    - 'android/src/main/jniLibs/x86/libsum.h'
+    - 'android/src/main/jniLibs/x86_64/libsum.h'
 preamble: |
   // ignore_for_file: always_specify_types
   // ignore_for_file: camel_case_types
