@@ -1,51 +1,52 @@
 ANDROID_OUT=../android/src/main/jniLibs
-ANDROID_SDK=$(HOME)/Library/Android/sdk
-NDK_BIN=$(ANDROID_SDK)/ndk/23.1.7779620/toolchains/llvm/prebuilt/darwin-x86_64/bin
+ANDROID_SDK=$(HOME)/../opt/android-ndk-r26b/
+NDK_BIN=$(ANDROID_SDK)/toolchains/llvm/prebuilt/linux-x86_64/bin
 LIB_NAME=libsum
 
 android-armv7a:
-	set CGO_ENABLED=1 \
-	set GOOS=android \
-	set GOARCH=arm \
-	set GOARM=7 \
-	set CC=$(NDK_BIN)/armv7a-linux-androideabi21-clang
+	CGO_ENABLED=1 \
+	GOOS=android \
+	GOARCH=arm \
+	GOARM=7 \
+	CC=$(NDK_BIN)/armv7a-linux-androideabi21-clang \
 	go build -buildmode=c-shared -o $(ANDROID_OUT)/armeabi-v7a/${LIB_NAME}.so .
 
 android-arm64:
-	set CGO_ENABLED=1 \
-	set GOOS=android \
-	set GOARCH=arm64 \
-	set CC=$(NDK_BIN)/aarch64-linux-android21-clang
+	CGO_ENABLED=1 \
+	GOOS=android \
+	GOARCH=arm64 \
+	CC=$(NDK_BIN)/aarch64-linux-android21-clang \
 	go build -buildmode=c-shared -o $(ANDROID_OUT)/arm64-v8a/${LIB_NAME}.so .
 
 android-x86:
-	set CGO_ENABLED=1 \
-	set GOOS=android \
-	set GOARCH=386 \
-	set CC=$(NDK_BIN)/i686-linux-android21-clang
-	go build -buildmode=c-shared -o $(ANDROID_OUT)/x86/${LIB_NAME}.so .
+	CGO_ENABLED=1 \
+	GOOS=android \
+	GOARCH=386 \
+	CC=/opt/android-ndk-r26b/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android21-clang \
+	go build -buildmode=c-shared -o ../android/src/main/jniLibs/x86/libsum.so .
+
 
 android-x86_64:
-	set CGO_ENABLED=1 \
-	set GOOS=android \
-	set GOARCH=amd64 \
-	set CC=$(NDK_BIN)/x86_64-linux-android21-clang
+	CGO_ENABLED=1 \
+	GOOS=android \
+	GOARCH=amd64 \
+	CC=$(NDK_BIN)/x86_64-linux-android21-clang \
 	go build -buildmode=c-shared -o $(ANDROID_OUT)/x86_64/${LIB_NAME}.so .
 
 ios-x86_64-sim:
-	set GOARCH=amd64 \
-	set SDK=iphonesimulator \
-	set LIB_NAME=${LIB_NAME} \
+	GOARCH=amd64 \
+	SDK=iphonesimulator \
+	LIB_NAME=${LIB_NAME} \
 	./build_ios.sh
 
 ios-arm64-sim:
-	set GOARCH=arm64 \
+	GOARCH=arm64 \
 	SDK=iphonesimulator \
 	LIB_NAME=${LIB_NAME} \
 	./build_ios.sh
 
 ios-arm64:
-	set GOARCH=arm64 \
+	GOARCH=arm64 \
 	SDK=iphoneos \
 	LIB_NAME=${LIB_NAME} \
 	./build_ios.sh
