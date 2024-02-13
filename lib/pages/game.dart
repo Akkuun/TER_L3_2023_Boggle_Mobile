@@ -1,5 +1,3 @@
-//components
-
 import 'package:bouggr/components/grille.dart';
 
 import 'package:bouggr/components/scoreboard.dart';
@@ -115,6 +113,4 @@ class _GamePageState extends State<GamePage> {
     }));
   }
 }
-
-
 

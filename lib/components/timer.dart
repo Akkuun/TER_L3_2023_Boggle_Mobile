@@ -18,7 +18,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
   int seconds = 0;
   int minutes = 3;
   bool running = false;
-  double progression =1.0;
+  double progression =0.0;
   late Timer timer; // late car on ne l'a pas encore initialisé
 
   /// Initialise le timer
@@ -61,6 +61,8 @@ class _BoggleTimerState extends State<BoggleTimer> {
     super.dispose();
   }
 
+
+
   /// Démarre le timer
   void startTimer() {
     if (!running) {
@@ -86,7 +88,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
     setState(() {
       seconds = 180;
       minutes = 3;
-      progression =1.0;
+      progression =0.0;
       running = false;
     });
   }
