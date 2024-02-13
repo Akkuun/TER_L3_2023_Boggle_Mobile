@@ -40,6 +40,7 @@ dependencies:
   binary: ^3.0.1
   firebase_core: ^2.25.0
   sign_in_with_apple: ^5.0.0
+  firebase_auth: ^4.17.4
 
 dev_dependencies:
   ffi: ^2.0.2

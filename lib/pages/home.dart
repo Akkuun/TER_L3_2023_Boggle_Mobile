@@ -8,6 +8,7 @@ import 'package:bouggr/utils/decode.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -66,9 +67,7 @@ class HomePage extends StatelessWidget {
           ),
           BtnBoggle(
             onPressed: () {
-              if (gameServices.start(LangCode.FR, GameType.multi)) {
-                router.goToPage(PageName.game);
-              }
+              router.goToPage(PageName.login);
             },
             btnType: BtnType.secondary,
             btnSize: BtnSize.large,

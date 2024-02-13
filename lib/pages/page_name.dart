@@ -1,5 +1,6 @@
 enum PageName {
   home,
   game,
-  rules;
+  rules,
+  login;
 }
