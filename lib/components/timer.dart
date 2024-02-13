@@ -18,6 +18,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
   int seconds = 0;
   int minutes = 3;
   bool running = false;
+  double progression =1.0;
   late Timer timer; // late car on ne l'a pas encore initialisé
 
   /// Initialise le timer
@@ -43,12 +44,12 @@ class _BoggleTimerState extends State<BoggleTimer> {
     setState(() {
       if (seconds > 0) {
         seconds--;
-        timerServices.update(seconds, minutes);
+        timerServices.update(seconds, minutes, timerServices.getTimerProgress());
       } else {
         if (minutes > 0) {
           minutes--;
           seconds = 59;
-          timerServices.update(seconds, minutes);
+          timerServices.update(seconds, minutes, timerServices.getTimerProgress());
         } else {
           //running = false;
           timerServices.stop();
@@ -62,7 +63,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
   @override
   void dispose() {
     timer.cancel();
-
+    Provider.of<TimerServices>(context, listen: false).setprogression(1.0);
     super.dispose();
   }
 
@@ -86,6 +87,8 @@ class _BoggleTimerState extends State<BoggleTimer> {
       seconds = 180;
       minutes = 3;
       running = false;
+      progression =1.0;
+      Provider.of<TimerServices>(context, listen: false).resetProgress(); // Réinitialiser la progression
     });
   }
 
@@ -95,21 +98,27 @@ class _BoggleTimerState extends State<BoggleTimer> {
       seconds = 0;
       minutes = 0;
       running = false;
+      progression = 0.0;
     });
   }
 
   /// Affiche le timer
-  String displayTimer() {
+  String displayTimer(double progression) {
     String displaySeconds = seconds.toString();
     String displayMinutes = minutes.toString();
+    String displayProgression = progression.toString();
+    print('progression: $displayProgression');
+
     if (seconds < 10) {
       displaySeconds = '0$seconds';
     }
-    return '$displayMinutes:$displaySeconds';
+    return '$displayMinutes:$displaySeconds    $displayProgression ';
   }
+
 
   @override
   Widget build(BuildContext context) {
+    double progression = context.watch<TimerServices>().progression;
     if (context.watch<GameServices>().triggerPopUp) {
       stopTimer();
     } else {
@@ -117,7 +126,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
     }
 
     return Text(
-      displayTimer(),
+      displayTimer(progression),
       style: const TextStyle(
         fontSize: 30,
         fontWeight: FontWeight.bold,

@@ -9,6 +9,8 @@ class TimerServices extends ChangeNotifier {
   int _seconds = 0;
   int _minutes = 3;
 
+  double _progression = 1.0;
+
   bool get isRunning {
     return _running;
   }
@@ -21,9 +23,14 @@ class TimerServices extends ChangeNotifier {
     return _seconds;
   }
 
-  void update(int seconds, int minutes) {
+  double get progression {
+    return _progression;
+  }
+
+  void update(int seconds, int minutes, double progression) {
     _seconds = seconds;
     _minutes = minutes;
+    _progression = progression;
     notifyListeners();
   }
 
@@ -34,6 +41,21 @@ class TimerServices extends ChangeNotifier {
 
   void start() {
     _running = true;
+    notifyListeners();
+  }
+  double getTimerProgress() {
+    int totalSeconds = _minutes * 60 + _seconds;
+    double progress = _running ?  0.0 : (totalSeconds / 180) ;
+    print('minute: $progress');
+    return progress;
+  }
+
+  void resetProgress() {
+    _progression = 1.0;
+    notifyListeners();
+  }
+  void setprogression(double d) {
+    _progression=d;
     notifyListeners();
   }
 }
