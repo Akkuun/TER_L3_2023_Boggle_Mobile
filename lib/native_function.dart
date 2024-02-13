@@ -10,7 +10,7 @@ import 'generated_bindings.dart';
 /// only do this for native functions which are guaranteed to be short-lived.
 GoSlice allWordFrom(GoSlice Grid, GoSlice dico) =>
     _bindings.AllWordFrom(Grid, dico);
-const String _libName = 'native_add';
+const String _libName = 'bouggr';
 
 void testGo() => _bindings.TestGo();
 
