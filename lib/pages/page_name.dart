@@ -2,5 +2,9 @@ enum PageName {
   home,
   game,
   rules,
-  login;
+  login,
+  emailLogin,
+  googleLogin,
+  emailCreate,
+  ;
 }

@@ -41,10 +41,17 @@ class LoginPage extends StatelessWidget {
           ),
           BtnBoggle(
             onPressed: () {
-              router.goToPage(PageName.home);
+              router.goToPage(PageName.emailLogin);
             },
             btnSize: BtnSize.large,
-            text: "home",
+            text: "Connexion par email",
+          ),
+          BtnBoggle(
+            onPressed: () {
+              router.goToPage(PageName.emailCreate);
+            },
+            btnSize: BtnSize.large,
+            text: "Créé un compte",
           ),
         ],
       ),
