@@ -53,6 +53,15 @@ class LoginPage extends StatelessWidget {
             btnSize: BtnSize.large,
             text: "Créé un compte",
           ),
+          BtnBoggle(
+            onPressed: () {
+              //deconnexion
+              _auth.signOut();
+              router.goToPage(PageName.home);
+            },
+            btnSize: BtnSize.large,
+            text: "Déconnexion",
+          ),
         ],
       ),
     );

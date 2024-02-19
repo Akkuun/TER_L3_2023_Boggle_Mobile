@@ -24,41 +24,42 @@ class _EmailLogInState extends State<EmailLogIn> {
   final RegExp validationEmail =
       RegExp(r'^[a-zA-Z0-9.a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$');
 
-  void requetFireBaseConnexion() {
-    FirebaseAuth.instance
-        .signInWithEmailAndPassword(email: email.text, password: mdp.text)
-        .then((result) {
-      //gestion de la connexion
-      isLoading = false;
-      Provider.of<NavigationServices>(context, listen: false).index =
-          PageName.home; //redirection vers la page d'accueil
-    }).catchError((err) {
-      //gestion des erreurs
-      print(err.message);
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Error"),
-              content: Text(err.message),
-              actions: [
-                ElevatedButton(
-                  child: const Text("Ok"),
-                  onPressed: () {
-                    Provider.of<NavigationServices>(context, listen: false)
-                            .index =
-                        PageName.home; //redirection vers la page d'accueil
-                  },
-                )
-              ],
-            );
-          });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final router = Provider.of<NavigationServices>(context, listen: false);
+
+    void requetFireBaseConnexion() {
+      FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email.text, password: mdp.text)
+          .then((result) {
+        //gestion de la connexion
+        isLoading = false;
+        router.index = PageName.home; //redirection vers la page d'accueil
+      }).catchError((err) {
+        //gestion des erreurs
+        print(err.message);
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text("Erreur"),
+                content: Text(
+                    "Les informations d'identification fournies sont incorrectes, mal formées ou ont expiré."),
+                actions: [
+                  ElevatedButton(
+                    child: const Text("Ok"),
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Ferme la boîte de dialogue
+                    },
+                  )
+                ],
+              );
+            });
+        setState(() {
+          isLoading = false;
+        });
+      });
+    }
 
     return Form(
         key: _key,

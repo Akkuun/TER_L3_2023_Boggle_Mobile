@@ -1,4 +1,5 @@
 import 'package:bouggr/components/btn.dart';
+import 'package:bouggr/pages/home.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,62 +26,63 @@ class _EmailCreateState extends State<EmailCreate> {
   final RegExp validationEmail =
       RegExp(r'^[a-zA-Z0-9.a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$');
 
-  void requetFireBaseCreation() {
-    if (mdp.text != mdp2.text) {
-      // Les mots de passe ne correspondent pas
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text("Erreur"),
-              content: const Text("Les mots de passe ne correspondent pas."),
-              actions: [
-                ElevatedButton(
-                  child: const Text("Ok"),
-                  onPressed: () {
-                    Navigator.of(context).pop(); // Ferme la boîte de dialogue
-                  },
-                )
-              ],
-            );
-          });
-      return;
-    } else {
-      FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email.text, password: mdp.text)
-          .then((result) {
-        //gestion de la creation
+  @override
+  Widget build(BuildContext context) {
+    final router = Provider.of<NavigationServices>(context, listen: false);
+
+    void requetFireBaseCreation() {
+      if (mdp.text != mdp2.text) {
+        // Les mots de passe ne correspondent pas
         isLoading = false;
-        Provider.of<NavigationServices>(context, listen: false).index =
-            PageName.home; //redirection vers la page d'accueil
-      }).catchError((err) {
-        //gestion des erreurs
-        print(err.message);
         showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: const Text("Error"),
-                content: Text(err.message),
+                title: const Text("Erreur"),
+                content: const Text("Les mots de passe ne correspondent pas."),
                 actions: [
                   ElevatedButton(
                     child: const Text("Ok"),
                     onPressed: () {
-                      Provider.of<NavigationServices>(context, listen: false)
-                              .index =
-                          PageName.home; //redirection vers la page d'accueil
+                      Navigator.of(context).pop(); // Ferme la boîte de dialogue
                     },
                   )
                 ],
               );
             });
-      });
+      } else {
+        FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+                email: email.text, password: mdp.text)
+            .then((result) {
+          //gestion de la creation
+          isLoading = false;
+          router.index = PageName.home; //redirection vers la page d'accueil
+        }).catchError((err) {
+          //gestion des erreurs
+          print(err.message);
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text("Erreur"),
+                  content: Text(err.message),
+                  actions: [
+                    ElevatedButton(
+                      child: const Text("Ok"),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .pop(); // Ferme la boîte de dialogue
+                      },
+                    )
+                  ],
+                );
+              });
+          isLoading = false;
+        });
+      }
     }
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    final router = Provider.of<NavigationServices>(context, listen: false);
     return Form(
         key: _key,
         child: Column(children: [
@@ -136,6 +138,8 @@ class _EmailCreateState extends State<EmailCreate> {
               validator: (value) {
                 if (value!.isEmpty) {
                   return 'Mot de passe';
+                } else if (value.length < 6) {
+                  return 'Le mot de passe doit contenir au moins 6 caractères!';
                 }
                 return null;
               },
