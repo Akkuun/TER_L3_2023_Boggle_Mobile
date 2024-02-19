@@ -21,8 +21,6 @@ class LoginPage extends StatelessWidget {
     final _auth = FirebaseAuth.instance;
     User? user;
 
-
-
     _auth.authStateChanges().listen((User? user) {
       if (user == null) {
         print('User is currently signed out!');

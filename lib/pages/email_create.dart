@@ -57,7 +57,7 @@ class _EmailCreateState extends State<EmailCreate> {
             .then((result) {
           //gestion de la creation
           isLoading = false;
-          router.index = PageName.home; //redirection vers la page d'accueil
+          router.goToPage(PageName.home); //redirection vers la page d'accueil
         }).catchError((err) {
           //gestion des erreurs
           print(err.message);

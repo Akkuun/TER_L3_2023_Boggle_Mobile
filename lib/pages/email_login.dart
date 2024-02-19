@@ -28,22 +28,18 @@ class _EmailLogInState extends State<EmailLogIn> {
   Widget build(BuildContext context) {
     final router = Provider.of<NavigationServices>(context, listen: false);
 
-    void requetFireBaseConnexion() {
-      FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email.text, password: mdp.text)
-          .then((result) {
-        //gestion de la connexion
-        isLoading = false;
-        router.index = PageName.home; //redirection vers la page d'accueil
-      }).catchError((err) {
-        //gestion des erreurs
-        print(err.message);
+    void requetFireBaseConnexion() async {
+      try {
+        final credential = await FirebaseAuth.instance
+            .signInWithEmailAndPassword(email: email.text, password: mdp.text);
+      } on FirebaseAuthException catch (e) {
+        print(e.message);
         showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
                 title: const Text("Erreur"),
-                content: Text(
+                content: const Text(
                     "Les informations d'identification fournies sont incorrectes, mal formées ou ont expiré."),
                 actions: [
                   ElevatedButton(
@@ -55,10 +51,19 @@ class _EmailLogInState extends State<EmailLogIn> {
                 ],
               );
             });
+      }
+      /*
+          .then((result) {
+        //gestion de la connexion
+        isLoading = false;
+        router.goToPage(PageName.home); //redirection vers la page d'accueil
+      }).catchError((err) {
+        //gestion des erreurs
+        
         setState(() {
           isLoading = false;
         });
-      });
+      });*/
     }
 
     return Form(
