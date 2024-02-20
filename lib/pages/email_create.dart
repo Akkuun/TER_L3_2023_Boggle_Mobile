@@ -1,9 +1,7 @@
 import 'package:bouggr/components/btn.dart';
-import 'package:bouggr/pages/home.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -52,6 +50,7 @@ class _EmailCreateState extends State<EmailCreate> {
             });
       } else {
         try {
+          // ignore: unused_local_variable
           final credential = await FirebaseAuth.instance
               .createUserWithEmailAndPassword(
                   email: email.text, password: mdp.text);

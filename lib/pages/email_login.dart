@@ -2,7 +2,6 @@ import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +29,7 @@ class _EmailLogInState extends State<EmailLogIn> {
 
     void requetFireBaseConnexion() async {
       try {
+        // ignore: unused_local_variable
         final credential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email.text, password: mdp.text);
         router.goToPage(PageName.home);

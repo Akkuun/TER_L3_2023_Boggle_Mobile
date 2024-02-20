@@ -1,13 +1,8 @@
 import 'package:bouggr/components/btn.dart';
-import 'package:bouggr/components/card.dart';
-import 'package:bouggr/components/title.dart';
 import 'package:bouggr/pages/page_name.dart';
-import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
-import 'package:bouggr/utils/decode.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatelessWidget {
@@ -16,15 +11,18 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final router = Provider.of<NavigationServices>(context, listen: false);
-    final gameServices = Provider.of<GameServices>(context, listen: false);
 
+    // ignore: no_leading_underscores_for_local_identifiers
     final _auth = FirebaseAuth.instance;
+    // ignore: unused_local_variable
     User? user;
 
     _auth.authStateChanges().listen((User? user) {
       if (user == null) {
+        // ignore: avoid_print
         print('User is currently signed out!');
       } else {
+        // ignore: avoid_print
         print('User is signed in!');
       }
     });
