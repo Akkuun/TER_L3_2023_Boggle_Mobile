@@ -30,7 +30,7 @@ class _EmailCreateState extends State<EmailCreate> {
   Widget build(BuildContext context) {
     final router = Provider.of<NavigationServices>(context, listen: false);
 
-    void requetFireBaseCreation() {
+    Future<void> requetFireBaseCreation() async {
       if (mdp.text != mdp2.text) {
         // Les mots de passe ne correspondent pas
         isLoading = false;
@@ -51,35 +51,43 @@ class _EmailCreateState extends State<EmailCreate> {
               );
             });
       } else {
-        FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
-                email: email.text, password: mdp.text)
-            .then((result) {
-          //gestion de la creation
-          isLoading = false;
-          router.goToPage(PageName.home); //redirection vers la page d'accueil
-        }).catchError((err) {
-          //gestion des erreurs
-          print(err.message);
+        try {
+          final credential = await FirebaseAuth.instance
+              .createUserWithEmailAndPassword(
+                  email: email.text, password: mdp.text);
+          router.goToPage(PageName.home);
+        } on FirebaseAuthException catch (e) {
+          // ignore: avoid_print
+          print(e.message);
+          Widget text;
+          if (e.code == 'email-already-in-use') {
+            text = const Text('L\'email est déjà utilisé par un autre compte.');
+          } else {
+            text = const Text('Erreur inconnue');
+          }
+          // ignore: use_build_context_synchronously
           showDialog(
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
+                  //pop up
                   title: const Text("Erreur"),
-                  content: Text(err.message),
+                  content: text,
                   actions: [
                     ElevatedButton(
                       child: const Text("Ok"),
                       onPressed: () {
-                        Navigator.of(context)
-                            .pop(); // Ferme la boîte de dialogue
+                        Navigator.of(context).pop(); // Ferme la a pop up
                       },
                     )
                   ],
                 );
               });
-          isLoading = false;
-        });
+          setState(() {
+            //on utilise le setState pour changer l'état de la variable isLoading sinon elle ne changera pas
+            isLoading = false;
+          });
+        }
       }
     }
 

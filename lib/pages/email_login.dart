@@ -32,38 +32,34 @@ class _EmailLogInState extends State<EmailLogIn> {
       try {
         final credential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email.text, password: mdp.text);
+        router.goToPage(PageName.home);
       } on FirebaseAuthException catch (e) {
+        // ignore: avoid_print
         print(e.message);
+        // ignore: use_build_context_synchronously
         showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
+                //pop up
                 title: const Text("Erreur"),
                 content: const Text(
-                    "Les informations d'identification fournies sont incorrectes, mal formées ou ont expiré."),
+                    "Les informations d'identification fournies sont incorrectes."),
                 actions: [
                   ElevatedButton(
                     child: const Text("Ok"),
                     onPressed: () {
-                      Navigator.of(context).pop(); // Ferme la boîte de dialogue
+                      Navigator.of(context).pop(); // Ferme la a pop up
                     },
                   )
                 ],
               );
             });
-      }
-      /*
-          .then((result) {
-        //gestion de la connexion
-        isLoading = false;
-        router.goToPage(PageName.home); //redirection vers la page d'accueil
-      }).catchError((err) {
-        //gestion des erreurs
-        
         setState(() {
+          //on utilise le setState pour changer l'état de la variable isLoading sinon elle ne changera pas
           isLoading = false;
         });
-      });*/
+      }
     }
 
     return Form(
