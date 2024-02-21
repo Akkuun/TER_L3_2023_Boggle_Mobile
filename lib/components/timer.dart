@@ -18,7 +18,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
   int seconds = 0;
   int minutes = 3;
   bool running = false;
-  double progression =0.0;
+  double progression = 0.0;
   late Timer timer; // late car on ne l'a pas encore initialisé
 
   /// Initialise le timer
@@ -30,7 +30,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
 
   void _timerCallBack(Timer t) {
     TimerServices timerServices =
-    Provider.of<TimerServices>(context, listen: false);
+        Provider.of<TimerServices>(context, listen: false);
     if (!running) {
       return;
     }
@@ -61,8 +61,6 @@ class _BoggleTimerState extends State<BoggleTimer> {
     super.dispose();
   }
 
-
-
   /// Démarre le timer
   void startTimer() {
     if (!running) {
@@ -83,12 +81,13 @@ class _BoggleTimerState extends State<BoggleTimer> {
       });
     }
   }
+
   /// Remet le timer à 3 minutes
   void resetTimer() {
     setState(() {
       seconds = 180;
       minutes = 3;
-      progression =0.0;
+      progression = 0.0;
       running = false;
     });
   }
@@ -116,14 +115,13 @@ class _BoggleTimerState extends State<BoggleTimer> {
     return '$displayMinutes:$displaySeconds    $displayProgression ';
   }
 
-
   @override
   Widget build(BuildContext context) {
     if (context.watch<GameServices>().triggerPopUp) {
       stopTimer();
     } else {
-      startTimer();
       Provider.of<TimerServices>(context, listen: false).resetProgress();
+      startTimer();
     }
 
     return Text(

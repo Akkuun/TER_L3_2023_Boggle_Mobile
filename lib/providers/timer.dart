@@ -9,7 +9,7 @@ class TimerServices extends ChangeNotifier {
   int _seconds = 0;
   int _minutes = 3;
 
-  double _progression = 1.0;
+  double _progression = 0;
 
   bool get isRunning {
     return _running;
@@ -43,6 +43,7 @@ class TimerServices extends ChangeNotifier {
     _running = true;
     notifyListeners();
   }
+
   double getTimerProgress() {
     int totalSeconds = _minutes * 60 + _seconds;
     double progress = 1.0 - (totalSeconds / 180);
@@ -51,11 +52,11 @@ class TimerServices extends ChangeNotifier {
   }
 
   void resetProgress() {
-    _progression = 1.0;
-    notifyListeners();
+    _progression = 0;
   }
+
   void setprogression(double d) {
-    _progression=d;
+    _progression = d;
     notifyListeners();
   }
 }
