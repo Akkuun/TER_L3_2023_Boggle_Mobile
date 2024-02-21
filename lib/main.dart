@@ -12,10 +12,12 @@ import 'firebase_options.dart';
 
 void main() async {
   //DynamicLibrary.open('libsum.so');
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
 
   runApp(const App());
 }

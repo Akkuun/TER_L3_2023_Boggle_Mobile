@@ -1,5 +1,3 @@
-//components
-
 import 'package:bouggr/components/grille.dart';
 
 import 'package:bouggr/components/scoreboard.dart';
@@ -84,21 +82,28 @@ class _GamePageState extends State<GamePage> {
     var timerServices = context.watch<TimerServices>();
     var gameServices = context.watch<GameServices>();
     return Globals(child: Builder(builder: (BuildContext innerContext) {
+      // Calculer l'opacité en fonction de la progression
+      double opacity =  timerServices.progression;
+
       return Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: Column(
-                children: [
-                  const AppTitle(fontSize: 56),
-                  ScoreBoard(score: score, strikes: strikes),
-                  boggleGrille,
-                  WordsFound(previousWords: previousWords),
-                  ActionAndTimer(gameServices: gameServices),
-                  Text(timerServices.seconds.toString()),
-                  Text(gameServices.triggerPopUp.toString())
-                ],
+          // Fond de la page blanc avec une opacité réduite en fonction de la progression
+          Container(
+            color: Colors.red.withOpacity(opacity),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: Column(
+                  children: [
+                    const AppTitle(fontSize: 56),
+                    ScoreBoard(score: score, strikes: strikes),
+                    boggleGrille,
+                    WordsFound(previousWords: previousWords),
+                    ActionAndTimer(gameServices: gameServices),
+                    Text(timerServices.seconds.toString()),
+                    Text(gameServices.triggerPopUp.toString())
+                  ],
+                ),
               ),
             ),
           ),
@@ -108,3 +113,4 @@ class _GamePageState extends State<GamePage> {
     }));
   }
 }
+

@@ -47,6 +47,8 @@ class PopUpGameMenu extends StatelessWidget {
                 BtnBoggle(
                   onPressed: () {
                     Provider.of<GameServices>(context, listen: false).stop();
+                    Provider.of<TimerServices>(context, listen: false)
+                        .resetProgress();
                     Provider.of<NavigationServices>(context, listen: false)
                         .goToPage(PageName.home);
                   },
@@ -54,6 +56,8 @@ class PopUpGameMenu extends StatelessWidget {
                 ),
                 BtnBoggle(
                     onPressed: () {
+                      Provider.of<TimerServices>(context, listen: false)
+                          .resetProgress();
                       Provider.of<GameServices>(context, listen: false).stop();
                       Provider.of<NavigationServices>(context, listen: false)
                           .goToPage(PageName.home);
