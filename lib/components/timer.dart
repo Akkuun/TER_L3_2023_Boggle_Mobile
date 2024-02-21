@@ -18,6 +18,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
   int seconds = 0;
   int minutes = 3;
   bool running = false;
+  double progression = 0.0;
   late Timer timer; // late car on ne l'a pas encore initialisé
 
   /// Initialise le timer
@@ -25,16 +26,9 @@ class _BoggleTimerState extends State<BoggleTimer> {
   void initState() {
     super.initState();
     startTimer();
-    setState(() {
-      timer = Timer.periodic(const Duration(seconds: 1), _timerCallBack);
-    });
   }
 
   void _timerCallBack(Timer t) {
-    // if (!running) {
-    //   Provider.of<GameServices>(context, listen: false).stop();
-    //   return;
-    // }
     TimerServices timerServices =
         Provider.of<TimerServices>(context, listen: false);
     if (!running) {
@@ -43,41 +37,49 @@ class _BoggleTimerState extends State<BoggleTimer> {
     setState(() {
       if (seconds > 0) {
         seconds--;
-        timerServices.update(seconds, minutes);
+        progression = timerServices.getTimerProgress();
+        timerServices.update(seconds, minutes, progression);
       } else {
         if (minutes > 0) {
           minutes--;
           seconds = 59;
-          timerServices.update(seconds, minutes);
+          progression = timerServices.getTimerProgress();
+          timerServices.update(seconds, minutes, progression);
         } else {
-          //running = false;
           timerServices.stop();
           Provider.of<GameServices>(context, listen: false).stop();
         }
       }
     });
+    print('Progression: $progression'); // Ajoutez cette ligne pour le débogage
   }
 
   /// Arrête le timer quand on quitte la page
   @override
   void dispose() {
     timer.cancel();
-
     super.dispose();
   }
 
   /// Démarre le timer
   void startTimer() {
-    setState(() {
-      running = true;
-    });
+    if (!running) {
+      setState(() {
+        running = true;
+        timer = Timer.periodic(const Duration(seconds: 1), _timerCallBack);
+      });
+    }
   }
 
   /// Arrête le timer
+
   void stopTimer() {
-    setState(() {
-      running = false;
-    });
+    if (running) {
+      setState(() {
+        running = false;
+        timer.cancel();
+      });
+    }
   }
 
   /// Remet le timer à 3 minutes
@@ -85,6 +87,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
     setState(() {
       seconds = 180;
       minutes = 3;
+      progression = 0.0;
       running = false;
     });
   }
@@ -94,6 +97,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
     setState(() {
       seconds = 0;
       minutes = 0;
+      progression = 0.0;
       running = false;
     });
   }
@@ -102,10 +106,13 @@ class _BoggleTimerState extends State<BoggleTimer> {
   String displayTimer() {
     String displaySeconds = seconds.toString();
     String displayMinutes = minutes.toString();
+    String displayProgression = progression.toString();
+    print('progression: $displayProgression');
+
     if (seconds < 10) {
       displaySeconds = '0$seconds';
     }
-    return '$displayMinutes:$displaySeconds';
+    return '$displayMinutes:$displaySeconds    $displayProgression ';
   }
 
   @override
@@ -113,6 +120,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
     if (context.watch<GameServices>().triggerPopUp) {
       stopTimer();
     } else {
+      Provider.of<TimerServices>(context, listen: false).resetProgress();
       startTimer();
     }
 
