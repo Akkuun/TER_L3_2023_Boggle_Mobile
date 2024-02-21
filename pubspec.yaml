@@ -38,8 +38,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   binary: ^3.0.1
-  firebase_core: ^2.25.0
+  firebase_core: ^2.25.4
   sign_in_with_apple: ^5.0.0
+  firebase_auth: ^4.17.4
 
 dev_dependencies:
   ffi: ^2.0.2
@@ -76,18 +77,6 @@ flutter:
   assets:
     - assets/dictionary/global.json
 
-  plugin:
-    platforms:
-      android:
-        ffiPlugin: true
-      ios:
-        ffiPlugin: true
-      linux:
-        ffiPlugin: true
-      macos:
-        ffiPlugin: true
-      windows:
-        ffiPlugin: true
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
