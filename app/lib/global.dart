@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 /// The `Globals` class is an inherited widget that provides access to global variables
 /// the variable can be define for specific context or not
 class Globals extends InheritedWidget {
+  static String playerName = ''; // variable pour stocker le prénom
+
   static final Map<LangCode, DiceSet> diceSets = {
     LangCode.FR: DiceSet(dices: [
       ["E", "T", "U", "K", "N", "O"],
@@ -46,6 +48,10 @@ class Globals extends InheritedWidget {
 
   static Dictionary selectDictionary(LangCode lang) {
     return dictionaries[lang]!;
+  }
+
+  static String getPlayerName() {
+    return playerName;
   }
 
   static DiceSet selectDiceSet(LangCode lang) {

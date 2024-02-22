@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
+  final TextEditingController nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {

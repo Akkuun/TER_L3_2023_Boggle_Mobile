@@ -27,7 +27,7 @@ class _BouggrRouter extends State<BouggrRouter> {
     switch (selectedIndex) {
       //switch pour afficher la page correspondante
       case PageName.home:
-        page = const HomePage();
+        page = HomePage();
         break;
       case PageName.game:
         page = const GamePage();
