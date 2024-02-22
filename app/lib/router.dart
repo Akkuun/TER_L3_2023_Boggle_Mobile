@@ -5,6 +5,7 @@ import 'package:bouggr/pages/login.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/pages/rulepage.dart';
 import 'package:bouggr/pages/game.dart';
+import 'package:bouggr/pages/stats.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,8 +35,13 @@ class _BouggrRouter extends State<BouggrRouter> {
         break;
       case PageName.rules:
         page = const RulePage();
+        break;
       case PageName.login:
         page = const LoginPage();
+        break;
+      case PageName.stats:
+        page = const StatsPage();
+        break;
       case PageName.emailLogin:
         page = const EmailLogIn();
       case PageName.googleLogin:

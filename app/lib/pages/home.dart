@@ -71,6 +71,28 @@ class HomePage extends StatelessWidget {
             btnType: BtnType.secondary,
             btnSize: BtnSize.large,
             text: "Multiplayer",
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              IconBtnBoggle(
+                icon: const Icon(Icons.home),
+                onPressed: () {},
+                btnType: BtnType.primary,
+              ),
+              IconBtnBoggle(
+                icon: const Icon(Icons.extension),
+                onPressed: () {},
+                btnType: BtnType.secondary,
+              ),
+              IconBtnBoggle(
+                icon: const Icon(Icons.insights),
+                onPressed: () {
+                  router.goToPage(PageName.stats);
+                },
+                btnType: BtnType.secondary,
+              ),
+            ],
           )
         ],
       ),
