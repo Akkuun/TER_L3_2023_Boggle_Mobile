@@ -6,8 +6,16 @@ import 'package:bouggr/pages/page_name.dart';
 
 /// Page des règles du jeu
 
-class SettingsPage extends StatelessWidget {
+class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
+
+  @override
+  _SettingsPageState createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  String? _selectedLanguage;
+
   @override
   Widget build(BuildContext context) {
     var router = Provider.of<NavigationServices>(context,
@@ -37,11 +45,11 @@ class SettingsPage extends StatelessWidget {
               TextSpan(
                 children: [
                   TextSpan(
-                    text: 'St',
+                    text: 'Se',
                     style: textStyleJUA,
                   ),
                   TextSpan(
-                    text: 'a',
+                    text: 'tt',
                     style: TextStyle(
                       color: Color(0xFF1F87B3),
                       fontSize: 64,
@@ -51,7 +59,7 @@ class SettingsPage extends StatelessWidget {
                     ),
                   ),
                   TextSpan(
-                    text: 'ts',
+                    text: 'ings',
                     style: textStyleJUA,
                   ),
                 ],
@@ -80,17 +88,27 @@ class SettingsPage extends StatelessWidget {
           child: SingleChildScrollView(
             child: Container(
               padding: const EdgeInsets.all(20),
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(text: 'Gros con\n', style: textStyleIBM),
-                      TextSpan(text: 'Soon\n', style: textStyleIBM),
-                    ],
+              child: Column( //enfants
+                children: [
+                  DropdownButton<String>(
+                    items: <String>['French', 'Global']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        _selectedLanguage = newValue;
+                      });
+                    },
+                    hint: Text('Select an langage'),
+                    value: _selectedLanguage,
                   ),
-                  textAlign: TextAlign.justify,
-                ),
+
+                  Text(_selectedLanguage ?? 'No language selected'), //DropDownButtonValue
+                ],
               ),
             ),
           ),
