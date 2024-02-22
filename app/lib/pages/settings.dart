@@ -1,4 +1,5 @@
 import 'package:bouggr/providers/navigation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bouggr/components/btn.dart';
@@ -22,6 +23,24 @@ class _SettingsPageState extends State<SettingsPage> {
   void _handleButtonClick() {
     // Do something when the button is clicked
   }
+
+  Future<void> _changePassword() async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null && _password != null && _confirmPassword != null) {
+        if (_password == _confirmPassword) {
+          await user.updatePassword(_password!);
+        } else {
+          // Passwords do not match
+        }
+      } else {
+        // User is not signed in or passwords are empty
+      }
+    } catch (e) {
+      // An error occurred
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +66,7 @@ class _SettingsPageState extends State<SettingsPage> {
           padding: EdgeInsets.all(16),
           child: SizedBox(
             width: 430,
-            height: 70,
+            height: 90,
             child: Text.rich(
               TextSpan(
                 children: [
@@ -146,7 +165,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      // Do something when the button is clicked
+                      _changePassword();
                     },
                     child: Text('Change Password'),
                   ),
