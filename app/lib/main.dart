@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/timer.dart';
