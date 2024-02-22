@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/pages/page_name.dart';
+import 'package:bouggr/global.dart';
 
 /// Page des règles du jeu
 
@@ -15,6 +16,12 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   String? _selectedLanguage;
+  String? _password;
+  String? _confirmPassword;
+
+  void _handleButtonClick() {
+    // Do something when the button is clicked
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +95,8 @@ class _SettingsPageState extends State<SettingsPage> {
           child: SingleChildScrollView(
             child: Container(
               padding: const EdgeInsets.all(20),
-              child: Column( //enfants
+              child: Column(
+                //enfants
                 children: [
                   DropdownButton<String>(
                     items: <String>['French', 'Global']
@@ -107,19 +115,53 @@ class _SettingsPageState extends State<SettingsPage> {
                     value: _selectedLanguage,
                   ),
 
-                  Text(_selectedLanguage ?? 'No language selected'), //DropDownButtonValue
+                  Text('Langage selected : ' + (_selectedLanguage ?? 'None')),
+                  //DropDownButtonValue
+                  SizedBox(height: 20),
+                  TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        _password = value;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Password',
+                    ),
+                    obscureText: true,
+                  ),
+                  SizedBox(height: 20),
+                  TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        _confirmPassword = value;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Confirm Password',
+                    ),
+                    obscureText: true,
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Do something when the button is clicked
+                    },
+                    child: Text('Change Password'),
+                  ),
+                  BtnBoggle(
+                    onPressed: () {
+                      router.goToPage(PageName.home);
+                    },
+                    btnType: BtnType.secondary,
+                    btnSize: BtnSize.small,
+                    text: "Go back",
+                  ),
                 ],
               ),
             ),
           ),
-        ),
-        BtnBoggle(
-          onPressed: () {
-            router.goToPage(PageName.home);
-          },
-          btnType: BtnType.secondary,
-          btnSize: BtnSize.large,
-          text: "Go back",
         ),
       ],
     );
