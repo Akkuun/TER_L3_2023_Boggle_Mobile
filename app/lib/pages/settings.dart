@@ -32,7 +32,7 @@ class _SettingsPageState extends State<SettingsPage> {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null && _password != null && _confirmPassword != null) {
         if (_password == _confirmPassword) {
-          if (_password!.length >= 6) { // Vérifier la longueur du mot de passe
+          if (_password!.length >= 6) {
             await user.updatePassword(_password!);
             setState(() {
               errorText = null;
@@ -165,6 +165,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       labelText: 'Password',
                     ),
                     obscureText: true,
+                    enabled: FirebaseAuth.instance.currentUser != null,
                   ),
                   SizedBox(height: 20),
                   TextField(
@@ -179,20 +180,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       errorText: errorText,
                     ),
                     obscureText: true,
+                    enabled: FirebaseAuth.instance.currentUser != null,
                   ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      _changePassword();
-                    },
-                    child: Text('Change Password'),
-                  ),if (changeSuccess)
-                    Text(
-                      'Password changed successfully!',
-                      style: TextStyle(
-                        color: Colors.green,
-                      ),
-                    ),
                   BtnBoggle(
                     onPressed: () {
                       router.goToPage(PageName.home);
