@@ -182,6 +182,18 @@ class _SettingsPageState extends State<SettingsPage> {
                     obscureText: true,
                     enabled: FirebaseAuth.instance.currentUser != null,
                   ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _changePassword();
+                    },
+                    child: Text('Change Password'),
+                  ),if (changeSuccess)
+                    Text(
+                      'Password changed successfully!',
+                      style: TextStyle(
+                        color: Colors.green,
+                      ),
+                    ),
                   BtnBoggle(
                     onPressed: () {
                       router.goToPage(PageName.home);
