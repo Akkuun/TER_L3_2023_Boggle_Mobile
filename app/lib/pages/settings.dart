@@ -19,6 +19,9 @@ class _SettingsPageState extends State<SettingsPage> {
   String? _selectedLanguage;
   String? _password;
   String? _confirmPassword;
+  String? errorText;
+  bool changeSuccess = false;
+
 
   void _handleButtonClick() {
     // Do something when the button is clicked
@@ -29,12 +32,26 @@ class _SettingsPageState extends State<SettingsPage> {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null && _password != null && _confirmPassword != null) {
         if (_password == _confirmPassword) {
-          await user.updatePassword(_password!);
+          if (_password!.length >= 6) { // Vérifier la longueur du mot de passe
+            await user.updatePassword(_password!);
+            setState(() {
+              errorText = null;
+              changeSuccess = true;
+            });
+          } else {
+            setState(() {
+              errorText = "Password must be at least 6 characters long";
+            });
+          }
         } else {
-          // Passwords do not match
+          setState(() {
+            errorText = "Passwords don't match";
+          });
         }
       } else {
-        // User is not signed in or passwords are empty
+        setState(() {
+          errorText = "User is not signed in or passwords are empty";
+        });
       }
     } catch (e) {
       // An error occurred
@@ -159,6 +176,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Confirm Password',
+                      errorText: errorText,
                     ),
                     obscureText: true,
                   ),
@@ -168,7 +186,13 @@ class _SettingsPageState extends State<SettingsPage> {
                       _changePassword();
                     },
                     child: Text('Change Password'),
-                  ),
+                  ),if (changeSuccess)
+                    Text(
+                      'Password changed successfully!',
+                      style: TextStyle(
+                        color: Colors.green,
+                      ),
+                    ),
                   BtnBoggle(
                     onPressed: () {
                       router.goToPage(PageName.home);
