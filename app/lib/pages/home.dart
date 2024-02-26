@@ -5,6 +5,8 @@ import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/utils/decode.dart';
+import 'package:bouggr/utils/game_data.dart';
+import 'package:bouggr/utils/game_result.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -72,6 +74,27 @@ class HomePage extends StatelessWidget {
             btnType: BtnType.secondary,
             btnSize: BtnSize.large,
             text: "Multiplayer",
+          ),
+          FutureBuilder<List<GameResult>>(
+            future: GameDataStorage.loadGameResults(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                final gameResults = snapshot.data!;
+                return Column(
+                  children: gameResults.map((result) {
+                    return ListTile(
+                      title: Text(result.playerName),
+                      subtitle: Text(
+                          'Score: ${result.score}'), //j'affiche les donnees dans cette page juste pour voir si ca marche(rafraichir la page a chaque fois)
+                    );
+                  }).toList(),
+                );
+              }
+            },
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

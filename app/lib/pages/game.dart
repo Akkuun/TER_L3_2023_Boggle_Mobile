@@ -14,6 +14,7 @@ import 'package:bouggr/providers/game.dart';
 
 //utils
 import 'package:bouggr/providers/timer.dart';
+
 import 'package:bouggr/utils/word_score.dart';
 import 'package:bouggr/utils/dico.dart';
 //flutter

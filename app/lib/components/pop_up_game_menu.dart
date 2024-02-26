@@ -3,15 +3,19 @@
 import 'dart:math';
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/popup.dart';
+import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/timer.dart';
+import 'package:bouggr/utils/game_data.dart';
+import 'package:bouggr/utils/game_result.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PopUpGameMenu extends StatelessWidget {
   final int score;
+
   const PopUpGameMenu({
     super.key,
     required this.score,
@@ -56,6 +60,10 @@ class PopUpGameMenu extends StatelessWidget {
                 BtnBoggle(
                   onPressed: () {
                     gameServices.stop();
+                    GameResult gameResult = GameResult(
+                        playerName: Globals.getPlayerName(), score: score);
+                    GameDataStorage.saveGameResult(gameResult);
+
                     navigationServices.goToPage(PageName.home);
                   },
                   text: "new game",
@@ -63,6 +71,10 @@ class PopUpGameMenu extends StatelessWidget {
                 BtnBoggle(
                     onPressed: () {
                       gameServices.stop();
+                      GameResult gameResult = GameResult(
+                          playerName: Globals.getPlayerName(), score: score);
+                      GameDataStorage.saveGameResult(gameResult);
+
                       navigationServices.goToPage(PageName.home);
                     },
                     text: "Home",

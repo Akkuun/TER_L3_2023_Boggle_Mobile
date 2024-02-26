@@ -5,6 +5,7 @@ import 'package:bouggr/pages/login.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/pages/rulepage.dart';
 import 'package:bouggr/pages/game.dart';
+import 'package:bouggr/pages/saved_data_page.dart';
 import 'package:bouggr/pages/stats.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +49,9 @@ class _BouggrRouter extends State<BouggrRouter> {
         page = const LoginPage();
       case PageName.emailCreate:
         page = const EmailCreate();
+      case PageName.data:
+        page = SavedDataPage();
+        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
