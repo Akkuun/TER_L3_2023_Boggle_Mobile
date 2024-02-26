@@ -58,6 +58,14 @@ class LoginPage extends StatelessWidget {
             btnSize: BtnSize.large,
             text: "Déconnexion",
           ),
+          BtnBoggle(
+            onPressed: () {
+              router.goToPage(PageName.home);
+            },
+            btnType: BtnType.secondary,
+            btnSize: BtnSize.small,
+            text: "Go back",
+          ),
         ],
       ),
     );
