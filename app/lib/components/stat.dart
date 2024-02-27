@@ -11,8 +11,8 @@ class Stat extends StatelessWidget {
   const Stat({
     super.key,
     this.fontSize = 18,
-    this.statName = 'Stat Name',
-    this.statValue = 'Stat Value',
+    required this.statName,
+    this.statValue = 'N/A',
     this.isDarker = false,
     this.isFirst = false,
     this.isLast = false,
@@ -23,7 +23,7 @@ class Stat extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: Colors.grey[isDarker ? 300 : 200],
+        color: Colors.lightBlue[isDarker ? 100 : 50],
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(isFirst ? 8 : 0),
           topRight: Radius.circular(isFirst ? 8 : 0),
@@ -31,21 +31,27 @@ class Stat extends StatelessWidget {
           bottomRight: Radius.circular(isLast ? 8 : 0),
         ),
       ),
-
       child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-          Flexible(
-            child: Text(
-              statName,
-              style: TextStyle(fontSize: fontSize),
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Text(
+                statName,
+                style: TextStyle(fontSize: fontSize),
+              ),
             ),
           ),
-          Text(
-            statValue,
-            style: TextStyle(fontSize: fontSize),
+          SizedBox(
+            width: 50,
+            child: Text(
+              statValue,
+              style: TextStyle(fontSize: fontSize),
+              textAlign: TextAlign.right,
             ),
-          ],
+          ),
+        ],
       ),
     );
   }

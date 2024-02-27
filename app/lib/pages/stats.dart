@@ -78,35 +78,29 @@ class StatsPage extends StatelessWidget {
           ),
           width: MediaQuery.of(context).size.width * 0.9,
           height: MediaQuery.of(context).size.height - 200,
-          child: SingleChildScrollView(
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Stat(
-                      statName: 'Nom stat',
-                      statValue: '10',
-                      isDarker: true,
-                      isFirst: true,
-                    ),
-                    Stat(
-                      statName: 'Rang de bouggr sur play store',
-                      statValue: '1',
-                    ),
-                    Stat(
-                      statName: 'Nombre de diapos du cours de Meynard',
-                      statValue: '386',
-                      isDarker: true,
-                    ),
-                    Stat(
-                      statName: 'To-do, remplacer par les vraies stats',
-                      isLast: true,
-                    ),
-                  ],
+          child: const SingleChildScrollView(
+            child: Column(
+              children: [
+                Stat(
+                  statName: 'Nom stat',
+                  statValue: '10',
+                  isDarker: true,
+                  isFirst: true,
                 ),
-              ),
+                Stat(
+                  statName: 'Rang de bouggr sur play store',
+                  statValue: '1',
+                ),
+                Stat(
+                  statName: 'Nombre de diapos du cours de Meynard',
+                  statValue: '386',
+                  isDarker: true,
+                ),
+                Stat(
+                  statName: 'To-do, remplacer par les vraies stats',
+                  isLast: true,
+                ),
+              ],
             ),
           ),
         ),
