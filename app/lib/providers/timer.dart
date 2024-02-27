@@ -47,7 +47,6 @@ class TimerServices extends ChangeNotifier {
   double getTimerProgress() {
     int totalSeconds = _minutes * 60 + _seconds;
     double progress = 1.0 - (totalSeconds / 180);
-    print('Progression: $progress');
     return progress;
   }
 
