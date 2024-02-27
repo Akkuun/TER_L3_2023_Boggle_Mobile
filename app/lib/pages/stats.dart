@@ -5,20 +5,14 @@ import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/stat.dart';
 import 'package:bouggr/pages/page_name.dart';
 
-/// Page des règles du jeu
+/// Page des stat
 
 class StatsPage extends StatelessWidget {
-  const StatsPage({Key? key}) : super(key: key);
+  const StatsPage({super.key});
   @override
   Widget build(BuildContext context) {
     var router = Provider.of<NavigationServices>(context,
         listen: false); //recuperation du services de navigation
-    const textStyleIBM = TextStyle(
-      color: Colors.black,
-      fontSize: 20,
-      fontFamily: 'IBM Plex Sans',
-      fontWeight: FontWeight.w600,
-    );
     const textStyleJUA = TextStyle(
       color: Colors.black,
       fontSize: 64,
