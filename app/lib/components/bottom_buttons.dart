@@ -25,34 +25,37 @@ class BottomButtons extends StatelessWidget {
               Expanded(
                 child: child
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconBtnBoggle(
-                    icon: const Icon(Icons.home),
-                    onPressed: () {},
-                    btnType: BtnType.primary,
-                  ),
-                  IconBtnBoggle(
-                    icon: const Icon(Icons.extension),
-                    onPressed: () {},
-                    btnType: BtnType.secondary,
-                  ),
-                  IconBtnBoggle(
-                    icon: const Icon(Icons.insights),
-                    onPressed: () {
-                      router.goToPage(PageName.stats);
-                    },
-                    btnType: BtnType.secondary,
-                  ),
-                  IconBtnBoggle(
-                    icon: const Icon(Icons.settings),
-                    onPressed: () {
-                      router.goToPage(PageName.settings);
-                    },
-                    btnType: BtnType.secondary,
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16, left: 16, right: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    IconBtnBoggle(
+                      icon: const Icon(Icons.home),
+                      onPressed: () {},
+                      btnType: BtnType.primary,
+                    ),
+                    IconBtnBoggle(
+                      icon: const Icon(Icons.extension),
+                      onPressed: () {},
+                      btnType: BtnType.secondary,
+                    ),
+                    IconBtnBoggle(
+                      icon: const Icon(Icons.insights),
+                      onPressed: () {
+                        router.goToPage(PageName.stats);
+                      },
+                      btnType: BtnType.secondary,
+                    ),
+                    IconBtnBoggle(
+                      icon: const Icon(Icons.settings),
+                      onPressed: () {
+                        router.goToPage(PageName.settings);
+                      },
+                      btnType: BtnType.secondary,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
