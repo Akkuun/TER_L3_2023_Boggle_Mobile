@@ -1,12 +1,15 @@
 import 'package:bouggr/utils/decode.dart';
 import 'package:bouggr/utils/dice_set.dart';
 import 'package:bouggr/utils/dico.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 /// The `Globals` class is an inherited widget that provides access to global variables
 /// the variable can be define for specific context or not
 class Globals extends InheritedWidget {
   static String playerName = 'test'; // variable pour stocker le prénom
+
+  static final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   static final Map<LangCode, DiceSet> diceSets = {
     LangCode.FR: DiceSet(dices: [
@@ -56,6 +59,10 @@ class Globals extends InheritedWidget {
 
   static DiceSet selectDiceSet(LangCode lang) {
     return diceSets[lang]!;
+  }
+
+  static FirebaseFirestore db() {
+    return _db;
   }
 
   @override

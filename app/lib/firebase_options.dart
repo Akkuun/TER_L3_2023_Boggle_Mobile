@@ -49,6 +49,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '745616957132',
     projectId: 'bouggr-4bd2b',
     authDomain: 'bouggr-4bd2b.firebaseapp.com',
+    databaseURL: 'https://bouggr-4bd2b-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'bouggr-4bd2b.appspot.com',
     measurementId: 'G-E8QSBZ8K35',
   );
@@ -58,6 +59,7 @@ class DefaultFirebaseOptions {
     appId: '1:745616957132:android:4acef77112419aa89aec69',
     messagingSenderId: '745616957132',
     projectId: 'bouggr-4bd2b',
+    databaseURL: 'https://bouggr-4bd2b-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'bouggr-4bd2b.appspot.com',
   );
 
@@ -66,9 +68,9 @@ class DefaultFirebaseOptions {
     appId: '1:745616957132:ios:1590a3309202a7a49aec69',
     messagingSenderId: '745616957132',
     projectId: 'bouggr-4bd2b',
+    databaseURL: 'https://bouggr-4bd2b-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'bouggr-4bd2b.appspot.com',
-    iosClientId:
-        '745616957132-6d230q3fsi7e6d2hi5vhdr0cmabl5jte.apps.googleusercontent.com',
+    iosClientId: '745616957132-6d230q3fsi7e6d2hi5vhdr0cmabl5jte.apps.googleusercontent.com',
     iosBundleId: 'com.example.bouggr',
   );
 
@@ -77,9 +79,9 @@ class DefaultFirebaseOptions {
     appId: '1:745616957132:ios:e94f9abeb9f2f9a99aec69',
     messagingSenderId: '745616957132',
     projectId: 'bouggr-4bd2b',
+    databaseURL: 'https://bouggr-4bd2b-default-rtdb.europe-west1.firebasedatabase.app',
     storageBucket: 'bouggr-4bd2b.appspot.com',
-    iosClientId:
-        '745616957132-jej3hcgg8k8kn8pc67d3aujqtdgekuf4.apps.googleusercontent.com',
+    iosClientId: '745616957132-jej3hcgg8k8kn8pc67d3aujqtdgekuf4.apps.googleusercontent.com',
     iosBundleId: 'com.example.bouggr.RunnerTests',
   );
 }
