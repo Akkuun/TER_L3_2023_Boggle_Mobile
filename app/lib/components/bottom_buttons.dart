@@ -26,7 +26,7 @@ class BottomButtons extends StatelessWidget {
                 child: child
               ),
               Padding(
-                padding: const EdgeInsets.only(bottom: 16, left: 16, right: 16),
+                padding: const EdgeInsets.all(16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
