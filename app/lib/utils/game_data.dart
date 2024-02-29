@@ -16,6 +16,7 @@ class GameDataStorage {
     if (_auth.currentUser != null) {
       final user = _auth.currentUser;
       final userDoc = _db.collection('user_solo_games').doc(user!.uid);
+      userDoc.set({'uid': user.uid, 'email': user.email});
       final userResults = userDoc.collection('gameResults');
       await userResults.add(gameResult.toJson());
     }

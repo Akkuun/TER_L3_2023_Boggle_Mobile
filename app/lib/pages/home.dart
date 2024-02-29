@@ -75,27 +75,6 @@ class HomePage extends StatelessWidget {
             btnSize: BtnSize.large,
             text: "Multiplayer",
           ),
-          FutureBuilder<List<GameResult>>(
-            future: GameDataStorage.loadGameResults(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                final gameResults = snapshot.data!;
-                return Column(
-                  children: gameResults.map((result) {
-                    return ListTile(
-                      title: Text(result.playerName),
-                      subtitle: Text(
-                          'Score: ${result.score}'), //j'affiche les donnees dans cette page juste pour voir si ca marche(rafraichir la page a chaque fois)
-                    );
-                  }).toList(),
-                );
-              }
-            },
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
