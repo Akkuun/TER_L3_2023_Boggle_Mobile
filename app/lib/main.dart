@@ -2,6 +2,7 @@ import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/timer.dart';
 import 'package:bouggr/router.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';

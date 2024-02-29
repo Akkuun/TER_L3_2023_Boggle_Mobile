@@ -51,7 +51,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
         }
       }
     });
-    print('Progression: $progression'); // Ajoutez cette ligne pour le débogage
+    // Ajoutez cette ligne pour le débogage
   }
 
   /// Arrête le timer quand on quitte la page
@@ -107,7 +107,6 @@ class _BoggleTimerState extends State<BoggleTimer> {
     String displaySeconds = seconds.toString();
     String displayMinutes = minutes.toString();
     String displayProgression = progression.toString();
-    print('progression: $displayProgression');
 
     if (seconds < 10) {
       displaySeconds = '0$seconds';

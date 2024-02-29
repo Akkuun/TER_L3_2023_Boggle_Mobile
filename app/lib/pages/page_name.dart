@@ -7,6 +7,8 @@ enum PageName {
   emailLogin,
   googleLogin,
   emailCreate,
-  settings
+  data_storage,
+  data,
+  settings,
   ;
 }

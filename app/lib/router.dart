@@ -5,6 +5,7 @@ import 'package:bouggr/pages/login.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/pages/rulepage.dart';
 import 'package:bouggr/pages/game.dart';
+
 import 'package:bouggr/pages/stats.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,7 @@ class _BouggrRouter extends State<BouggrRouter> {
     switch (selectedIndex) {
       //switch pour afficher la page correspondante
       case PageName.home:
-        page = const HomePage();
+        page = HomePage();
         break;
       case PageName.game:
         page = const GamePage();
@@ -50,6 +51,7 @@ class _BouggrRouter extends State<BouggrRouter> {
         page = const LoginPage();
       case PageName.emailCreate:
         page = const EmailCreate();
+        break;
       case PageName.settings:
         page = const SettingsPage();
       default:
