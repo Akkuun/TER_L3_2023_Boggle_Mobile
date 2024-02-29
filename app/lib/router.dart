@@ -11,6 +11,8 @@ import 'package:bouggr/providers/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'pages/settings.dart';
+
 class BouggrRouter extends StatefulWidget {
   const BouggrRouter({super.key});
 
@@ -49,8 +51,9 @@ class _BouggrRouter extends State<BouggrRouter> {
         page = const LoginPage();
       case PageName.emailCreate:
         page = const EmailCreate();
-
         break;
+      case PageName.settings:
+        page = const SettingsPage();
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }

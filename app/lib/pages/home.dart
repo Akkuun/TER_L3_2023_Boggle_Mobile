@@ -94,7 +94,13 @@ class HomePage extends StatelessWidget {
                   router.goToPage(PageName.stats);
                 },
                 btnType: BtnType.secondary,
-              ),
+              ), IconBtnBoggle(
+                icon: const Icon(Icons.settings),
+                onPressed: () {
+                  router.goToPage(PageName.settings);
+                },
+                btnType: BtnType.secondary,
+              )
             ],
           )
         ],
