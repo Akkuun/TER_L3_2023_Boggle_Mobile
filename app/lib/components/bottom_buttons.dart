@@ -15,6 +15,7 @@ class BottomButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final router = Provider.of<NavigationServices>(context, listen: false);
+    final index = router.index;
     return SizedBox(
         height: MediaQuery.of(context).size.height,
         child: Center(
@@ -32,8 +33,10 @@ class BottomButtons extends StatelessWidget {
                   children: [
                     IconBtnBoggle(
                       icon: const Icon(Icons.home),
-                      onPressed: () {},
-                      btnType: BtnType.primary,
+                      onPressed: () {
+                        router.goToPage(PageName.home);
+                      },
+                      btnType: index == PageName.home ? BtnType.primary : BtnType.secondary,
                     ),
                     IconBtnBoggle(
                       icon: const Icon(Icons.extension),
@@ -45,14 +48,14 @@ class BottomButtons extends StatelessWidget {
                       onPressed: () {
                         router.goToPage(PageName.stats);
                       },
-                      btnType: BtnType.secondary,
+                      btnType: index == PageName.stats ? BtnType.primary : BtnType.secondary,
                     ),
                     IconBtnBoggle(
                       icon: const Icon(Icons.settings),
                       onPressed: () {
                         router.goToPage(PageName.settings);
                       },
-                      btnType: BtnType.secondary,
+                      btnType: index == PageName.settings ? BtnType.primary : BtnType.secondary,
                     ),
                   ],
                 ),
