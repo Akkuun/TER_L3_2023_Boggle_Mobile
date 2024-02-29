@@ -18,10 +18,11 @@ class GameDataStorage {
       final userDoc = _db.collection('user_solo_games').doc(user!.uid);
       userDoc.set({'uid': user.uid, 'email': user.email});
       final userResults = userDoc.collection('gameResults');
-      await userResults.add(gameResult.toJson());
+      await userResults.add(gameResult.toJsonOnline());
+      gameResult.uID = user.uid;
     }
 
-    gameResults.add(jsonEncode(gameResult.toJson()));
+    gameResults.add(jsonEncode(gameResult.toJsonLocal()));
     await prefs.setStringList(_key, gameResults);
   }
 
@@ -36,5 +37,10 @@ class GameDataStorage {
     return jsonList.map((jsonString) {
       return GameResult.fromJson(jsonDecode(jsonString));
     }).toList();
+  }
+
+  static Future<void> deleteGameResults() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_key);
   }
 }

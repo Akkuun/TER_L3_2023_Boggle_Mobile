@@ -80,6 +80,19 @@ class _GamePageState extends State<GamePage> {
     return _score;
   }
 
+  List<int> _countWordsByLength() {
+    if (_previousWords.isEmpty) {
+      return [];
+    }
+    int max =
+        _previousWords.map((e) => e.length).reduce((a, b) => a > b ? a : b);
+    List<int> count = List.filled(max - 2, 0);
+    for (var word in _previousWords) {
+      count[word.length - 3]++;
+    }
+    return count;
+  }
+
   @override
   Widget build(BuildContext context) {
     var timerServices = context.watch<TimerServices>();
@@ -108,7 +121,11 @@ class _GamePageState extends State<GamePage> {
               ),
             ),
           ),
-          PopUpGameMenu(score: _score),
+          PopUpGameMenu(
+            score: _score,
+            grid: boggleGrille.letters.join(),
+            words: _countWordsByLength(),
+          ),
         ],
       );
     }));

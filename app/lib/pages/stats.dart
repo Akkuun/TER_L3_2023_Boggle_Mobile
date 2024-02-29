@@ -1,9 +1,8 @@
-import 'package:bouggr/providers/navigation.dart';
+import 'package:bouggr/utils/game_data.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:bouggr/components/bottom_buttons.dart';
 import 'package:bouggr/components/stat.dart';
-import 'package:bouggr/pages/page_name.dart';
 
 /// Page des stat
 
@@ -11,8 +10,16 @@ class StatsPage extends StatelessWidget {
   const StatsPage({super.key});
   @override
   Widget build(BuildContext context) {
-    var router = Provider.of<NavigationServices>(context,
-        listen: false); //recuperation du services de navigation
+    var parties = GameDataStorage.loadGameResults();
+
+    var isAuth = FirebaseAuth.instance.currentUser != null;
+
+    var filteredParties = parties.then((value) => value
+        .where((element) => isAuth
+            ? element.uid == FirebaseAuth.instance.currentUser?.uid
+            : element.uid == 'guest')
+        .toList());
+
     const textStyleJUA = TextStyle(
       color: Colors.black,
       fontSize: 64,
@@ -21,7 +28,7 @@ class StatsPage extends StatelessWidget {
       height: 0,
     );
     return BottomButtons(
-      child : Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           const Padding(
@@ -72,7 +79,6 @@ class StatsPage extends StatelessWidget {
               ],
             ),
             width: MediaQuery.of(context).size.width * 0.9,
-            height: MediaQuery.of(context).size.height - 200,
             child: const SingleChildScrollView(
               child: Column(
                 children: [

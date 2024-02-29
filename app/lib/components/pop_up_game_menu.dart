@@ -15,11 +15,14 @@ import 'package:provider/provider.dart';
 
 class PopUpGameMenu extends StatelessWidget {
   final int score;
+  final List<int> words;
+  final String grid;
 
-  const PopUpGameMenu({
-    super.key,
-    required this.score,
-  });
+  const PopUpGameMenu(
+      {super.key,
+      required this.score,
+      required this.grid,
+      required this.words});
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +63,9 @@ class PopUpGameMenu extends StatelessWidget {
                 BtnBoggle(
                   onPressed: () {
                     gameServices.stop();
-                    GameResult gameResult = GameResult(
-                        playerName: Globals.getPlayerName(), score: score);
+                    GameResult gameResult =
+                        GameResult(score: score, grid: grid, words: words);
+
                     GameDataStorage.saveGameResult(gameResult);
 
                     navigationServices.goToPage(PageName.home);
@@ -71,8 +75,8 @@ class PopUpGameMenu extends StatelessWidget {
                 BtnBoggle(
                     onPressed: () {
                       gameServices.stop();
-                      GameResult gameResult = GameResult(
-                          playerName: Globals.getPlayerName(), score: score);
+                      GameResult gameResult =
+                          GameResult(score: score, grid: grid, words: words);
                       GameDataStorage.saveGameResult(gameResult);
 
                       navigationServices.goToPage(PageName.home);
