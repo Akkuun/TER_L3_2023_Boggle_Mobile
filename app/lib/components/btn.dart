@@ -87,7 +87,10 @@ class IconBtnBoggle extends StatelessWidget {
       height: 64,
       width: 64,
       decoration: BoxDecoration(
-          color: Colors.white,
+          color: MaterialStateColor.resolveWith((states) =>
+          BtnType.primary == btnType
+              ? const Color.fromARGB(255, 91, 157, 255)
+              : Colors.white),
           borderRadius: BorderRadius.circular(5),
           boxShadow: const [
             BoxShadow(

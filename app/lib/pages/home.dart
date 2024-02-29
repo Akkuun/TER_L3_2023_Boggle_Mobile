@@ -1,3 +1,4 @@
+import 'package:bouggr/components/bottom_buttons.dart';
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/card.dart';
 import 'package:bouggr/components/title.dart';
@@ -18,93 +19,66 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              BoggleCard(
-                onPressed: () {
-                  router.goToPage(PageName.rules);
-                },
-                title: "Rules",
-                action: 'read',
-                child: const Text(
-                  'Find words\n&\nearn points',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 22,
-                    fontFamily: 'Jua',
-                    fontWeight: FontWeight.w400,
-                    height: 0,
+    return BottomButtons(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                BoggleCard(
+                  onPressed: () {
+                    router.goToPage(PageName.rules);
+                  },
+                  title: "Rules",
+                  action: 'read',
+                  child: const Text(
+                    'Find words\n&\nearn points',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 22,
+                      fontFamily: 'Jua',
+                      fontWeight: FontWeight.w400,
+                      height: 0,
+                    ),
                   ),
                 ),
-              ),
-              BoggleCard(
-                title: "SoonTm",
-                action: 'play',
-                onPressed: () {
-                  router.goToPage(PageName.rules);
-                },
-              )
-            ],
-          ),
-          const SizedBox(
-            width: 430,
-            height: 113,
-            child: AppTitle(),
-          ),
-          BtnBoggle(
-            onPressed: () {
-              if (gameServices.start(LangCode.FR, GameType.solo)) {
-                router.goToPage(PageName.game);
-              }
-            },
-            btnSize: BtnSize.large,
-            text: "SinglePlayer",
-          ),
-          BtnBoggle(
-            onPressed: () {
-              router.goToPage(PageName.login);
-            },
-            btnType: BtnType.secondary,
-            btnSize: BtnSize.large,
-            text: "Multiplayer",
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconBtnBoggle(
-                icon: const Icon(Icons.home),
-                onPressed: () {},
-                btnType: BtnType.primary,
-              ),
-              IconBtnBoggle(
-                icon: const Icon(Icons.extension),
-                onPressed: () {},
-                btnType: BtnType.secondary,
-              ),
-              IconBtnBoggle(
-                icon: const Icon(Icons.insights),
-                onPressed: () {
-                  router.goToPage(PageName.stats);
-                },
-                btnType: BtnType.secondary,
-              ), IconBtnBoggle(
-                icon: const Icon(Icons.settings),
-                onPressed: () {
-                  router.goToPage(PageName.settings);
-                },
-                btnType: BtnType.secondary,
-              )
-            ],
-          )
-        ],
-      ),
+                BoggleCard(
+                  title: "SoonTm",
+                  action: 'play',
+                  onPressed: () {
+                    router.goToPage(PageName.rules);
+                  },
+                ),
+
+              ],
+            ),
+            const SizedBox(
+              width: 430,
+              height: 113,
+              child: AppTitle(),
+            ),
+            BtnBoggle(
+              onPressed: () {
+                if (gameServices.start(LangCode.FR, GameType.solo)) {
+                  router.goToPage(PageName.game);
+                }
+              },
+              btnSize: BtnSize.large,
+              text: "SinglePlayer",
+            ),
+            BtnBoggle(
+              onPressed: () {
+                router.goToPage(PageName.login);
+              },
+              btnType: BtnType.secondary,
+              btnSize: BtnSize.large,
+              text: "Multiplayer",
+            ),
+          ],
+        ),
     );
   }
 }
