@@ -10,5 +10,6 @@ enum PageName {
   data_storage,
   data,
   settings,
+  start_game,
   ;
 }

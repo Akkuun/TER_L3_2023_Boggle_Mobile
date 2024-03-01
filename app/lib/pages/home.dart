@@ -62,9 +62,7 @@ class HomePage extends StatelessWidget {
             ),
             BtnBoggle(
               onPressed: () {
-                if (gameServices.start(LangCode.FR, GameType.solo)) {
-                  router.goToPage(PageName.game);
-                }
+                router.goToPage(PageName.start_game);
               },
               btnSize: BtnSize.large,
               text: "SinglePlayer",
