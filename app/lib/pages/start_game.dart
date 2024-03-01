@@ -22,10 +22,8 @@ class StartGamePage extends StatelessWidget {
           acce,
           BtnBoggle(
             onPressed: () {
-              if (acce.shakeDetected()) {
-                if (gameServices.start(LangCode.FR, GameType.solo)) {
-                  router.goToPage(PageName.game);
-                }
+              if (gameServices.start(LangCode.FR, GameType.solo)) {
+                router.goToPage(PageName.game);
               }
             },
             btnSize: BtnSize.large,
