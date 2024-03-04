@@ -18,17 +18,18 @@ import 'package:provider/provider.dart';
 
 import 'package:bouggr/components/bottom_buttons.dart';
 
+import '../providers/game.dart';
 import '../providers/navigation.dart';
 import 'package:bouggr/global.dart';
 
-class GameMultiplayerPage extends StatefulWidget {
-  const GameMultiplayerPage({super.key});
+class MultiplayerCreateJoinPage extends StatefulWidget {
+  const MultiplayerCreateJoinPage({super.key});
 
   @override
-  State<GameMultiplayerPage> createState() => _GameMultiplayerPageState();
+  State<MultiplayerCreateJoinPage> createState() => _MultiplayerCreateJoinPageState();
 }
 
-class _GameMultiplayerPageState extends State<GameMultiplayerPage> {
+class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
   String? _gameUID = '';
   BtnType _btnType = BtnType.secondary;
   bool _incorrectCode = false;
@@ -61,6 +62,10 @@ class _GameMultiplayerPageState extends State<GameMultiplayerPage> {
     final database = FirebaseDatabase.instance;
     final gameUID = database.ref('games').push().key;
     final gameRef = database.ref('games/$gameUID');
+    var lang = Provider.of<GameServices>(context, listen: false).language;
+    var letters = Globals.selectDiceSet(lang).roll();
+
+    print(letters);
     gameRef.set({
       'players': {
         playerUID: {
@@ -70,6 +75,8 @@ class _GameMultiplayerPageState extends State<GameMultiplayerPage> {
         }
       },
       'status': 'waiting',
+      'lang': lang.toString(),
+      'letters': letters,
     });
     Globals.gameCode = gameUID!;
     router.goToPage(PageName.game);

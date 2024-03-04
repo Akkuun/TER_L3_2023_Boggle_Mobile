@@ -17,6 +17,8 @@ import 'package:bouggr/providers/timer.dart';
 
 import 'package:bouggr/utils/word_score.dart';
 import 'package:bouggr/utils/dico.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 //flutter
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,9 +28,11 @@ import '../components/pop_up_game_menu.dart';
 
 class GamePage extends StatefulWidget {
   final List<String>? letters;
+  final GameType mode;
   const GamePage({
     super.key,
     this.letters,
+    this.mode = GameType.solo,
   });
 
   @override
@@ -49,12 +53,33 @@ class _GamePageState extends State<GamePage> {
     var lang = Provider.of<GameServices>(context, listen: false).language;
     List<String> selectedLetter;
 
-    if (widget.letters == null) {
-      _dictionary = Globals.selectDictionary(lang);
-      _dictionary.load();
-      selectedLetter = Globals.selectDiceSet(lang).roll();
-    } else {
-      selectedLetter = widget.letters!;
+    switch(widget.mode) {
+      case GameType.solo:
+        if (widget.letters == null) {
+          _dictionary = Globals.selectDictionary(lang);
+          _dictionary.load();
+          selectedLetter = Globals.selectDiceSet(lang).roll();
+        } else {
+          selectedLetter = widget.letters!;
+        }
+        break;
+      case GameType.multi:
+        User? user;
+        try {
+          user = FirebaseAuth.instance.currentUser;
+          if (user == null) {
+            // error
+          }
+        } catch (e) {
+          // error
+        }
+        final playerUID = user!.uid;
+        FirebaseDatabase database = FirebaseDatabase.instance;
+        var gameRef = database.ref('games/${Globals.gameCode}');
+        var letters = gameRef.child('letters').get();
+        print(letters);
+        selectedLetter = letters as List<String>;
+        break;
     }
 
     boggleGrille = BoggleGrille(

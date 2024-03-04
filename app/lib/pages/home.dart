@@ -87,7 +87,7 @@ class HomePage extends StatelessWidget {
           ),
           BtnBoggle(
             onPressed: () {
-              router.goToPage(PageName.multiplayer);
+              router.goToPage(PageName.multiplayerCreateJoin);
             },
             btnType: BtnType.secondary,
             btnSize: BtnSize.large,

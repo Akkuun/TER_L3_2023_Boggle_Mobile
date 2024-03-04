@@ -21,14 +21,14 @@ import 'package:bouggr/components/bottom_buttons.dart';
 
 import '../providers/navigation.dart';
 
-class GameMultiplayerPage extends StatefulWidget {
-  const GameMultiplayerPage({super.key});
+class MultiplayerGamePage extends StatefulWidget {
+  const MultiplayerGamePage({super.key});
 
   @override
-  State<GameMultiplayerPage> createState() => _GameMultiplayerPageState();
+  State<MultiplayerGamePage> createState() => _MultiplayerGamePageState();
 }
 
-class _GameMultiplayerPageState extends State<GameMultiplayerPage> {
+class _MultiplayerGamePageState extends State<MultiplayerGamePage> {
   String? _gameUID = '';
   BtnType _btnType = BtnType.secondary;
 
