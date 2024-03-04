@@ -61,7 +61,9 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     var router = Provider.of<NavigationServices>(context,
-        listen: false); //recuperation du services de navigation
+        listen: false);
+
+    final auth = FirebaseAuth.instance;//recuperation du services de navigation
 
     const textStyleJUA = TextStyle(
       color: Colors.black,
@@ -189,6 +191,15 @@ class _SettingsPageState extends State<SettingsPage> {
                           color: Colors.green,
                         ),
                       ),
+                    BtnBoggle(
+                      onPressed: () {
+                        //deconnexion
+                        auth.signOut();
+                        router.goToPage(PageName.home);
+                      },
+                      btnSize: BtnSize.large,
+                      text: "Déconnexion",
+                    ),
                     BtnBoggle(
                       onPressed: () {
                         GameDataStorage.deleteGameResults();

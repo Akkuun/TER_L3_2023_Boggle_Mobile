@@ -43,8 +43,6 @@ class _GameMultiplayerPageState extends State<GameMultiplayerPage> {
     final gameRef = database.ref('games/$_gameUID');
 
     gameRef.onValue.listen((event) {
-
-
       final gameData = event.snapshot.value as Map<String, dynamic>;
       final players = gameData['players'];
       if (players[playerUID] == null) {
@@ -176,7 +174,7 @@ class _GameMultiplayerPageState extends State<GameMultiplayerPage> {
             ),
             BtnBoggle(
               onPressed: () {
-                _joinGame(user!.uid);
+                if (_gameUID!.isNotEmpty) _joinGame(user!.uid);
               },
               btnSize: BtnSize.large,
               text: "Join a game",

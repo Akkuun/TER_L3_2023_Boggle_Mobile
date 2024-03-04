@@ -96,7 +96,7 @@ class HomePage extends StatelessWidget {
               btnSize: BtnSize.large,
               text: "Multiplayer",
             ),
-            welcomeWidget,
+            welcomeWidget ?? const SizedBox(),
           ],
         ),
     );
