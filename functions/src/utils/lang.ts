@@ -1,0 +1,1 @@
+export enum LangCode { FR, RM, EN, SP, GLOBAL }
