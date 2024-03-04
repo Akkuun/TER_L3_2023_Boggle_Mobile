@@ -87,13 +87,6 @@ class _GameMultiplayerPageState extends State<GameMultiplayerPage> {
     } catch (e) {
       router.goToPage(PageName.login);
     }
-    FirebaseDatabase database = FirebaseDatabase.instance;
-
-/*    var playerRef = database.ref('players/$playerUID');
-    playerRef.set({
-      'email': user!.email,
-      'score': 0,
-    });*/
 
     return BottomButtons(
         child: Column(
