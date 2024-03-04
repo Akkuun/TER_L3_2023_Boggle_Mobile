@@ -36,28 +36,28 @@ class GameMultiplayerPage extends StatefulWidget {
 class _GameMultiplayerPageState extends State<GameMultiplayerPage> {
   String? _gameUID = '';
   BtnType _btnType = BtnType.secondary;
+  bool _incorrectCode = false;
 
-  _joinGame(String playerUID) {
+  Future<bool> _joinGame(String playerUID) async {
     final router = Provider.of<NavigationServices>(context, listen: false);
     final database = FirebaseDatabase.instance;
     final gameRef = database.ref('games/$_gameUID');
-
-    gameRef.onValue.listen((event) {
-      final gameData = event.snapshot.value as Map<String, dynamic>;
-      final players = gameData['players'];
+    final gameData = await gameRef.child('players').get();
+    if (gameData.exists) {
+      final players = gameData.value as Map<String, dynamic>;
       if (players[playerUID] == null) {
-        players[playerUID] = {
+        gameRef.child('players/$playerUID').set({
           'email': FirebaseAuth.instance.currentUser!.email,
           'score': 0,
           'leader': false,
-        };
-        gameRef.update({
-          'players': players,
         });
-        Globals.gameCode = _gameUID!;
-        router.goToPage(PageName.game);
       }
-    });
+      Globals.gameCode = _gameUID!;
+      router.goToPage(PageName.game);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   _createGame(String playerUID) {
@@ -174,12 +174,22 @@ class _GameMultiplayerPageState extends State<GameMultiplayerPage> {
             ),
             BtnBoggle(
               onPressed: () {
-                if (_gameUID!.isNotEmpty) _joinGame(user!.uid);
+                if (_gameUID!.isNotEmpty) _incorrectCode = _joinGame(user!.uid) as bool;
               },
               btnSize: BtnSize.large,
               text: "Join a game",
               btnType: _btnType,
             ),
+            if (_incorrectCode)
+              const Text(
+                "Incorrect code",
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 26,
+                  fontFamily: 'Jua',
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
           ],
         )
     );
