@@ -7,13 +7,9 @@
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/title.dart';
 import 'package:bouggr/pages/page_name.dart';
-import 'package:bouggr/providers/game.dart';
 
 //utils
-import 'package:bouggr/providers/timer.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 //flutter
@@ -43,8 +39,9 @@ class _GameMultiplayerPageState extends State<GameMultiplayerPage> {
     final gameRef = database.ref('games/$_gameUID');
     final gameData = await gameRef.child('players').get();
     if (gameData.exists) {
-      final players = gameData.value as Map<String, dynamic>;
-      if (players[playerUID] == null) {
+      final players = gameData.value;
+
+      if (players != null) {
         gameRef.child('players/$playerUID').set({
           'email': FirebaseAuth.instance.currentUser!.email,
           'score': 0,
