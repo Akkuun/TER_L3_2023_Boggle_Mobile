@@ -175,9 +175,9 @@ class _GameMultiplayerPageState extends State<GameMultiplayerPage> {
           onPressed: () {
             if (_gameUID!.isNotEmpty) {
               _joinGame(user!.uid).then((value) {
-                if (!value) {
+                if (value != _incorrectCode) {
                   setState(() {
-                    _incorrectCode = true;
+                    _incorrectCode = value;
                   });
                 }
               });
