@@ -1,6 +1,7 @@
 enum PageName {
   home,
   game,
+  multiplayer,
   rules,
   stats,
   login,

@@ -4,10 +4,12 @@ import 'package:bouggr/pages/home.dart';
 import 'package:bouggr/pages/login.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/pages/rulepage.dart';
+import 'package:bouggr/pages/multiplayer.dart';
 import 'package:bouggr/pages/game.dart';
 
 import 'package:bouggr/pages/stats.dart';
 import 'package:bouggr/providers/navigation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -39,6 +41,17 @@ class _BouggrRouter extends State<BouggrRouter> {
       case PageName.rules:
         page = const RulePage();
         break;
+      case PageName.multiplayer:
+        try {
+          User? user = FirebaseAuth.instance.currentUser;
+          if (user != null) {
+            page = const GameMultiplayerPage();
+          } else {
+            page = const LoginPage();
+          }
+        } catch (e) {
+          page = const LoginPage();
+        }
       case PageName.login:
         page = const LoginPage();
         break;

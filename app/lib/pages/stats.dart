@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:bouggr/utils/game_data.dart';
+import 'package:bouggr/utils/game_result.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bouggr/components/bottom_buttons.dart';
@@ -14,12 +17,6 @@ class StatsPage extends StatelessWidget {
 
     var isAuth = FirebaseAuth.instance.currentUser != null;
 
-    var filteredParties = parties.then((value) => value
-        .where((element) => isAuth
-            ? element.uid == FirebaseAuth.instance.currentUser?.uid
-            : element.uid == 'guest')
-        .toList());
-
     const textStyleJUA = TextStyle(
       color: Colors.black,
       fontSize: 64,
@@ -28,9 +25,8 @@ class StatsPage extends StatelessWidget {
       height: 0,
     );
     return BottomButtons(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
+        child:
+        Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
           const Padding(
             padding: EdgeInsets.all(16),
             child: SizedBox(
@@ -79,34 +75,35 @@ class StatsPage extends StatelessWidget {
               ],
             ),
             width: MediaQuery.of(context).size.width * 0.9,
-            child: const SingleChildScrollView(
-              child: Column(
-                children: [
-                  Stat(
-                    statName: 'Nom stat',
-                    statValue: '10',
-                    isDarker: true,
-                    isFirst: true,
-                  ),
-                  Stat(
-                    statName: 'Rang de bouggr sur play store',
-                    statValue: '1',
-                  ),
-                  Stat(
-                    statName: 'Nombre de diapos du cours de Meynard',
-                    statValue: '386',
-                    isDarker: true,
-                  ),
-                  Stat(
-                    statName: 'To-do, remplacer par les vraies stats',
-                    isLast: true,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+            child: SingleChildScrollView(
+                child: Builder(builder: (BuildContext innerContext) {
+                  return FutureBuilder(
+                    future: parties,
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      }
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
+                      if (snapshot.hasData) {
+                        var parties = snapshot.data;
+
+                        return Column(
+                            children: [
+                            for (var party in parties)
+                              Stat(
+                                statName: "test",
+                                statValue: jsonDecode(party)['score'].toString(),
+                              )
+                           ],
+                      );
+                      }
+                      return const Text('No data');
+                    },
+                  );
+                })),
+          )
+        ]));
   }
 }

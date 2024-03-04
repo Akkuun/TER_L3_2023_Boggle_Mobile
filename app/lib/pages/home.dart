@@ -8,6 +8,7 @@ import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:bouggr/utils/game_data.dart';
 import 'package:bouggr/utils/game_result.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +20,24 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
+    var welcomeWidget;
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        welcomeWidget = Text(
+          "Bienvenue,\n ${user.email}",
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 28,
+            fontFamily: 'Jua',
+            fontWeight: FontWeight.w400,
+          ),
+          textAlign: TextAlign.center,
+        );
+      }
+    } catch (e) {
+      // exception
+    }
     return BottomButtons(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -71,12 +90,13 @@ class HomePage extends StatelessWidget {
             ),
             BtnBoggle(
               onPressed: () {
-                router.goToPage(PageName.login);
+                router.goToPage(PageName.multiplayer);
               },
               btnType: BtnType.secondary,
               btnSize: BtnSize.large,
               text: "Multiplayer",
             ),
+            welcomeWidget,
           ],
         ),
     );

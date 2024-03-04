@@ -27,16 +27,16 @@ class GameDataStorage {
   }
 
   //methode pour recuperer la liste des resultats de jeu stockés à partir des preferences partagees
-  static Future<List<GameResult>> loadGameResults() async {
+  static Future<List<String>> loadGameResults() async {
     final prefs = await SharedPreferences.getInstance();
+
     final List<String>? jsonList = prefs.getStringList(
         _key); // convertit les resultats en une liste dobjets GameResult
     if (jsonList == null) {
       return [];
     }
-    return jsonList.map((jsonString) {
-      return GameResult.fromJson(jsonDecode(jsonString));
-    }).toList();
+
+    return jsonList;
   }
 
   static Future<void> deleteGameResults() async {
