@@ -14,12 +14,20 @@ class StartGamePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
-    final acce = BoggleAccelerometer();
+    BoggleAccelerometer accelerometer = BoggleAccelerometer();
+    accelerometer.isShaking.addListener(() {
+      if (accelerometer.isShaking.value) {
+        print('Shake detected');
+        if (gameServices.start(LangCode.FR, GameType.solo)) {
+          router.goToPage(PageName.game);
+        }
+      }
+    });
 
     return Center(
       child: Column(
         children: [
-          acce,
+          accelerometer,
           BtnBoggle(
             onPressed: () {
               if (gameServices.start(LangCode.FR, GameType.solo)) {

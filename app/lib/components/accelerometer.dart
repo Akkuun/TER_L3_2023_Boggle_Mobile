@@ -1,9 +1,14 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:math';
+
+import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 class BoggleAccelerometer extends StatefulWidget {
-  const BoggleAccelerometer({super.key});
+  BoggleAccelerometer({super.key});
+
+  final ValueNotifier<bool> isShaking = ValueNotifier<bool>(
+      false); // cela permet de récupérer si une secousse a été détectée dans n'importe quelle partie de l'application (car c'est publique dans cette partie de l'application)
 
   @override
   _BoggleAccelerometerState createState() => _BoggleAccelerometerState();
@@ -12,6 +17,7 @@ class BoggleAccelerometer extends StatefulWidget {
 class _BoggleAccelerometerState extends State<BoggleAccelerometer> {
   AccelerometerEvent? _accelerometerEvent;
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
+  bool debug = false;
 
   Duration sensorInterval = SensorInterval.normalInterval;
 
@@ -32,28 +38,34 @@ class _BoggleAccelerometerState extends State<BoggleAccelerometer> {
   void startAccelerometer() {
     _streamSubscriptions.add(
       accelerometerEventStream(samplingPeriod: sensorInterval).listen(
+        // c'est pour écouter les événements de l'accéléromètre (physique)
         (AccelerometerEvent event) {
           setState(() {
             _accelerometerEvent = event;
+            widget.isShaking.value = shakeDetected();
+            if (widget.isShaking.value) {
+              print('Shake detected');
+            }
           });
         },
         onError: (e) {
           showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text("Erreur"),
-                content: const Text("Votre appareil ne dispose pas d'accéléromètre."),
-                actions: [
-                  ElevatedButton(
-                    child: const Text("Ok"),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  )
-                ],
-              );
-            });
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text("Erreur"),
+                  content: const Text(
+                      "Votre appareil ne dispose pas d'accéléromètre."),
+                  actions: [
+                    ElevatedButton(
+                      child: const Text("Ok"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ],
+                );
+              });
         },
         cancelOnError: true,
       ),
@@ -61,26 +73,35 @@ class _BoggleAccelerometerState extends State<BoggleAccelerometer> {
   }
 
   bool shakeDetected() {
-    if (_accelerometerEvent!.x.abs() > 10 ||
-        _accelerometerEvent!.y.abs() > 10 ||
-        _accelerometerEvent!.z.abs() > 10) {
-      return true;
-    }
-    return false;
+    // la magnitude est une mesure de l'intensité totale de l'accélération, indépendamment de la direction pour notre cas
+    double x = _accelerometerEvent!.x;
+    double y = _accelerometerEvent!.y;
+    double z = _accelerometerEvent!.z;
+
+    double magnitude = sqrt(x * x + y * y + z * z);
+
+    print('magnitude: $magnitude');
+
+    return magnitude > 15; // Ajustez le seuil en fonction de vos besoins
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0),
-          child: Text('Accelerometer'),
-        ),
-        Text(_accelerometerEvent?.x.toStringAsFixed(1) ?? '?'),
-        Text(_accelerometerEvent?.y.toStringAsFixed(1) ?? '?'),
-        Text(_accelerometerEvent?.z.toStringAsFixed(1) ?? '?'),
-      ],
-    );
+    switch(debug){
+      case true:
+        return Column(
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0),
+              child: Text('Accelerometer'),
+            ),
+            Text(_accelerometerEvent?.x.toStringAsFixed(1) ?? '?'),
+            Text(_accelerometerEvent?.y.toStringAsFixed(1) ?? '?'),
+            Text(_accelerometerEvent?.z.toStringAsFixed(1) ?? '?'),
+          ],
+        );
+      case false:
+        return Container();
+    }
   }
 }
