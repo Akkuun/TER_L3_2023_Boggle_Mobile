@@ -64,37 +64,40 @@ class _GameMultiplayerPageState extends State<GameMultiplayerPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const AppTitle(),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Mul",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 30,
-                    fontFamily: 'Jua',
-                    fontWeight: FontWeight.w400,
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Mul",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 30,
+                      fontFamily: 'Jua',
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                ),
-                Text(
-                  "ti",
-                  style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 30,
-                    fontFamily: 'Jua',
-                    fontWeight: FontWeight.w400,
+                  Text(
+                    "ti",
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 30,
+                      fontFamily: 'Jua',
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                ),
-                Text(
-                  "player",
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 30,
-                    fontFamily: 'Jua',
-                    fontWeight: FontWeight.w400,
+                  const Text(
+                    "player",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 30,
+                      fontFamily: 'Jua',
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
             BtnBoggle(
               onPressed: () {
@@ -107,7 +110,7 @@ class _GameMultiplayerPageState extends State<GameMultiplayerPage> {
               "or",
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 20,
+                fontSize: 26,
                 fontFamily: 'Jua',
                 fontWeight: FontWeight.w400,
               ),
