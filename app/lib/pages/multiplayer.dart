@@ -176,7 +176,7 @@ class _GameMultiplayerPageState extends State<GameMultiplayerPage> {
             ),
             BtnBoggle(
               onPressed: () {
-                router.goToPage(PageName.home);
+                _joinGame(user!.uid);
               },
               btnSize: BtnSize.large,
               text: "Join a game",
