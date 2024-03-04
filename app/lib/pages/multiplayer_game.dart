@@ -24,7 +24,6 @@ import 'package:provider/provider.dart';
 import 'package:bouggr/components/bottom_buttons.dart';
 
 import '../providers/navigation.dart';
-import 'package:bouggr/global.dart';
 
 class GameMultiplayerPage extends StatefulWidget {
   const GameMultiplayerPage({super.key});
@@ -36,50 +35,6 @@ class GameMultiplayerPage extends StatefulWidget {
 class _GameMultiplayerPageState extends State<GameMultiplayerPage> {
   String? _gameUID = '';
   BtnType _btnType = BtnType.secondary;
-
-  _joinGame(String playerUID) {
-    final router = Provider.of<NavigationServices>(context, listen: false);
-    final database = FirebaseDatabase.instance;
-    final gameRef = database.ref('games/$_gameUID');
-
-    gameRef.onValue.listen((event) {
-
-
-      final gameData = event.snapshot.value as Map<String, dynamic>;
-      final players = gameData['players'];
-      if (players[playerUID] == null) {
-        players[playerUID] = {
-          'email': FirebaseAuth.instance.currentUser!.email,
-          'score': 0,
-          'leader': false,
-        };
-        gameRef.update({
-          'players': players,
-        });
-        Globals.gameCode = _gameUID!;
-        router.goToPage(PageName.game);
-      }
-    });
-  }
-
-  _createGame(String playerUID) {
-    final router = Provider.of<NavigationServices>(context, listen: false);
-    final database = FirebaseDatabase.instance;
-    final gameUID = database.ref('games').push().key;
-    final gameRef = database.ref('games/$gameUID');
-    gameRef.set({
-      'players': {
-        playerUID: {
-          'email': FirebaseAuth.instance.currentUser!.email,
-          'score': 0,
-          'leader': true,
-        }
-      },
-      'status': 'waiting',
-    });
-    Globals.gameCode = gameUID!;
-    router.goToPage(PageName.game);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,12 +50,13 @@ class _GameMultiplayerPageState extends State<GameMultiplayerPage> {
     }
     FirebaseDatabase database = FirebaseDatabase.instance;
 
+    final playerUID = FirebaseAuth.instance.currentUser!.uid;
 
-/*    var playerRef = database.ref('players/$playerUID');
+    var playerRef = database.ref('players/$playerUID');
     playerRef.set({
       'email': user!.email,
       'score': 0,
-    });*/
+    });
 
     return BottomButtons(
         child: Column(
@@ -145,7 +101,7 @@ class _GameMultiplayerPageState extends State<GameMultiplayerPage> {
             ),
             BtnBoggle(
               onPressed: () {
-                _createGame(user!.uid);
+                router.goToPage(PageName.game);
               },
               btnSize: BtnSize.large,
               text: "Create a game",

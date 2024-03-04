@@ -11,6 +11,8 @@ class Globals extends InheritedWidget {
 
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
 
+  static String gameCode = '';
+
   static final Map<LangCode, DiceSet> diceSets = {
     LangCode.FR: DiceSet(dices: [
       ["E", "T", "U", "K", "N", "O"],
