@@ -25,7 +25,11 @@ import '../components/action_and_timer.dart';
 import '../components/pop_up_game_menu.dart';
 
 class GamePage extends StatefulWidget {
-  const GamePage({super.key});
+  final List<String>? letters;
+  const GamePage({
+    super.key,
+    this.letters,
+  });
 
   @override
   State<GamePage> createState() => _GamePageState();
@@ -43,10 +47,15 @@ class _GamePageState extends State<GamePage> {
   void initState() {
     super.initState();
     var lang = Provider.of<GameServices>(context, listen: false).language;
+    List<String> selectedLetter;
 
-    _dictionary = Globals.selectDictionary(lang);
-    _dictionary.load();
-    List<String> selectedLetter = Globals.selectDiceSet(lang).roll();
+    if (widget.letters == null) {
+      _dictionary = Globals.selectDictionary(lang);
+      _dictionary.load();
+      selectedLetter = Globals.selectDiceSet(lang).roll();
+    } else {
+      selectedLetter = widget.letters!;
+    }
 
     boggleGrille = BoggleGrille(
         letters: selectedLetter,
