@@ -20,6 +20,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
   bool running = false;
   double progression = 0.0;
   late Timer timer; // late car on ne l'a pas encore initialisé
+  bool debug = false;
 
   /// Initialise le timer
   @override
@@ -111,7 +112,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
     if (seconds < 10) {
       displaySeconds = '0$seconds';
     }
-    return '$displayMinutes:$displaySeconds    $displayProgression ';
+    return debug ? '$displayMinutes:$displaySeconds    $displayProgression ' : '$displayMinutes:$displaySeconds';
   }
 
   @override

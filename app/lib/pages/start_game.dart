@@ -6,6 +6,7 @@ import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:haptic_feedback/haptic_feedback.dart';
 
 class StartGamePage extends StatelessWidget {
   const StartGamePage({Key? key}) : super(key: key);
@@ -17,6 +18,8 @@ class StartGamePage extends StatelessWidget {
     BoggleAccelerometer accelerometer = BoggleAccelerometer();
     accelerometer.isShaking.addListener(() {
       if (accelerometer.isShaking.value) {
+        //ici faire le retour hapitque
+        Haptics.vibrate(HapticsType.success);
         print('Shake detected');
         if (gameServices.start(LangCode.FR, GameType.solo)) {
           router.goToPage(PageName.game);

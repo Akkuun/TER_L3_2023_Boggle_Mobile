@@ -101,8 +101,8 @@ class _GamePageState extends State<GamePage> {
                     boggleGrille,
                     WordsFound(previousWords: _previousWords),
                     const ActionAndTimer(),
-                    Text(timerServices.seconds.toString()),
-                    Text(gameServices.triggerPopUp.toString())
+                    //Text(timerServices.seconds.toString()),
+                    //Text(gameServices.triggerPopUp.toString())
                   ],
                 ),
               ),
