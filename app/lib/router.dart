@@ -9,6 +9,7 @@ import 'package:bouggr/pages/game.dart';
 
 import 'package:bouggr/pages/stats.dart';
 import 'package:bouggr/providers/navigation.dart';
+import 'package:bouggr/providers/game.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +37,6 @@ class _BouggrRouter extends State<BouggrRouter> {
         break;
       case PageName.game:
         page = const GamePage();
-
         break;
       case PageName.rules:
         page = const RulePage();
@@ -52,6 +52,9 @@ class _BouggrRouter extends State<BouggrRouter> {
         } catch (e) {
           page = const LoginPage();
         }
+      case PageName.multiplayerGame:
+        page = const GamePage(mode: GameType.multi);
+        break;
       case PageName.login:
         page = const LoginPage();
         break;

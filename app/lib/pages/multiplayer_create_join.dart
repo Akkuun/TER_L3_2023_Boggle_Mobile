@@ -62,10 +62,8 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
     final database = FirebaseDatabase.instance;
     final gameUID = database.ref('games').push().key;
     final gameRef = database.ref('games/$gameUID');
-    var lang = Provider.of<GameServices>(context, listen: false).language;
-    var letters = Globals.selectDiceSet(lang).roll();
-
-    print(letters);
+    final lang = Provider.of<GameServices>(context, listen: false).language;
+    final letters = Globals.selectDiceSet(lang).roll();
     gameRef.set({
       'players': {
         playerUID: {
@@ -75,11 +73,11 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
         }
       },
       'status': 'waiting',
-      'lang': lang.toString(),
-      'letters': letters,
+      'lang': lang.index,
+      'letters': letters.join(''),
     });
     Globals.gameCode = gameUID!;
-    router.goToPage(PageName.game);
+    router.goToPage(PageName.multiplayerGame);
   }
 
   @override
