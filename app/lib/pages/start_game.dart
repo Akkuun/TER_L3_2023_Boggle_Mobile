@@ -31,6 +31,46 @@ class StartGamePage extends StatelessWidget {
       child: Column(
         children: [
           accelerometer,
+          const Text(
+            "Secouer votre téléphone pour lancer une partie",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 22,
+              fontFamily: 'Jua',
+              fontWeight: FontWeight.w400,
+              height: 0,
+            ),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height - 800),
+          const Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.waving_hand,
+                  size: 100.0,
+                ),
+                Icon(
+                  Icons.phone_android_rounded,
+                  size: 100.0,
+                )
+              ],
+            ),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height - 750),
+          const Text(
+            "ou",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 22,
+              fontFamily: 'Jua',
+              fontWeight: FontWeight.w400,
+              height: 0,
+            ),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height - 780),
           BtnBoggle(
             onPressed: () {
               if (gameServices.start(LangCode.FR, GameType.solo)) {

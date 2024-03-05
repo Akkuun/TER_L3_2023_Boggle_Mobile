@@ -8,7 +8,7 @@ class BoggleAccelerometer extends StatefulWidget {
   BoggleAccelerometer({super.key});
 
   final ValueNotifier<bool> isShaking = ValueNotifier<bool>(
-      false); // cela permet de récupérer si une secousse a été détectée dans n'importe quelle partie de l'application (car c'est publique dans cette partie de l'application)
+      false); // cela permet de récupérer si une secousse a été détectée dans n'importe quelle partie de l'application (car c'est publique dans cette partie de la classe)
 
   @override
   _BoggleAccelerometerState createState() => _BoggleAccelerometerState();
@@ -80,9 +80,11 @@ class _BoggleAccelerometerState extends State<BoggleAccelerometer> {
 
     double magnitude = sqrt(x * x + y * y + z * z);
 
-    print('magnitude: $magnitude');
+    if(debug){
+      print('magnitude: $magnitude');
+    }
 
-    return magnitude > 15; // Ajustez le seuil en fonction de vos besoins
+    return magnitude > 20;
   }
 
   @override
