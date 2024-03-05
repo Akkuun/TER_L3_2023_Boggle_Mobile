@@ -11,12 +11,11 @@ class BoggleAccelerometer extends StatefulWidget {
       false); // cela permet de récupérer si une secousse a été détectée dans n'importe quelle partie de l'application (car c'est publique dans cette partie de la classe)
 
   @override
-  // ignore: library_private_types_in_public_api
-  _BoggleAccelerometerState createState() => _BoggleAccelerometerState();
+  BoggleAccelerometerState createState() => BoggleAccelerometerState();
 
 }
 
-class _BoggleAccelerometerState extends State<BoggleAccelerometer> {
+class BoggleAccelerometerState extends State<BoggleAccelerometer> {
   AccelerometerEvent? _accelerometerEvent;
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
   bool debug = false;

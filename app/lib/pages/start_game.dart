@@ -5,29 +5,57 @@ import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 // ignore: depend_on_referenced_packages
 import 'package:haptic_feedback/haptic_feedback.dart';
 
-class StartGamePage extends StatelessWidget {
+class StartGamePage extends StatefulWidget {
   const StartGamePage({super.key});
 
   @override
+  StartGamePageState createState() => StartGamePageState();
+}
+
+class StartGamePageState extends State<StartGamePage> {
+  late BoggleAccelerometer accelerometer;
+
+  @override
+  void initState() {
+    // une fois le widget initialisé on crée un écouteur sur l'accéléromètre
+    super.initState();
+
+    accelerometer = BoggleAccelerometer();
+    accelerometer.isShaking.addListener(_surDetectionSecousse);
+  }
+
+  @override
+  void dispose() {
+    // une vois le widget supprimer s'assure de la suppresion de l'écouteur
+    accelerometer.isShaking.removeListener(_surDetectionSecousse);
+    super.dispose();
+  }
+
+  void _surDetectionSecousse() {
+    if (accelerometer.isShaking.value) {
+      Haptics.vibrate(HapticsType.success); // retour haptique
+      accelerometer.isShaking.value = false; // on remet à zéro la détection de secousse
+      final gameServices = Provider.of<GameServices>(context, listen: false);
+      if (gameServices.start(LangCode.FR, GameType.solo)) {
+        final router = Provider.of<NavigationServices>(context, listen: false);
+        router.goToPage(PageName.game);
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]); // Force portrait mode
+
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
-    BoggleAccelerometer accelerometer = BoggleAccelerometer();
-    accelerometer.isShaking.addListener(() {
-      if (accelerometer.isShaking.value) {
-        //ici faire le retour hapitque
-        Haptics.vibrate(HapticsType.success);
-        // ignore: avoid_print
-        print('Shake detected');
-        if (gameServices.start(LangCode.FR, GameType.solo)) {
-          router.goToPage(PageName.game);
-        }
-      }
-    });
 
     return Center(
       child: Column(
