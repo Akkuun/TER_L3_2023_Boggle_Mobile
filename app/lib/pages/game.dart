@@ -69,7 +69,7 @@ class _GamePageState extends State<GamePage> {
     return _dictionary.contain(word);
   }
 
-  bool _endWordSelection(String word) {
+  bool _endWordSelection(String word, Set<int> indexes) {
     if (_previousWords.contains(word) || !_isWordValid(word)) {
       setState(() {
         _strikes++;
@@ -79,6 +79,20 @@ class _GamePageState extends State<GamePage> {
     _updateScore(wordScore(word));
     _previousWords.add(word);
     return true;
+  }
+
+  bool _endWordSelectionMultiplayer(String word, Set<int> indexes) {
+    if(_endWordSelection(word, indexes)) {
+      final database = FirebaseDatabase.instance;
+      final gameUID = Globals.gameCode;
+      final gameRef = database.ref('games/$gameUID');
+      final playerUID = FirebaseAuth.instance.currentUser!.uid;
+      final playerRef = gameRef.child('players/$playerUID');
+      playerRef.child('words').push().set(indexes.toList());
+      playerRef.child('score').set(_score);
+      return true;
+    }
+    return false;
   }
 
   int _updateScore(int wordScore) {
@@ -135,7 +149,8 @@ class _GamePageState extends State<GamePage> {
                         BoggleGrille(
                           letters: selectedLetter,
                           onWordSelectionEnd: _endWordSelection,
-                          isWordValid: _isWordValid
+                          isWordValid: _isWordValid,
+                          mode: widget.mode,
                         ),
                         WordsFound(previousWords: _previousWords),
                         const ActionAndTimer(),
@@ -174,7 +189,7 @@ class _GamePageState extends State<GamePage> {
                               ScoreBoard(score: _score, strikes: _strikes),
                               BoggleGrille(
                                 letters: snapshot.data!,
-                                onWordSelectionEnd: _endWordSelection,
+                                onWordSelectionEnd: _endWordSelectionMultiplayer,
                                 isWordValid: _isWordValid,
                               ),
                               WordsFound(previousWords: _previousWords),

@@ -7,14 +7,16 @@ import 'package:provider/provider.dart';
 
 class BoggleGrille extends StatefulWidget {
   final List<String> letters;
-  final bool Function(String) onWordSelectionEnd;
+  final bool Function(String, Set<int>) onWordSelectionEnd;
   final bool Function(String) isWordValid;
+  final GameType mode;
 
   const BoggleGrille({
     super.key,
     required this.letters,
     required this.onWordSelectionEnd,
     required this.isWordValid,
+    this.mode = GameType.solo,
   });
 
   @override
@@ -30,6 +32,8 @@ class _BoggleGrilleState extends State<BoggleGrille> {
   String currentWord = "";
   bool isCurrentWordValid = false;
   bool lock = false;
+
+  get mode => null;
 
   _detectTapedItem(PointerEvent event) {
     if (lock) {
@@ -93,7 +97,7 @@ class _BoggleGrilleState extends State<BoggleGrille> {
 
   void _sendWordToGameLogicAndClear(PointerUpEvent event) {
     if (currentWord.length >= 3) {
-      widget.onWordSelectionEnd(currentWord);
+      widget.onWordSelectionEnd(currentWord, selectedIndexes);
     }
     _clearSelection();
   }
