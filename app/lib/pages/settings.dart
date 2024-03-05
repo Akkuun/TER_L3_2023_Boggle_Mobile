@@ -7,6 +7,8 @@ import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/bottom_buttons.dart';
 import 'package:bouggr/pages/page_name.dart';
 
+import '../global.dart';
+
 /// Page des règles du jeu
 
 class SettingsPage extends StatefulWidget {
@@ -195,6 +197,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       onPressed: () {
                         //deconnexion
                         auth.signOut();
+                        Globals.gameCode = "";
+                        Globals.playerName = "";
                         router.goToPage(PageName.home);
                       },
                       btnSize: BtnSize.large,
