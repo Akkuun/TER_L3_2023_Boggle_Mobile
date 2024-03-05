@@ -24,6 +24,7 @@ class StartGamePage extends StatelessWidget {
         if (gameServices.start(LangCode.FR, GameType.solo)) {
           router.goToPage(PageName.game);
         }
+        accelerometer.dispose(); // ne pas oublier de libérer les ressources utilisées par le state
       }
     });
 
