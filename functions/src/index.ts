@@ -1,19 +1,49 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * import {onCall} from "firebase-functions/v2/https";
- * import {onDocumentWritten} from "firebase-functions/v2/firestore";
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+    const {onValueWritten,onValueCreated} = require("firebase-functions/v2/database");
+const {logger} = require("firebase-functions");
 
-import {onRequest} from "firebase-functions/v2/https";
-import * as logger from "firebase-functions/logger";
+// The Firebase Admin SDK to access the Firebase Realtime Database.
+const admin = require("firebase-admin");
 
-// Start writing functions
-// https://firebase.google.com/docs/functions/typescript
 
-// export const helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+admin.initializeApp();
+// Init firestore
+const store = admin.firestore();
+
+export const onNewGame = onValueCreated(
+    {
+        ref: "/games/{gameId}",
+        instance: "bouggr-4bd2b-default-rtdb",
+         region: "europe-west1"
+    },
+        async (event: any) => {
+        
+          store.collection("games").doc(event.params.gameId).set({
+            gameId: event.params.gameId,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            status: "created"
+          });
+
+        // create a new game
+
+    }
+    );
+// Path: src/index.ts
+
+export const onNewGameEdit = onValueWritten(
+  {
+    ref: "/games/{gameId}",
+    instance: "bouggr-4bd2b-default-rtdb",
+     region: "europe-west1"
+  },
+    async (event: any) => {
+         store.collection("games").doc(event.params.gameId).set({
+            gameId: event.params.gameId,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+            status: "created"
+          });
+       
+       logger.info(`Game ${event} was edited`);
+    }
+);
