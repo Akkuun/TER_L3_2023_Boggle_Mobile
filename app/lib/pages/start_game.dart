@@ -19,6 +19,8 @@ class StartGamePage extends StatefulWidget {
 
 class StartGamePageState extends State<StartGamePage> {
   late BoggleAccelerometer accelerometer;
+  // ignore: non_constant_identifier_names
+  bool PageCharger = false;
 
   @override
   void initState() {
@@ -37,9 +39,10 @@ class StartGamePageState extends State<StartGamePage> {
   }
 
   void _surDetectionSecousse() {
-    if (accelerometer.isShaking.value) {
+    if (accelerometer.isShaking.value && PageCharger) {
       Haptics.vibrate(HapticsType.success); // retour haptique
-      accelerometer.isShaking.value = false; // on remet à zéro la détection de secousse
+      accelerometer.isShaking.value =
+          false; // on remet à zéro la détection de secousse
       final gameServices = Provider.of<GameServices>(context, listen: false);
       if (gameServices.start(LangCode.FR, GameType.solo)) {
         final router = Provider.of<NavigationServices>(context, listen: false);
@@ -53,6 +56,15 @@ class StartGamePageState extends State<StartGamePage> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]); // Force portrait mode
+
+    ///pour éviter le problème de mouvement du téléphone avant le chargement du widget
+    //WidgetsBinding permet de faire des actions après le chargement du widget
+    //instance permet de récupérer l'instance de l'application
+    //addPostFrameCallback permet de faire une action après le chargement du widget
+    //(_){...} est une fonction anonyme
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      PageCharger = true; // une fois le widget chargé on met à jour la variable
+    });
 
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
