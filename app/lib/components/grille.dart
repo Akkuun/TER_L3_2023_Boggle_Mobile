@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 class BoggleGrille extends StatefulWidget {
   final List<String> letters;
-  final bool Function(String, Set<int>) onWordSelectionEnd;
+  final bool Function(String, List<(int, int)>) onWordSelectionEnd;
   final bool Function(String) isWordValid;
   final GameType mode;
 
@@ -97,7 +97,11 @@ class _BoggleGrilleState extends State<BoggleGrille> {
 
   void _sendWordToGameLogicAndClear(PointerUpEvent event) {
     if (currentWord.length >= 3) {
-      widget.onWordSelectionEnd(currentWord, selectedIndexes);
+      List<(int, int)> indexes = [];
+      for (var index in selectedIndexes) {
+        indexes.add((index ~/ 4, index % 4));
+      }
+      widget.onWordSelectionEnd(currentWord, indexes);
     }
     _clearSelection();
   }

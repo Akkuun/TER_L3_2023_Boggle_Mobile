@@ -69,7 +69,7 @@ class _GamePageState extends State<GamePage> {
     return _dictionary.contain(word);
   }
 
-  bool _endWordSelection(String word, Set<int> indexes) {
+  bool _endWordSelection(String word, List<(int, int)> indexes) {
     if (_previousWords.contains(word) || !_isWordValid(word)) {
       setState(() {
         _strikes++;
@@ -81,14 +81,15 @@ class _GamePageState extends State<GamePage> {
     return true;
   }
 
-  bool _endWordSelectionMultiplayer(String word, Set<int> indexes) {
+  bool _endWordSelectionMultiplayer(String word, List<(int, int)> indexes) {
     if(_endWordSelection(word, indexes)) {
       final database = FirebaseDatabase.instance;
       final gameUID = Globals.gameCode;
       final gameRef = database.ref('games/$gameUID');
       final playerUID = FirebaseAuth.instance.currentUser!.uid;
       final playerRef = gameRef.child('players/$playerUID');
-      playerRef.child('words').push().set(indexes.toList());
+      var res = indexes.map((e) => {"x" : e.$1, "y" : e.$2}).toList();
+      playerRef.child('words').push().set(res);
       playerRef.child('score').set(_score);
       return true;
     }
