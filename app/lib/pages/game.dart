@@ -52,34 +52,12 @@ class _GamePageState extends State<GamePage> {
     super.initState();
     var lang = Provider.of<GameServices>(context, listen: false).language;
     List<String> selectedLetter;
-
-    switch(widget.mode) {
-      case GameType.solo:
-        if (widget.letters == null) {
-          _dictionary = Globals.selectDictionary(lang);
-          _dictionary.load();
-          selectedLetter = Globals.selectDiceSet(lang).roll();
-        } else {
-          selectedLetter = widget.letters!;
-        }
-        break;
-      case GameType.multi:
-        User? user;
-        try {
-          user = FirebaseAuth.instance.currentUser;
-          if (user == null) {
-            // error
-          }
-        } catch (e) {
-          // error
-        }
-        final playerUID = user!.uid;
-        FirebaseDatabase database = FirebaseDatabase.instance;
-        var gameRef = database.ref('games/${Globals.gameCode}');
-        var letters = gameRef.child('letters').get();
-        print(letters);
-        selectedLetter = letters as List<String>;
-        break;
+    if (widget.letters == null) {
+      _dictionary = Globals.selectDictionary(lang);
+      _dictionary.load();
+      selectedLetter = Globals.selectDiceSet(lang).roll();
+    } else {
+      selectedLetter = widget.letters!;
     }
 
     boggleGrille = BoggleGrille(
