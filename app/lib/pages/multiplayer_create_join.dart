@@ -50,7 +50,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
         });
       }
       Globals.gameCode = _gameUID!;
-      router.goToPage(PageName.game);
+      router.goToPage(PageName.multiplayerGame);
       return true;
     } else {
       return false;
