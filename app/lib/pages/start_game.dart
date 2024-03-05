@@ -6,10 +6,11 @@ import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+// ignore: depend_on_referenced_packages
 import 'package:haptic_feedback/haptic_feedback.dart';
 
 class StartGamePage extends StatelessWidget {
-  const StartGamePage({Key? key}) : super(key: key);
+  const StartGamePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +21,11 @@ class StartGamePage extends StatelessWidget {
       if (accelerometer.isShaking.value) {
         //ici faire le retour hapitque
         Haptics.vibrate(HapticsType.success);
+        // ignore: avoid_print
         print('Shake detected');
         if (gameServices.start(LangCode.FR, GameType.solo)) {
           router.goToPage(PageName.game);
         }
-        accelerometer.dispose(); // ne pas oublier de libérer les ressources utilisées par le state
       }
     });
 

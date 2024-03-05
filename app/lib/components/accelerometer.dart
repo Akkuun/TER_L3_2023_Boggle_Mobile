@@ -10,14 +10,10 @@ class BoggleAccelerometer extends StatefulWidget {
   final ValueNotifier<bool> isShaking = ValueNotifier<bool>(
       false); // cela permet de récupérer si une secousse a été détectée dans n'importe quelle partie de l'application (car c'est publique dans cette partie de la classe)
 
-  _BoggleAccelerometerState? _state; //permet de stocker l'état du widget
-
   @override
+  // ignore: library_private_types_in_public_api
   _BoggleAccelerometerState createState() => _BoggleAccelerometerState();
 
-  void dispose() { //permet de libérer les ressources utilisées par le state
-    _state?.dispose();
-  }
 }
 
 class _BoggleAccelerometerState extends State<BoggleAccelerometer> {
@@ -86,6 +82,7 @@ class _BoggleAccelerometerState extends State<BoggleAccelerometer> {
     double magnitude = sqrt(x * x + y * y + z * z);
 
     if(debug){
+      // ignore: avoid_print
       print('magnitude: $magnitude');
     }
 
