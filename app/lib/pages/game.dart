@@ -15,6 +15,7 @@ import 'package:bouggr/providers/game.dart';
 //utils
 import 'package:bouggr/providers/timer.dart';
 
+
 import 'package:bouggr/utils/word_score.dart';
 import 'package:bouggr/utils/dico.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -29,6 +30,7 @@ import '../components/pop_up_game_menu.dart';
 class GamePage extends StatefulWidget {
   final List<String>? letters;
   final GameType mode;
+
   const GamePage({
     super.key,
     this.letters,
@@ -40,8 +42,8 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> {
-  late BoggleGrille boggleGrille;
   final List<String> _previousWords = [];
+  late final List<String> selectedLetter;
   int _score = 0;
   int _strikes = 0;
 
@@ -51,7 +53,6 @@ class _GamePageState extends State<GamePage> {
   void initState() {
     super.initState();
     var lang = Provider.of<GameServices>(context, listen: false).language;
-    List<String> selectedLetter;
     if (widget.letters == null) {
       _dictionary = Globals.selectDictionary(lang);
       _dictionary.load();
@@ -59,11 +60,6 @@ class _GamePageState extends State<GamePage> {
     } else {
       selectedLetter = widget.letters!;
     }
-
-    boggleGrille = BoggleGrille(
-        letters: selectedLetter,
-        onWordSelectionEnd: _endWordSelection,
-        isWordValid: _isWordValid);
   }
 
   bool _isWordValid(String word) {
@@ -97,7 +93,7 @@ class _GamePageState extends State<GamePage> {
       return [];
     }
     int max =
-        _previousWords.map((e) => e.length).reduce((a, b) => a > b ? a : b);
+    _previousWords.map((e) => e.length).reduce((a, b) => a > b ? a : b);
     List<int> count = List.filled(max - 2, 0);
     for (var word in _previousWords) {
       count[word.length - 3]++;
@@ -105,41 +101,117 @@ class _GamePageState extends State<GamePage> {
     return count;
   }
 
+  Future<List<String>> _fetchLetters() async {
+    final database = FirebaseDatabase.instance;
+    final gameUID = Globals.gameCode;
+    final gameRef = database.ref('games/$gameUID');
+    final snapshot = await gameRef.child('letters').get();
+    final letters = snapshot.value as String;
+    var res = List<String>.filled(letters.length, '');
+    for (var i = 0; i < letters.length; i++) {
+      res[i] = letters[i];
+    }
+    return res;
+  }
+
   @override
   Widget build(BuildContext context) {
-    var timerServices = context.watch<TimerServices>();
-    var gameServices = context.watch<GameServices>();
-    return Globals(child: Builder(builder: (BuildContext innerContext) {
-      double opacity = timerServices.progression;
-
-      return Stack(
-        children: [
-          Container(
-            color: Colors.red.withOpacity(opacity),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: Column(
-                  children: [
-                    const AppTitle(fontSize: 56),
-                    ScoreBoard(score: _score, strikes: _strikes),
-                    boggleGrille,
-                    WordsFound(previousWords: _previousWords),
-                    const ActionAndTimer(),
-                    Text(timerServices.seconds.toString()),
-                    Text(gameServices.triggerPopUp.toString())
-                  ],
+    switch (widget.mode) {
+      case GameType.solo:
+        var timerServices = context.watch<TimerServices>();
+        return Globals(child: Builder(builder: (BuildContext innerContext) {
+          double opacity = timerServices.progression;
+          return Stack(
+            children: [
+              Container(
+                color: Colors.red.withOpacity(opacity),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        const AppTitle(fontSize: 56),
+                        ScoreBoard(score: _score, strikes: _strikes),
+                        BoggleGrille(
+                          letters: selectedLetter,
+                          onWordSelectionEnd: _endWordSelection,
+                          isWordValid: _isWordValid
+                        ),
+                        WordsFound(previousWords: _previousWords),
+                        const ActionAndTimer(),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          PopUpGameMenu(
-            score: _score,
-            grid: boggleGrille.letters.join(),
-            words: _countWordsByLength(),
-          ),
-        ],
-      );
-    }));
+              PopUpGameMenu(
+                score: _score,
+                grid: selectedLetter.join(),
+                words: _countWordsByLength(),
+              ),
+            ],
+          );
+        }));
+      case GameType.multi:
+        final letters = _fetchLetters();
+        return Globals(child: Builder(builder: (BuildContext innerContext)
+        {
+          double opacity = 0;
+          return FutureBuilder<List<String>>(
+            future: letters,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Stack(
+                  children: [
+                    Container(
+                      color: Colors.red.withOpacity(opacity),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              const AppTitle(fontSize: 56),
+                              ScoreBoard(score: _score, strikes: _strikes),
+                              BoggleGrille(
+                                letters: snapshot.data!,
+                                onWordSelectionEnd: _endWordSelection,
+                                isWordValid: _isWordValid,
+                              ),
+                              WordsFound(previousWords: _previousWords),
+                              const ActionAndTimer(),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    PopUpGameMenu(
+                      score: _score,
+                      grid: selectedLetter.join(),
+                      words: _countWordsByLength(),
+                    ),
+                  ],
+                );
+              } else {
+                return const CircularProgressIndicator();
+              }
+            },
+          );
+        }));
+    }
+  }
+}
+
+class GameWidget extends StatelessWidget {
+  final GameType mode;
+  const GameWidget({
+    super.key,
+    this.mode = GameType.solo,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GamePage(
+      mode: mode,
+    );
   }
 }

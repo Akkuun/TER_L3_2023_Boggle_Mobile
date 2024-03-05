@@ -106,12 +106,13 @@ class _BoggleTimerState extends State<BoggleTimer> {
   String displayTimer() {
     String displaySeconds = seconds.toString();
     String displayMinutes = minutes.toString();
-    String displayProgression = progression.toString();
+    //String displayProgression = progression.toString();
 
     if (seconds < 10) {
       displaySeconds = '0$seconds';
     }
-    return '$displayMinutes:$displaySeconds    $displayProgression ';
+    return '$displayMinutes:$displaySeconds';
+    //return '$displayMinutes:$displaySeconds    $displayProgression ';
   }
 
   @override
