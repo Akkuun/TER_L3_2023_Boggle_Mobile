@@ -1,31 +1,33 @@
 import 'dart:async';
 import 'dart:math';
-
+import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
-class BoggleAccelerometer extends StatefulWidget {
-  BoggleAccelerometer({super.key});
+class BoggleAccelerometre extends StatefulWidget {
+  BoggleAccelerometre({super.key});
 
-  final ValueNotifier<bool> isShaking = ValueNotifier<bool>(
+  final ValueNotifier<bool> estSecouer = ValueNotifier<bool>(
       false); // cela permet de récupérer si une secousse a été détectée dans n'importe quelle partie de l'application (car c'est publique dans cette partie de la classe)
 
   @override
-  BoggleAccelerometerState createState() => BoggleAccelerometerState();
-
+  BoggleAccelerometreState createState() => BoggleAccelerometreState();
 }
 
-class BoggleAccelerometerState extends State<BoggleAccelerometer> {
+class BoggleAccelerometreState extends State<BoggleAccelerometre> {
   AccelerometerEvent? _accelerometerEvent;
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
   bool debug = false;
+  Queue<double> fileAccel = Queue<double>();
+  int fileTaille = 6;
+  double seuilDetection = 20;
 
   Duration sensorInterval = SensorInterval.normalInterval;
 
   @override
   void initState() {
     super.initState();
-    startAccelerometer();
+    startAccelerometre();
   }
 
   @override
@@ -35,17 +37,18 @@ class BoggleAccelerometerState extends State<BoggleAccelerometer> {
       subscription.cancel();
     }
     _streamSubscriptions.clear();
-    widget.isShaking.value = false;
+    widget.estSecouer.value = false;
+    fileAccel.clear();
   }
 
-  void startAccelerometer() {
+  void startAccelerometre() {
     _streamSubscriptions.add(
       accelerometerEventStream(samplingPeriod: sensorInterval).listen(
         // c'est pour écouter les événements de l'accéléromètre (physique)
         (AccelerometerEvent event) {
           setState(() {
             _accelerometerEvent = event;
-            widget.isShaking.value = shakeDetected();
+            widget.estSecouer.value = secousseDetection();
           });
         },
         onError: (e) {
@@ -72,7 +75,7 @@ class BoggleAccelerometerState extends State<BoggleAccelerometer> {
     );
   }
 
-  bool shakeDetected() {
+  bool secousseDetection() {
     // la magnitude est une mesure de l'intensité totale de l'accélération, indépendamment de la direction pour notre cas
     double x = _accelerometerEvent!.x;
     double y = _accelerometerEvent!.y;
@@ -80,23 +83,40 @@ class BoggleAccelerometerState extends State<BoggleAccelerometer> {
 
     double magnitude = sqrt(x * x + y * y + z * z);
 
-    if(debug){
-      // ignore: avoid_print
-      print('magnitude: $magnitude');
+    fileAccel.add(magnitude);
+    if (fileAccel.length > fileTaille) {
+      // on garde que les 10 dernières valeurs
+      fileAccel.removeFirst();
+    }
+    if (fileAccel.length < fileTaille) {
+      // on attend d'avoir 10 valeurs
+      return false;
     }
 
-    return magnitude > 20;
+    double moyMagnitude = fileAccel.reduce((a, b) => a + b) / fileAccel.length;
+
+    if (moyMagnitude < seuilDetection) {
+      fileAccel.clear();
+      return false;
+    }
+
+    if (debug) {
+      // ignore: avoid_print
+      print('magnitude moyenne: $moyMagnitude');
+    }
+
+    return moyMagnitude > seuilDetection;
   }
 
   @override
   Widget build(BuildContext context) {
-    switch(debug){
+    switch (debug) {
       case true:
         return Column(
           children: [
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: Text('Accelerometer'),
+              child: Text('Accelerometre'),
             ),
             Text(_accelerometerEvent?.x.toStringAsFixed(1) ?? '?'),
             Text(_accelerometerEvent?.y.toStringAsFixed(1) ?? '?'),

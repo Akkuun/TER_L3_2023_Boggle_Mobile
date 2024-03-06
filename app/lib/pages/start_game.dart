@@ -1,4 +1,4 @@
-import 'package:bouggr/components/accelerometer.dart';
+import 'package:bouggr/components/accelerometre.dart';
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/game.dart';
@@ -18,7 +18,7 @@ class StartGamePage extends StatefulWidget {
 }
 
 class StartGamePageState extends State<StartGamePage> {
-  late BoggleAccelerometer accelerometer;
+  late BoggleAccelerometre accelerometre;
   // ignore: non_constant_identifier_names
   bool PageCharger = false;
 
@@ -27,21 +27,21 @@ class StartGamePageState extends State<StartGamePage> {
     // une fois le widget initialisé on crée un écouteur sur l'accéléromètre
     super.initState();
 
-    accelerometer = BoggleAccelerometer();
-    accelerometer.isShaking.addListener(_surDetectionSecousse);
+    accelerometre = BoggleAccelerometre();
+    accelerometre.estSecouer.addListener(_surDetectionSecousse);
   }
 
   @override
   void dispose() {
     // une vois le widget supprimer s'assure de la suppresion de l'écouteur
-    accelerometer.isShaking.removeListener(_surDetectionSecousse);
+    accelerometre.estSecouer.removeListener(_surDetectionSecousse);
     super.dispose();
   }
 
   void _surDetectionSecousse() {
-    if (accelerometer.isShaking.value && PageCharger) {
+    if (accelerometre.estSecouer.value && PageCharger) {
       Haptics.vibrate(HapticsType.success); // retour haptique
-      accelerometer.isShaking.value =
+      accelerometre.estSecouer.value =
           false; // on remet à zéro la détection de secousse
       final gameServices = Provider.of<GameServices>(context, listen: false);
       if (gameServices.start(LangCode.FR, GameType.solo)) {
@@ -72,7 +72,7 @@ class StartGamePageState extends State<StartGamePage> {
     return Center(
       child: Column(
         children: [
-          accelerometer,
+          accelerometre,
           const Text(
             "Secouer votre téléphone pour lancer une partie",
             textAlign: TextAlign.center,
