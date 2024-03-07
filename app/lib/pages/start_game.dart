@@ -14,10 +14,10 @@ class StartGamePage extends StatefulWidget {
   const StartGamePage({super.key});
 
   @override
-  StartGamePageState createState() => StartGamePageState();
+  State<StartGamePage> createState() => _StartGamePageState();
 }
 
-class StartGamePageState extends State<StartGamePage> {
+class _StartGamePageState extends State<StartGamePage> {
   late BoggleAccelerometre accelerometre;
   // ignore: non_constant_identifier_names
   bool PageCharger = false;

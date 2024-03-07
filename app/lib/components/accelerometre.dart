@@ -130,7 +130,7 @@ class BoggleAccelerometreState extends State<BoggleAccelerometre> {
           ],
         );
       case false:
-        return Container();
+        return const SizedBox.shrink();
     }
   }
 }
