@@ -21,6 +21,8 @@ class StartGamePageState extends State<StartGamePage> {
   late BoggleAccelerometre accelerometre;
   // ignore: non_constant_identifier_names
   bool PageCharger = false;
+  int nbSecousse = 0;
+  int secousseDemander = 10;
 
   @override
   void initState() {
@@ -38,16 +40,30 @@ class StartGamePageState extends State<StartGamePage> {
     super.dispose();
   }
 
-  void _surDetectionSecousse() {
+  Future<void> _surDetectionSecousse() async {
     if (accelerometre.estSecouer.value && PageCharger) {
-      Haptics.vibrate(HapticsType.success); // retour haptique
+      Haptics.vibrate(HapticsType.soft); // retour haptique
+      await Future.delayed(const Duration(seconds: 1));
+      nbSecousse++; // on incrémente le nombre de secousse
       accelerometre.estSecouer.value =
           false; // on remet à zéro la détection de secousse
-      final gameServices = Provider.of<GameServices>(context, listen: false);
-      if (gameServices.start(LangCode.FR, GameType.solo)) {
-        final router = Provider.of<NavigationServices>(context, listen: false);
-        router.goToPage(PageName.game);
+      if (nbSecousse >= secousseDemander) {
+        // si le nombre de secousse demander est atteint
+        Haptics.vibrate(HapticsType.success); // retour haptique
+        if (mounted) { // Vérifiez si le widget est monté avant de lancer le jeu car je sais pas pourquoi j'ai eu une erreur et c'est la solution d'après stackoverflow
+          // Vérifiez si le widget est monté avant de lancer le jeu
+          _startGame(); // on lance la partie
+        }
       }
+    }
+  }
+
+  void _startGame() {
+    final router = Provider.of<NavigationServices>(context, listen: false);
+    final gameServices = Provider.of<GameServices>(context, listen: false);
+
+    if (gameServices.start(LangCode.FR, GameType.solo)) {
+      router.goToPage(PageName.game);
     }
   }
 
