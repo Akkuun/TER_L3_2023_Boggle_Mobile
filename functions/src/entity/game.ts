@@ -4,14 +4,18 @@ import { Dictionary } from "./dictionnary";
 
 export class Game {
   private isStarted = false;
-  private timerUntilShutdown = 100;
+  private timerUntilShutdown = 600;
+  private timer =180;
 
   constructor(
-    private timer: number,
-    private grid: string[],
-    private playerIds: string[],
+    private db : any,
+    private grid: string,
     private dico : Dictionary
   ) {}
+
+  public get Data() {
+    return this.db.get();
+  }
 
   public Start() {
     this.isStarted = true;
@@ -31,6 +35,8 @@ export class Game {
     // remove from bdd & send message
 
   }
+
+  public Init() {}
 
   public DecressTimer() :boolean {
     
