@@ -77,9 +77,6 @@ class _StartGamePageState extends State<StartGamePage> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-    ]); // Force portrait mode
 
     ///pour éviter le problème de mouvement du téléphone avant le chargement du widget
     //WidgetsBinding permet de faire des actions après le chargement du widget
