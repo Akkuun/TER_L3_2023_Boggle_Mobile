@@ -29,7 +29,9 @@ class StartGamePageState extends State<StartGamePage> {
     // une fois le widget initialisé on crée un écouteur sur l'accéléromètre
     super.initState();
 
-    accelerometre = BoggleAccelerometre();
+    accelerometre = BoggleAccelerometre(
+        fileTaille: 6,
+        seuilDetection: 20); //on donne des paramètres à l'accéléromètre
     accelerometre.estSecouer.addListener(_surDetectionSecousse);
   }
 
@@ -41,16 +43,22 @@ class StartGamePageState extends State<StartGamePage> {
   }
 
   Future<void> _surDetectionSecousse() async {
+    await Future.delayed(const Duration(milliseconds: 500));
     if (accelerometre.estSecouer.value && PageCharger) {
-      Haptics.vibrate(HapticsType.soft); // retour haptique
-      await Future.delayed(const Duration(seconds: 1));
+      Haptics.vibrate(HapticsType.rigid); // retour haptique
       nbSecousse++; // on incrémente le nombre de secousse
       accelerometre.estSecouer.value =
           false; // on remet à zéro la détection de secousse
       if (nbSecousse >= secousseDemander) {
         // si le nombre de secousse demander est atteint
+        for (int i = 0; i < 3; i++) { //tentative de secousse personnalisée
+          Haptics.vibrate(HapticsType.heavy);
+          await Future.delayed(const Duration(
+              milliseconds: 100)); // Attendez un peu entre chaque secousse
+        }
         Haptics.vibrate(HapticsType.success); // retour haptique
-        if (mounted) { // Vérifiez si le widget est monté avant de lancer le jeu car je sais pas pourquoi j'ai eu une erreur et c'est la solution d'après stackoverflow
+        if (mounted) {
+          // Vérifiez si le widget est monté avant de lancer le jeu car je sais pas pourquoi j'ai eu une erreur et c'est la solution d'après stackoverflow
           // Vérifiez si le widget est monté avant de lancer le jeu
           _startGame(); // on lance la partie
         }

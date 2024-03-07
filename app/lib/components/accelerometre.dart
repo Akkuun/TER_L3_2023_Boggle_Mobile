@@ -5,10 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 class BoggleAccelerometre extends StatefulWidget {
-  BoggleAccelerometre({super.key});
 
   final ValueNotifier<bool> estSecouer = ValueNotifier<bool>(
       false); // cela permet de récupérer si une secousse a été détectée dans n'importe quelle partie de l'application (car c'est publique dans cette partie de la classe)
+
+  final int fileTaille;
+  final double seuilDetection;
+
+  BoggleAccelerometre({super.key, this.fileTaille = 6, this.seuilDetection = 20});
 
   @override
   BoggleAccelerometreState createState() => BoggleAccelerometreState();
@@ -19,14 +23,16 @@ class BoggleAccelerometreState extends State<BoggleAccelerometre> {
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
   bool debug = false;
   Queue<double> fileAccel = Queue<double>();
-  int fileTaille = 6;
-  double seuilDetection = 20;
+  late int fileTaille;
+  late double seuilDetection;
 
   Duration sensorInterval = SensorInterval.normalInterval;
 
   @override
   void initState() {
     super.initState();
+    fileTaille = widget.fileTaille;
+    seuilDetection = widget.seuilDetection;
     startAccelerometre();
   }
 
