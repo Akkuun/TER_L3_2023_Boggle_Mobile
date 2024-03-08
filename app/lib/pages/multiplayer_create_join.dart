@@ -43,7 +43,7 @@ class MultiplayerCreateJoinPage extends StatefulWidget {
 class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
   String? _gameUID = '';
   BtnType _btnType = BtnType.secondary;
-  late int _joinCode;
+  int _joinCode = -1;
 
   // Leave game
 
@@ -190,7 +190,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
           text: "Join a game",
           btnType: _btnType,
         ),
-        if (_joinCode != 0)
+        if (_joinCode > 0)
           Text(
             JoinGameReturn.values[_joinCode] as String,
             style: const TextStyle(
