@@ -49,6 +49,7 @@ dependencies:
   shared_preferences: ^2.2.2
   cloud_firestore: ^4.15.5
   firebase_database: ^10.4.7
+  cloud_functions: ^4.6.8
 
 dev_dependencies:
   flutter_test:
