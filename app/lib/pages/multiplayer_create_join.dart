@@ -32,6 +32,8 @@ enum JoinGameReturn {
   invalidPassword,
 }
 
+
+
 class MultiplayerCreateJoinPage extends StatefulWidget {
   const MultiplayerCreateJoinPage({super.key});
 
@@ -44,6 +46,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
   String? _gameUID = '';
   BtnType _btnType = BtnType.secondary;
   int _joinCode = -1;
+  String error = '';
 
   // Leave game
 
@@ -57,8 +60,8 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
         "email": FirebaseAuth.instance.currentUser!.email,
       },
     );
-    final response = result.data as int;
-    print("Succesfully joined game $_gameUID. Return code : $response");
+    final response = result.data;
+    print("Trting to join game $_gameUID. Return code : $response");
     if (response == JoinGameReturn.success.index) {
       Globals.gameCode = _gameUID!;
       router.goToPage(PageName.multiplayerGame);
@@ -83,6 +86,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
       final response = result.data as String;
       print("Succesfully created game $response server-side");
       Globals.gameCode = response;
+      Globals.currentMultiplayerGame = letters.join('');
       router.goToPage(PageName.multiplayerGame);
     } catch (e) {
       print("ERROR CREATING GAME ? $e");
@@ -91,6 +95,8 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
 
   @override
   Widget build(BuildContext context) {
+    Globals.gameCode = '';
+    Globals.currentMultiplayerGame = '';
     final router = Provider.of<NavigationServices>(context, listen: false);
     User? user;
     try {
@@ -176,30 +182,31 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
           ),
         ),
         BtnBoggle(
-          onPressed: () {
-            _joinCode = _joinGame(user!.uid) as int;
-            print("Joining game $_gameUID");
+          onPressed: () async {
+            _joinCode = await _joinGame(user!.uid);
+            print("Joining game $_gameUID with code $_joinCode");
             if (_joinCode == 0) {
-              print("Join code $_joinCode");
               router.goToPage(PageName.multiplayerGame);
             } else {
-              print("Incorrect code $_joinCode");
+              setState(() {
+                error = "Error joining game\n${JoinGameReturn.values[_joinCode]}";
+              });
             }
           },
           btnSize: BtnSize.large,
           text: "Join a game",
           btnType: _btnType,
         ),
-        if (_joinCode > 0)
-          Text(
-            JoinGameReturn.values[_joinCode] as String,
-            style: const TextStyle(
-              color: Colors.red,
-              fontSize: 26,
-              fontFamily: 'Jua',
-              fontWeight: FontWeight.w400,
-            ),
+        Text(
+          error,
+          style: const TextStyle(
+            color: Colors.red,
+            fontSize: 26,
+            fontFamily: 'Jua',
+            fontWeight: FontWeight.w400,
           ),
+          textAlign: TextAlign.center,
+        ),
       ],
     ));
   }

@@ -18,6 +18,7 @@ import 'package:bouggr/providers/timer.dart';
 
 import 'package:bouggr/utils/word_score.dart';
 import 'package:bouggr/utils/dico.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 //flutter
@@ -81,7 +82,7 @@ class _GamePageState extends State<GamePage> {
     return true;
   }
 
-  bool _endWordSelectionMultiplayer(String word, List<(int, int)> indexes) {
+  bool _endWordSelectionMultiplayerOld(String word, List<(int, int)> indexes) {
     if(_endWordSelection(word, indexes)) {
       final database = FirebaseDatabase.instance;
       final gameUID = Globals.gameCode;
@@ -94,6 +95,18 @@ class _GamePageState extends State<GamePage> {
       return true;
     }
     return false;
+  }
+
+  bool _endWordSelectionMultiplayer(String word, List<(int, int)> indexes) {
+    final database = FirebaseDatabase.instance;
+    final gameUID = Globals.gameCode;
+    var res = indexes.map((e) => {"x" : e.$1, "y" : e.$2}).toList();
+    final result = FirebaseFunctions.instance.httpsCallable('sendWord').call({
+      "gameId": gameUID,
+      "userId": FirebaseAuth.instance.currentUser!.uid,
+      "word": res,
+    }).then((value) => print("Word $word sent to server"));
+    return _endWordSelection(word, indexes);
   }
 
   int _updateScore(int wordScore) {
@@ -117,7 +130,12 @@ class _GamePageState extends State<GamePage> {
   }
 
   Future<List<String>> _fetchLetters() async {
-    print("fetching letters from firebase");
+    print("Fetching letters");
+    if (Globals.currentMultiplayerGame.isNotEmpty) {
+      print("Letters already fetched before : ${Globals.currentMultiplayerGame}");
+      return Globals.currentMultiplayerGame.split('');
+    }
+    print("Fetching letters from firebase");
     final database = FirebaseDatabase.instance;
     final gameUID = Globals.gameCode;
     final gameRef = database.ref('games/$gameUID');
@@ -127,6 +145,8 @@ class _GamePageState extends State<GamePage> {
     for (var i = 0; i < letters.length; i++) {
       res[i] = letters[i];
     }
+    print("Letters fetched : $res");
+    Globals.currentMultiplayerGame = letters;
     return res;
   }
 
