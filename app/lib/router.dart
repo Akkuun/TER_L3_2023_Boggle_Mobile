@@ -81,7 +81,10 @@ class _BouggrRouter extends State<BouggrRouter> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                page, //affichage de la page
+                SizedBox(
+                    height: constraints.maxHeight,
+                    child: page
+                ), //affichage de la page
               ],
             ),
           ),
