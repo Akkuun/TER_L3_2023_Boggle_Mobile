@@ -137,36 +137,16 @@ class _GamePageState extends State<GamePage> {
         var timerServices = context.watch<TimerServices>();
         return Globals(child: Builder(builder: (BuildContext innerContext) {
           double opacity = timerServices.progression;
-          return Stack(
-            children: [
-              Container(
-                color: Colors.red.withOpacity(opacity),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        const AppTitle(fontSize: 56),
-                        ScoreBoard(score: _score, strikes: _strikes),
-                        BoggleGrille(
-                          letters: selectedLetter,
-                          onWordSelectionEnd: _endWordSelection,
-                          isWordValid: _isWordValid,
-                          mode: widget.mode,
-                        ),
-                        WordsFound(previousWords: _previousWords),
-                        const ActionAndTimer(),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              PopUpGameMenu(
-                score: _score,
-                grid: selectedLetter.join(),
-                words: _countWordsByLength(),
-              ),
-            ],
+          return GameWidget(
+            mode: widget.mode,
+            opacity: opacity,
+            letters: selectedLetter,
+            score: _score,
+            strikes: _strikes,
+            previousWords: _previousWords,
+            endWordSelection: _endWordSelection,
+            isWordValid: _isWordValid,
+            countWordsByLength: _countWordsByLength,
           );
         }));
       case GameType.multi:
@@ -178,35 +158,16 @@ class _GamePageState extends State<GamePage> {
             future: letters,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Stack(
-                  children: [
-                    Container(
-                      color: Colors.red.withOpacity(opacity),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(
-                          child: Column(
-                            children: [
-                              const AppTitle(fontSize: 56),
-                              ScoreBoard(score: _score, strikes: _strikes),
-                              BoggleGrille(
-                                letters: snapshot.data!,
-                                onWordSelectionEnd: _endWordSelectionMultiplayer,
-                                isWordValid: _isWordValid,
-                              ),
-                              WordsFound(previousWords: _previousWords),
-                              const ActionAndTimer(),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    PopUpGameMenu(
-                      score: _score,
-                      grid: selectedLetter.join(),
-                      words: _countWordsByLength(),
-                    ),
-                  ],
+                return GameWidget(
+                  mode: widget.mode,
+                  opacity: opacity,
+                  letters: snapshot.data!,
+                  score: _score,
+                  strikes: _strikes,
+                  previousWords: _previousWords,
+                  endWordSelection: _endWordSelectionMultiplayer,
+                  isWordValid: _isWordValid,
+                  countWordsByLength: _countWordsByLength,
                 );
               } else {
                 return const CircularProgressIndicator();
@@ -220,15 +181,72 @@ class _GamePageState extends State<GamePage> {
 
 class GameWidget extends StatelessWidget {
   final GameType mode;
+  final double opacity;
+  final List<String> letters;
+  final int score;
+  final int strikes;
+  final List<String> previousWords;
+  final bool Function(String word, List<(int, int)> indexes)? endWordSelection;
+  final bool Function(String word) isWordValid;
+  final List<int> Function() countWordsByLength;
+
   const GameWidget({
     super.key,
     this.mode = GameType.solo,
+    this.opacity = 0,
+    required this.letters,
+    required this.score,
+    required this.strikes,
+    required this.previousWords,
+    this.endWordSelection,
+    required this.isWordValid,
+    required this.countWordsByLength,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GamePage(
-      mode: mode,
+    return Stack(
+      children: [
+        Stack(
+          children: [
+            Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  color: Colors.yellow,
+                  height: MediaQuery.of(context).size.height * opacity,
+                )
+            ),
+            Positioned.fill(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        const AppTitle(fontSize: 56),
+                        ScoreBoard(score: score, strikes: strikes),
+                        BoggleGrille(
+                          letters: letters,
+                          //letters: snapshot.data!,
+                          onWordSelectionEnd: endWordSelection ?? (word, indexes) => false,
+                          isWordValid: isWordValid,
+                        ),
+                        WordsFound(previousWords: previousWords),
+                        const ActionAndTimer(),
+                      ],
+                    ),
+                  ),
+                ),
+            ),
+          ],
+        ),
+        PopUpGameMenu(
+          score: score,
+          grid: letters.join(),
+          words: countWordsByLength(),
+        ),
+      ],
     );
   }
 }
