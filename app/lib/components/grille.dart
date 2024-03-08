@@ -79,14 +79,10 @@ class _BoggleGrilleState extends State<BoggleGrille> {
   }
 
   bool isAdjacent(BoggleDiceRender target, BoggleDiceRender last) {
-    return target.index == last.index + 1 ||
-        target.index == last.index - 1 ||
-        target.index == last.index + 4 ||
-        target.index == last.index - 4 ||
-        target.index == last.index + 3 ||
-        target.index == last.index - 3 ||
-        target.index == last.index + 5 ||
-        target.index == last.index - 5;
+    (int, int) targetCoords = (target.index ~/ 4, target.index % 4);
+    (int, int) lastCoords = (last.index ~/ 4, last.index % 4);
+    return (targetCoords.$1 - lastCoords.$1).abs() <= 1 &&
+        (targetCoords.$2 - lastCoords.$2).abs() <= 1;
   }
 
   void _selectIndex(int index) {
