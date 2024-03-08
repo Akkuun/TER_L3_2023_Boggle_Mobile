@@ -1,14 +1,27 @@
-
-import { GameHandler } from "./services/game_handler";
-
 import { onCall } from "firebase-functions/v2/https";
 // The Firebase Admin SDK to access the Firebase Realtime Database.
 import * as admin from "firebase-admin";
 import { JoinGameReturn } from "./enums/JoinGameReturn";
+import { DictionariesHandler } from "./services/dictionnaries_handler";
+import { SendWordI, recreateWord } from "./utils/lang";
+
 
 
 admin.initializeApp();
-// Init firestore
+
+// storage
+const bucket = admin.storage().bucket();
+
+let dico = bucket.file("fr_dico.json");
+
+
+const dictionariesHandler = new DictionariesHandler();
+
+(async () => {
+    const dicoObj = JSON.parse((await dico.download()).toString());
+    dictionariesHandler.addDictionary(0, dicoObj);
+})();
+
 
 interface User {
     email: string,
@@ -50,39 +63,15 @@ export const CreateGame = onCall(async (req) => {
 
     await game.set(payload);
 
-
-
-
-    const db = admin.database().ref(`/games/${gameId}`);
-
-    GameHandler.createGame(db, gameId, data.letters, data.lang);
-
     return gameId;
 }
 );
 
 
 export const StartGame = onCall(async (req) => {
-    const data = req.data;
 
-
-
-    const game = GameHandler.getGame(data.gameId);
-    const gameData = await game.Data;
-    if (gameData.status === "started") {
-        return "Game already started";
-    } else {
-        if (gameData.players.length < 2) {
-            return "Not enough players";
-        } else {
-            // start game
-            game.Start();
-
-            return "Game started";
-        }
-    }
-}
-);
+    return false;
+});
 
 
 export const JoinGame = onCall(async (req) => {
@@ -129,15 +118,27 @@ export const LeaveGame = onCall(async (req) => {
 });
 
 
+
+
+
 export const sendWord = onCall(async (req) => {
-    const data = req.data;
+    const data = req.data as SendWordI;
     const game = admin.database().ref(`/games/${data.gameId}`);
-    const gameData: any = await game.get();
-    if (gameData.status === "started") {
-        return "Game already started";
-    } else {
-        // leave game
-        game.update({ word: data.word });
-        return "Word sent";
+    const gameData = await game.get();
+    if (!gameData.exists()) {
+        return 0;
     }
+
+    const grid = (await game.child("letters").get()).val();
+    const word = data.word;
+    const wordStr = recreateWord(grid, word);
+
+    const dico = dictionariesHandler.getDictionary((await game.child("lang").get()).val());
+
+    if (dico.contain(wordStr)) {
+        return 0;
+    }
+
+    return 1;
+
 });
