@@ -23,81 +23,70 @@ import '../providers/game.dart';
 import '../providers/navigation.dart';
 import 'package:bouggr/global.dart';
 
+enum JoinGameReturn {
+  success,
+  gameFull,
+  gameStarted,
+  gameNotFound,
+  alreadyInGame,
+  invalidPassword,
+}
+
 class MultiplayerCreateJoinPage extends StatefulWidget {
   const MultiplayerCreateJoinPage({super.key});
 
   @override
-  State<MultiplayerCreateJoinPage> createState() => _MultiplayerCreateJoinPageState();
+  State<MultiplayerCreateJoinPage> createState() =>
+      _MultiplayerCreateJoinPageState();
 }
 
 class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
   String? _gameUID = '';
   BtnType _btnType = BtnType.secondary;
-  bool _incorrectCode = false;
+  late int _joinCode;
 
-  Future<bool> _joinGame(String playerUID) async {
+  // Leave game
+
+  Future<int> _joinGame(String playerUID) async {
     final router = Provider.of<NavigationServices>(context, listen: false);
-    final database = FirebaseDatabase.instance;
-    final gameRef = database.ref('games/$_gameUID');
-    final gameData = await gameRef.child('players').get();
-    if (gameData.exists) {
-      final players = gameData.value;
-
-      if (players != null) {
-        gameRef.child('players/$playerUID').set({
-          'email': FirebaseAuth.instance.currentUser!.email,
-          'score': 0,
-          'leader': false,
-        });
-      }
-      Globals.gameCode = _gameUID!;
-      router.goToPage(PageName.multiplayerGame);
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  _createGameOld(String playerUID) {
-    final router = Provider.of<NavigationServices>(context, listen: false);
-    final database = FirebaseDatabase.instance;
-    final gameUID = database.ref('games').push().key;
-    final gameRef = database.ref('games/$gameUID');
-    final lang = Provider.of<GameServices>(context, listen: false).language;
-    final letters = Globals.selectDiceSet(lang).roll();
-    gameRef.set({
-      'players': {
-        playerUID: {
-          'email': FirebaseAuth.instance.currentUser!.email,
-          'score': 0,
-          'leader': true,
-        }
-      },
-      'status': 'waiting',
-      'lang': lang.index,
-      'letters': letters.join(''),
-    });
-    Globals.gameCode = gameUID!;
-    router.goToPage(PageName.multiplayerGame);
-  }
-
-  _createGame(String playerUID) async {
-    final router = Provider.of<NavigationServices>(context, listen: false);
-    final lang = Provider.of<GameServices>(context, listen: false).language;
-    final letters = Globals.selectDiceSet(lang).roll();
-    print("SALUT ??");
-    final result = await FirebaseFunctions.instance.httpsCallable('CreateGame').call(
+    final result =
+        await FirebaseFunctions.instance.httpsCallable('JoinGame').call(
       {
-        "letters": letters.join(''),
-        "lang": lang.index,
+        "gameId": _gameUID,
         "userId": playerUID,
         "email": FirebaseAuth.instance.currentUser!.email,
       },
     );
-    final response = result.data as String;
-    print("RESPONSE ? $response");
-    Globals.gameCode = response;
-    router.goToPage(PageName.multiplayerGame);
+    final response = result.data as int;
+    print("Succesfully joined game $_gameUID. Return code : $response");
+    if (response == JoinGameReturn.success.index) {
+      Globals.gameCode = _gameUID!;
+      router.goToPage(PageName.multiplayerGame);
+    }
+    return response;
+  }
+
+  _createGame(String playerUID) async {
+    try {
+      final router = Provider.of<NavigationServices>(context, listen: false);
+      final lang = Provider.of<GameServices>(context, listen: false).language;
+      final letters = Globals.selectDiceSet(lang).roll();
+      final result =
+          await FirebaseFunctions.instance.httpsCallable('CreateGame').call(
+        {
+          "letters": letters.join(''),
+          "lang": lang.index,
+          "userId": playerUID,
+          "email": FirebaseAuth.instance.currentUser!.email,
+        },
+      );
+      final response = result.data as String;
+      print("Succesfully created game $response server-side");
+      Globals.gameCode = response;
+      router.goToPage(PageName.multiplayerGame);
+    } catch (e) {
+      print("ERROR CREATING GAME ? $e");
+    }
   }
 
   @override
@@ -188,24 +177,23 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
         ),
         BtnBoggle(
           onPressed: () {
-            if (_gameUID!.isNotEmpty) {
-              _joinGame(user!.uid).then((value) {
-                if (value != _incorrectCode) {
-                  setState(() {
-                    _incorrectCode = value;
-                  });
-                }
-              });
+            _joinCode = _joinGame(user!.uid) as int;
+            print("Joining game $_gameUID");
+            if (_joinCode == 0) {
+              print("Join code $_joinCode");
+              router.goToPage(PageName.multiplayerGame);
+            } else {
+              print("Incorrect code $_joinCode");
             }
           },
           btnSize: BtnSize.large,
           text: "Join a game",
           btnType: _btnType,
         ),
-        if (_incorrectCode)
-          const Text(
-            "Incorrect code",
-            style: TextStyle(
+        if (_joinCode != 0)
+          Text(
+            JoinGameReturn.values[_joinCode] as String,
+            style: const TextStyle(
               color: Colors.red,
               fontSize: 26,
               fontFamily: 'Jua',

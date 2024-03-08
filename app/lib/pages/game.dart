@@ -117,6 +117,7 @@ class _GamePageState extends State<GamePage> {
   }
 
   Future<List<String>> _fetchLetters() async {
+    print("fetching letters from firebase");
     final database = FirebaseDatabase.instance;
     final gameUID = Globals.gameCode;
     final gameRef = database.ref('games/$gameUID');
