@@ -1,9 +1,10 @@
 
 import { GameHandler } from "./services/game_handler";
 
-const { onRequest } = require("firebase-functions/v2/https");
+import { onCall } from "firebase-functions/v2/https";
 // The Firebase Admin SDK to access the Firebase Realtime Database.
-const admin = require("firebase-admin");
+import * as admin from "firebase-admin";
+import { JoinGameReturn } from "./enums/JoinGameReturn";
 
 
 admin.initializeApp();
@@ -17,7 +18,7 @@ interface User {
 
 interface GameInterface {
     status: string;
-    players: Map<string, User>;
+    players: { [key: string]: User };
     letters: string;
     lang: number;
 }
@@ -28,94 +29,115 @@ interface GameInterface {
 
 
 
-export const CreateGame = onRequest(async (req: any, res: any) => {
-    const data = req.body;
+export const CreateGame = onCall(async (req) => {
+    const data = req.data as { userId: string, email: string, letters: string, lang: number };
     const game = admin.database().ref("/games").push();
-    const gameId = game.key;
+    const gameId = game.key as string;
+
+
     const payload: GameInterface = {
-        status: "created",
-        players: new Map<string, User>(),
-        letters: data.letters,
-        lang: data.lang,
+        "status": "created",
+        "letters": data.letters,
+        "players": {
+            [data.userId]: {
+                "email": data.email,
+                "score": 0,
+                "leader": true
+            }
+        },
+        "lang": data.lang,
     };
-    payload.players.set(data.userId, { email: data.email, score: 0, leader: true });
-    game.set(payload);
+
+    await game.set(payload);
+
+
+
 
     const db = admin.database().ref(`/games/${gameId}`);
 
     GameHandler.createGame(db, gameId, data.letters, data.lang);
 
-    res.status(200).send(gameId);
+    return gameId;
 }
 );
 
 
-export const StartGame = onRequest(async (req: any, res: any) => {
-    const data = req.body;
+export const StartGame = onCall(async (req) => {
+    const data = req.data;
 
 
 
     const game = GameHandler.getGame(data.gameId);
     const gameData = await game.Data;
     if (gameData.status === "started") {
-        res.status(400).send("Game already started");
+        return "Game already started";
     } else {
         if (gameData.players.length < 2) {
-            res.status(400).send("Not enough players");
+            return "Not enough players";
         } else {
             // start game
             game.Start();
 
-            res.status(200).send("Game started");
+            return "Game started";
         }
     }
 }
 );
 
 
-export const JoinGame = onRequest(async (req: any, res: any) => {
-    const data = req.body;
+export const JoinGame = onCall(async (req) => {
+    const data = req.data as { userId: string, gameId: string, email: string };
     const game = admin.database().ref(`/games/${data.gameId}`);
-    const gameData = await game.get();
-    if (gameData.status === "started") {
-        res.status(400).send("Game already started");
-    } else {
-        if (gameData.players.length >= 10) {
-            res.status(400).send("Game full");
-        } else {
-            // join game
-            game.update({ players: [...gameData.players, data.userId] });
+    const dataGame = await game.get();
+    if (!dataGame.exists()) {
+        return JoinGameReturn.GAME_NOT_FOUND;
+    }
 
-            res.status(200).send("Game joined");
+    if ((await game.child("status").get()).val() === "started") {
+        return JoinGameReturn.GAME_STARTED;
+    }
+
+    const gameData = await game.child("players").get();
+    if (gameData.exists()) {
+        const player = game.child("players/" + data.userId)
+        if ((await player.get()).exists()) {
+            return JoinGameReturn.ALREADY_IN_GAME;
         }
+        player.set({
+            "email": data.email,
+            "score": 0,
+            "leader": false
+        });
+        return JoinGameReturn.SUCCESS;
+    } else {
+        return JoinGameReturn.GAME_NOT_FOUND;
     }
 });
 
-export const LeaveGame = onRequest(async (req: any, res: any) => {
-    const data = req.body;
+export const LeaveGame = onCall(async (req) => {
+    const data = req.data;
     const game = admin.database().ref(`/games/${data.gameId}`);
-    const gameData = await game.get();
+    const gameData: any = await game.get();
     if (gameData.status === "started") {
-        res.status(400).send("Game already started");
+        return "Game already started";
     } else {
         // leave game
         game.update({ players: gameData.players.filter((player: string) => player !== data.userId) });
 
-        res.status(200).send("Game left");
+        return "Game left";
     }
 });
 
 
-export const sendWord = onRequest(async (req: any, res: any) => {
-    const data = req.body;
+export const sendWord = onCall(async (req) => {
+    const data = req.data;
     const game = admin.database().ref(`/games/${data.gameId}`);
-    const gameData = await game.get();
+    const gameData: any = await game.get();
     if (gameData.status === "started") {
-        res.status(400).send("Game already started");
+        return "Game already started";
     } else {
         // leave game
         game.update({ word: data.word });
-
-        res.status(200).send("Word sent");
+        return "Word sent";
     }
 });
