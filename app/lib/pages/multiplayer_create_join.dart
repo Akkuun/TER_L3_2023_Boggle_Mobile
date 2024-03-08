@@ -7,6 +7,7 @@
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/title.dart';
 import 'package:bouggr/pages/page_name.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 
 //utils
 import 'package:firebase_auth/firebase_auth.dart';
@@ -57,7 +58,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
     }
   }
 
-  _createGame(String playerUID) {
+  _createGameOld(String playerUID) {
     final router = Provider.of<NavigationServices>(context, listen: false);
     final database = FirebaseDatabase.instance;
     final gameUID = database.ref('games').push().key;
@@ -77,6 +78,25 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
       'letters': letters.join(''),
     });
     Globals.gameCode = gameUID!;
+    router.goToPage(PageName.multiplayerGame);
+  }
+
+  _createGame(String playerUID) async {
+    final router = Provider.of<NavigationServices>(context, listen: false);
+    final lang = Provider.of<GameServices>(context, listen: false).language;
+    final letters = Globals.selectDiceSet(lang).roll();
+    print("SALUT ??");
+    final result = await FirebaseFunctions.instance.httpsCallable('CreateGame').call(
+      {
+        "letters": letters.join(''),
+        "lang": lang.index,
+        "userId": playerUID,
+        "email": FirebaseAuth.instance.currentUser!.email,
+      },
+    );
+    final response = result.data as String;
+    print("RESPONSE ? $response");
+    Globals.gameCode = response;
     router.goToPage(PageName.multiplayerGame);
   }
 
