@@ -1,5 +1,7 @@
 //components
 
+import 'dart:math';
+
 import 'package:bouggr/components/grille.dart';
 
 import 'package:bouggr/components/scoreboard.dart';
@@ -15,12 +17,12 @@ import 'package:bouggr/providers/game.dart';
 //utils
 import 'package:bouggr/providers/timer.dart';
 
-
 import 'package:bouggr/utils/word_score.dart';
 import 'package:bouggr/utils/dico.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+
 //flutter
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -82,26 +84,11 @@ class _GamePageState extends State<GamePage> {
     return true;
   }
 
-  bool _endWordSelectionMultiplayerOld(String word, List<(int, int)> indexes) {
-    if(_endWordSelection(word, indexes)) {
-      final database = FirebaseDatabase.instance;
-      final gameUID = Globals.gameCode;
-      final gameRef = database.ref('games/$gameUID');
-      final playerUID = FirebaseAuth.instance.currentUser!.uid;
-      final playerRef = gameRef.child('players/$playerUID');
-      var res = indexes.map((e) => {"x" : e.$1, "y" : e.$2}).toList();
-      playerRef.child('words').push().set(res);
-      playerRef.child('score').set(_score);
-      return true;
-    }
-    return false;
-  }
-
   bool _endWordSelectionMultiplayer(String word, List<(int, int)> indexes) {
-    final database = FirebaseDatabase.instance;
     final gameUID = Globals.gameCode;
-    var res = indexes.map((e) => {"x" : e.$1, "y" : e.$2}).toList();
-    final result = FirebaseFunctions.instance.httpsCallable('sendWord').call({
+    var res = indexes.map((e) => {"x": e.$1, "y": e.$2}).toList();
+    print("Word : $res");
+    FirebaseFunctions.instance.httpsCallable('sendWord').call({
       "gameId": gameUID,
       "userId": FirebaseAuth.instance.currentUser!.uid,
       "word": res,
@@ -121,7 +108,7 @@ class _GamePageState extends State<GamePage> {
       return [];
     }
     int max =
-    _previousWords.map((e) => e.length).reduce((a, b) => a > b ? a : b);
+        _previousWords.map((e) => e.length).reduce((a, b) => a > b ? a : b);
     List<int> count = List.filled(max - 2, 0);
     for (var word in _previousWords) {
       count[word.length - 3]++;
@@ -132,7 +119,8 @@ class _GamePageState extends State<GamePage> {
   Future<List<String>> _fetchLetters() async {
     print("Fetching letters");
     if (Globals.currentMultiplayerGame.isNotEmpty) {
-      print("Letters already fetched before : ${Globals.currentMultiplayerGame}");
+      print(
+          "Letters already fetched before : ${Globals.currentMultiplayerGame}");
       return Globals.currentMultiplayerGame.split('');
     }
     print("Fetching letters from firebase");
@@ -171,8 +159,7 @@ class _GamePageState extends State<GamePage> {
         }));
       case GameType.multi:
         final letters = _fetchLetters();
-        return Globals(child: Builder(builder: (BuildContext innerContext)
-        {
+        return Globals(child: Builder(builder: (BuildContext innerContext) {
           double opacity = 0;
           return FutureBuilder<List<String>>(
             future: letters,
@@ -197,6 +184,31 @@ class _GamePageState extends State<GamePage> {
         }));
     }
   }
+}
+
+class WaveClipper extends CustomClipper<Path> {
+  final double waveHeight;
+  final double waveFrequency;
+  final double progression;
+
+  WaveClipper({this.waveHeight = 20, this.waveFrequency = 1, required this.progression});
+
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.moveTo(0, size.height);
+    for (var i = 0; i < size.width; i++) {
+      path.lineTo(i.toDouble(), (-waveHeight * sin((i / size.width)*(1+i/(2*size.width)) * 2 * pi * waveFrequency + (progression*pi) + 1.2 * pi) + size.height) - waveHeight);
+    }
+    path.lineTo(size.width, size.height);
+    path.lineTo(size.width, 0);
+    path.lineTo(0, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(WaveClipper oldClipper) => true;
 }
 
 class GameWidget extends StatelessWidget {
@@ -229,19 +241,25 @@ class GameWidget extends StatelessWidget {
       children: [
         Stack(
           children: [
-            Positioned.fill(
-              bottom: 0,
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                  child: AnimatedContainer(
-                    duration: const Duration(seconds: 1),
-                    height: MediaQuery.of(context).size.height * opacity,
-                    width: MediaQuery.of(context).size.width,
-                    color: const Color.fromRGBO(255, 237, 172, 1),
-                    constraints: BoxConstraints.expand(
-                      height: MediaQuery.of(context).size.height * opacity,
-                    ),
-                  ),
+            Container(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              color: const Color.fromRGBO(255, 237, 172, 1),
+            ),
+            ClipPath(
+              clipper: WaveClipper(
+                waveHeight: 15,
+                waveFrequency: 0.8,
+                progression: opacity,
+              ),
+              child: AnimatedContainer(
+                duration: const Duration(seconds: 1),
+                height: MediaQuery.of(context).size.height * opacity,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.white,
+                constraints: BoxConstraints.expand(
+                  height: MediaQuery.of(context).size.height * (1 - opacity),
+                ),
               ),
             ),
             SizedBox(
@@ -256,7 +274,8 @@ class GameWidget extends StatelessWidget {
                       BoggleGrille(
                         letters: letters,
                         //letters: snapshot.data!,
-                        onWordSelectionEnd: endWordSelection ?? (word, indexes) => false,
+                        onWordSelectionEnd:
+                            endWordSelection ?? (word, indexes) => false,
                         isWordValid: isWordValid,
                       ),
                       WordsFound(previousWords: previousWords),
@@ -267,7 +286,6 @@ class GameWidget extends StatelessWidget {
               ),
             ),
           ],
-
         ),
         PopUpGameMenu(
           score: score,
