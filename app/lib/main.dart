@@ -38,7 +38,7 @@ class App extends StatelessWidget {
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
-              seedColor: const Color.fromARGB(255, 80, 190, 253)),
+              seedColor: const Color.fromARGB(255, 89, 150, 194)),
         ),
         home: const BouggrRouter(),
       ),

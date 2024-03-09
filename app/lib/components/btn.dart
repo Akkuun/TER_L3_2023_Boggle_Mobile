@@ -54,7 +54,7 @@ class BtnBoggle extends StatelessWidget {
             style: ButtonStyle(
                 backgroundColor: MaterialStateColor.resolveWith((states) =>
                     BtnType.primary == btnType
-                        ? const Color.fromARGB(255, 91, 157, 255)
+                        ? const Color.fromARGB(255, 89, 150, 194)
                         : Colors.white)),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -88,9 +88,9 @@ class IconBtnBoggle extends StatelessWidget {
       width: 64,
       decoration: BoxDecoration(
           color: MaterialStateColor.resolveWith((states) =>
-          BtnType.primary == btnType
-              ? const Color.fromARGB(255, 91, 157, 255)
-              : Colors.white),
+              BtnType.primary == btnType
+                  ? const Color.fromARGB(255, 89, 150, 194)
+                  : Colors.white),
           borderRadius: BorderRadius.circular(5),
           boxShadow: const [
             BoxShadow(
