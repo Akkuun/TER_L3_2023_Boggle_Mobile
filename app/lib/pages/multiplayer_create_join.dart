@@ -32,8 +32,6 @@ enum JoinGameReturn {
   invalidPassword,
 }
 
-
-
 class MultiplayerCreateJoinPage extends StatefulWidget {
   const MultiplayerCreateJoinPage({super.key});
 
@@ -189,7 +187,8 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
               router.goToPage(PageName.multiplayerGame);
             } else {
               setState(() {
-                error = "Error joining game\n${JoinGameReturn.values[_joinCode]}";
+                error =
+                    "Error joining game\n${JoinGameReturn.values[_joinCode]}";
               });
             }
           },
