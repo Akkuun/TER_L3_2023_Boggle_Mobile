@@ -4,10 +4,18 @@ import * as admin from "firebase-admin";
 import { JoinGameReturn } from "./enums/JoinGameReturn";
 import { DictionariesHandler } from "./services/dictionnaries_handler";
 import { SendWordI, recreateWord } from "./utils/lang";
+import { logger } from "firebase-functions/v1";
+import { cert } from "firebase-admin/app";
 
 
+const serviceAccount = require("../private.json");
 
-admin.initializeApp();
+admin.initializeApp({
+    credential: cert(serviceAccount),
+    databaseURL: "https://bouggr-4bd2b-default-rtdb.europe-west1.firebasedatabase.app",
+    storageBucket: "bouggr-4bd2b.appspot.com"
+});
+
 
 // storage
 const bucket = admin.storage().bucket();
@@ -15,12 +23,15 @@ const bucket = admin.storage().bucket();
 let dico = bucket.file("fr_dico.json");
 
 
+
+
 const dictionariesHandler = new DictionariesHandler();
 
-(async () => {
-    const dicoObj = JSON.parse((await dico.download()).toString());
-    dictionariesHandler.addDictionary(0, dicoObj);
-})();
+
+dico.download().then((data) => {
+    const dico = JSON.parse(data.toString());
+    dictionariesHandler.addDictionary(0, dico);
+});
 
 
 interface User {
@@ -122,11 +133,13 @@ export const LeaveGame = onCall(async (req) => {
 
 
 export const sendWord = onCall(async (req) => {
+
+    logger.warn("sendWord", req);
     const data = req.data as SendWordI;
     const game = admin.database().ref(`/games/${data.gameId}`);
     const gameData = await game.get();
     if (!gameData.exists()) {
-        return 0;
+        return 3;
     }
 
     const grid = (await game.child("letters").get()).val();
@@ -135,10 +148,24 @@ export const sendWord = onCall(async (req) => {
 
     const dico = dictionariesHandler.getDictionary((await game.child("lang").get()).val());
 
-    if (dico.contain(wordStr)) {
-        return 0;
+    const checkWord = await game.child("players/" + data.userId + "/words").orderByChild("word").equalTo(wordStr).get();
+    if (checkWord.exists()) {
+
+        if (checkWord.val().length > 0) {
+            return 2;
+        } else if (dico.contain(wordStr)) {
+            await game.child("players/" + data.userId + "/words").push(wordStr);
+            return 0;
+        }
+        return 1;
+
+
+    } else {
+        if (dico.contain(wordStr)) {
+            await game.child("players/" + data.userId + "/words").push(wordStr);
+            return 0;
+        }
+
+        return 1;
     }
-
-    return 1;
-
 });
