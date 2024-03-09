@@ -229,37 +229,45 @@ class GameWidget extends StatelessWidget {
       children: [
         Stack(
           children: [
-            Positioned(
-                bottom: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  color: Colors.yellow,
-                  height: MediaQuery.of(context).size.height * opacity,
-                )
-            ),
             Positioned.fill(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Column(
-                      children: [
-                        const AppTitle(fontSize: 56),
-                        ScoreBoard(score: score, strikes: strikes),
-                        BoggleGrille(
-                          letters: letters,
-                          //letters: snapshot.data!,
-                          onWordSelectionEnd: endWordSelection ?? (word, indexes) => false,
-                          isWordValid: isWordValid,
-                        ),
-                        WordsFound(previousWords: previousWords),
-                        const ActionAndTimer(),
-                      ],
+              bottom: 0,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                  child: AnimatedContainer(
+                    duration: const Duration(seconds: 1),
+                    height: MediaQuery.of(context).size.height * opacity,
+                    width: MediaQuery.of(context).size.width,
+                    color: const Color.fromRGBO(255, 237, 172, 1),
+                    constraints: BoxConstraints.expand(
+                      height: MediaQuery.of(context).size.height * opacity,
                     ),
                   ),
+              ),
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Column(
+                    children: [
+                      const AppTitle(fontSize: 56),
+                      ScoreBoard(score: score, strikes: strikes),
+                      BoggleGrille(
+                        letters: letters,
+                        //letters: snapshot.data!,
+                        onWordSelectionEnd: endWordSelection ?? (word, indexes) => false,
+                        isWordValid: isWordValid,
+                      ),
+                      WordsFound(previousWords: previousWords),
+                      const ActionAndTimer(),
+                    ],
+                  ),
                 ),
+              ),
             ),
           ],
+
         ),
         PopUpGameMenu(
           score: score,
