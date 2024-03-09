@@ -2,20 +2,11 @@
 
 import 'dart:math';
 
-import 'package:bouggr/components/grille.dart';
-
-import 'package:bouggr/components/scoreboard.dart';
-import 'package:bouggr/components/words_found.dart';
-import 'package:bouggr/components/title.dart';
-
 //globals
 import 'package:bouggr/global.dart';
 
 //services
 import 'package:bouggr/providers/game.dart';
-
-//utils
-import 'package:bouggr/providers/timer.dart';
 
 import 'package:bouggr/utils/word_score.dart';
 import 'package:bouggr/utils/dico.dart';
@@ -27,8 +18,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../components/action_and_timer.dart';
+import '../components/game_front.dart';
 import '../components/pop_up_game_menu.dart';
+import '../components/wave.dart';
 
 class GamePage extends StatefulWidget {
   final List<String>? letters;
@@ -45,16 +37,16 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> {
-  final List<String> _previousWords = [];
+  late GameServices gameServices;
+
   late final List<String> selectedLetter;
-  int _score = 0;
-  int _strikes = 0;
 
   late Dictionary _dictionary;
 
   @override
   void initState() {
     super.initState();
+    gameServices = Provider.of<GameServices>(context, listen: false);
     var lang = Provider.of<GameServices>(context, listen: false).language;
     if (widget.letters == null) {
       _dictionary = Globals.selectDictionary(lang);
@@ -73,14 +65,12 @@ class _GamePageState extends State<GamePage> {
   }
 
   bool _endWordSelection(String word, List<(int, int)> indexes) {
-    if (_previousWords.contains(word) || !_isWordValid(word)) {
-      setState(() {
-        _strikes++;
-      });
+    if (gameServices.isInWordList(word) || !_isWordValid(word)) {
+      gameServices.addStrike();
       return false;
     }
     _updateScore(wordScore(word));
-    _previousWords.add(word);
+    gameServices.addWord(word);
     return true;
   }
 
@@ -96,21 +86,18 @@ class _GamePageState extends State<GamePage> {
     return _endWordSelection(word, indexes);
   }
 
-  int _updateScore(int wordScore) {
-    setState(() {
-      _score += wordScore;
-    });
-    return _score;
+  void _updateScore(int wordScore) {
+    gameServices.addScore(wordScore);
   }
 
   List<int> _countWordsByLength() {
-    if (_previousWords.isEmpty) {
+    if (gameServices.words.isEmpty) {
       return [];
     }
     int max =
-        _previousWords.map((e) => e.length).reduce((a, b) => a > b ? a : b);
+        gameServices.words.map((e) => e.length).reduce((a, b) => a > b ? a : b);
     List<int> count = List.filled(max - 2, 0);
-    for (var word in _previousWords) {
+    for (var word in gameServices.words) {
       count[word.length - 3]++;
     }
     return count;
@@ -142,16 +129,10 @@ class _GamePageState extends State<GamePage> {
   Widget build(BuildContext context) {
     switch (widget.mode) {
       case GameType.solo:
-        var timerServices = context.watch<TimerServices>();
         return Globals(child: Builder(builder: (BuildContext innerContext) {
-          double opacity = timerServices.progression;
           return GameWidget(
             mode: widget.mode,
-            opacity: opacity,
             letters: selectedLetter,
-            score: _score,
-            strikes: _strikes,
-            previousWords: _previousWords,
             endWordSelection: _endWordSelection,
             isWordValid: _isWordValid,
             countWordsByLength: _countWordsByLength,
@@ -160,18 +141,13 @@ class _GamePageState extends State<GamePage> {
       case GameType.multi:
         final letters = _fetchLetters();
         return Globals(child: Builder(builder: (BuildContext innerContext) {
-          double opacity = 0;
           return FutureBuilder<List<String>>(
             future: letters,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return GameWidget(
                   mode: widget.mode,
-                  opacity: opacity,
                   letters: snapshot.data!,
-                  score: _score,
-                  strikes: _strikes,
-                  previousWords: _previousWords,
                   endWordSelection: _endWordSelectionMultiplayer,
                   isWordValid: _isWordValid,
                   countWordsByLength: _countWordsByLength,
@@ -227,11 +203,8 @@ class WaveClipper extends CustomClipper<Path> {
 
 class GameWidget extends StatelessWidget {
   final GameType mode;
-  final double opacity;
   final List<String> letters;
-  final int score;
-  final int strikes;
-  final List<String> previousWords;
+
   final bool Function(String word, List<(int, int)> indexes)? endWordSelection;
   final bool Function(String word) isWordValid;
   final List<int> Function() countWordsByLength;
@@ -239,11 +212,7 @@ class GameWidget extends StatelessWidget {
   const GameWidget({
     super.key,
     this.mode = GameType.solo,
-    this.opacity = 0,
     required this.letters,
-    required this.score,
-    required this.strikes,
-    required this.previousWords,
     this.endWordSelection,
     required this.isWordValid,
     required this.countWordsByLength,
@@ -262,94 +231,17 @@ class GameWidget extends StatelessWidget {
             ),
             const Wave(),
             GameFront(
-                score: score,
-                strikes: strikes,
-                letters: letters,
-                endWordSelection: endWordSelection,
-                isWordValid: isWordValid,
-                previousWords: previousWords),
+              letters: letters,
+              endWordSelection: endWordSelection,
+              isWordValid: isWordValid,
+            ),
           ],
         ),
         PopUpGameMenu(
-          score: score,
           grid: letters.join(),
           words: countWordsByLength(),
         ),
       ],
-    );
-  }
-}
-
-class Wave extends StatelessWidget {
-  const Wave({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    var opacity = Provider.of<TimerServices>(context).progression;
-
-    return ClipPath(
-      clipper: WaveClipper(
-        waveHeight: 15,
-        waveFrequency: 0.8,
-        progression: opacity,
-      ),
-      child: AnimatedContainer(
-        duration: const Duration(seconds: 1),
-        height: MediaQuery.of(context).size.height * opacity,
-        width: MediaQuery.of(context).size.width,
-        color: const Color.fromARGB(255, 169, 224, 255),
-        constraints: BoxConstraints.expand(
-          height: MediaQuery.of(context).size.height * (1 - opacity),
-        ),
-      ),
-    );
-  }
-}
-
-class GameFront extends StatelessWidget {
-  const GameFront({
-    super.key,
-    required this.score,
-    required this.strikes,
-    required this.letters,
-    required this.endWordSelection,
-    required this.isWordValid,
-    required this.previousWords,
-  });
-
-  final int score;
-  final int strikes;
-  final List<String> letters;
-  final bool Function(String word, List<(int, int)> indexes)? endWordSelection;
-  final bool Function(String word) isWordValid;
-  final List<String> previousWords;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Center(
-          child: Column(
-            children: [
-              const AppTitle(fontSize: 56),
-              ScoreBoard(score: score, strikes: strikes),
-              BoggleGrille(
-                letters: letters,
-                //letters: snapshot.data!,
-                onWordSelectionEnd:
-                    endWordSelection ?? (word, indexes) => false,
-                isWordValid: isWordValid,
-              ),
-              WordsFound(previousWords: previousWords),
-              const ActionAndTimer(),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

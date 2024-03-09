@@ -13,15 +13,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PopUpGameMenu extends StatelessWidget {
-  final int score;
   final List<int> words;
   final String grid;
 
-  const PopUpGameMenu(
-      {super.key,
-      required this.score,
-      required this.grid,
-      required this.words});
+  const PopUpGameMenu({super.key, required this.grid, required this.words});
 
   @override
   Widget build(BuildContext context) {
@@ -29,20 +24,18 @@ class PopUpGameMenu extends StatelessWidget {
         Provider.of<NavigationServices>(context, listen: false);
     GameServices gameServices =
         Provider.of<GameServices>(context, listen: false);
-
+    int score = context.read<GameServices>().score;
+    var h = MediaQuery.of(context).size.height * 0.8;
+    var w = MediaQuery.of(context).size.width * 0.8;
     return PopUp<GameServices>(
       child: Positioned(
-        top: MediaQuery.of(context).size.height * 0.5 -
-            min(MediaQuery.of(context).size.width * 0.8,
-                MediaQuery.of(context).size.height * 0.8),
+        top: MediaQuery.of(context).size.height * 0.5 - min(w, h),
         left: min(MediaQuery.of(context).size.width * 0.1,
             MediaQuery.of(context).size.height * 0.1),
         child: Center(
           child: Container(
-            height: min(MediaQuery.of(context).size.width * 0.8,
-                MediaQuery.of(context).size.height * 0.8),
-            width: min(MediaQuery.of(context).size.width * 0.8,
-                MediaQuery.of(context).size.height * 0.8),
+            height: min(w, h),
+            width: min(w, h),
             decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 181, 224, 255),
                 borderRadius: BorderRadius.circular(10)),
@@ -62,6 +55,7 @@ class PopUpGameMenu extends StatelessWidget {
                 BtnBoggle(
                   onPressed: () {
                     gameServices.stop();
+                    gameServices.reset();
                     GameResult gameResult =
                         GameResult(score: score, grid: grid, words: words);
 
@@ -74,10 +68,11 @@ class PopUpGameMenu extends StatelessWidget {
                 BtnBoggle(
                     onPressed: () {
                       gameServices.stop();
+
                       GameResult gameResult =
                           GameResult(score: score, grid: grid, words: words);
                       GameDataStorage.saveGameResult(gameResult);
-
+                      gameServices.reset();
                       navigationServices.goToPage(PageName.home);
                     },
                     text: "Home",

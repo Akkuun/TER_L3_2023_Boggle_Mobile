@@ -11,7 +11,6 @@ import 'package:cloud_functions/cloud_functions.dart';
 
 //utils
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 
 //flutter
 import 'package:flutter/material.dart';
