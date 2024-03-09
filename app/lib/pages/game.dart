@@ -88,7 +88,7 @@ class _GamePageState extends State<GamePage> {
     final gameUID = Globals.gameCode;
     var res = indexes.map((e) => {"x": e.$1, "y": e.$2}).toList();
     print("Word : $res");
-    FirebaseFunctions.instance.httpsCallable('sendWord').call({
+    FirebaseFunctions.instance.httpsCallable('SendWord').call({
       "gameId": gameUID,
       "userId": FirebaseAuth.instance.currentUser!.uid,
       "word": res,
@@ -191,14 +191,28 @@ class WaveClipper extends CustomClipper<Path> {
   final double waveFrequency;
   final double progression;
 
-  WaveClipper({this.waveHeight = 20, this.waveFrequency = 1, required this.progression});
+  WaveClipper(
+      {this.waveHeight = 20,
+      this.waveFrequency = 1,
+      required this.progression});
 
   @override
   Path getClip(Size size) {
     var path = Path();
     path.moveTo(0, size.height);
     for (var i = 0; i < size.width; i++) {
-      path.lineTo(i.toDouble(), (-waveHeight * sin((i / size.width)*(1+i/(2*size.width)) * 2 * pi * waveFrequency + (progression*pi) + 1.2 * pi) + size.height) - waveHeight);
+      path.lineTo(
+          i.toDouble(),
+          (-waveHeight *
+                      sin((i / size.width) *
+                              (1 + i / (2 * size.width)) *
+                              2 *
+                              pi *
+                              waveFrequency +
+                          (progression * pi) +
+                          1.2 * pi) +
+                  size.height) -
+              waveHeight);
     }
     path.lineTo(size.width, size.height);
     path.lineTo(size.width, 0);

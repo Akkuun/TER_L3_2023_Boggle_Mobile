@@ -4,8 +4,9 @@ import * as admin from "firebase-admin";
 import { JoinGameReturn } from "./enums/JoinGameReturn";
 import { DictionariesHandler } from "./services/dictionnaries_handler";
 import { SendWordI, recreateWord } from "./utils/lang";
-import { logger } from "firebase-functions/v1";
+
 import { cert } from "firebase-admin/app";
+import { log } from "firebase-functions/logger";
 
 
 const serviceAccount = require("../private.json");
@@ -132,9 +133,8 @@ export const LeaveGame = onCall(async (req) => {
 
 
 
-export const sendWord = onCall(async (req) => {
-
-    logger.warn("sendWord", req);
+export const SendWord = onCall(async (req) => {
+    log("sendWord called with", req.data)
     const data = req.data as SendWordI;
     const game = admin.database().ref(`/games/${data.gameId}`);
     const gameData = await game.get();
@@ -142,10 +142,13 @@ export const sendWord = onCall(async (req) => {
         return 3;
     }
 
+    log("gameData game found")
+
     const grid = (await game.child("letters").get()).val();
     const word = data.word;
     const wordStr = recreateWord(grid, word);
 
+    log("wordStr", wordStr)
     const dico = dictionariesHandler.getDictionary((await game.child("lang").get()).val());
 
     const checkWord = await game.child("players/" + data.userId + "/words").orderByChild("word").equalTo(wordStr).get();
