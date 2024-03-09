@@ -149,26 +149,24 @@ export const SendWord = onCall(async (req) => {
     const wordStr = recreateWord(grid, word);
 
     log("wordStr", wordStr)
+
+
     const dico = dictionariesHandler.getDictionary((await game.child("lang").get()).val());
 
-    const checkWord = await game.child("players/" + data.userId + "/words").orderByChild("word").equalTo(wordStr).get();
-    if (checkWord.exists()) {
-
-        if (checkWord.val().length > 0) {
-            return 2;
-        } else if (dico.contain(wordStr)) {
-            await game.child("players/" + data.userId + "/words").push(wordStr);
-            return 0;
-        }
-        return 1;
-
-
-    } else {
+    //const checkWord = await game.child("players/" + data.userId + "/words").orderByChild("word").equalTo(wordStr).get();
+    try {
         if (dico.contain(wordStr)) {
-            await game.child("players/" + data.userId + "/words").push(wordStr);
+            await game.child("players/" + data.userId).push({ word: wordStr });
+
             return 0;
         }
 
+
+        else {
+            return 1;
+        }
+    } catch (e) {
+        log("error", e)
         return 1;
     }
 });

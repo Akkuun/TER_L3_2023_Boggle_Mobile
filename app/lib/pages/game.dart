@@ -270,7 +270,7 @@ class GameWidget extends StatelessWidget {
                 duration: const Duration(seconds: 1),
                 height: MediaQuery.of(context).size.height * opacity,
                 width: MediaQuery.of(context).size.width,
-                color: Colors.white,
+                color: const Color.fromARGB(255, 169, 224, 255),
                 constraints: BoxConstraints.expand(
                   height: MediaQuery.of(context).size.height * (1 - opacity),
                 ),
