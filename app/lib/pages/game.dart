@@ -260,45 +260,14 @@ class GameWidget extends StatelessWidget {
               width: MediaQuery.of(context).size.width,
               color: const Color.fromRGBO(255, 237, 172, 1),
             ),
-            ClipPath(
-              clipper: WaveClipper(
-                waveHeight: 15,
-                waveFrequency: 0.8,
-                progression: opacity,
-              ),
-              child: AnimatedContainer(
-                duration: const Duration(seconds: 1),
-                height: MediaQuery.of(context).size.height * opacity,
-                width: MediaQuery.of(context).size.width,
-                color: const Color.fromARGB(255, 169, 224, 255),
-                constraints: BoxConstraints.expand(
-                  height: MediaQuery.of(context).size.height * (1 - opacity),
-                ),
-              ),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: Column(
-                    children: [
-                      const AppTitle(fontSize: 56),
-                      ScoreBoard(score: score, strikes: strikes),
-                      BoggleGrille(
-                        letters: letters,
-                        //letters: snapshot.data!,
-                        onWordSelectionEnd:
-                            endWordSelection ?? (word, indexes) => false,
-                        isWordValid: isWordValid,
-                      ),
-                      WordsFound(previousWords: previousWords),
-                      const ActionAndTimer(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            const Wave(),
+            GameFront(
+                score: score,
+                strikes: strikes,
+                letters: letters,
+                endWordSelection: endWordSelection,
+                isWordValid: isWordValid,
+                previousWords: previousWords),
           ],
         ),
         PopUpGameMenu(
@@ -307,6 +276,80 @@ class GameWidget extends StatelessWidget {
           words: countWordsByLength(),
         ),
       ],
+    );
+  }
+}
+
+class Wave extends StatelessWidget {
+  const Wave({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var opacity = Provider.of<TimerServices>(context).progression;
+
+    return ClipPath(
+      clipper: WaveClipper(
+        waveHeight: 15,
+        waveFrequency: 0.8,
+        progression: opacity,
+      ),
+      child: AnimatedContainer(
+        duration: const Duration(seconds: 1),
+        height: MediaQuery.of(context).size.height * opacity,
+        width: MediaQuery.of(context).size.width,
+        color: const Color.fromARGB(255, 169, 224, 255),
+        constraints: BoxConstraints.expand(
+          height: MediaQuery.of(context).size.height * (1 - opacity),
+        ),
+      ),
+    );
+  }
+}
+
+class GameFront extends StatelessWidget {
+  const GameFront({
+    super.key,
+    required this.score,
+    required this.strikes,
+    required this.letters,
+    required this.endWordSelection,
+    required this.isWordValid,
+    required this.previousWords,
+  });
+
+  final int score;
+  final int strikes;
+  final List<String> letters;
+  final bool Function(String word, List<(int, int)> indexes)? endWordSelection;
+  final bool Function(String word) isWordValid;
+  final List<String> previousWords;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: Column(
+            children: [
+              const AppTitle(fontSize: 56),
+              ScoreBoard(score: score, strikes: strikes),
+              BoggleGrille(
+                letters: letters,
+                //letters: snapshot.data!,
+                onWordSelectionEnd:
+                    endWordSelection ?? (word, indexes) => false,
+                isWordValid: isWordValid,
+              ),
+              WordsFound(previousWords: previousWords),
+              const ActionAndTimer(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
