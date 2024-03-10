@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 class PopUpGameMenu extends StatelessWidget {
   const PopUpGameMenu({super.key});
 
+  /// Count the number of words found by length in the current game
   List<int> _countWordsByLength(GameServices gameServices) {
     if (gameServices.words.isEmpty) {
       return [];
@@ -30,22 +31,24 @@ class PopUpGameMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // is in listen: false because we don't need to get the update from the navigation action
     NavigationServices navigationServices =
         Provider.of<NavigationServices>(context, listen: false);
+
+    // is in listen: true because we need to update the score
     GameServices gameServices =
         Provider.of<GameServices>(context, listen: true);
 
-    var h = MediaQuery.of(context).size.height * 0.8;
-    var w = MediaQuery.of(context).size.width * 0.8;
+    var h = MediaQuery.of(context).size.height;
+    var w = MediaQuery.of(context).size.width;
     return PopUp<GameServices>(
       child: Positioned(
-        top: MediaQuery.of(context).size.height * 0.5 - min(w, h),
-        left: min(MediaQuery.of(context).size.width * 0.1,
-            MediaQuery.of(context).size.height * 0.1),
+        top: h * 0.5 - min(w * 0.8, h * 0.8),
+        left: min(w * 0.1, h * 0.1),
         child: Center(
           child: Container(
-            height: min(w, h),
-            width: min(w, h),
+            height: min(w * 0.8, h * 0.8),
+            width: min(w * 0.8, h * 0.8),
             decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 181, 224, 255),
                 borderRadius: BorderRadius.circular(10)),
@@ -66,14 +69,13 @@ class PopUpGameMenu extends StatelessWidget {
                 BtnBoggle(
                   onPressed: () {
                     gameServices.stop();
-                    gameServices.reset();
                     GameResult gameResult = GameResult(
                         score: gameServices.score,
                         grid: gameServices.letters.join(),
                         words: _countWordsByLength(gameServices));
 
                     GameDataStorage.saveGameResult(gameResult);
-
+                    gameServices.reset();
                     navigationServices.goToPage(PageName.home);
                   },
                   text: "new game",

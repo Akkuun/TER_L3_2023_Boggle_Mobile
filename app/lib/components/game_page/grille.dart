@@ -3,8 +3,6 @@ import 'package:bouggr/global.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/utils/dico.dart';
 import 'package:bouggr/utils/word_score.dart';
-import 'package:cloud_functions/cloud_functions.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';

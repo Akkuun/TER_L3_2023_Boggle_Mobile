@@ -17,7 +17,7 @@ class ActionAndTimer extends StatelessWidget {
     TimerServices timerServices =
         Provider.of<TimerServices>(context, listen: false);
     GameServices gameServices =
-        Provider.of<GameServices>(context, listen: false);
+        Provider.of<GameServices>(context, listen: true);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,

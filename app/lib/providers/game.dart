@@ -31,10 +31,6 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
     _letters = letters;
   }
 
-  GameType get gameType {
-    return type;
-  }
-
   void stop() {
     super.toggle(true);
   }
