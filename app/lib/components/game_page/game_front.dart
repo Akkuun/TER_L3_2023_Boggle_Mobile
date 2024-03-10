@@ -5,7 +5,7 @@ import 'package:bouggr/components/game_page/grille.dart';
 import 'package:bouggr/components/game_page/scoreboard.dart';
 import 'package:bouggr/components/title.dart';
 
-import 'package:bouggr/components/words_found.dart';
+import 'package:bouggr/components/game_page/words_found.dart';
 import 'package:flutter/material.dart';
 
 class GameFront extends StatelessWidget {

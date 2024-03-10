@@ -115,18 +115,6 @@ class _BoggleGrilleState extends State<BoggleGrille> {
     return true;
   }
 
-  bool _endWordSelectionMultiplayer(String word, List<(int, int)> indexes) {
-    final gameUID = Globals.gameCode;
-    var res = indexes.map((e) => {"x": e.$1, "y": e.$2}).toList();
-    print("Word : $res");
-    FirebaseFunctions.instance.httpsCallable('SendWord').call({
-      "gameId": gameUID,
-      "userId": FirebaseAuth.instance.currentUser!.uid,
-      "word": res,
-    }).then((value) => print("Word $word sent to server"));
-    return _endWordSelection(word, indexes);
-  }
-
   void _sendWordToGameLogicAndClear(PointerUpEvent event) {
     if (currentWord.length >= 3) {
       List<(int, int)> indexes = [];

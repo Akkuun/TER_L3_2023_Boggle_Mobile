@@ -11,7 +11,7 @@ enum GameType {
 
 class GameServices extends ChangeNotifier with TriggerPopUp {
   LangCode _lang = LangCode.FR;
-  List<String> _words = List<String>.empty(growable: true);
+  final List<String> _words = List<String>.empty(growable: true);
   GameType type = GameType.solo;
   int _score = 0;
   int _strikes = 0;

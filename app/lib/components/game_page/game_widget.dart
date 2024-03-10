@@ -6,6 +6,7 @@ import 'package:bouggr/components/game_page/wave.dart';
 
 import 'package:flutter/material.dart';
 
+/// Contains the animation for the background and the game front  and the pop up menu
 class GameWidget extends StatelessWidget {
   const GameWidget({
     super.key,
