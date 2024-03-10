@@ -16,53 +16,58 @@ class BottomButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     final router = Provider.of<NavigationServices>(context, listen: false);
     final index = router.index;
-    return SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: child
+    return Container(
+      color: const Color.fromARGB(255, 169, 224, 255),
+      height: MediaQuery.of(context).size.height,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(child: child),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconBtnBoggle(
+                    icon: const Icon(Icons.home),
+                    onPressed: () {
+                      router.goToPage(PageName.home);
+                    },
+                    btnType: index == PageName.home
+                        ? BtnType.primary
+                        : BtnType.secondary,
+                  ),
+                  IconBtnBoggle(
+                    icon: const Icon(Icons.extension),
+                    onPressed: () {},
+                    btnType: BtnType.secondary,
+                  ),
+                  IconBtnBoggle(
+                    icon: const Icon(Icons.insights),
+                    onPressed: () {
+                      router.goToPage(PageName.stats);
+                    },
+                    btnType: index == PageName.stats
+                        ? BtnType.primary
+                        : BtnType.secondary,
+                  ),
+                  IconBtnBoggle(
+                    icon: const Icon(Icons.settings),
+                    onPressed: () {
+                      router.goToPage(PageName.settings);
+                    },
+                    btnType: index == PageName.settings
+                        ? BtnType.primary
+                        : BtnType.secondary,
+                  ),
+                ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    IconBtnBoggle(
-                      icon: const Icon(Icons.home),
-                      onPressed: () {
-                        router.goToPage(PageName.home);
-                      },
-                      btnType: index == PageName.home ? BtnType.primary : BtnType.secondary,
-                    ),
-                    IconBtnBoggle(
-                      icon: const Icon(Icons.extension),
-                      onPressed: () {},
-                      btnType: BtnType.secondary,
-                    ),
-                    IconBtnBoggle(
-                      icon: const Icon(Icons.insights),
-                      onPressed: () {
-                        router.goToPage(PageName.stats);
-                      },
-                      btnType: index == PageName.stats ? BtnType.primary : BtnType.secondary,
-                    ),
-                    IconBtnBoggle(
-                      icon: const Icon(Icons.settings),
-                      onPressed: () {
-                        router.goToPage(PageName.settings);
-                      },
-                      btnType: index == PageName.settings ? BtnType.primary : BtnType.secondary,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
-      );
+      ),
+    );
   }
 }

@@ -9,18 +9,19 @@ class AppTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textStyle = TextStyle(
+      color: Colors.black,
+      fontSize: fontSize,
+      fontFamily: 'Jua',
+      fontWeight: FontWeight.w400,
+      height: 0,
+    );
     return Text.rich(
       TextSpan(
         children: [
           TextSpan(
             text: 'B',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: fontSize,
-              fontFamily: 'Jua',
-              fontWeight: FontWeight.w400,
-              height: 0,
-            ),
+            style: textStyle,
           ),
           TextSpan(
             text: 'OU',
@@ -34,13 +35,7 @@ class AppTitle extends StatelessWidget {
           ),
           TextSpan(
             text: 'GGR',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: fontSize,
-              fontFamily: 'Jua',
-              fontWeight: FontWeight.w400,
-              height: 0,
-            ),
+            style: textStyle,
           ),
         ],
       ),

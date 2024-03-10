@@ -18,7 +18,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
   int seconds = 0;
   int minutes = 3;
   bool running = false;
-  double progression = 0.0;
+  double? progression;
   late Timer timer; // late car on ne l'a pas encore initialisé
   bool debug = false;
 
@@ -39,13 +39,13 @@ class _BoggleTimerState extends State<BoggleTimer> {
       if (seconds > 0) {
         seconds--;
         progression = timerServices.getTimerProgress();
-        timerServices.update(seconds, minutes, progression);
+        timerServices.update(seconds, minutes, progression!);
       } else {
         if (minutes > 0) {
           minutes--;
           seconds = 59;
           progression = timerServices.getTimerProgress();
-          timerServices.update(seconds, minutes, progression);
+          timerServices.update(seconds, minutes, progression!);
         } else {
           timerServices.stop();
           Provider.of<GameServices>(context, listen: false).stop();
@@ -83,36 +83,18 @@ class _BoggleTimerState extends State<BoggleTimer> {
     }
   }
 
-  /// Remet le timer à 3 minutes
-  void resetTimer() {
-    setState(() {
-      seconds = 180;
-      minutes = 3;
-      progression = 0.0;
-      running = false;
-    });
-  }
-
-  /// Met le timer a 0
-  void setTimerToZero() {
-    setState(() {
-      seconds = 0;
-      minutes = 0;
-      progression = 0.0;
-      running = false;
-    });
-  }
-
   /// Affiche le timer
   String displayTimer() {
     String displaySeconds = seconds.toString();
     String displayMinutes = minutes.toString();
-    String displayProgression = progression.toString();
+    //String displayProgression = progression.toString();
 
     if (seconds < 10) {
       displaySeconds = '0$seconds';
     }
+
     return debug ? '$displayMinutes:$displaySeconds    $displayProgression ' : '$displayMinutes:$displaySeconds';
+
   }
 
   @override
@@ -120,7 +102,6 @@ class _BoggleTimerState extends State<BoggleTimer> {
     if (context.watch<GameServices>().triggerPopUp) {
       stopTimer();
     } else {
-      Provider.of<TimerServices>(context, listen: false).resetProgress();
       startTimer();
     }
 

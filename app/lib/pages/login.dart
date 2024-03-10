@@ -33,7 +33,7 @@ class LoginPage extends StatelessWidget {
           BtnBoggle(
             onPressed: () {},
             btnSize: BtnSize.large,
-            text: "connexion",
+            text: "Connexion",
           ),
           BtnBoggle(
             onPressed: () {
@@ -47,16 +47,7 @@ class LoginPage extends StatelessWidget {
               router.goToPage(PageName.emailCreate);
             },
             btnSize: BtnSize.large,
-            text: "Créé un compte",
-          ),
-          BtnBoggle(
-            onPressed: () {
-              //deconnexion
-              _auth.signOut();
-              router.goToPage(PageName.home);
-            },
-            btnSize: BtnSize.large,
-            text: "Déconnexion",
+            text: "Créér un compte",
           ),
           BtnBoggle(
             onPressed: () {

@@ -8,6 +8,8 @@ environment:
   flutter: '>=3.3.0'
 
 dependencies:
+  cloud_functions: ^4.6.8
+  firebase_database: ^10.4.7
   flutter:
     sdk: flutter
   haptic_feedback: ^0.4.2
