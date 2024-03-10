@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:bouggr/components/popup.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:flutter/material.dart';

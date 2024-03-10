@@ -12,10 +12,10 @@ import '../global.dart';
 /// Page des règles du jeu
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({super.key});
 
   @override
-  _SettingsPageState createState() => _SettingsPageState();
+  State<SettingsPage> createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
@@ -62,10 +62,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    var router = Provider.of<NavigationServices>(context,
-        listen: false);
+    var router = Provider.of<NavigationServices>(context, listen: false);
 
-    final auth = FirebaseAuth.instance;//recuperation du services de navigation
+    final auth = FirebaseAuth.instance; //recuperation du services de navigation
 
     const textStyleJUA = TextStyle(
       color: Colors.black,

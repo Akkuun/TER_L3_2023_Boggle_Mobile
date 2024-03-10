@@ -9,9 +9,8 @@ enum PageName {
   emailLogin,
   googleLogin,
   emailCreate,
-  data_storage,
   data,
   settings,
-  start_game,
+  startGame,
   ;
 }

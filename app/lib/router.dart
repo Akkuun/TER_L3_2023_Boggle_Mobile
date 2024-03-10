@@ -72,8 +72,8 @@ class _BouggrRouter extends State<BouggrRouter> {
       case PageName.settings:
         page = const SettingsPage();
         break;
-      case PageName.start_game:
-        page =  StartGamePage();
+      case PageName.startGame:
+        page = StartGamePage();
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -88,8 +88,7 @@ class _BouggrRouter extends State<BouggrRouter> {
               children: [
                 SizedBox(
                     height: constraints.maxHeight,
-                    child: page
-                ), //affichage de la page
+                    child: page), //affichage de la page
               ],
             ),
           ),
