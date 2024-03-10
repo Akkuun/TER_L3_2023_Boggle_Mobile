@@ -1,4 +1,4 @@
-import 'package:bouggr/components/dices.dart';
+import 'package:bouggr/components/game_page/dices.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/utils/dico.dart';

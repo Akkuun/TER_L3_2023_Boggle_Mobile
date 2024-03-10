@@ -1,8 +1,8 @@
 //components
 
-import 'package:bouggr/components/game_front.dart';
-import 'package:bouggr/components/pop_up_game_menu.dart';
-import 'package:bouggr/components/wave.dart';
+import 'package:bouggr/components/game_page/game_front.dart';
+import 'package:bouggr/components/game_page/pop_up_game_menu.dart';
+import 'package:bouggr/components/game_page/wave.dart';
 
 import 'package:flutter/material.dart';
 

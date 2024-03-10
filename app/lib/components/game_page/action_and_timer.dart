@@ -1,7 +1,7 @@
 //components
 
 import 'package:bouggr/components/btn.dart';
-import 'package:bouggr/components/timer.dart';
+import 'package:bouggr/components/game_page/timer.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/timer.dart';
 import 'package:flutter/material.dart';

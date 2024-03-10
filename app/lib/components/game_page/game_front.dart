@@ -1,9 +1,10 @@
 //components
 
-import 'package:bouggr/components/action_and_timer.dart';
-import 'package:bouggr/components/grille.dart';
-import 'package:bouggr/components/scoreboard.dart';
+import 'package:bouggr/components/game_page/action_and_timer.dart';
+import 'package:bouggr/components/game_page/grille.dart';
+import 'package:bouggr/components/game_page/scoreboard.dart';
 import 'package:bouggr/components/title.dart';
+
 import 'package:bouggr/components/words_found.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +26,7 @@ class GameFront extends StatelessWidget {
               ScoreBoard(),
               BoggleGrille(),
               WordsFound(),
-              ActionAndTimer(),
+              ActionAndTimer()
             ],
           ),
         ),
