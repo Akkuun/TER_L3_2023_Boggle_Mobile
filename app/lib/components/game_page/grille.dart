@@ -9,11 +9,8 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 class BoggleGrille extends StatefulWidget {
-  final GameType mode;
-
   const BoggleGrille({
     super.key,
-    this.mode = GameType.solo,
   });
 
   @override

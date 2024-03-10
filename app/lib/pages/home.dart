@@ -78,7 +78,7 @@ class HomePage extends StatelessWidget {
           ),
           BtnBoggle(
             onPressed: () {
-              if (gameServices.start(LangCode.FR, GameType.solo)) {
+              if (gameServices.start(LangCode.FR)) {
                 router.goToPage(PageName.game);
               }
             },
