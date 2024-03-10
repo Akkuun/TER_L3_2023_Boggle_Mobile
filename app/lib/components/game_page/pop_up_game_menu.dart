@@ -38,6 +38,12 @@ class PopUpGameMenu extends StatelessWidget {
     // is in listen: true because we need to update the score
     GameServices gameServices =
         Provider.of<GameServices>(context, listen: true);
+    TimerServices timerServices =
+        Provider.of<TimerServices>(context, listen: false);
+    GameResult gameResult = GameResult(
+        score: gameServices.score,
+        grid: gameServices.letters.join(),
+        words: _countWordsByLength(gameServices));
 
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
@@ -58,7 +64,7 @@ class PopUpGameMenu extends StatelessWidget {
                 BtnBoggle(
                   onPressed: () {
                     gameServices.toggle(false);
-                    Provider.of<TimerServices>(context, listen: false).start();
+                    timerServices.start();
                   },
                   text: "X",
                   btnType: BtnType.square,
@@ -69,15 +75,10 @@ class PopUpGameMenu extends StatelessWidget {
                 BtnBoggle(
                   onPressed: () {
                     gameServices.stop();
-                    GameResult gameResult = GameResult(
-                        score: gameServices.score,
-                        grid: gameServices.letters.join(),
-                        words: _countWordsByLength(gameServices));
 
                     GameDataStorage.saveGameResult(gameResult);
 
-                    Provider.of<TimerServices>(context, listen: false)
-                        .resetProgress();
+                    timerServices.resetProgress();
                     gameServices.reset();
                     navigationServices.goToPage(PageName.home);
                   },
@@ -87,14 +88,9 @@ class PopUpGameMenu extends StatelessWidget {
                     onPressed: () {
                       gameServices.stop();
 
-                      GameResult gameResult = GameResult(
-                          score: gameServices.score,
-                          grid: gameServices.letters.join(),
-                          words: _countWordsByLength(gameServices));
                       GameDataStorage.saveGameResult(gameResult);
                       gameServices.reset();
-                      Provider.of<TimerServices>(context, listen: false)
-                          .resetProgress();
+                      timerServices.resetProgress();
                       navigationServices.goToPage(PageName.home);
                     },
                     text: "Home",

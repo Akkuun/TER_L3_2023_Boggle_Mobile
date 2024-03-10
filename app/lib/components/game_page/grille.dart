@@ -62,7 +62,7 @@ class _BoggleGrilleState extends State<BoggleGrille> {
 
     if (_trackTaped.isNotEmpty) {
       final last = _trackTaped.last;
-      if (isAdjacent(target, last)) {
+      if (_isAdjacent(target, last)) {
         isCurrentWordValid = _isWordValid(newWord);
         _trackTaped.add(target);
         _selectIndex(target.index);
@@ -80,7 +80,7 @@ class _BoggleGrilleState extends State<BoggleGrille> {
     });
   }
 
-  bool isAdjacent(BoggleDiceRender target, BoggleDiceRender last) {
+  bool _isAdjacent(BoggleDiceRender target, BoggleDiceRender last) {
     (int, int) targetCoords = (target.index ~/ 4, target.index % 4);
     (int, int) lastCoords = (last.index ~/ 4, last.index % 4);
     return (targetCoords.$1 - lastCoords.$1).abs() <= 1 &&
@@ -135,6 +135,7 @@ class _BoggleGrilleState extends State<BoggleGrille> {
   Widget build(BuildContext context) {
     GameServices gameServices = context.watch<GameServices>();
 
+    var width = MediaQuery.of(context).size.width;
     return Center(
       child: Container(
         decoration: BoxDecoration(
@@ -150,8 +151,8 @@ class _BoggleGrilleState extends State<BoggleGrille> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           child: SizedBox(
-            height: MediaQuery.of(context).size.width,
-            width: MediaQuery.of(context).size.width - 50,
+            height: width,
+            width: width - 50,
             child: Listener(
               onPointerDown:
                   !gameServices.triggerPopUp ? _detectTapedItem : null,
