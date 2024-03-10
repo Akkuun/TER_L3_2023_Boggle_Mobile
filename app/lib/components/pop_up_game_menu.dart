@@ -13,10 +13,20 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class PopUpGameMenu extends StatelessWidget {
-  final List<int> words;
-  final String grid;
+  const PopUpGameMenu({super.key});
 
-  const PopUpGameMenu({super.key, required this.grid, required this.words});
+  List<int> _countWordsByLength(GameServices gameServices) {
+    if (gameServices.words.isEmpty) {
+      return [];
+    }
+    int max =
+        gameServices.words.map((e) => e.length).reduce((a, b) => a > b ? a : b);
+    List<int> count = List.filled(max - 2, 0);
+    for (var word in gameServices.words) {
+      count[word.length - 3]++;
+    }
+    return count;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +66,10 @@ class PopUpGameMenu extends StatelessWidget {
                   onPressed: () {
                     gameServices.stop();
                     gameServices.reset();
-                    GameResult gameResult =
-                        GameResult(score: score, grid: grid, words: words);
+                    GameResult gameResult = GameResult(
+                        score: score,
+                        grid: gameServices.letters.join(),
+                        words: _countWordsByLength(gameServices));
 
                     GameDataStorage.saveGameResult(gameResult);
 
@@ -69,8 +81,10 @@ class PopUpGameMenu extends StatelessWidget {
                     onPressed: () {
                       gameServices.stop();
 
-                      GameResult gameResult =
-                          GameResult(score: score, grid: grid, words: words);
+                      GameResult gameResult = GameResult(
+                          score: score,
+                          grid: gameServices.letters.join(),
+                          words: _countWordsByLength(gameServices));
                       GameDataStorage.saveGameResult(gameResult);
                       gameServices.reset();
                       navigationServices.goToPage(PageName.home);
