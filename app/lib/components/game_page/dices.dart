@@ -12,29 +12,9 @@ class BoggleDice extends SingleChildRenderObjectWidget {
       required this.color,
       super.key})
       : super(
-            child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: color,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.25),
-                  offset: const Offset(4, 4),
-                  blurRadius: 4,
-                )
-              ]),
-          child: Center(
-            child: Text(
-              letter,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 32,
-                fontFamily: "Jua",
-                fontWeight: FontWeight.w400,
-                height: 0,
-              ),
-            ),
-          ),
+            child: DiceFront(
+          color: color,
+          letter: letter,
         ));
 
   @override
@@ -45,6 +25,46 @@ class BoggleDice extends SingleChildRenderObjectWidget {
   @override
   void updateRenderObject(BuildContext context, BoggleDiceRender renderObject) {
     renderObject.index = index;
+  }
+}
+
+class DiceFront extends StatelessWidget {
+  final Color color;
+  static const black = Colors.black;
+  final String letter;
+
+  const DiceFront({
+    super.key,
+    required this.color,
+    required this.letter,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: color,
+          boxShadow: [
+            BoxShadow(
+              color: black.withOpacity(0.25),
+              offset: const Offset(4, 4),
+              blurRadius: 4,
+            )
+          ]),
+      child: Center(
+        child: Text(
+          letter,
+          style: const TextStyle(
+            color: black,
+            fontSize: 32,
+            fontFamily: "Jua",
+            fontWeight: FontWeight.w400,
+            height: 0,
+          ),
+        ),
+      ),
+    );
   }
 }
 

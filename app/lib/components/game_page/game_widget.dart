@@ -14,13 +14,14 @@ class GameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Stack(
       children: [
         Stack(
           children: [
             Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
+              height: size.height,
+              width: size.width,
               color: const Color.fromRGBO(255, 237, 172, 1),
             ),
             const Wave(),
