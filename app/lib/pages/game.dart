@@ -6,10 +6,7 @@ import 'package:bouggr/global.dart';
 //services
 import 'package:bouggr/providers/game.dart';
 
-import 'package:bouggr/utils/word_score.dart';
 import 'package:bouggr/utils/dico.dart';
-import 'package:cloud_functions/cloud_functions.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 //flutter
@@ -21,12 +18,10 @@ import '../components/pop_up_game_menu.dart';
 import '../components/wave.dart';
 
 class GamePage extends StatefulWidget {
-  final List<String>? letters;
   final GameType mode;
 
   const GamePage({
     super.key,
-    this.letters,
     this.mode = GameType.solo,
   });
 
@@ -39,53 +34,10 @@ class _GamePageState extends State<GamePage> {
 
   late final List<String> selectedLetter;
 
-  late Dictionary _dictionary;
-
   @override
   void initState() {
     super.initState();
     gameServices = Provider.of<GameServices>(context, listen: false);
-    var lang = Provider.of<GameServices>(context, listen: false).language;
-    if (widget.letters == null) {
-      _dictionary = Globals.selectDictionary(lang);
-      _dictionary.load();
-      selectedLetter = Globals.selectDiceSet(lang).roll();
-    } else {
-      selectedLetter = widget.letters!;
-    }
-  }
-
-  bool _isWordValid(String word) {
-    if (word.length < 3) {
-      return false;
-    }
-    return _dictionary.contain(word);
-  }
-
-  bool _endWordSelection(String word, List<(int, int)> indexes) {
-    if (gameServices.isInWordList(word) || !_isWordValid(word)) {
-      gameServices.addStrike();
-      return false;
-    }
-    _updateScore(wordScore(word));
-    gameServices.addWord(word);
-    return true;
-  }
-
-  bool _endWordSelectionMultiplayer(String word, List<(int, int)> indexes) {
-    final gameUID = Globals.gameCode;
-    var res = indexes.map((e) => {"x": e.$1, "y": e.$2}).toList();
-    print("Word : $res");
-    FirebaseFunctions.instance.httpsCallable('SendWord').call({
-      "gameId": gameUID,
-      "userId": FirebaseAuth.instance.currentUser!.uid,
-      "word": res,
-    }).then((value) => print("Word $word sent to server"));
-    return _endWordSelection(word, indexes);
-  }
-
-  void _updateScore(int wordScore) {
-    gameServices.addScore(wordScore);
   }
 
   List<int> _countWordsByLength() {
@@ -127,12 +79,11 @@ class _GamePageState extends State<GamePage> {
   Widget build(BuildContext context) {
     switch (widget.mode) {
       case GameType.solo:
+        gameServices.letters =
+            Globals.selectDiceSet(gameServices.language).roll();
         return Globals(child: Builder(builder: (BuildContext innerContext) {
           return GameWidget(
             mode: widget.mode,
-            letters: selectedLetter,
-            endWordSelection: _endWordSelection,
-            isWordValid: _isWordValid,
             countWordsByLength: _countWordsByLength,
           );
         }));
@@ -143,11 +94,9 @@ class _GamePageState extends State<GamePage> {
             future: letters,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
+                gameServices.letters = snapshot.data!;
                 return GameWidget(
                   mode: widget.mode,
-                  letters: snapshot.data!,
-                  endWordSelection: _endWordSelectionMultiplayer,
-                  isWordValid: _isWordValid,
                   countWordsByLength: _countWordsByLength,
                 );
               } else {
@@ -162,23 +111,18 @@ class _GamePageState extends State<GamePage> {
 
 class GameWidget extends StatelessWidget {
   final GameType mode;
-  final List<String> letters;
 
-  final bool Function(String word, List<(int, int)> indexes)? endWordSelection;
-  final bool Function(String word) isWordValid;
   final List<int> Function() countWordsByLength;
 
   const GameWidget({
     super.key,
     this.mode = GameType.solo,
-    required this.letters,
-    this.endWordSelection,
-    required this.isWordValid,
     required this.countWordsByLength,
   });
 
   @override
   Widget build(BuildContext context) {
+    final letters = Provider.of<GameServices>(context).letters;
     return Stack(
       children: [
         Stack(
@@ -189,11 +133,7 @@ class GameWidget extends StatelessWidget {
               color: const Color.fromRGBO(255, 237, 172, 1),
             ),
             const Wave(),
-            GameFront(
-              letters: letters,
-              endWordSelection: endWordSelection,
-              isWordValid: isWordValid,
-            ),
+            const GameFront(),
           ],
         ),
         PopUpGameMenu(

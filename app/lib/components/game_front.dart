@@ -10,35 +10,22 @@ import 'package:flutter/material.dart';
 class GameFront extends StatelessWidget {
   const GameFront({
     super.key,
-    required this.letters,
-    required this.endWordSelection,
-    required this.isWordValid,
   });
-
-  final List<String> letters;
-  final bool Function(String word, List<(int, int)> indexes)? endWordSelection;
-  final bool Function(String word) isWordValid;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: MediaQuery.of(context).size.height,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
+      child: const Padding(
+        padding: EdgeInsets.all(8.0),
         child: Center(
           child: Column(
             children: [
-              const AppTitle(fontSize: 56),
-              const ScoreBoard(),
-              BoggleGrille(
-                letters: letters,
-                //letters: snapshot.data!,
-                onWordSelectionEnd:
-                    endWordSelection ?? (word, indexes) => false,
-                isWordValid: isWordValid,
-              ),
-              const WordsFound(),
-              const ActionAndTimer(),
+              AppTitle(fontSize: 56),
+              ScoreBoard(),
+              BoggleGrille(),
+              WordsFound(),
+              ActionAndTimer(),
             ],
           ),
         ),

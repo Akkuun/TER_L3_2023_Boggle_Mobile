@@ -1,21 +1,20 @@
 import 'package:bouggr/components/dices.dart';
+import 'package:bouggr/global.dart';
 import 'package:bouggr/providers/game.dart';
+import 'package:bouggr/utils/dico.dart';
+import 'package:bouggr/utils/word_score.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 class BoggleGrille extends StatefulWidget {
-  final List<String> letters;
-  final bool Function(String, List<(int, int)>) onWordSelectionEnd;
-  final bool Function(String) isWordValid;
   final GameType mode;
 
   const BoggleGrille({
     super.key,
-    required this.letters,
-    required this.onWordSelectionEnd,
-    required this.isWordValid,
     this.mode = GameType.solo,
   });
 
@@ -32,8 +31,16 @@ class _BoggleGrilleState extends State<BoggleGrille> {
   String currentWord = "";
   bool isCurrentWordValid = false;
   bool lock = false;
+  late GameServices gameServices;
+  late Dictionary _dictionary;
 
-  get mode => null;
+  @override
+  void initState() {
+    super.initState();
+    gameServices = Provider.of<GameServices>(context, listen: false);
+    _dictionary = Globals.selectDictionary(gameServices.language);
+    _dictionary.load();
+  }
 
   _detectTapedItem(PointerEvent event) {
     if (lock) {
@@ -56,12 +63,12 @@ class _BoggleGrilleState extends State<BoggleGrille> {
   }
 
   void _handleSelectedDice(BoggleDiceRender target) {
-    String newWord = currentWord + widget.letters[target.index];
+    String newWord = currentWord + gameServices.letters[target.index];
 
     if (_trackTaped.isNotEmpty) {
       final last = _trackTaped.last;
       if (isAdjacent(target, last)) {
-        isCurrentWordValid = widget.isWordValid(newWord);
+        isCurrentWordValid = _isWordValid(newWord);
         _trackTaped.add(target);
         _selectIndex(target.index);
       } else {
@@ -91,13 +98,42 @@ class _BoggleGrilleState extends State<BoggleGrille> {
     });
   }
 
+  bool _isWordValid(String word) {
+    if (word.length < 3) {
+      return false;
+    }
+    return _dictionary.contain(word);
+  }
+
+  bool _endWordSelection(String word, List<(int, int)> indexes) {
+    if (gameServices.isInWordList(word) || !_isWordValid(word)) {
+      gameServices.addStrike();
+      return false;
+    }
+    gameServices.addScore(wordScore(word));
+    gameServices.addWord(word);
+    return true;
+  }
+
+  bool _endWordSelectionMultiplayer(String word, List<(int, int)> indexes) {
+    final gameUID = Globals.gameCode;
+    var res = indexes.map((e) => {"x": e.$1, "y": e.$2}).toList();
+    print("Word : $res");
+    FirebaseFunctions.instance.httpsCallable('SendWord').call({
+      "gameId": gameUID,
+      "userId": FirebaseAuth.instance.currentUser!.uid,
+      "word": res,
+    }).then((value) => print("Word $word sent to server"));
+    return _endWordSelection(word, indexes);
+  }
+
   void _sendWordToGameLogicAndClear(PointerUpEvent event) {
     if (currentWord.length >= 3) {
       List<(int, int)> indexes = [];
       for (var index in selectedIndexes) {
         indexes.add((index ~/ 4, index % 4));
       }
-      widget.onWordSelectionEnd(currentWord, indexes);
+      _endWordSelection(currentWord, indexes);
     }
     _clearSelection();
   }
@@ -152,7 +188,7 @@ class _BoggleGrilleState extends State<BoggleGrille> {
                 itemBuilder: (context, index) {
                   return BoggleDice(
                     index: index,
-                    letter: widget.letters[index],
+                    letter: gameServices.letters[index],
                     color: selectedIndexes.contains(index)
                         ? isCurrentWordValid
                             ? Theme.of(context).primaryColor

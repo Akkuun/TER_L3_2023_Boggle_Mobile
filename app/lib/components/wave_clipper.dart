@@ -4,14 +4,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class WaveClipper extends CustomClipper<Path> {
-  final double waveHeight;
-  final double waveFrequency;
+  final double waveHeight = 15;
+  final double waveFrequency = 0.8;
   final double progression;
 
-  WaveClipper(
-      {this.waveHeight = 20,
-      this.waveFrequency = 1,
-      required this.progression});
+  WaveClipper({required this.progression});
 
   @override
   Path getClip(Size size) {

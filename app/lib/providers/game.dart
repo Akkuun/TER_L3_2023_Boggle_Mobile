@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:bouggr/components/popup.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:flutter/material.dart';
@@ -13,13 +15,20 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
   GameType type = GameType.solo;
   int _score = 0;
   int _strikes = 0;
+  List<String>? _letters;
 
-  GameServices({
-    this.type = GameType.solo,
-  });
+  GameServices();
 
   LangCode get language {
     return _lang;
+  }
+
+  List<String> get letters {
+    return _letters!;
+  }
+
+  set letters(List<String> letters) {
+    _letters = letters;
   }
 
   GameType get gameType {
