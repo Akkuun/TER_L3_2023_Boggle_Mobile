@@ -52,6 +52,8 @@ class TimerServices extends ChangeNotifier {
 
   void resetProgress() {
     _progression = 0;
+    _seconds = 0;
+    _minutes = 3;
   }
 
   void setprogression(double d) {

@@ -100,7 +100,6 @@ class _BoggleTimerState extends State<BoggleTimer> {
     if (context.watch<GameServices>().triggerPopUp) {
       stopTimer();
     } else {
-      Provider.of<TimerServices>(context, listen: false).resetProgress();
       startTimer();
     }
 
