@@ -1,11 +1,10 @@
 //components
 
-import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/game_page/timer.dart';
-import 'package:bouggr/providers/game.dart';
-import 'package:bouggr/providers/timer.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
+import 'pause_action.dart';
+import 'tips_action.dart';
 
 class ActionAndTimer extends StatelessWidget {
   const ActionAndTimer({
@@ -14,43 +13,13 @@ class ActionAndTimer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TimerServices timerServices =
-        Provider.of<TimerServices>(context, listen: false);
-    GameServices gameServices =
-        Provider.of<GameServices>(context, listen: true);
-
-    return Row(
+    return const Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        IconBtnBoggle(
-          onPressed: () {
-            if (gameServices.triggerPopUp) {
-              timerServices.stop();
-            } else {
-              timerServices.start();
-            }
-            gameServices.toggle(!gameServices.triggerPopUp);
-          },
-          icon: Icon(
-            gameServices.triggerPopUp ? Icons.play_arrow : Icons.pause,
-            color: Colors.black,
-            size: 48,
-            semanticLabel: "pause",
-          ),
-        ),
-        const BoggleTimer(),
-        IconBtnBoggle(
-          onPressed: () {
-            gameServices.stop();
-          },
-          icon: const Icon(
-            Icons.live_help_outlined,
-            color: Colors.black,
-            size: 48,
-            semanticLabel: "pause",
-          ),
-        ),
+        PauseAction(),
+        BoggleTimer(),
+        TipsAction(),
       ],
     );
   }
