@@ -28,7 +28,6 @@ class TimerServices extends ChangeNotifier {
   }
 
   void update(int seconds, int minutes, double progression) {
-    print("Updating timer : $seconds, $minutes, $progression");
     _seconds = seconds;
     _minutes = minutes;
     _progression = progression;
@@ -46,7 +45,6 @@ class TimerServices extends ChangeNotifier {
   }
 
   double getTimerProgress() {
-    print("calling getTimerProgress");
     int totalSeconds = (_minutes ?? 3) * 60 + (_seconds ?? 0);
     _progression = 1.0 - (totalSeconds / 180);
     return _progression!;

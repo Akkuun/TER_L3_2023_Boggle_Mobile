@@ -75,6 +75,9 @@ class PopUpGameMenu extends StatelessWidget {
                         words: _countWordsByLength(gameServices));
 
                     GameDataStorage.saveGameResult(gameResult);
+
+                    Provider.of<TimerServices>(context, listen: false)
+                        .resetProgress();
                     gameServices.reset();
                     navigationServices.goToPage(PageName.home);
                   },
@@ -90,6 +93,8 @@ class PopUpGameMenu extends StatelessWidget {
                           words: _countWordsByLength(gameServices));
                       GameDataStorage.saveGameResult(gameResult);
                       gameServices.reset();
+                      Provider.of<TimerServices>(context, listen: false)
+                          .resetProgress();
                       navigationServices.goToPage(PageName.home);
                     },
                     text: "Home",

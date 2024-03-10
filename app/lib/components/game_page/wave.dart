@@ -14,7 +14,7 @@ class Wave extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var progression = Provider.of<TimerServices>(context).getTimerProgress();
-    print("Wave progression : $progression");
+
     var size = MediaQuery.of(context).size;
     return ClipPath(
       clipper: WaveClipper(
