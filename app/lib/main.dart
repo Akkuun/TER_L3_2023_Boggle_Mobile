@@ -26,6 +26,8 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+    SystemChrome.setPreferredOrientations(
+        [DeviceOrientation.portraitUp]); // Force portrait mode
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => NavigationServices()),

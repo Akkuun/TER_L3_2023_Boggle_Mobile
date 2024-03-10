@@ -1,5 +1,12 @@
 //components
 
+import 'package:bouggr/components/grille.dart';
+import 'package:bouggr/components/pop_accelo.dart';
+
+import 'package:bouggr/components/scoreboard.dart';
+import 'package:bouggr/components/words_found.dart';
+import 'package:bouggr/components/title.dart';
+
 //globals
 import 'package:bouggr/global.dart';
 
@@ -28,6 +35,7 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> {
+
   late GameServices gameServices;
 
   @override
@@ -39,6 +47,31 @@ class _GamePageState extends State<GamePage> {
   Future<List<String>> _fetchLetters() async {
     if (kDebugMode) {
       print("Fetching letters");
+    var lang = Provider.of<GameServices>(context, listen: false).language;
+
+    _dictionary = Globals.selectDictionary(lang);
+    _dictionary.load();
+    List<String> selectedLetter = Globals.selectDiceSet(lang).roll();
+
+    restartGamePage = ReStartGamePage();
+    restartGamePage.setRestart(false);
+    restartGamePage.restartNotifier.addListener(_restartGame);
+
+    boggleGrille = BoggleGrille(
+        letters: selectedLetter,
+        onWordSelectionEnd: _endWordSelection,
+        isWordValid: _isWordValid);
+  }
+
+  @override
+  void dispose() {
+    restartGamePage.restartNotifier.removeListener(_restartGame);
+    super.dispose();
+  }
+
+  bool _isWordValid(String word) {
+    if (word.length < 3) {
+      return false;
     }
     if (Globals.currentMultiplayerGame.isNotEmpty) {
       if (kDebugMode) {
@@ -90,6 +123,14 @@ class _GamePageState extends State<GamePage> {
             },
           );
         }));
+    }
+  }
+
+  void _restartGame() {
+    if (restartGamePage.getRestart) {
+      print("restart game");
+      //faire le reset de partie 
+      //je le fait pas car je pige pas cette page
     }
   }
 }
