@@ -1,6 +1,7 @@
 //components
 
 import 'package:bouggr/components/grille.dart';
+import 'package:bouggr/components/pop_accelo.dart';
 
 import 'package:bouggr/components/scoreboard.dart';
 import 'package:bouggr/components/words_found.dart';
@@ -36,6 +37,7 @@ class _GamePageState extends State<GamePage> {
   final List<String> _previousWords = [];
   int _score = 0;
   int _strikes = 0;
+  late ReStartGamePage restartGamePage;
 
   late Dictionary _dictionary;
 
@@ -48,10 +50,20 @@ class _GamePageState extends State<GamePage> {
     _dictionary.load();
     List<String> selectedLetter = Globals.selectDiceSet(lang).roll();
 
+    restartGamePage = ReStartGamePage();
+    restartGamePage.setRestart(false);
+    restartGamePage.restartNotifier.addListener(_restartGame);
+
     boggleGrille = BoggleGrille(
         letters: selectedLetter,
         onWordSelectionEnd: _endWordSelection,
         isWordValid: _isWordValid);
+  }
+
+  @override
+  void dispose() {
+    restartGamePage.restartNotifier.removeListener(_restartGame);
+    super.dispose();
   }
 
   bool _isWordValid(String word) {
@@ -101,16 +113,25 @@ class _GamePageState extends State<GamePage> {
                     boggleGrille,
                     WordsFound(previousWords: _previousWords),
                     const ActionAndTimer(),
-                    Text(timerServices.seconds.toString()),
-                    Text(gameServices.triggerPopUp.toString())
+                    //Text(timerServices.seconds.toString()),
+                    //Text(gameServices.triggerPopUp.toString())
                   ],
                 ),
               ),
             ),
           ),
           PopUpGameMenu(score: _score),
+          PopAccelo(restartGamePage: restartGamePage),
         ],
       );
     }));
+  }
+
+  void _restartGame() {
+    if (restartGamePage.getRestart) {
+      print("restart game");
+      //faire le reset de partie 
+      //je le fait pas car je pige pas cette page
+    }
   }
 }

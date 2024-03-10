@@ -5,6 +5,7 @@ import 'package:bouggr/pages/login.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/pages/rulepage.dart';
 import 'package:bouggr/pages/game.dart';
+import 'package:bouggr/pages/start_game.dart';
 
 import 'package:bouggr/pages/stats.dart';
 import 'package:bouggr/providers/navigation.dart';
@@ -34,7 +35,6 @@ class _BouggrRouter extends State<BouggrRouter> {
         break;
       case PageName.game:
         page = const GamePage();
-
         break;
       case PageName.rules:
         page = const RulePage();
@@ -54,6 +54,10 @@ class _BouggrRouter extends State<BouggrRouter> {
         break;
       case PageName.settings:
         page = const SettingsPage();
+        break;
+      case PageName.start_game:
+        page =  StartGamePage();
+        break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
