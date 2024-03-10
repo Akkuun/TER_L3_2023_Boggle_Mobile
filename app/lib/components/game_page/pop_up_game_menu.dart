@@ -33,8 +33,8 @@ class PopUpGameMenu extends StatelessWidget {
     NavigationServices navigationServices =
         Provider.of<NavigationServices>(context, listen: false);
     GameServices gameServices =
-        Provider.of<GameServices>(context, listen: false);
-    int score = context.read<GameServices>().score;
+        Provider.of<GameServices>(context, listen: true);
+
     var h = MediaQuery.of(context).size.height * 0.8;
     var w = MediaQuery.of(context).size.width * 0.8;
     return PopUp<GameServices>(
@@ -61,13 +61,14 @@ class PopUpGameMenu extends StatelessWidget {
                   btnType: BtnType.square,
                 ),
                 const Text("Game Paused", style: TextStyle(fontSize: 30)),
-                Text("$score points", style: const TextStyle(fontSize: 20)),
+                Text("${gameServices.score} points",
+                    style: const TextStyle(fontSize: 20)),
                 BtnBoggle(
                   onPressed: () {
                     gameServices.stop();
                     gameServices.reset();
                     GameResult gameResult = GameResult(
-                        score: score,
+                        score: gameServices.score,
                         grid: gameServices.letters.join(),
                         words: _countWordsByLength(gameServices));
 
@@ -82,7 +83,7 @@ class PopUpGameMenu extends StatelessWidget {
                       gameServices.stop();
 
                       GameResult gameResult = GameResult(
-                          score: score,
+                          score: gameServices.score,
                           grid: gameServices.letters.join(),
                           words: _countWordsByLength(gameServices));
                       GameDataStorage.saveGameResult(gameResult);
