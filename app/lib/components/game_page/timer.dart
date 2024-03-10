@@ -38,13 +38,13 @@ class _BoggleTimerState extends State<BoggleTimer> {
       if (seconds > 0) {
         seconds--;
         progression = timerServices.getTimerProgress();
-        timerServices.update(seconds, minutes, progression ?? 0.0);
+        timerServices.update(seconds, minutes, progression!);
       } else {
         if (minutes > 0) {
           minutes--;
           seconds = 59;
           progression = timerServices.getTimerProgress();
-          timerServices.update(seconds, minutes, progression ?? 0.0);
+          timerServices.update(seconds, minutes, progression!);
         } else {
           timerServices.stop();
           Provider.of<GameServices>(context, listen: false).stop();
@@ -80,26 +80,6 @@ class _BoggleTimerState extends State<BoggleTimer> {
         timer.cancel();
       });
     }
-  }
-
-  /// Remet le timer à 3 minutes
-  void resetTimer() {
-    setState(() {
-      seconds = 180;
-      minutes = 3;
-      progression = 0.0;
-      running = false;
-    });
-  }
-
-  /// Met le timer a 0
-  void setTimerToZero() {
-    setState(() {
-      seconds = 0;
-      minutes = 0;
-      progression = 0.0;
-      running = false;
-    });
   }
 
   /// Affiche le timer

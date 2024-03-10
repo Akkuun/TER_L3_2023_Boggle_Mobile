@@ -13,20 +13,20 @@ class Wave extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var progression = Provider.of<TimerServices>(context).progression;
-
-    var h = MediaQuery.of(context).size.height;
+    var progression = Provider.of<TimerServices>(context).getTimerProgress();
+    print("Wave progression : $progression");
+    var size = MediaQuery.of(context).size;
     return ClipPath(
       clipper: WaveClipper(
         progression: progression,
       ),
       child: AnimatedContainer(
         duration: const Duration(seconds: 1),
-        height: h * progression,
-        width: MediaQuery.of(context).size.width,
+        height: size.height * progression,
+        width: size.width,
         color: const Color.fromARGB(255, 169, 224, 255),
         constraints: BoxConstraints.expand(
-          height: h * (1 - progression),
+          height: size.height * (1 - progression),
         ),
       ),
     );

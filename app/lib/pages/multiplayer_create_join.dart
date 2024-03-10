@@ -105,6 +105,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
       router.goToPage(PageName.login);
     }
 
+    final size = MediaQuery.of(context).size;
     return BottomButtons(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -162,9 +163,9 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
             fontWeight: FontWeight.w400,
           ),
         ),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+        SizedBox(height: size.height * 0.05),
         SizedBox(
-          width: MediaQuery.of(context).size.width * 0.8,
+          width: size.width * 0.8,
           child: TextField(
             onChanged: (value) {
               setState(() {
