@@ -7,7 +7,7 @@ import 'package:bouggr/utils/decode.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-// ignore: depend_on_referenced_packages
+
 import 'package:haptic_feedback/haptic_feedback.dart';
 
 class StartGamePage extends StatefulWidget {
@@ -51,7 +51,8 @@ class _StartGamePageState extends State<StartGamePage> {
           false; // on remet à zéro la détection de secousse
       if (nbSecousse >= secousseDemander) {
         // si le nombre de secousse demander est atteint
-        for (int i = 0; i < 3; i++) { //tentative de secousse personnalisée
+        for (int i = 0; i < 3; i++) {
+          //tentative de secousse personnalisée
           Haptics.vibrate(HapticsType.heavy);
           await Future.delayed(const Duration(
               milliseconds: 100)); // Attendez un peu entre chaque secousse
@@ -70,14 +71,13 @@ class _StartGamePageState extends State<StartGamePage> {
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
 
-    if (gameServices.start(LangCode.FR, GameType.solo)) {
+    if (gameServices.start(LangCode.FR)) {
       router.goToPage(PageName.game);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
     ///pour éviter le problème de mouvement du téléphone avant le chargement du widget
     //WidgetsBinding permet de faire des actions après le chargement du widget
     //instance permet de récupérer l'instance de l'application
@@ -136,7 +136,7 @@ class _StartGamePageState extends State<StartGamePage> {
           SizedBox(height: MediaQuery.of(context).size.height - 780),
           BtnBoggle(
             onPressed: () {
-              if (gameServices.start(LangCode.FR, GameType.solo)) {
+              if (gameServices.start(LangCode.FR)) {
                 router.goToPage(PageName.game);
               }
             },
