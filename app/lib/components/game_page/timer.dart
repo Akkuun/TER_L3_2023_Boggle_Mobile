@@ -93,8 +93,7 @@ class _BoggleTimerState extends State<BoggleTimer> {
       displaySeconds = '0$seconds';
     }
 
-    return debug ? '$displayMinutes:$displaySeconds    $displayProgression ' : '$displayMinutes:$displaySeconds';
-
+    return '$displayMinutes:$displaySeconds';
   }
 
   @override
