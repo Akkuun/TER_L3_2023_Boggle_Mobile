@@ -5,6 +5,8 @@ import 'package:bouggr/providers/timer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'wave_clipper.dart';
+
 class Wave extends StatelessWidget {
   const Wave({
     super.key,
