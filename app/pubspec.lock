@@ -233,7 +233,7 @@ packages:
     source: sdk
     version: "0.0.0"
   haptic_feedback:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: haptic_feedback
       sha256: ef6df60bd92ac75c87774c3300dd19732f5fbd81734371ea62196c3f55013408
