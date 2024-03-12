@@ -63,7 +63,7 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
     if (_words.contains(word)) {
       return;
     }
-    if (word.length > _longestWord!.length) {
+    if (word.length > (_longestWord?.length ?? 0)) {
       _longestWord = word;
     }
     _words.add(word);
