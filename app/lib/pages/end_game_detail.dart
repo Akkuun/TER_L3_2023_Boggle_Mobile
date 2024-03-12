@@ -29,6 +29,7 @@ class EndGameDetail extends StatelessWidget {
     WordsFound wordsFound = const WordsFound();
 
     return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
