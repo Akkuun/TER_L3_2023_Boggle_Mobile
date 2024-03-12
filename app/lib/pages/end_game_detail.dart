@@ -24,9 +24,48 @@ class EndGameDetail extends StatelessWidget {
         score: gameServices.score,
         grid: gameServices.letters.join(),
         words: []);
+    
+    final previousWords = Provider.of<GameServices>(context).words;
 
     return Column(
       children: [
+        Container(
+      decoration: ShapeDecoration(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        shadows: const [
+          BoxShadow(
+            color: Color(0x3F000000),
+            blurRadius: 4,
+            offset: Offset(0, 4),
+            spreadRadius: 0,
+          )
+        ],
+      ),
+      width: MediaQuery.of(context).size.width * 0.9,
+      height: MediaQuery.of(context).size.height *0.5,
+      child: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  //TODO afficher les mots de la grille
+                  for(var word in previousWords){
+                    Text(word);
+                  },
+                ],
+              ),
+              textAlign: TextAlign.justify,
+            ),
+          ),
+        ),
+      ),
+    ),
         BtnBoggle(
           onPressed: () {
             gameServices.stop();
