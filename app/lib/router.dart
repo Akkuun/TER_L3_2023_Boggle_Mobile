@@ -75,14 +75,11 @@ class _BouggrRouter extends State<BouggrRouter> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Scaffold(
+          resizeToAvoidBottomInset: true, // change this to true
           body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                    height: constraints.maxHeight,
-                    child: page), //affichage de la page
-              ],
+            child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              child: page, //affichage de la page
             ),
           ),
         );

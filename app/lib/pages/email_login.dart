@@ -58,6 +58,7 @@ class _EmailLogInState extends State<EmailLogIn> {
         setState(() {
           //on utilise le setState pour changer l'état de la variable isLoading sinon elle ne changera pas
           isLoading = false;
+          FocusScope.of(context).unfocus();// force le clavier à se fermer
         });
       }
     }

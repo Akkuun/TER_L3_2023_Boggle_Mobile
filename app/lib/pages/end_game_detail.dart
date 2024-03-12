@@ -29,6 +29,7 @@ class EndGameDetail extends StatelessWidget {
     WordsFound wordsFound = const WordsFound();
 
     return Container(
+      height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       color: const Color.fromARGB(255, 169, 224, 255),
       child: Column(

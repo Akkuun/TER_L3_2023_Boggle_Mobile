@@ -85,6 +85,7 @@ class _EmailCreateState extends State<EmailCreate> {
           setState(() {
             //on utilise le setState pour changer l'état de la variable isLoading sinon elle ne changera pas
             isLoading = false;
+            FocusScope.of(context).unfocus(); //force la fermeture du clavier
           });
         }
       }
