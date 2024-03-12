@@ -79,6 +79,18 @@ class PopUpGameMenu extends StatelessWidget {
                     GameDataStorage.saveGameResult(gameResult);
 
                     timerServices.resetProgress();
+
+                    navigationServices.goToPage(PageName.detail);
+                  },
+                  text: "detail",
+                ),
+                BtnBoggle(
+                  onPressed: () {
+                    gameServices.stop();
+
+                    GameDataStorage.saveGameResult(gameResult);
+
+                    timerServices.resetProgress();
                     gameServices.reset();
                     navigationServices.goToPage(PageName.home);
                   },
