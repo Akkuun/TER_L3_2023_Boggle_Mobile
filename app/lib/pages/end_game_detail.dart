@@ -76,7 +76,7 @@ class EndGameDetail extends StatelessWidget {
                       navigationServices.goToPage(PageName
                           .home); //TODO a rediriger vers la popup de tout les mots qui s'affiche sur la grille
                     },
-                    text: "new game",
+                    text: "Liste des plus long mots",
                   ),
                 ],
               ),
