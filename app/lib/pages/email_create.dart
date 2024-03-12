@@ -106,6 +106,7 @@ class _EmailCreateState extends State<EmailCreate> {
             child: TextFormField(
               controller: email,
               decoration: const InputDecoration(labelText: "Email"),
+              keyboardType: TextInputType.emailAddress,
               //c'est pour être sur que l'entrer soit un email fonctionnel ou non
               validator: (value) {
                 if (value!.isEmpty) {
