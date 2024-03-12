@@ -63,14 +63,6 @@ class _BouggrRouter extends State<BouggrRouter> {
   Widget build(BuildContext context) {
     var router = context
         .watch<NavigationServices>(); //écoute du listener de NavigationServices
-    var selectedIndex = router.index; //récupération de l'index de la page
-    Widget page;
-
-    if (_pages.containsKey(selectedIndex)) {
-      page = _pages[selectedIndex]!();
-    } else {
-      page = HomePage();
-    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -79,7 +71,8 @@ class _BouggrRouter extends State<BouggrRouter> {
           body: Center(
             child: SingleChildScrollView(
               physics: const ClampingScrollPhysics(),
-              child: page, //affichage de la page
+              child: _pages[router.index]?.call() ??
+                  HomePage(), //affichage de la page
             ),
           ),
         );
