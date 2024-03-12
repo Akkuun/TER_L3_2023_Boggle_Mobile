@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 enum BtnSize { small, medium, large }
 
-enum BtnType { primary, secondary, square }
+enum BtnType { primary, secondary, square, third }
 
 class BtnBoggle extends StatelessWidget {
   final BtnType btnType;
@@ -12,6 +12,19 @@ class BtnBoggle extends StatelessWidget {
   final double borderLineWidth;
   final bool removePaddings;
   final MainAxisAlignment horizontalAlignment;
+
+    Color switchColor(BtnType btnType) {
+    switch (btnType) {
+      case BtnType.primary:
+        return const Color.fromARGB(255, 89, 150, 194);
+      case BtnType.secondary:
+        return Colors.white;
+      case BtnType.third:
+        return const Color(0xFFAB80F1);
+      default:
+        return Colors.white;
+    }
+  }
 
   const BtnBoggle(
       {super.key,
@@ -52,10 +65,7 @@ class BtnBoggle extends StatelessWidget {
         child: ElevatedButton(
             onPressed: onPressed,
             style: ButtonStyle(
-                backgroundColor: MaterialStateColor.resolveWith((states) =>
-                    BtnType.primary == btnType
-                        ? const Color.fromARGB(255, 89, 150, 194)
-                        : Colors.white)),
+                backgroundColor: MaterialStateColor.resolveWith((states) => switchColor(btnType))),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,

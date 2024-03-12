@@ -77,6 +77,8 @@ class EndGameDetail extends StatelessWidget {
                           .home); //TODO a rediriger vers la popup de tout les mots qui s'affiche sur la grille
                     },
                     text: "Liste des plus long mots",
+                    btnType: BtnType.third,
+                    
                   ),
                 ],
               ),
