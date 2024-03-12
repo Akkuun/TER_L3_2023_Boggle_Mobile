@@ -1,4 +1,5 @@
 import 'package:bouggr/components/btn.dart';
+import 'package:bouggr/components/game_page/words_found.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
@@ -25,10 +26,30 @@ class EndGameDetail extends StatelessWidget {
         grid: gameServices.letters.join(),
         words: []);
 
-    final previousWords = gameServices.words;
+    WordsFound wordsFound = const WordsFound();
+
 
     return Column(
       children: [
+         Container(
+          decoration: ShapeDecoration(
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            shadows: const [
+              BoxShadow(
+                color: Color(0x3F000000),
+                blurRadius: 4,
+                offset: Offset(0, 4),
+                spreadRadius: 0,
+              )
+            ],
+          ),
+          width: MediaQuery.of(context).size.width * 0.9,
+          height: MediaQuery.of(context).size.height * 0.3,
+          child: wordsFound,
+        ),
         Container(
           decoration: ShapeDecoration(
             color: Colors.white,
@@ -45,24 +66,8 @@ class EndGameDetail extends StatelessWidget {
             ],
           ),
           width: MediaQuery.of(context).size.width * 0.9,
-          height: MediaQuery.of(context).size.height * 0.5,
-          child: SingleChildScrollView(
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text.rich(
-                  TextSpan(
-                    children: [
-                      //TODO afficher les mots de la grille
-                      for (var word in previousWords) TextSpan(text: word),
-                    ],
-                  ),
-                  textAlign: TextAlign.justify,
-                ),
-              ),
-            ),
-          ),
+          height: MediaQuery.of(context).size.height * 0.45,
+          child: wordsFound,
         ),
         BtnBoggle(
           onPressed: () {

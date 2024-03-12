@@ -17,7 +17,7 @@ class WordsFound extends StatelessWidget {
       height: 150,
       child: ListView(
         children: [
-          const Text('Mots selectionnés :'),
+          const Text('Mots trouvés :'),
           for (var word in previousWords) Text(word),
         ],
       ),
