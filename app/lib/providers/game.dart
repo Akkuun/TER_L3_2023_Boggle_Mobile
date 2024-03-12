@@ -14,11 +14,16 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
   int _score = 0;
   int _strikes = 0;
   List<String>? _letters;
+  String? _longestWord;
 
   GameServices();
 
   LangCode get language {
     return _lang;
+  }
+
+  String get longestWord {
+    return _longestWord ?? '';
   }
 
   List<String> get letters {
@@ -55,6 +60,12 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
   }
 
   void addWord(String word) {
+    if (_words.contains(word)) {
+      return;
+    }
+    if (word.length > _longestWord!.length) {
+      _longestWord = word;
+    }
     _words.add(word);
     notifyListeners();
   }
