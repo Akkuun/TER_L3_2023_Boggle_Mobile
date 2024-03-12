@@ -29,6 +29,7 @@ class EndGameDetail extends StatelessWidget {
     WordsFound wordsFound = const WordsFound();
 
     return Container(
+      width: MediaQuery.of(context).size.width,
       color: const Color.fromARGB(255, 169, 224, 255),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -67,12 +68,13 @@ class EndGameDetail extends StatelessWidget {
                   BtnBoggle(
                     onPressed: () {
                       gameServices.stop();
-      
+
                       GameDataStorage.saveGameResult(gameResult);
-      
+
                       timerServices.resetProgress();
                       gameServices.reset();
-                      navigationServices.goToPage(PageName.home); //TODO a rediriger vers la popup de tout les mots qui s'affiche sur la grille
+                      navigationServices.goToPage(PageName
+                          .home); //TODO a rediriger vers la popup de tout les mots qui s'affiche sur la grille
                     },
                     text: "new game",
                   ),
@@ -105,9 +107,9 @@ class EndGameDetail extends StatelessWidget {
           BtnBoggle(
             onPressed: () {
               gameServices.stop();
-      
+
               GameDataStorage.saveGameResult(gameResult);
-      
+
               timerServices.resetProgress();
               gameServices.reset();
               navigationServices.goToPage(PageName.home);
@@ -117,7 +119,7 @@ class EndGameDetail extends StatelessWidget {
           BtnBoggle(
               onPressed: () {
                 gameServices.stop();
-      
+
                 GameDataStorage.saveGameResult(gameResult);
                 gameServices.reset();
                 timerServices.resetProgress();
