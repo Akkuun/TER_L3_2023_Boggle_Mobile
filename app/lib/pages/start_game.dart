@@ -22,6 +22,13 @@ class _StartGamePageState extends State<StartGamePage> {
   bool PageCharger = false;
   int nbSecousse = 0;
   int secousseDemander = 10;
+  static const _textStyle = TextStyle(
+    color: Colors.black,
+    fontSize: 22,
+    fontFamily: 'Jua',
+    fontWeight: FontWeight.w400,
+    height: 0,
+  );
 
   @override
   void initState() {
@@ -88,6 +95,7 @@ class _StartGamePageState extends State<StartGamePage> {
 
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
+    var h = MediaQuery.of(context).size.height;
 
     return Center(
       child: Column(
@@ -96,15 +104,9 @@ class _StartGamePageState extends State<StartGamePage> {
           const Text(
             "Secouer votre téléphone pour lancer une partie",
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 22,
-              fontFamily: 'Jua',
-              fontWeight: FontWeight.w400,
-              height: 0,
-            ),
+            style: _textStyle,
           ),
-          SizedBox(height: MediaQuery.of(context).size.height - 800),
+          SizedBox(height: h - 800),
           const Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -120,19 +122,9 @@ class _StartGamePageState extends State<StartGamePage> {
               ],
             ),
           ),
-          SizedBox(height: MediaQuery.of(context).size.height - 750),
-          const Text(
-            "ou",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 22,
-              fontFamily: 'Jua',
-              fontWeight: FontWeight.w400,
-              height: 0,
-            ),
-          ),
-          SizedBox(height: MediaQuery.of(context).size.height - 780),
+          SizedBox(height: h - 750),
+          const Text("ou", textAlign: TextAlign.center, style: _textStyle),
+          SizedBox(height: h - 780),
           BtnBoggle(
             onPressed: () {
               if (gameServices.start(LangCode.FR)) {
