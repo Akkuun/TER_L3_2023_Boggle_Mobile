@@ -41,7 +41,16 @@ class Globals extends InheritedWidget {
         decoder: Decoded(lang: generateLangCode())),
     LangCode.GLOBAL: Dictionary(
         path: 'assets/dictionary/global.json',
-        decoder: Decoded(lang: generateLangCode()))
+        decoder: Decoded(lang: generateLangCode())),
+    LangCode.EN: Dictionary(
+        path: 'assets/dictionary/en_dico.json',
+        decoder: Decoded(lang: generateLangCode())),
+    LangCode.SP: Dictionary(
+        path: 'assets/dictionary/sp_dico.json',
+        decoder: Decoded(lang: generateLangCode())),
+    LangCode.RM: Dictionary(
+        path: 'assets/dictionary/rm_dico.json',
+        decoder: Decoded(lang: generateLangCode())),
   };
 
   const Globals({
