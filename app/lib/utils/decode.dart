@@ -1,6 +1,13 @@
 import 'package:binary/binary.dart';
 
 class Decoded {
+  static final Map<String, LangCode> stringLang = {
+    'fr': LangCode.FR,
+    'rm': LangCode.RM,
+    'en': LangCode.EN,
+    'sp': LangCode.SP,
+    'global': LangCode.GLOBAL
+  };
   final Map<LangCode, int> lang;
 
   Decoded({required this.lang});
@@ -15,6 +22,10 @@ class Decoded {
 
   Int8 getRunesFrom(int code) {
     return Int8(code & ((1 << 8) - 1));
+  }
+
+  static LangCode toLangCode(String code) {
+    return Decoded.stringLang[code] ?? LangCode.FR;
   }
 }
 

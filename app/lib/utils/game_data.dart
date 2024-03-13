@@ -26,6 +26,16 @@ class GameDataStorage {
     await prefs.setStringList(_key, gameResults);
   }
 
+  static Future<void> saveLanguage(String language) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('language', language);
+  }
+
+  static Future<String?> loadLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('language');
+  }
+
   //methode pour recuperer la liste des resultats de jeu stockés à partir des preferences partagees
   static Future<List<String>> loadGameResults() async {
     final prefs = await SharedPreferences.getInstance();

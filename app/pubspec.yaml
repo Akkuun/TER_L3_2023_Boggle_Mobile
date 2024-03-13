@@ -83,3 +83,6 @@ flutter:
   assets:
     - assets/dictionary/global.json
     - assets/dictionary/fr_dico.json
+    - assets/dictionary/en_dico.json
+    - assets/dictionary/sp_dico.json
+    - assets/dictionary/rm_dico.json

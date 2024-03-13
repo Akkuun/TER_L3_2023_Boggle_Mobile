@@ -25,12 +25,10 @@ class EndGameDetail extends StatelessWidget {
         score: gameServices.score,
         grid: gameServices.letters.join(),
         words: []);
-
-    WordsFound wordsFound = const WordsFound();
-
+    var size = MediaQuery.of(context).size;
     return Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
+      height: size.height,
+      width: size.width,
       color: const Color.fromARGB(255, 169, 224, 255),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -52,8 +50,8 @@ class EndGameDetail extends StatelessWidget {
                   )
                 ],
               ),
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: MediaQuery.of(context).size.height * 0.3,
+              width: size.width * 0.9,
+              height: size.height * 0.3,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -79,7 +77,6 @@ class EndGameDetail extends StatelessWidget {
                     },
                     text: "Liste des plus long mots",
                     btnType: BtnType.third,
-                    
                   ),
                 ],
               ),
@@ -102,9 +99,9 @@ class EndGameDetail extends StatelessWidget {
                   )
                 ],
               ),
-              width: MediaQuery.of(context).size.width * 0.9,
-              height: MediaQuery.of(context).size.height * 0.45,
-              child: wordsFound,
+              width: size.width * 0.9,
+              height: size.height * 0.45,
+              child: const WordsFound(),
             ),
           ),
           BtnBoggle(

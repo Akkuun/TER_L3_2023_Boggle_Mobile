@@ -1,5 +1,6 @@
 import 'package:bouggr/components/popup.dart';
 import 'package:bouggr/utils/decode.dart';
+import 'package:bouggr/utils/game_data.dart';
 import 'package:flutter/material.dart';
 
 enum GameType {
@@ -19,7 +20,19 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
   GameServices();
 
   LangCode get language {
+    GameDataStorage.loadLanguage().then((value) {
+      if (value != null) {
+        _lang = Decoded.toLangCode(value);
+      } else {
+        GameDataStorage.saveLanguage("fr");
+      }
+    });
     return _lang;
+  }
+
+  set language(LangCode lang) {
+    _lang = lang;
+    notifyListeners();
   }
 
   String get longestWord {

@@ -1,5 +1,8 @@
+import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
+import 'package:bouggr/utils/decode.dart';
 import 'package:bouggr/utils/game_data.dart';
+import 'package:bouggr/utils/lang.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,11 +22,18 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  String? _selectedLanguage;
   String? _password;
   String? _confirmPassword;
   String? errorText;
   bool changeSuccess = false;
+  final list = <Language>[
+    const Language('fr', 'Français', LangCode.FR),
+    const Language('en', 'English', LangCode.EN),
+    const Language('es', 'Español', LangCode.SP),
+    const Language('rm', 'Roumain', LangCode.RM),
+    const Language('gl', 'Global', LangCode.GLOBAL),
+  ];
+  Language? _selectedLanguage = const Language('fr', 'Français', LangCode.FR);
 
   void _handleButtonClick() {
     // Do something when the button is clicked
@@ -73,6 +83,7 @@ class _SettingsPageState extends State<SettingsPage> {
       fontWeight: FontWeight.w400,
       height: 0,
     );
+
     return BottomButtons(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -131,16 +142,19 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Column(
                   //enfants
                   children: [
-                    DropdownButton<String>(
-                      items: <String>['French', 'Global']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
+                    DropdownButton<Language>(
+                      items: list
+                          .map<DropdownMenuItem<Language>>((Language value) {
+                        return DropdownMenuItem<Language>(
                           value: value,
-                          child: Text(value),
+                          child: Text(value.name),
                         );
                       }).toList(),
-                      onChanged: (String? newValue) {
+                      onChanged: (Language? newValue) {
                         setState(() {
+                          GameDataStorage.saveLanguage(newValue!.code);
+                          Provider.of<GameServices>(context, listen: false)
+                              .language = newValue.langCode;
                           _selectedLanguage = newValue;
                         });
                       },
@@ -148,7 +162,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       value: _selectedLanguage,
                     ),
 
-                    Text('Langage selected : ${_selectedLanguage ?? 'None'}'),
+                    Text(
+                        'Langage selected : ${_selectedLanguage?.name ?? 'None'}'),
                     //DropDownButtonValue
                     const SizedBox(height: 20),
                     TextField(
