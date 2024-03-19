@@ -96,7 +96,7 @@ func appendFromPoint(res chan string, grid string, word string, i, j int, used [
 	if (node[0].(int32) & 0b100000000) > 0 {
 		res <- word
 	}
-	if 2 != len(node) { //if no children -> leaf
+	if len(node) != 2 { //if no children -> leaf
 		return
 	}
 	var ix, jy, index int
