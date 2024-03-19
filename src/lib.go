@@ -10,103 +10,124 @@ func sum(a C.int, b C.int) C.int {
 	return a + b
 }
 
-//export AllWordFrom
-func AllWordFrom(grid []C.int, n C.int, dico []interface{}) []string {
+//export GetAllWord
+func GetAllWord(grid string, dico []interface{}) []string {
+	buf := make(chan string, 1024) //buffered channel to avoid deadlock
+	resMap := make(map[string]bool)
 
-	ch := make(chan string)
-	res := make([]string, 0)
 	wg := new(sync.WaitGroup)
+
 	wg.Add(1)
+	go startAtAllPoint(buf, grid, dico, wg)
 
-	go func(wg *sync.WaitGroup) {
-		allWordFrom(grid, n, dico, ch)
-		defer wg.Done()
-	}(wg)
-
-	for w := range ch {
-		res = append(res, w)
+	for e := range buf {
+		resMap[e] = true
+	}
+	res := make([]string, 0, len(resMap))
+	for k := range resMap {
+		res = append(res, k)
 	}
 
 	wg.Wait()
-	return res
 
+	return res
 }
 
-func allWordFrom(grid []C.int, n C.int, dico []interface{}, ch chan string) {
+func startAtAllPoint(buf chan string, grid string, dico []interface{}, wg *sync.WaitGroup) {
+	iwg := new(sync.WaitGroup)
+	iwg.Add(16)
 
-	wg := new(sync.WaitGroup)
-	wg.Add(int(n * n))
-	for i := C.int(0); i < n; i++ {
-		for j := C.int(0); j < n; j++ {
+	for _, i := range [4]int{0, 1, 2, 3} {
+		for _, j := range [4]int{0, 1, 2, 3} {
 
-			go func(wg *sync.WaitGroup, ch chan string, i C.int, j C.int, n C.int, grid []C.int, dico []interface{}) {
-				allWordStartingFrom("",
-					[3]C.int{i, j, n}, grid, make([]bool, n*n), dico, ch)
-				defer wg.Done()
-			}(wg, ch, i, j, n, grid, dico)
+			go initPoint(buf, grid, iwg, i, j, dico,
+				grid[i*4+j])
 		}
 	}
 
-	wg.Wait()
-	close(ch)
+	iwg.Wait()
+	close(buf)
+	defer wg.Done()
 
 }
 
-func allWordStartingFrom(word string, vector [3]C.int, grid []C.int,
-	used []bool, dico []interface{}, ch chan string) {
-	i, j, n := vector[0], vector[1], vector[2]
-	wordLen := len(word)
-	child, ok := dico[1].([]interface{})
-	wg := new(sync.WaitGroup)
-
-	if wordLen > 16 || !ok {
+func initPoint(buf chan string, grid string, iwg *sync.WaitGroup, i, j int, dico []interface{}, point byte) {
+	defer iwg.Done()
+	var used [4][4]bool
+	used[i][j] = true
+	children := dico[1].([]interface{})
+	n, err := getChild(children, point)
+	if err != nil { //if no children for this letter
 		return
 	}
+	child := n.([]interface{})
 
-	handleWord(wordLen, word, child, ch)
+	appendFromPoint(buf, grid, string(point), i, j, used, child)
 
-	for x := C.int(-1); x < 2; x++ {
-		for y := C.int(-1); y < 2; y++ {
-			target := (i+x)*n + (j + y)
-			if (x == 0 && y == 0) || notUsable(target, n) || used[target] {
+}
+
+var MOVE = [3]int{-1, 0, 1}
+
+func appendFromPoint(res chan string, grid string, word string, i, j int, used [4][4]bool, node []interface{}) {
+
+	if (node[0].(int32) & 0b100000000) > 0 {
+		res <- word
+	}
+	if 2 != len(node) { //if no children -> leaf
+		return
+	}
+	var ix, jy, index int
+
+	children := node[1].([]interface{})
+
+	for _, a := range MOVE {
+		for _, b := range MOVE {
+			ix = a + i
+			jy = b + j
+			index = ix*4 + jy
+			if ix < 0 || jy < 0 || ix > 3 || jy > 3 { //out of range
 				continue
 			}
-			used[target] = true
-			vector[0], vector[1] = i+x, j+y
-			wg.Add(1)
-			word += string(grid[target])
-			go func(wg *sync.WaitGroup, used []bool, child []interface{}, vector [3]C.int, word string, ch chan string) {
-				allWordStartingFrom(word, vector, grid, used, child, ch)
-				defer wg.Done()
-			}(wg, used, child, vector, word, ch)
-			word = word[:wordLen]
-			used[target] = false
-
-		}
-	}
-	wg.Wait()
-
-}
-
-func handleWord(wordLen int, word string, child []interface{}, ch chan string) {
-	if wordLen > 2 {
-
-		lastLetter := C.int(word[wordLen-1])
-		for _, el := range child {
-			if l, ok := el.(C.int); ok && l&lastLetter == lastLetter && (l&1<<9) > 0 {
-				ch <- word
-				break
+			if used[ix][jy] { // can't use the same letter twice
+				continue
 			}
-			if l, ok := el.([]interface{})[0].(C.int); ok && l&lastLetter == lastLetter && (l&1<<9) > 0 {
-				ch <- word
-				break
+
+			newLetter := grid[index]
+
+			n, err := getChild(children, newLetter)
+			if err != nil { //if no children for this letter
+				continue
 			}
+			used[ix][jy] = true
+			if child, ok := n.([]interface{}); !ok {
+				appendFromPoint(res, grid, word+string(newLetter), ix, jy, used, []interface{}{n})
+			} else {
+				appendFromPoint(res, grid, word+string(newLetter), ix, jy, used, child)
+			}
+			used[ix][jy] = false
+
 		}
 	}
 }
 
-func notUsable(target C.int, n C.int) bool {
-	return target < 0 || target > n*n-1
+func getChild(children []interface{}, newLetter byte) (interface{}, error) {
+	for _, n := range children {
+		child, ok := n.([]interface{})
+
+		if !ok && byte(n.(int32)) == newLetter { // if no children -> leaf
+			return n, nil
+		}
+
+		if !ok {
+			continue
+		}
+
+		if byte(child[0].(int32)) == newLetter { //with children
+			return child, nil
+		}
+
+	}
+	return nil, errors.New("not found")
 }
 
 //export enforce_binding
