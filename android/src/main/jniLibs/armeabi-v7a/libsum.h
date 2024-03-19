@@ -19,6 +19,12 @@ typedef struct { const char *p; ptrdiff_t n; } _GoString_;
 /* Start of preamble from import "C" comments.  */
 
 
+#line 3 "lib.go"
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+#line 1 "cgo-generated-wrapper"
 
 
 /* End of preamble from import "C" comments.  */
@@ -56,7 +62,7 @@ typedef double _Complex GoComplex128;
   static assertion to make sure the file is being used on architecture
   at least with matching size of GoInt.
 */
-typedef char _check_for_32_bit_pointer_matching_GoInt[1];
+typedef char _check_for_32_bit_pointer_matching_GoInt[sizeof(void*)==32/8 ? 1:-1];
 
 #ifndef GO_CGO_GOSTRING_TYPEDEF
 typedef _GoString_ GoString;
@@ -75,7 +81,8 @@ extern "C" {
 #endif
 
 extern int sum(int a, int b);
-extern GoSlice AllWordFrom(GoSlice grid, int n, GoSlice dico);
+extern char** GetAllWord(char* cgrid, void* cdico);
+extern void FreeCStringArray(char** cstr, int size);
 extern void enforce_binding();
 
 #ifdef __cplusplus

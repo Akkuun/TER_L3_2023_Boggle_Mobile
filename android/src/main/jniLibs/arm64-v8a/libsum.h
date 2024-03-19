@@ -19,6 +19,12 @@ typedef struct { const char *p; ptrdiff_t n; } _GoString_;
 /* Start of preamble from import "C" comments.  */
 
 
+#line 3 "lib.go"
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+#line 1 "cgo-generated-wrapper"
 
 
 /* End of preamble from import "C" comments.  */
@@ -75,7 +81,8 @@ extern "C" {
 #endif
 
 extern int sum(int a, int b);
-extern GoSlice AllWordFrom(GoSlice grid, int n, GoSlice dico);
+extern char** GetAllWord(char* cgrid, void* cdico);
+extern void FreeCStringArray(char** cstr, int size);
 extern void enforce_binding();
 
 #ifdef __cplusplus

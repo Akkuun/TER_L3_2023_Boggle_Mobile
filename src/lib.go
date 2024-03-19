@@ -1,8 +1,13 @@
 package main
 
+//#include <string.h>
+//#include <stdlib.h>
+//#include <stdio.h>
 import "C"
 import (
+	"errors"
 	"sync"
+	"unsafe"
 )
 
 //export sum
@@ -11,8 +16,16 @@ func sum(a C.int, b C.int) C.int {
 }
 
 //export GetAllWord
-func GetAllWord(grid string, dico []interface{}) []string {
+func GetAllWord(cgrid *C.char, cdico *C.void) **C.char {
+	grid := C.GoString(cgrid)
+	idico := interface{}(unsafe.Pointer(cdico))
+	dico, ok := idico.([]interface{})
+	if !ok {
+		return nil
+	}
+
 	buf := make(chan string, 1024) //buffered channel to avoid deadlock
+
 	resMap := make(map[string]bool)
 
 	wg := new(sync.WaitGroup)
@@ -20,17 +33,26 @@ func GetAllWord(grid string, dico []interface{}) []string {
 	wg.Add(1)
 	go startAtAllPoint(buf, grid, dico, wg)
 
-	for e := range buf {
-		resMap[e] = true
-	}
-	res := make([]string, 0, len(resMap))
+	var res **C.char = (**C.char)(C.malloc(C.size_t(len(resMap) * int(unsafe.Sizeof(uintptr(0))))))
+	i := 0
 	for k := range resMap {
-		res = append(res, k)
+
+		cstr := C.CString(k)
+		**(**uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(res)) + uintptr(i)*unsafe.Sizeof(uintptr(0)))) = uintptr(unsafe.Pointer(cstr))
+		i++
 	}
 
 	wg.Wait()
 
 	return res
+}
+
+//export FreeCStringArray
+func FreeCStringArray(cstr **C.char, size C.int) {
+	for i := 0; i < int(size); i++ {
+		C.free(unsafe.Pointer(unsafe.Pointer(uintptr(unsafe.Pointer(cstr)) + uintptr(i)*unsafe.Sizeof(uintptr(0)))))
+	}
+	C.free(unsafe.Pointer(cstr))
 }
 
 func startAtAllPoint(buf chan string, grid string, dico []interface{}, wg *sync.WaitGroup) {
