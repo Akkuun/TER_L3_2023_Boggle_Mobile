@@ -38,7 +38,8 @@ func GetAllWord(cgrid *C.char, cdico *C.void) **C.char {
 	for k := range resMap {
 
 		cstr := C.CString(k)
-		**(**uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(res)) + uintptr(i)*unsafe.Sizeof(uintptr(0)))) = uintptr(unsafe.Pointer(cstr))
+		**(**uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(res)) +
+			uintptr(i)*unsafe.Sizeof(uintptr(0)))) = uintptr(unsafe.Pointer(cstr))
 		i++
 	}
 
