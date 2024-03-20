@@ -9888,20 +9888,22 @@ class NativeLibrary {
   ffi.Pointer<ffi.Pointer<ffi.Char>> GetAllWord(
     ffi.Pointer<ffi.Char> cgrid,
     ffi.Pointer<ffi.Void> cdico,
+    ffi.Pointer<ffi.Int> n,
   ) {
     return _GetAllWord(
       cgrid,
       cdico,
+      n,
     );
   }
 
   late final _GetAllWordPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<ffi.Pointer<ffi.Char>> Function(
-              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Void>)>>('GetAllWord');
+          ffi.Pointer<ffi.Pointer<ffi.Char>> Function(ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Int>)>>('GetAllWord');
   late final _GetAllWord = _GetAllWordPtr.asFunction<
-      ffi.Pointer<ffi.Pointer<ffi.Char>> Function(
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Void>)>();
+      ffi.Pointer<ffi.Pointer<ffi.Char>> Function(ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Int>)>();
 
   void FreeCStringArray(
     ffi.Pointer<ffi.Pointer<ffi.Char>> cstr,
