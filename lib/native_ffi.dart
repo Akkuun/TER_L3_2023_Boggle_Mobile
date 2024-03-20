@@ -12,6 +12,20 @@ import 'generated_bindings.dart';
 /// only do this for native functions which are guaranteed to be short-lived.
 int sum(int a, int b) => _bindings.sum(a, b);
 
+Future<Array<String>> GetAllWords(String grid, dynamic dico) {
+  //grid to Pointer<Char>
+  final Pointer<Char> gridPtr = utf8.encode(grid).cast<Char>() as Pointer<Char>;
+
+  final res = _bindings.GetAllWord(gridPtr, dico);
+
+  //convert Pointer<Pointer<Char>> to List<String>
+  final List<String> words = [];
+  for (int i = 0; i < res.length; i++) {
+    words.add(res[i].cast<Utf8>().toDartString());
+  }
+  return words;
+}
+
 const String _libName = 'native_ffi';
 
 /// The dynamic library in which the symbols for [NativeAddBindings] can be found.
@@ -30,19 +44,3 @@ final DynamicLibrary _dylib = () {
 
 /// The bindings to the native functions in [_dylib].
 final NativeLibrary _bindings = NativeLibrary(_dylib);
-
-base class GoSlice extends Struct {
-  external Pointer<Uint8> data;
-  @Int32()
-  external int len;
-  @Int32()
-  external int cap;
-
-  List<int> toList() {
-    final list = <int>[];
-    for (var i = 0; i < len; i++) {
-      list.add(data[i]);
-    }
-    return list;
-  }
-}

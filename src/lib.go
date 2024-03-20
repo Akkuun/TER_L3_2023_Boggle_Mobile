@@ -10,13 +10,18 @@ import (
 	"unsafe"
 )
 
+struct WordList {
+	C.char **words;
+	C.int size;
+}
+
 //export sum
 func sum(a C.int, b C.int) C.int {
 	return a + b
 }
 
 //export GetAllWord
-func GetAllWord(cgrid *C.char, cdico *C.void) **C.char {
+func GetAllWord(cgrid *C.char, cdico *C.void) WordList {
 	grid := C.GoString(cgrid)
 	idico := interface{}(unsafe.Pointer(cdico))
 	dico, ok := idico.([]interface{})
