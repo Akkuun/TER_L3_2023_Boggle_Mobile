@@ -81,7 +81,7 @@ extern "C" {
 #endif
 
 extern int sum(int a, int b);
-extern char** GetAllWord(char* cgrid, void* cdico);
+extern char** GetAllWord(char* cgrid, void* cdico, int* n);
 extern void FreeCStringArray(char** cstr, int size);
 extern void enforce_binding();
 

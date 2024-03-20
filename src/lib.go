@@ -10,18 +10,13 @@ import (
 	"unsafe"
 )
 
-struct WordList {
-	C.char **words;
-	C.int size;
-}
-
 //export sum
 func sum(a C.int, b C.int) C.int {
 	return a + b
 }
 
 //export GetAllWord
-func GetAllWord(cgrid *C.char, cdico *C.void) WordList {
+func GetAllWord(cgrid *C.char, cdico *C.void, n *C.int) **C.char {
 	grid := C.GoString(cgrid)
 	idico := interface{}(unsafe.Pointer(cdico))
 	dico, ok := idico.([]interface{})
@@ -40,8 +35,9 @@ func GetAllWord(cgrid *C.char, cdico *C.void) WordList {
 
 	var res **C.char = (**C.char)(C.malloc(C.size_t(len(resMap) * int(unsafe.Sizeof(uintptr(0))))))
 	i := 0
+	(*n) = 0
 	for k := range resMap {
-
+		(*n)++
 		cstr := C.CString(k)
 		**(**uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(res)) +
 			uintptr(i)*unsafe.Sizeof(uintptr(0)))) = uintptr(unsafe.Pointer(cstr))
