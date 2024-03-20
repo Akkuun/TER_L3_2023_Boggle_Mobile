@@ -1,6 +1,5 @@
-import 'dart:async';
-import "dart:convert";
 import 'dart:ffi';
+import 'package:ffi/ffi.dart';
 import 'dart:io';
 
 import 'generated_bindings.dart';
@@ -26,7 +25,7 @@ class NativeStringArray {
     return result;
   }
 
-  get(int index) {
+  String get(int index) {
     if (index < 0 || index >= length) throw RangeError("Index out of range");
     return (ptr + index).value.cast<Char>().toString();
   }
@@ -36,9 +35,11 @@ class NativeStringArray {
   }
 }
 
-NativeStringArray getAllWords(String grid, dynamic dico) {
+NativeStringArray getAllWords(String grid, Pointer<Void> dico) {
   //grid to Pointer<Char>
-  final Pointer<Char> gridPtr = utf8.encode(grid).cast<Char>() as Pointer<Char>;
+  //convert grid to pointer<Char>
+  final Pointer<Char> gridPtr = grid.toNativeUtf8().cast<Char>();
+
   var n = Pointer.fromAddress(0).cast<Int>();
 
   var ptr = _bindings.GetAllWord(gridPtr, dico, n);

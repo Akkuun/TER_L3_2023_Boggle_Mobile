@@ -7,6 +7,7 @@ import 'package:bouggr/providers/timer.dart';
 import 'package:bouggr/utils/game_data.dart';
 import 'package:bouggr/utils/game_result.dart';
 import 'package:flutter/material.dart';
+import 'package:native_ffi/native_ffi.dart';
 import 'package:provider/provider.dart';
 
 class EndGameDetail extends StatelessWidget {
@@ -25,6 +26,7 @@ class EndGameDetail extends StatelessWidget {
         score: gameServices.score,
         grid: gameServices.letters.join(),
         words: []);
+
     var size = MediaQuery.of(context).size;
     return Container(
       height: size.height,
@@ -101,7 +103,7 @@ class EndGameDetail extends StatelessWidget {
               ),
               width: size.width * 0.9,
               height: size.height * 0.45,
-              child: const WordsFound(),
+              child: const AllWordsFound(),
             ),
           ),
           BtnBoggle(
