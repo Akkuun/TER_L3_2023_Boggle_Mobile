@@ -12,18 +12,37 @@ import 'generated_bindings.dart';
 /// only do this for native functions which are guaranteed to be short-lived.
 int sum(int a, int b) => _bindings.sum(a, b);
 
-Future<Array<String>> GetAllWords(String grid, dynamic dico) {
+class NativeStringArray {
+  final Pointer<Pointer<Char>> ptr;
+  final int length;
+
+  NativeStringArray(this.ptr, this.length);
+
+  List<String> toList() {
+    final List<String> result = [];
+    for (var i = 0; i < length; i++) {
+      result.add((ptr + i).value.cast<Char>().toString());
+    }
+    return result;
+  }
+
+  get(int index) {
+    if (index < 0 || index >= length) throw RangeError("Index out of range");
+    return (ptr + index).value.cast<Char>().toString();
+  }
+
+  free() {
+    _bindings.FreeCStringArray(ptr, length);
+  }
+}
+
+NativeStringArray getAllWords(String grid, dynamic dico) {
   //grid to Pointer<Char>
   final Pointer<Char> gridPtr = utf8.encode(grid).cast<Char>() as Pointer<Char>;
+  var n = Pointer.fromAddress(0).cast<Int>();
 
-  final res = _bindings.GetAllWord(gridPtr, dico);
-
-  //convert Pointer<Pointer<Char>> to List<String>
-  final List<String> words = [];
-  for (int i = 0; i < res.length; i++) {
-    words.add(res[i].cast<Utf8>().toDartString());
-  }
-  return words;
+  var ptr = _bindings.GetAllWord(gridPtr, dico, n);
+  return NativeStringArray(ptr, n.value);
 }
 
 const String _libName = 'native_ffi';
