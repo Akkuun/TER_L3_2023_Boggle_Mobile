@@ -6,6 +6,7 @@ import 'package:bouggr/global.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/utils/dico.dart';
 import 'package:flutter/material.dart';
+import 'package:native_ffi/generated_bindings.dart';
 import 'package:native_ffi/native_ffi.dart';
 import 'package:provider/provider.dart';
 
@@ -43,29 +44,26 @@ class AllWordsFound extends StatefulWidget {
 
 class _AllWordsFoundState extends State<AllWordsFound> {
   NativeStringArray? _words;
+  Pointer<Void>? dico;
 
   @override
   void initState() {
-    var dico = Globals
-        .dictionaries[
-            Provider.of<GameServices>(context, listen: false).language]!
-        .dictionary;
-
-    //convert dictionary to pointer<void>
-    Pointer<Void> dicoPtr = dico.cast<Void>();
-
     super.initState();
+    dico = loadDictionary("assets/dictionary/fr_dico.json");
+
     final letters = Provider.of<GameServices>(context, listen: false).letters;
     _words = getAllWords(
       letters.join(),
-      dicoPtr,
+      dico!,
     );
   }
 
+  @override
   _AllWordsFoundState();
 
   @override
   void dispose() {
+    dico ?? freeDictionary(dico!);
     _words?.free();
     super.dispose();
   }

@@ -35,14 +35,35 @@ class NativeStringArray {
   }
 }
 
+Pointer<Void> loadDictionary(String path) {
+  //path to Pointer<Char>
+  //convert path to pointer<Char>
+  final Pointer<Char> pathPtr = path.toNativeUtf8().cast<Char>();
+
+  return _bindings.LoadDico(pathPtr);
+}
+
+void freeDictionary(Pointer<Void> dico) {
+  _bindings.FreeDico(dico);
+}
+
+bool checkWord(Pointer<Void> dico, String word) {
+  //word to Pointer<Char>
+  //convert word to pointer<Char>
+  final Pointer<Char> wordPtr = word.toNativeUtf8().cast<Char>();
+
+  return _bindings.CheckWord(wordPtr, dico) == 1;
+}
+
 NativeStringArray getAllWords(String grid, Pointer<Void> dico) {
   //grid to Pointer<Char>
   //convert grid to pointer<Char>
   final Pointer<Char> gridPtr = grid.toNativeUtf8().cast<Char>();
 
-  var n = Pointer.fromAddress(0).cast<Int>();
-
+  var n = calloc<Int>();
+  n.value = 0;
   var ptr = _bindings.GetAllWord(gridPtr, dico, n);
+  print("success get all words ${n.value}");
   return NativeStringArray(ptr, n.value);
 }
 
