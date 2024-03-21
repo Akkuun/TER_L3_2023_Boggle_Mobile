@@ -87,11 +87,13 @@ func GetAllWord(cgrid *C.char, cdico *C.void, n *C.int) **C.char {
 	dico, ok := idico.([]interface{})
 	if !ok {
 		log.Println("Error while casting dico")
+		*n = -1
 		return nil
 	}
 
 	if _, ok := dico[0].(int32); !ok {
 		log.Println("Error while casting dico")
+		*n = -1
 		return nil
 	}
 
