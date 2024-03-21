@@ -60,7 +60,6 @@ func LoadDico(cpath *C.char) *C.void {
 
 	file, err := os.ReadFile(path)
 	if err != nil {
-		log.Println("Error while reading file", err)
 		return nil
 	}
 
@@ -68,7 +67,6 @@ func LoadDico(cpath *C.char) *C.void {
 
 	err = json.Unmarshal(file, &d)
 	if err != nil {
-		log.Println("Error while unmarshalling", err)
 		return nil
 	}
 
@@ -86,14 +84,12 @@ func GetAllWord(cgrid *C.char, cdico *C.void, n *C.int) **C.char {
 	idico := interface{}(unsafe.Pointer(cdico))
 	dico, ok := idico.([]interface{})
 	if !ok {
-		log.Println("Error while casting dico")
 		*n = -1
 		return nil
 	}
 
 	if _, ok := dico[0].(int32); !ok {
-		log.Println("Error while casting dico")
-		*n = -1
+		*n = -2
 		return nil
 	}
 
