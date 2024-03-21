@@ -3,36 +3,37 @@ import 'package:bouggr/utils/decode.dart';
 import 'package:bouggr/utils/game_data.dart';
 import 'package:flutter/material.dart';
 
-enum GameType {
-  solo,
-  multi;
-}
+enum GameType { solo, multi }
 
 class GameServices extends ChangeNotifier with TriggerPopUp {
   LangCode _lang = LangCode.FR;
-  final List<String> _words = List<String>.empty(growable: true);
+  final List<String> _words = [];
 
   int _score = 0;
   int _strikes = 0;
   List<String>? _letters;
   String? _longestWord;
 
-  GameServices();
-
-  LangCode get language {
-    GameDataStorage.loadLanguage().then((value) {
-      if (value != null) {
-        _lang = Decoded.toLangCode(value);
-      } else {
-        GameDataStorage.saveLanguage("fr");
-      }
-    });
-    return _lang;
+  GameServices() {
+    // Récupérer la langue à partir des préférences utilisateur lors de l'initialisation
+    _initLanguage();
   }
 
+  // Récupérer la langue à partir des préférences utilisateur
+  Future<void> _initLanguage() async {
+    _lang = await GameDataStorage.loadLanguage();
+    notifyListeners();
+  }
+
+  // Récupère la langue actuelle
+  LangCode get language => _lang;
+
+  // Définit la langue actuelle
   set language(LangCode lang) {
     _lang = lang;
     notifyListeners();
+    // Sauvegarder la langue dans les préférences utilisateur
+    GameDataStorage.saveLanguage(lang);
   }
 
   String get longestWord {

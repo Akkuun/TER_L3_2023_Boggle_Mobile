@@ -3,13 +3,31 @@ import 'package:bouggr/utils/game_result.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bouggr/utils/decode.dart';
 
 class GameDataStorage {
   static final _auth = FirebaseAuth.instance;
   static final _db = FirebaseFirestore.instance;
 
   static const _key = 'gameResults';
-  // methode pour sauvegarder les resultat du jeu
+
+  // Fonction pour sauvegarder la langue sélectionnée
+  static Future<void> saveLanguage(LangCode language) async {
+    final prefs = await SharedPreferences.getInstance();
+    final langIndex = language.index;
+    await prefs.setInt('selectedLanguage', langIndex);
+  }
+
+  // Fonction pour charger la langue sélectionnée
+  static Future<LangCode> loadLanguage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final langIndex = prefs.getInt('selectedLanguage');
+    return langIndex != null
+        ? LangCode.values[langIndex]
+        : LangCode.FR; // Langue par défaut
+  }
+
+  // Méthode pour sauvegarder les résultats du jeu
   static Future<void> saveGameResult(GameResult gameResult) async {
     final prefs = await SharedPreferences.getInstance();
     final List<String> gameResults = prefs.getStringList(_key) ?? [];
@@ -26,17 +44,7 @@ class GameDataStorage {
     await prefs.setStringList(_key, gameResults);
   }
 
-  static Future<void> saveLanguage(String language) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('language', language);
-  }
-
-  static Future<String?> loadLanguage() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('language');
-  }
-
-  //methode pour recuperer la liste des resultats de jeu stockés à partir des preferences partagees
+  // Méthode pour récupérer la liste des résultats de jeu stockés à partir des préférences partagées
   static Future<List<String>> loadGameResults() async {
     final prefs = await SharedPreferences.getInstance();
 
