@@ -62,7 +62,7 @@ typedef double _Complex GoComplex128;
   static assertion to make sure the file is being used on architecture
   at least with matching size of GoInt.
 */
-typedef char _check_for_32_bit_pointer_matching_GoInt[1];
+typedef char _check_for_32_bit_pointer_matching_GoInt[sizeof(void*)==32/8 ? 1:-1];
 
 #ifndef GO_CGO_GOSTRING_TYPEDEF
 typedef _GoString_ GoString;
@@ -81,6 +81,9 @@ extern "C" {
 #endif
 
 extern int sum(int a, int b);
+extern int CheckWord(char* cword, void* cdico);
+extern void* LoadDico(char* cpath);
+extern void FreeDico(void* cdico);
 extern char** GetAllWord(char* cgrid, void* cdico, int* n);
 extern void FreeCStringArray(char** cstr, int size);
 extern void enforce_binding();

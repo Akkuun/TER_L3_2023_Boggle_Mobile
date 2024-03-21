@@ -5,14 +5,77 @@ package main
 //#include <stdio.h>
 import "C"
 import (
+	"encoding/json"
 	"errors"
+	"log"
+	"os"
 	"sync"
+
 	"unsafe"
 )
 
 //export sum
 func sum(a C.int, b C.int) C.int {
 	return a + b
+}
+
+//export CheckWord
+func CheckWord(cword *C.char, cdico *C.void) C.int {
+	word := C.GoString(cword)
+	if len(word) < 3 {
+		return 0
+	}
+
+	idico := interface{}(unsafe.Pointer(cdico))
+	dico, ok := idico.([]interface{})
+
+	if !ok {
+		return -1
+	}
+
+	children := dico[1].([]interface{})
+
+	for i, n := range word {
+		n, err := getChild(children, byte(n))
+		if err != nil {
+			return 0
+		}
+		if child, ok := n.([]interface{}); !ok {
+			if i == len(word)-1 {
+				return C.int(n.(int32) & 0b100000000)
+			}
+			return 0
+		} else {
+			children = child[1].([]interface{})
+
+		}
+	}
+
+	return C.int(children[0].(int32) & 0b100000000)
+}
+
+//export LoadDico
+func LoadDico(cpath *C.char) *C.void {
+	path := C.GoString(cpath)
+
+	file, err := os.ReadFile(path)
+	if err != nil {
+		return nil
+	}
+
+	var d [2]interface{}
+
+	err = json.Unmarshal(file, &d)
+	if err != nil {
+		return nil
+	}
+
+	return (*C.void)(unsafe.Pointer(&d))
+}
+
+//export FreeDico
+func FreeDico(cdico *C.void) {
+	C.free(unsafe.Pointer(cdico))
 }
 
 //export GetAllWord
@@ -36,7 +99,7 @@ func GetAllWord(cgrid *C.char, cdico *C.void, n *C.int) **C.char {
 	var res **C.char = (**C.char)(C.malloc(C.size_t(len(resMap) * int(unsafe.Sizeof(uintptr(0))))))
 	i := 0
 	(*n) = 0
-	for k := range resMap {
+	for k := range resMap { // convert to **C.char
 		(*n)++
 		cstr := C.CString(k)
 		**(**uintptr)(unsafe.Pointer(uintptr(unsafe.Pointer(res)) +
@@ -86,19 +149,27 @@ func initPoint(buf chan string, grid string, iwg *sync.WaitGroup, i, j int, dico
 	}
 	child := n.([]interface{})
 
-	appendFromPoint(buf, grid, string(point), i, j, used, child)
+	err = appendFromPoint(buf, grid, string(point), i, j, used, child)
+	if err != nil {
+		log.Panic("Err type for value", err)
+	}
 
 }
 
 var MOVE = [3]int{-1, 0, 1}
 
-func appendFromPoint(res chan string, grid string, word string, i, j int, used [4][4]bool, node []interface{}) {
+func appendFromPoint(res chan string, grid string, word string, i, j int, used [4][4]bool, node []interface{}) error {
 
-	if (node[0].(int32) & 0b100000000) > 0 {
+	n, ok := node[0].(int32)
+	if !ok {
+		return errors.New("wrong type")
+	}
+
+	if (n & 0b100000000) > 0 {
 		res <- word
 	}
 	if len(node) != 2 { //if no children -> leaf
-		return
+		return nil
 	}
 	var ix, jy, index int
 
@@ -132,6 +203,7 @@ func appendFromPoint(res chan string, grid string, word string, i, j int, used [
 
 		}
 	}
+	return nil
 }
 
 func getChild(children []interface{}, newLetter byte) (interface{}, error) {
