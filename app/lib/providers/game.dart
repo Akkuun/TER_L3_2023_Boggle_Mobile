@@ -15,24 +15,25 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
   String? _longestWord;
 
   GameServices() {
-    // Récupérer la langue à partir des préférences utilisateur lors de l'initialisation
+    // Récupére la langue à partir shared preferences lors de l'initialisation
     _initLanguage();
   }
 
-  // Récupérer la langue à partir des préférences utilisateur
+  // Recuper la langue à partir des shared preferences
   Future<void> _initLanguage() async {
     _lang = await GameDataStorage.loadLanguage();
     notifyListeners();
   }
 
   // Récupère la langue actuelle
-  LangCode get language => _lang;
+  LangCode get language {
+    return _lang;
+  }
 
-  // Définit la langue actuelle
+  // Definit la langue actuelle
   set language(LangCode lang) {
     _lang = lang;
     notifyListeners();
-    // Sauvegarder la langue dans les préférences utilisateur
     GameDataStorage.saveLanguage(lang);
   }
 

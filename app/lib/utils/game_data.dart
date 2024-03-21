@@ -11,20 +11,16 @@ class GameDataStorage {
 
   static const _key = 'gameResults';
 
-  // Fonction pour sauvegarder la langue sélectionnée
   static Future<void> saveLanguage(LangCode language) async {
     final prefs = await SharedPreferences.getInstance();
     final langIndex = language.index;
     await prefs.setInt('selectedLanguage', langIndex);
   }
 
-  // Fonction pour charger la langue sélectionnée
   static Future<LangCode> loadLanguage() async {
     final prefs = await SharedPreferences.getInstance();
     final langIndex = prefs.getInt('selectedLanguage');
-    return langIndex != null
-        ? LangCode.values[langIndex]
-        : LangCode.FR; // Langue par défaut
+    return langIndex != null ? LangCode.values[langIndex] : LangCode.FR;
   }
 
   // Méthode pour sauvegarder les résultats du jeu
