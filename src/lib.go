@@ -14,7 +14,7 @@ import (
 	"unsafe"
 )
 
-//go:embed all:dictionary/*
+//go:embed dictionary/*
 var dico embed.FS
 
 //export sum
@@ -61,7 +61,7 @@ func CheckWord(cword *C.char, cdico *C.void) C.int {
 func LoadDico(cpath *C.char, res *C.void) C.int {
 	path := C.GoString(cpath)
 
-	file, err := dico.ReadFile(path)
+	file, err := dico.ReadFile("dictionary/" + path)
 	if err != nil {
 		return -1
 	}
