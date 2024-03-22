@@ -58,22 +58,29 @@ func CheckWord(cword *C.char, cdico *C.void) C.int {
 }
 
 //export LoadDico
-func LoadDico(cpath *C.char) unsafe.Pointer {
+func LoadDico(cpath *C.char, res *C.void) C.int {
 	path := C.GoString(cpath)
 
 	file, err := dico.ReadFile(path)
 	if err != nil {
-		return nil
+		return -1
 	}
 
-	d := new([]interface{})
-
-	err = json.Unmarshal(file, d)
+	err = json.Unmarshal(file, res)
 	if err != nil {
-		return nil
+		return -2
 	}
 
-	return unsafe.Pointer(d)
+	test := interface{}(res)
+	if _, ok := test.([]interface{}); !ok {
+		return -3
+	}
+
+	if len(test.([]interface{})) == 0 {
+		return -4
+	}
+
+	return 0
 }
 
 //export FreeDico
