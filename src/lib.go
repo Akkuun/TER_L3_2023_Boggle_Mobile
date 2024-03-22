@@ -60,11 +60,14 @@ func CheckWord(cword *C.char, cdico *C.void) C.int {
 //export LoadDico
 func LoadDico(cpath *C.char, res *C.void) C.int {
 	path := C.GoString(cpath)
-
 	file, err := dico.ReadFile("dictionary/" + path)
 	if err != nil {
 		return -1
 	}
+
+	C.free(unsafe.Pointer(res))
+
+	res = (*C.void)(unsafe.Pointer(new([]interface{})))
 
 	err = json.Unmarshal(file, res)
 	if err != nil {
