@@ -82,9 +82,9 @@ extern "C" {
 
 extern int sum(int a, int b);
 extern int CheckWord(char* cword, void* cdico);
-extern int LoadDico(char* cpath, void* res);
+extern GoSlice LoadDico(char* cpath, int* rerr);
 extern void FreeDico(void* cdico);
-extern char** GetAllWord(char* cgrid, void* cdico, int* n);
+extern char** GetAllWord(char* cgrid, GoSlice dico, int* n);
 extern void FreeCStringArray(char** cstr, int size);
 extern void enforce_binding();
 
