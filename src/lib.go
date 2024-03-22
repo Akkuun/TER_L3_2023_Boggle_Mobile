@@ -101,7 +101,8 @@ func GetAllWord(cgrid *C.char, cdico *C.void, n *C.int) **C.char {
 	//n is the number of word found, if n < 0, an error occured
 	grid := C.GoString(cgrid)
 	//convert the unsafe.Pointer to []interface{}
-	idico := interface{}(unsafe.Pointer(cdico))
+
+	idico := *(*interface{})(unsafe.Pointer(cdico))
 
 	dico := idico.([]interface{})
 	if len(dico) == 0 {
