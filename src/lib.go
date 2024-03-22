@@ -66,16 +66,16 @@ func LoadDico(cpath *C.char, rerr *C.int) *C.void {
 		return nil
 	}
 
-	res := new([]interface{})
+	var res []interface{}
 
-	err = json.Unmarshal(file, res)
+	err = json.Unmarshal(file, &res)
 	if err != nil {
 		*rerr = -2
 		return nil
 	}
 
 	*rerr = 0
-	return (*C.void)(unsafe.Pointer(res))
+	return (*C.void)(unsafe.Pointer(&res))
 }
 
 //export FreeDico
