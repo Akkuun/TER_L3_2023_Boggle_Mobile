@@ -5,14 +5,17 @@ package main
 //#include <stdio.h>
 import "C"
 import (
+	"embed"
 	"encoding/json"
 	"errors"
 	"log"
-	"os"
 	"sync"
 
 	"unsafe"
 )
+
+//go:embed all:dictionary/*
+var dico embed.FS
 
 //export sum
 func sum(a C.int, b C.int) C.int {
@@ -58,7 +61,7 @@ func CheckWord(cword *C.char, cdico *C.void) C.int {
 func LoadDico(cpath *C.char) unsafe.Pointer {
 	path := C.GoString(cpath)
 
-	file, err := os.ReadFile(path)
+	file, err := dico.ReadFile("all:dictionary/" + path)
 	if err != nil {
 		return nil
 	}
