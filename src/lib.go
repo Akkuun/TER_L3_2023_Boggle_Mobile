@@ -23,7 +23,7 @@ func sum(a C.int, b C.int) C.int {
 }
 
 //export CheckWord
-func CheckWord(cword *C.char, cdico *C.void) C.int {
+func CheckWord(cword *C.char, cdico unsafe.Pointer) C.int {
 	word := C.GoString(cword)
 	if len(word) < 3 {
 		return 0
@@ -58,7 +58,7 @@ func CheckWord(cword *C.char, cdico *C.void) C.int {
 }
 
 //export LoadDico
-func LoadDico(cpath *C.char, rerr *C.int) []interface{} {
+func LoadDico(cpath *C.char, rerr *C.int) unsafe.Pointer {
 	path := C.GoString(cpath)
 	file, err := dico.ReadFile("dictionary/" + path)
 	if err != nil {
@@ -75,7 +75,7 @@ func LoadDico(cpath *C.char, rerr *C.int) []interface{} {
 	}
 
 	*rerr = 0
-	return *res
+	return unsafe.Pointer(res)
 }
 
 //export FreeDico
@@ -97,10 +97,12 @@ func FreeChild(child []interface{}) {
 }
 
 //export GetAllWord
-func GetAllWord(cgrid *C.char, dico []interface{}, n *C.int) **C.char {
+func GetAllWord(cgrid *C.char, cdico unsafe.Pointer, n *C.int) **C.char {
 	//n is the number of word found, if n < 0, an error occured
 	grid := C.GoString(cgrid)
 	//convert the unsafe.Pointer to []interface{}
+
+	dico := *(*[]interface{})(cdico)
 
 	if len(dico) == 0 {
 		*n = -1
