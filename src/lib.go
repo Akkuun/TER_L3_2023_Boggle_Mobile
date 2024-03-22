@@ -61,7 +61,7 @@ func CheckWord(cword *C.char, cdico *C.void) C.int {
 func LoadDico(cpath *C.char) unsafe.Pointer {
 	path := C.GoString(cpath)
 
-	file, err := dico.ReadFile("all:dictionary/" + path)
+	file, err := dico.ReadFile(path)
 	if err != nil {
 		return nil
 	}
