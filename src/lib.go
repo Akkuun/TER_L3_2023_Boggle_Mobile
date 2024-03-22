@@ -55,7 +55,7 @@ func CheckWord(cword *C.char, cdico *C.void) C.int {
 }
 
 //export LoadDico
-func LoadDico(cpath *C.char) *C.void {
+func LoadDico(cpath *C.char) []interface{} {
 	path := C.GoString(cpath)
 
 	file, err := os.ReadFile(path)
@@ -63,30 +63,20 @@ func LoadDico(cpath *C.char) *C.void {
 		return nil
 	}
 
-	var d *C.void = (*C.void)(C.malloc(C.size_t(len(file))))
+	var d []interface{}
 
-	err = json.Unmarshal(file, d)
+	err = json.Unmarshal(file, &d)
 	if err != nil {
-		panic(err)
+		return nil
 	}
 
 	return d
 }
 
-//export FreeDico
-func FreeDico(cdico *C.void) {
-	C.free(unsafe.Pointer(cdico))
-}
-
 //export GetAllWord
-func GetAllWord(cgrid *C.char, cdico *C.void, n *C.int) **C.char {
+func GetAllWord(cgrid *C.char, dico []interface{}, n *C.int) **C.char {
+	//n is the number of word found, if n < 0, an error occured
 	grid := C.GoString(cgrid)
-	idico := interface{}(unsafe.Pointer(cdico))
-	dico, ok := idico.([]interface{})
-	if !ok {
-		*n = -1
-		return nil
-	}
 
 	if _, ok := dico[0].(int32); !ok {
 		*n = -2
