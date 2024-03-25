@@ -61,33 +61,31 @@ func CheckWord(cword *C.char, cdico unsafe.Pointer) C.int {
 }
 
 func unsafeDico(dico []interface{}) unsafe.Pointer {
+
+	// case leaf (no children)
 	if len(dico) == 1 {
-		temp := make([]interface{}, 1)
-		temp[0] = C.int(int32(dico[0].(float64)))
-		runtime.KeepAlive(&temp)
-		return unsafe.Pointer(&temp)
-	} else {
-		res := make([]interface{}, 2)
-		children := dico[1].([]interface{})
-		res[0] = C.int(int32(dico[0].(float64)))
-
-		unsafeChildren := make([]unsafe.Pointer, len(children))
-
-		res[1] = unsafe.Pointer(&unsafeChildren)
-		runtime.KeepAlive(&unsafeChildren)
-		for i, n := range children {
-			child, ok := n.([]interface{})
-			if !ok {
-				unsafeChildren[i] = unsafeDico([]interface{}{n})
-			} else {
-				unsafeChildren[i] = unsafeDico(child)
-			}
-		}
-
-		runtime.KeepAlive(&res)
-		return unsafe.Pointer(&res)
+		res := C.malloc(C.size_t(unsafe.Sizeof(C.int(0))))
+		*(*C.int)(res) = C.int(dico[0].(float64))
+		runtime.KeepAlive(res)
+		return res
 	}
 
+	value := C.int(dico[0].(float64))
+	children := dico[1].([]interface{})
+	unsafeChildren := C.malloc(C.size_t(unsafe.Sizeof(unsafe.Pointer(nil)) * uintptr(len(children))))
+
+	res := C.malloc(C.size_t(unsafe.Sizeof(C.int(0)) + unsafe.Sizeof(unsafe.Pointer(nil))))
+	*(*C.int)(res) = value
+	*(*unsafe.Pointer)(unsafe.Pointer(uintptr(res) + unsafe.Sizeof(C.int(0)))) = unsafeChildren
+	for i, n := range children {
+		*(*unsafe.Pointer)(unsafe.Pointer(uintptr(unsafeChildren) +
+			uintptr(i)*unsafe.Sizeof(unsafe.Pointer(nil)))) = unsafeDico(n.([]interface{}))
+	}
+
+	runtime.KeepAlive(res)
+	runtime.KeepAlive(unsafeChildren)
+	return res
+	// case with children
 }
 
 //export LoadDico
