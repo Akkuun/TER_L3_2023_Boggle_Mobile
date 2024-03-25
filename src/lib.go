@@ -64,14 +64,17 @@ func unsafeDico(dico []interface{}) unsafe.Pointer {
 	if len(dico) == 1 {
 		temp := make([]interface{}, 1)
 		temp[0] = C.int(int32(dico[0].(float64)))
+		runtime.KeepAlive(&temp)
 		return unsafe.Pointer(&temp)
 	} else {
 		res := make([]interface{}, 2)
 		children := dico[1].([]interface{})
 		res[0] = C.int(int32(dico[0].(float64)))
+
 		unsafeChildren := make([]unsafe.Pointer, len(children))
 
 		res[1] = unsafe.Pointer(&unsafeChildren)
+		runtime.KeepAlive(&unsafeChildren)
 		for i, n := range children {
 			child, ok := n.([]interface{})
 			if !ok {
@@ -81,6 +84,7 @@ func unsafeDico(dico []interface{}) unsafe.Pointer {
 			}
 		}
 
+		runtime.KeepAlive(&res)
 		return unsafe.Pointer(&res)
 	}
 
@@ -105,7 +109,7 @@ func LoadDico(cpath *C.char, rerr *C.int) unsafe.Pointer {
 
 	*rerr = 0
 
-	runtime.KeepAlive(res)
+	runtime.KeepAlive(unsafeDico(*res))
 	return unsafe.Pointer(res)
 }
 
