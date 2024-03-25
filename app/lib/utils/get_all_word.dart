@@ -1,11 +1,12 @@
+import 'dart:async';
 import 'dart:collection';
-import 'dart:isolate';
 
-Future<List<String>> getAllWords(String grid, dynamic dico) async {
-  return Isolate.run(() => _getAllWords(grid, dico));
+Future<List<String>> getAllWords(String grid, dynamic dico) {
+  return _getAllWords(grid, dico);
 }
 
-List<String> _getAllWords(String grid, dynamic dico) {
+Future<List<String>> _getAllWords(String grid, dynamic dico) async {
+  print("start get all words");
   if (dico.runtimeType != List) {
     return List.empty();
   }
@@ -16,16 +17,9 @@ List<String> _getAllWords(String grid, dynamic dico) {
 
   HashMap<String, bool> resMap = HashMap<String, bool>();
 
-  ReceivePort receivePort = ReceivePort();
+  _startAtAllPoint([grid, dico, resMap]);
 
-  Isolate.spawn(_startAtAllPoint, [grid, dico, receivePort.sendPort]);
-
-  receivePort.listen((data) {
-    if (data is String) {
-      resMap[data] = true;
-    }
-  });
-
+  print("end get all words");
   return resMap.keys.toList();
 }
 
@@ -33,10 +27,10 @@ void _startAtAllPoint(List<dynamic> args) {
   _start(args[0], args[1], args[2]);
 }
 
-void _start(String grid, dynamic dico, SendPort sp) {
+void _start(String grid, dynamic dico, HashMap<String, bool> rp) {
   for (var i in {0, 1, 2, 3}) {
     for (var j in {0, 1, 2, 3}) {
-      Isolate.spawn(_initPoint, [grid, i, j, dico, grid[i * 4 + j], sp]);
+      _initPoint([grid, i, j, dico, grid[i * 4 + j], rp]);
     }
   }
 }
@@ -45,13 +39,13 @@ void _initPoint(List<dynamic> args) {
   _init(args[0], args[1], args[2], args[3], args[4], args[5]);
 }
 
-void _init(String grid, int i, int j, dynamic dico, String point, SendPort sp) {
+void _init(String grid, int i, int j, dynamic dico, String point,
+    HashMap<String, bool> sp) {
   var used = List.generate(4, (index) => List.generate(4, (index) => false));
   used[i][j] = true;
   var children = dico[1];
   var n = _getChild(children, point);
-  if (n != null) {
-    //if no children for this letter
+  if (n == null) {
     return;
   }
   if (n is List) {
@@ -61,8 +55,8 @@ void _init(String grid, int i, int j, dynamic dico, String point, SendPort sp) {
 
 const move = {-1, 0, 1};
 
-void _appendFromPoint(SendPort sp, String grid, String word, int i, int j,
-    List<List<bool>> used, dynamic node) {
+void _appendFromPoint(HashMap<String, bool> sp, String grid, String word, int i,
+    int j, List<List<bool>> used, dynamic node) {
   if (node.runtimeType != List) {
     return;
   }
@@ -74,7 +68,7 @@ void _appendFromPoint(SendPort sp, String grid, String word, int i, int j,
   }
 
   if ((val & 0x100) > 0) {
-    sp.send(word);
+    sp[word] = true;
   }
 
   if ((node as List).length < 2) {
