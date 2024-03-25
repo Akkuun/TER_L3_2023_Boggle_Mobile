@@ -20,6 +20,7 @@ typedef struct { const char *p; ptrdiff_t n; } _GoString_;
 
 
 #line 3 "lib.go"
+
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>

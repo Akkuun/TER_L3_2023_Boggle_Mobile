@@ -1,8 +1,10 @@
 package main
 
-//#include <string.h>
-//#include <stdlib.h>
-//#include <stdio.h>
+/*
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+*/
 import "C"
 import (
 	"embed"
@@ -57,8 +59,30 @@ func CheckWord(cword *C.char, cdico unsafe.Pointer) C.int {
 	return C.int(children[0].(int32) & 0b100000000)
 }
 
+func unsafeDico(dico []interface{}) unsafe.Pointer {
+	if len(dico) == 1 {
+		temp := make([]interface{}, 1)
+		temp[0] = C.int(dico[0].(int32))
+		return unsafe.Pointer(&temp)
+	} else {
+		res := make([]interface{}, 2)
+		children := dico[1].([]interface{})
+		res[0] = C.int(dico[0].(int32))
+		unsafeChildren := make([]unsafe.Pointer, len(children))
+
+		res[1] = unsafe.Pointer(&unsafeChildren)
+		for i, n := range children {
+			child := n.([]interface{})
+			unsafeChildren[i] = unsafeDico(child)
+		}
+
+		return unsafe.Pointer(&res)
+	}
+
+}
+
 //export LoadDico
-func LoadDico(cpath *C.char, rerr *C.int) *C.void {
+func LoadDico(cpath *C.char, rerr *C.int) unsafe.Pointer {
 	path := C.GoString(cpath)
 	file, err := dico.ReadFile("dictionary/" + path)
 	if err != nil {
@@ -66,16 +90,16 @@ func LoadDico(cpath *C.char, rerr *C.int) *C.void {
 		return nil
 	}
 
-	res := (*C.void)(C.malloc(C.size_t(len(file))))
+	var res []interface{}
 
-	err = json.Unmarshal(file, res)
+	err = json.Unmarshal(file, &res)
 	if err != nil {
 		*rerr = -2
 		return nil
 	}
 
 	*rerr = 0
-	return res
+	return (unsafeDico(res))
 }
 
 //export FreeDico
@@ -97,7 +121,7 @@ func FreeChild(child []interface{}) {
 }
 
 //export GetAllWord
-func GetAllWord(cgrid *C.char, cdico *C.void, n *C.int) **C.char {
+func GetAllWord(cgrid *C.char, cdico unsafe.Pointer, n *C.int) **C.char {
 	//n is the number of word found, if n < 0, an error occured
 	grid := C.GoString(cgrid)
 	//convert the unsafe.Pointer to []interface{}
