@@ -9904,17 +9904,21 @@ class NativeLibrary {
 
   ffi.Pointer<ffi.Void> LoadDico(
     ffi.Pointer<ffi.Char> cpath,
+    ffi.Pointer<ffi.Int> rerr,
   ) {
     return _LoadDico(
       cpath,
+      rerr,
     );
   }
 
   late final _LoadDicoPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Char>)>>('LoadDico');
+          ffi.Pointer<ffi.Void> Function(
+              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Int>)>>('LoadDico');
   late final _LoadDico = _LoadDicoPtr.asFunction<
-      ffi.Pointer<ffi.Void> Function(ffi.Pointer<ffi.Char>)>();
+      ffi.Pointer<ffi.Void> Function(
+          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Int>)>();
 
   void FreeDico(
     ffi.Pointer<ffi.Void> cdico,

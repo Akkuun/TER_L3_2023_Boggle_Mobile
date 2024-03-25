@@ -40,12 +40,19 @@ Pointer<Void> loadDictionary(String path) {
   //convert path to pointer<Char>
   final Pointer<Char> pathPtr = path.toNativeUtf8().cast<Char>();
 
-  return _bindings.LoadDico(pathPtr);
+  var n = calloc<Int>();
+
+  final voidPtr = _bindings.LoadDico(pathPtr, n);
+
+  if (n.value < 0) {
+    throw Exception(
+        "Failed to load dictionary from $path with error code ${n.value}");
+  }
+
+  return voidPtr;
 }
 
-void freeDictionary(Pointer<Void> dico) {
-  _bindings.FreeDico(dico);
-}
+void freeDico(Pointer<Void> dico) => _bindings.FreeDico(dico);
 
 bool checkWord(Pointer<Void> dico, String word) {
   //word to Pointer<Char>
