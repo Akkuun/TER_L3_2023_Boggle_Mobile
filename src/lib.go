@@ -78,8 +78,14 @@ func unsafeDico(dico []interface{}) unsafe.Pointer {
 	*(*C.int)(res) = value
 	*(*unsafe.Pointer)(unsafe.Pointer(uintptr(res) + unsafe.Sizeof(C.int(0)))) = unsafeChildren
 	for i, n := range children {
-		*(*unsafe.Pointer)(unsafe.Pointer(uintptr(unsafeChildren) +
-			uintptr(i)*unsafe.Sizeof(unsafe.Pointer(nil)))) = unsafeDico(n.([]interface{}))
+		val, ok := n.([]interface{})
+		if !ok {
+			*(*unsafe.Pointer)(unsafe.Pointer(uintptr(unsafeChildren) +
+				uintptr(i)*unsafe.Sizeof(unsafe.Pointer(nil)))) = unsafeDico([]interface{}{n})
+		} else {
+			*(*unsafe.Pointer)(unsafe.Pointer(uintptr(unsafeChildren) +
+				uintptr(i)*unsafe.Sizeof(unsafe.Pointer(nil)))) = unsafeDico(val)
+		}
 	}
 
 	runtime.KeepAlive(res)
