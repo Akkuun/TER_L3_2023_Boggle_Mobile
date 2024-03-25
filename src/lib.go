@@ -11,6 +11,7 @@ import (
 	"encoding/json"
 	"errors"
 	"log"
+	"runtime"
 	"sync"
 
 	"unsafe"
@@ -94,7 +95,7 @@ func LoadDico(cpath *C.char, rerr *C.int) unsafe.Pointer {
 		return nil
 	}
 
-	var res []interface{}
+	res := new([]interface{})
 
 	err = json.Unmarshal(file, &res)
 	if err != nil {
@@ -103,7 +104,9 @@ func LoadDico(cpath *C.char, rerr *C.int) unsafe.Pointer {
 	}
 
 	*rerr = 0
-	return (unsafeDico(res))
+
+	runtime.KeepAlive(res)
+	return unsafe.Pointer(res)
 }
 
 //export FreeDico
