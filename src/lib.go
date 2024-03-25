@@ -72,8 +72,12 @@ func unsafeDico(dico []interface{}) unsafe.Pointer {
 
 		res[1] = unsafe.Pointer(&unsafeChildren)
 		for i, n := range children {
-			child := n.([]interface{})
-			unsafeChildren[i] = unsafeDico(child)
+			child, ok := n.([]interface{})
+			if !ok {
+				unsafeChildren[i] = unsafeDico([]interface{}{n})
+			} else {
+				unsafeChildren[i] = unsafeDico(child)
+			}
 		}
 
 		return unsafe.Pointer(&res)
