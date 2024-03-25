@@ -62,12 +62,12 @@ func CheckWord(cword *C.char, cdico unsafe.Pointer) C.int {
 func unsafeDico(dico []interface{}) unsafe.Pointer {
 	if len(dico) == 1 {
 		temp := make([]interface{}, 1)
-		temp[0] = C.int(dico[0].(int32))
+		temp[0] = C.int(int32(dico[0].(float64)))
 		return unsafe.Pointer(&temp)
 	} else {
 		res := make([]interface{}, 2)
 		children := dico[1].([]interface{})
-		res[0] = C.int(dico[0].(int32))
+		res[0] = C.int(int32(dico[0].(float64)))
 		unsafeChildren := make([]unsafe.Pointer, len(children))
 
 		res[1] = unsafe.Pointer(&unsafeChildren)
