@@ -49,65 +49,69 @@ class PopUpGameMenu extends StatelessWidget {
     var w = MediaQuery.of(context).size.width;
     return PopUp<GameServices>(
       child: Positioned(
-        top: h * 0.5 - min(w * 0.8, h * 0.8),
-        left: min(w * 0.1, h * 0.1),
+        top: h * 0.5 - min(w * 0.45, h * 0.45),
+        left: min(w * 0.05, h * 0.05),
         child: Center(
           child: Container(
-            height: min(w * 0.8, h * 0.8),
-            width: min(w * 0.8, h * 0.8),
+            height: min(w * 0.9, h * 0.9),
+            width: min(w * 0.9, h * 0.9),
             decoration: BoxDecoration(
                 color: const Color.fromARGB(255, 181, 224, 255),
                 borderRadius: BorderRadius.circular(10)),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                BtnBoggle(
-                  onPressed: () {
-                    gameServices.toggle(false);
-                    timerServices.start();
-                  },
-                  text: "X",
-                  btnType: BtnType.square,
-                ),
-                const Text("Game Paused", style: TextStyle(fontSize: 30)),
-                Text("${gameServices.score} points",
-                    style: const TextStyle(fontSize: 20)),
-                BtnBoggle(
-                  onPressed: () {
-                    gameServices.stop();
-
-                    GameDataStorage.saveGameResult(gameResult);
-
-                    timerServices.resetProgress();
-
-                    navigationServices.goToPage(PageName.detail);
-                  },
-                  text: "detail",
-                ),
-                BtnBoggle(
-                  onPressed: () {
-                    gameServices.stop();
-
-                    GameDataStorage.saveGameResult(gameResult);
-
-                    timerServices.resetProgress();
-                    gameServices.reset();
-                    navigationServices.goToPage(PageName.home);
-                  },
-                  text: "new game",
-                ),
-                BtnBoggle(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  BtnBoggle(
+                    onPressed: () {
+                      gameServices.toggle(false);
+                      timerServices.start();
+                    },
+                    text: "X",
+                    btnType: BtnType.square,
+                  ),
+                  const Text("Game Paused", style: TextStyle(fontSize: 30)),
+                  Text("${gameServices.score} points",
+                      style: const TextStyle(fontSize: 20)),
+                  BtnBoggle(
                     onPressed: () {
                       gameServices.stop();
 
                       GameDataStorage.saveGameResult(gameResult);
-                      gameServices.reset();
+
                       timerServices.resetProgress();
+
+                      navigationServices.goToPage(PageName.detail);
+                    },
+                    text: "detail",
+                  ),
+                  BtnBoggle(
+                    onPressed: () {
+                      gameServices.stop();
+
+                      GameDataStorage.saveGameResult(gameResult);
+
+                      timerServices.resetProgress();
+                      gameServices.reset();
                       navigationServices.goToPage(PageName.home);
                     },
-                    text: "Home",
-                    btnType: BtnType.secondary),
-              ],
+                    text: "new game",
+                  ),
+                  BtnBoggle(
+                      onPressed: () {
+                        gameServices.stop();
+
+                        GameDataStorage.saveGameResult(gameResult);
+                        gameServices.reset();
+                        timerServices.resetProgress();
+                        navigationServices.goToPage(PageName.home);
+                      },
+                      text: "Home",
+                      btnType: BtnType.secondary),
+                ],
+              ),
             ),
           ),
         ),
