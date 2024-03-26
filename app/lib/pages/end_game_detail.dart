@@ -9,7 +9,6 @@ import 'package:bouggr/providers/timer.dart';
 import 'package:bouggr/utils/game_data.dart';
 import 'package:bouggr/utils/game_result.dart';
 import 'package:flutter/material.dart';
-import 'package:native_ffi/native_ffi.dart';
 import 'package:provider/provider.dart';
 
 class EndGameDetail extends StatelessWidget {
@@ -64,7 +63,6 @@ class EndGameDetail extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text("Grid :  OVERFCEANAEBRUAS"),
                           Text("Score : ${gameServices.score}"),
                           const Text("Score Max : NaN"),
                         ],
@@ -87,24 +85,24 @@ class EndGameDetail extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                  decoration: ShapeDecoration(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                    decoration: ShapeDecoration(
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      shadows: const [
+                        BoxShadow(
+                          color: Color(0x3F000000),
+                          blurRadius: 4,
+                          offset: Offset(0, 4),
+                          spreadRadius: 0,
+                        )
+                      ],
                     ),
-                    shadows: const [
-                      BoxShadow(
-                        color: Color(0x3F000000),
-                        blurRadius: 4,
-                        offset: Offset(0, 4),
-                        spreadRadius: 0,
-                      )
-                    ],
-                  ),
-                  width: size.width * 0.9,
-                  height: size.height * 0.45,
-                  child: const WordsFound(),
-                ),
+                    width: size.width * 0.9,
+                    height: size.height * 0.45,
+                    child: const Padding(
+                        padding: EdgeInsets.all(8.0), child: WordsFound())),
               ),
               BtnBoggle(
                 onPressed: () {

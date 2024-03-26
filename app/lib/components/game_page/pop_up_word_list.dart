@@ -1,7 +1,3 @@
-//components
-
-import 'dart:math';
-
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/game_page/dices.dart';
 import 'package:bouggr/components/game_page/words_found.dart';
@@ -9,7 +5,6 @@ import 'package:bouggr/components/popup.dart';
 import 'package:bouggr/providers/end_game_service.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class PopUpWordList extends StatelessWidget {
