@@ -78,12 +78,23 @@ class _AllWordsFoundState extends State<AllWordsFound> {
             }
             if (snapshot.hasData) {
               var words = snapshot.data;
-
-              return Column(
-                children: [
-                  Text("${words.length}"),
-                  for (var word in words) Text(word)
-                ],
+              if (words == null) {
+                return const Text('No Word in grid');
+              }
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("${words.length}"),
+                    for (var word in words)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [Text(word.txt), Text(word.toCoordString())],
+                      )
+                  ],
+                ),
               );
             }
             return const Text('No data');

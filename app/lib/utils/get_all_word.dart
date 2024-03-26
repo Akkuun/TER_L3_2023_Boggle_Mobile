@@ -6,29 +6,23 @@ import 'package:bouggr/global.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:bouggr/utils/dico.dart';
 
-Future<List<String>> getAllWords(List<String> grid, dynamic dico) async {
-  return _getAllWords(grid, dico);
-}
-
-Future<List<String>> _getAllWords(List<String> grid, dynamic dico) async {
-  HashMap<String, bool> resMap = HashMap<String, bool>();
+Future<List<Word>?> getAllWords(List<String> grid, dynamic dico) async {
+  HashMap<String, Word> resMap = HashMap<String, Word>();
 
   if (dico.runtimeType != List) {
-    return List.empty();
+    return null;
   }
 
   if (dico.isEmpty) {
-    return List.empty();
+    return null;
   }
 
   _start(grid, dico, resMap);
-  var res = resMap.keys.toList();
-  res.sort((a, b) => -a.length.compareTo(b.length));
 
-  return res;
+  return resMap.values.toList();
 }
 
-void _start(List<String> grid, dynamic dico, HashMap<String, bool> rp) {
+void _start(List<String> grid, dynamic dico, HashMap<String, Word> rp) {
   for (var i in const {0, 1, 2, 3}) {
     for (var j in const {0, 1, 2, 3}) {
       _init(grid, i, j, dico, grid[i * 4 + j], rp);
@@ -37,26 +31,26 @@ void _start(List<String> grid, dynamic dico, HashMap<String, bool> rp) {
 }
 
 void _init(List<String> grid, int i, int j, dynamic dico, String point,
-    HashMap<String, bool> sp) {
+    HashMap<String, Word> sp) {
   var used = List.generate(16, (index) => false);
   used[i * 4 + j] = true;
   List<dynamic> children = dico[1];
   var n = _getChild(children, point);
   if (n != null) {
-    _appendFromPoint2(
-        sp, grid, point, i, j, used, Globals.selectDictionary(LangCode.FR));
+    _appendFromPoint2(sp, grid, Word(point, [Coord(i, j)]), i, j, used,
+        Globals.selectDictionary(LangCode.FR));
   }
 }
 
 const move = {-1, 0, 1};
 
-Future<void> _appendFromPoint2(HashMap<String, bool> sp, List<String> grid,
-    String word, int i, int j, List<bool> used, Dictionary dico) async {
-  if (dico.contain(word)) {
-    sp[word] = true;
+Future<void> _appendFromPoint2(HashMap<String, Word> sp, List<String> grid,
+    Word word, int i, int j, List<bool> used, Dictionary dico) async {
+  if (dico.contain(word.txt)) {
+    sp[word.txt] = word;
   }
 
-  if (!dico.canCreate(word)) {
+  if (!dico.canCreate(word.txt)) {
     return;
   }
 
@@ -80,12 +74,15 @@ Future<void> _appendFromPoint2(HashMap<String, bool> sp, List<String> grid,
       var newLetter = grid[index];
 
       used[index] = true;
-      _appendFromPoint2(sp, grid, word + newLetter, ix, jy, used, dico);
+
+      _appendFromPoint2(
+          sp, grid, word.append(newLetter, Coord(ix, jy)), ix, jy, used, dico);
       used[index] = false;
     }
   }
 }
 
+/*
 Future<void> _appendFromPoint(HashMap<String, bool> sp, List<String> grid,
     String word, int i, int j, List<bool> used, dynamic node) async {
   var val = node.runtimeType == (List<dynamic>) ? node[0] : node;
@@ -128,12 +125,12 @@ Future<void> _appendFromPoint(HashMap<String, bool> sp, List<String> grid,
     }
   }
 }
-
+*/
 dynamic _getChild(List<dynamic> children, String newLetter) {
   var rune = utf8.encode(newLetter)[0];
 
   for (var n in children) {
-    if ((n.runtimeType != List<dynamic>) && ((n & rune) == rune)) {
+    if ((n.runtimeType != List<dynamic>) && (((n as int) & rune) == rune)) {
       // if no children -> leaf
       return n;
     }
@@ -147,4 +144,35 @@ dynamic _getChild(List<dynamic> children, String newLetter) {
     }
   }
   return null;
+}
+
+class Coord {
+  int x;
+  int y;
+
+  Coord(this.x, this.y);
+}
+
+class Word {
+  String txt;
+  List<Coord> coords;
+  Word(this.txt, this.coords);
+
+  Word append(String letter, Coord coord) {
+    return Word(txt + letter, List.from(coords)..add(coord));
+  }
+
+  void removeLast() {
+    txt = txt.substring(0, txt.length - 1);
+    coords.removeLast();
+  }
+
+  @override
+  String toString() {
+    return "$txt : ${coords.map((e) => "(${e.x},${e.y})").join(', ')}";
+  }
+
+  String toCoordString() {
+    return coords.map((e) => "(${e.x},${e.y})").join(', ');
+  }
 }
