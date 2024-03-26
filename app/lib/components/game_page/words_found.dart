@@ -67,7 +67,7 @@ class _AllWordsFoundState extends State<AllWordsFound> {
           child: Builder(builder: (BuildContext innerContext) {
         return FutureBuilder(
           future: getAllWords(
-              Provider.of<GameServices>(context, listen: false).letters.join(),
+              Provider.of<GameServices>(context, listen: false).letters,
               Globals.selectDictionary(LangCode.FR).dictionary),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -80,7 +80,10 @@ class _AllWordsFoundState extends State<AllWordsFound> {
               var words = snapshot.data;
 
               return Column(
-                children: [for (var word in words) Text(word)],
+                children: [
+                  Text("${words.length}"),
+                  for (var word in words) Text(word)
+                ],
               );
             }
             return const Text('No data');

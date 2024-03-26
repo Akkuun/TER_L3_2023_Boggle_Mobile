@@ -60,6 +60,7 @@ class EndGameDetail extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      Text("Grid :  OVERFCEANAEBRUAS"),
                       Text("Score : ${gameServices.score}"),
                       const Text("Score Max : NaN"),
                     ],

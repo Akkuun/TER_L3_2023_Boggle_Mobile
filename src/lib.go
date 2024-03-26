@@ -25,6 +25,12 @@ func sum(a C.int, b C.int) C.int {
 	return a + b
 }
 
+
+//export CheckNode
+func CheckNode(a C.char,b C.int) C.int {
+	return (a &b)==b
+}
+
 //export CheckWord
 func CheckWord(cword *C.char, cdico unsafe.Pointer) C.int {
 	word := C.GoString(cword)
