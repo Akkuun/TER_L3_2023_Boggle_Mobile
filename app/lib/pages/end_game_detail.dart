@@ -23,6 +23,9 @@ class EndGameDetail extends StatelessWidget {
     NavigationServices navigationServices =
         Provider.of<NavigationServices>(context, listen: false);
 
+    EndGameService endGameService =
+        Provider.of<EndGameService>(context, listen: true);
+
     GameResult gameResult = GameResult(
         score: gameServices.score,
         grid: gameServices.letters.join(),
@@ -72,8 +75,7 @@ class EndGameDetail extends StatelessWidget {
                       const Text("Plus long mot trouvable : pas dispo"),
                       BtnBoggle(
                         onPressed: () {
-                          Provider.of<EndGameService>(context, listen: false)
-                              .toggle(true);
+                          endGameService.showPopUp();
                         },
                         text: "Liste des plus long mots",
                         btnType: BtnType.third,

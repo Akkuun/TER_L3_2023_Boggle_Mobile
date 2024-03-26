@@ -34,7 +34,7 @@ class App extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => NavigationServices()),
         ChangeNotifierProvider(create: (context) => GameServices()),
         ChangeNotifierProvider(create: (context) => TimerServices()),
-        ChangeNotifierProvider(create: ((context) => EndGameService())),
+        ChangeNotifierProvider(create: (context) => EndGameService()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

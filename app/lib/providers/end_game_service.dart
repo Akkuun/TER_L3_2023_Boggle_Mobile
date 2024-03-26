@@ -11,5 +11,16 @@ class EndGameService extends ChangeNotifier with TriggerPopUp {
     notifyListeners();
   }
 
-  EndGameService();
+  void resetSelectedWord() {
+    selectedWord = null;
+    notifyListeners();
+  }
+
+  void showPopUp() {
+    super.toggle(true);
+  }
+
+  void hidePopUp() {
+    super.toggle(false);
+  }
 }
