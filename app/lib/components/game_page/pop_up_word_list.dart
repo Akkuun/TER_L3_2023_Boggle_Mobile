@@ -1,5 +1,7 @@
 //components
 
+import 'dart:math';
+
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/game_page/dices.dart';
 import 'package:bouggr/components/game_page/words_found.dart';
@@ -16,7 +18,7 @@ class PopUpWordList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var gameServices = Provider.of<GameServices>(context, listen: true);
-
+    var endGameServices = Provider.of<EndGameService>(context, listen: true);
     var h = MediaQuery.of(context).size.height;
     var w = MediaQuery.of(context).size.width;
     return PopUp<EndGameService>(
@@ -80,7 +82,14 @@ class PopUpWordList extends StatelessWidget {
                           return BoggleDice(
                             index: index,
                             letter: gameServices.letters[index],
-                            color: Colors.white,
+                            color: endGameServices.selectedWord != null
+                                ? endGameServices.selectedWord!.isAtCoord(index)
+                                    ? endGameServices.selectedWord!
+                                            .isFirstChild(index)
+                                        ? Colors.green
+                                        : Theme.of(context).primaryColor
+                                    : Colors.white
+                                : Colors.white,
                           );
                         },
                       ),

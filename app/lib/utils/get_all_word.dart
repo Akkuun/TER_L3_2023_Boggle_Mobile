@@ -19,7 +19,9 @@ Future<List<Word>?> getAllWords(List<String> grid, dynamic dico) async {
 
   _start(grid, dico, resMap);
 
-  return resMap.values.toList();
+  var res = resMap.values.toList();
+  res.sort((a, b) => b.txt.length - a.txt.length);
+  return res;
 }
 
 void _start(List<String> grid, dynamic dico, HashMap<String, Word> rp) {
@@ -165,6 +167,14 @@ class Word {
   void removeLast() {
     txt = txt.substring(0, txt.length - 1);
     coords.removeLast();
+  }
+
+  bool isAtCoord(int index) {
+    return coords.any((element) => element.x * 4 + element.y == index);
+  }
+
+  bool isFirstChild(int index) {
+    return coords.first.x * 4 + coords.first.y == index;
   }
 
   @override

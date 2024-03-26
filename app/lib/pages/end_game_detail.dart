@@ -109,7 +109,8 @@ class EndGameDetail extends StatelessWidget {
               BtnBoggle(
                 onPressed: () {
                   gameServices.stop();
-
+                  Provider.of<EndGameService>(context, listen: false)
+                      .toggle(false);
                   GameDataStorage.saveGameResult(gameResult);
 
                   timerServices.resetProgress();
@@ -121,7 +122,8 @@ class EndGameDetail extends StatelessWidget {
               BtnBoggle(
                   onPressed: () {
                     gameServices.stop();
-
+                    Provider.of<EndGameService>(context, listen: false)
+                        .toggle(true);
                     GameDataStorage.saveGameResult(gameResult);
                     gameServices.reset();
                     timerServices.resetProgress();

@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:bouggr/global.dart';
+import 'package:bouggr/providers/end_game_service.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:bouggr/utils/get_all_word.dart';
@@ -88,11 +89,7 @@ class _AllWordsFoundState extends State<AllWordsFound> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("${words.length}"),
-                    for (var word in words)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [Text(word.txt), Text(word.toCoordString())],
-                      )
+                    for (var word in words) ClickableWord(word: word)
                   ],
                 ),
               );
@@ -101,6 +98,29 @@ class _AllWordsFoundState extends State<AllWordsFound> {
           },
         );
       })),
+    );
+  }
+}
+
+class ClickableWord extends StatelessWidget {
+  const ClickableWord({
+    super.key,
+    required this.word,
+  });
+
+  final Word word;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      onPressed: () {
+        Provider.of<EndGameService>(context, listen: false)
+            .setSelectedWord(word);
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [Text(word.txt), Text(word.toCoordString())],
+      ),
     );
   }
 }
