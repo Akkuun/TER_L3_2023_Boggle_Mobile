@@ -64,13 +64,19 @@ class PopUpGameMenu extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  BtnBoggle(
-                    onPressed: () {
-                      gameServices.toggle(false);
-                      timerServices.start();
-                    },
-                    text: "X",
-                    btnType: BtnType.square,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconBtnBoggle(
+                        icon: const Icon(Icons.close_rounded),
+                        onPressed: () {
+                          gameServices.toggle(false);
+                          timerServices.start();
+                        },
+                        btnType: BtnType.secondary,
+                        btnSize: BtnSize.small,
+                      ),
+                    ],
                   ),
                   const Text("Game Paused", style: TextStyle(fontSize: 30)),
                   Text("${gameServices.score} points",
