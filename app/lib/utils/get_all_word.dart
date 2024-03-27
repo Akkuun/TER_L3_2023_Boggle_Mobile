@@ -6,16 +6,8 @@ import 'package:bouggr/global.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:bouggr/utils/dico.dart';
 
-Future<List<Word>?> getAllWords(List<String> grid, dynamic dico) async {
+Future<List<Word>?> getAllWords(List<String> grid, Dictionary dico) async {
   HashMap<String, Word> resMap = HashMap<String, Word>();
-
-  if (dico.runtimeType != List) {
-    return null;
-  }
-
-  if (dico.isEmpty) {
-    return null;
-  }
 
   _start(grid, dico, resMap);
 
@@ -32,16 +24,12 @@ void _start(List<String> grid, dynamic dico, HashMap<String, Word> rp) {
   }
 }
 
-void _init(List<String> grid, int i, int j, dynamic dico, String point,
+void _init(List<String> grid, int i, int j, Dictionary dico, String point,
     HashMap<String, Word> sp) {
   var used = List.generate(16, (index) => false);
   used[i * 4 + j] = true;
-  List<dynamic> children = dico[1];
-  var n = _getChild(children, point);
-  if (n != null) {
-    _appendFromPoint2(sp, grid, Word(point, [Coord(i, j)]), i, j, used,
-        Globals.selectDictionary(LangCode.FR));
-  }
+
+  _appendFromPoint2(sp, grid, Word(point, [Coord(i, j)]), i, j, used, dico);
 }
 
 const move = {-1, 0, 1};

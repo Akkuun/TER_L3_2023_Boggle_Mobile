@@ -62,14 +62,14 @@ class _AllWordsFoundState extends State<AllWordsFound> {
 
   @override
   Widget build(BuildContext context) {
+    var gameServices = Provider.of<GameServices>(context);
     return SizedBox(
       height: 150,
       child: SingleChildScrollView(
           child: Builder(builder: (BuildContext innerContext) {
         return FutureBuilder(
-          future: getAllWords(
-              Provider.of<GameServices>(context, listen: false).letters,
-              Globals.selectDictionary(LangCode.FR).dictionary),
+          future: getAllWords(gameServices.letters,
+              Globals.selectDictionary(gameServices.language)),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
