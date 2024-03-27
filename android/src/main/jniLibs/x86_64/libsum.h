@@ -20,6 +20,7 @@ typedef struct { const char *p; ptrdiff_t n; } _GoString_;
 
 
 #line 3 "lib.go"
+
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -81,7 +82,10 @@ extern "C" {
 #endif
 
 extern int sum(int a, int b);
-extern char** GetAllWord(char* cgrid, void* cdico);
+extern int CheckWord(char* cword, void* cdico);
+extern void* LoadDico(char* cpath, int* rerr);
+extern void FreeDico(void* cdico);
+extern char** GetAllWord(char* cgrid, void* cdico, int* n);
 extern void FreeCStringArray(char** cstr, int size);
 extern void enforce_binding();
 

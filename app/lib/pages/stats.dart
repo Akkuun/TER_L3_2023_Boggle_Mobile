@@ -56,6 +56,7 @@ class StatsPage extends StatelessWidget {
         ),
       ),
       Container(
+        height: MediaQuery.of(context).size.height * 0.7,
         decoration: ShapeDecoration(
           color: Colors.white,
           shape: RoundedRectangleBorder(

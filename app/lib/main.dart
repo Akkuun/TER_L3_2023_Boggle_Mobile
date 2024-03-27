@@ -1,3 +1,4 @@
+import 'package:bouggr/providers/end_game_service.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/timer.dart';
@@ -32,7 +33,8 @@ class App extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => NavigationServices()),
         ChangeNotifierProvider(create: (context) => GameServices()),
-        ChangeNotifierProvider(create: (context) => TimerServices())
+        ChangeNotifierProvider(create: (context) => TimerServices()),
+        ChangeNotifierProvider(create: (context) => EndGameService()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

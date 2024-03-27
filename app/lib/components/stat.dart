@@ -20,39 +20,33 @@ class Stat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: Colors.lightBlue[isDarker ? 100 : 50],
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(isFirst ? 8 : 0),
-          topRight: Radius.circular(isFirst ? 8 : 0),
-          bottomLeft: Radius.circular(isLast ? 8 : 0),
-          bottomRight: Radius.circular(isLast ? 8 : 0),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: Text(
-                statName,
-                style: TextStyle(fontSize: fontSize),
-              ),
+    return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.05,
+          padding: const EdgeInsets.all(4),
+          decoration: BoxDecoration(
+            color: Colors.lightBlue[isDarker ? 100 : 50],
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  statName,
+                  style: TextStyle(fontSize: fontSize),
+                ),
+                Text(
+                  statValue,
+                  style: TextStyle(fontSize: fontSize),
+                  textAlign: TextAlign.right,
+                ),
+              ],
             ),
           ),
-          SizedBox(
-            width: 50,
-            child: Text(
-              statValue,
-              style: TextStyle(fontSize: fontSize),
-              textAlign: TextAlign.right,
-            ),
-          ),
-        ],
-      ),
-    );
+        ));
   }
 }

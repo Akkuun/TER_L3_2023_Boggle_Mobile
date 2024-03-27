@@ -1,5 +1,5 @@
 ANDROID_OUT=../android/src/main/jniLibs
-ANDROID_SDK=$(HOME)/../opt/android-ndk-r26b/
+ANDROID_SDK=$(HOME)/android-ndk-r26c
 NDK_BIN=$(ANDROID_SDK)/toolchains/llvm/prebuilt/linux-x86_64/bin
 LIB_NAME=libsum
 
@@ -22,7 +22,7 @@ android-x86:
 	CGO_ENABLED=1 \
 	GOOS=android \
 	GOARCH=386 \
-	CC=/opt/android-ndk-r26b/toolchains/llvm/prebuilt/linux-x86_64/bin/i686-linux-android21-clang \
+	CC=$(NDK_BIN)/i686-linux-android21-clang \
 	go build -buildmode=c-shared -o ../android/src/main/jniLibs/x86/libsum.so .
 
 

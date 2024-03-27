@@ -14,16 +14,16 @@ class GameFront extends StatelessWidget {
       height: MediaQuery.of(context).size.height,
       child: const Padding(
         padding: EdgeInsets.all(8.0),
-        child: Center(
-          child: Column(
-            children: [
-              AppTitle(fontSize: 56),
-              ScoreBoard(),
-              BoggleGrille(),
-              WordsFound(),
-              ActionAndTimer()
-            ],
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            AppTitle(fontSize: 56),
+            ScoreBoard(),
+            BoggleGrille(),
+            WordsFound(),
+            ActionAndTimer()
+          ],
         ),
       ),
     );

@@ -13,7 +13,7 @@ class BtnBoggle extends StatelessWidget {
   final bool removePaddings;
   final MainAxisAlignment horizontalAlignment;
 
-    Color switchColor(BtnType btnType) {
+  Color switchColor(BtnType btnType) {
     switch (btnType) {
       case BtnType.primary:
         return const Color.fromARGB(255, 89, 150, 194);
@@ -65,7 +65,8 @@ class BtnBoggle extends StatelessWidget {
         child: ElevatedButton(
             onPressed: onPressed,
             style: ButtonStyle(
-                backgroundColor: MaterialStateColor.resolveWith((states) => switchColor(btnType))),
+                backgroundColor: MaterialStateColor.resolveWith(
+                    (states) => switchColor(btnType))),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -94,8 +95,8 @@ class IconBtnBoggle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 64,
-      width: 64,
+      height: btnSize != BtnSize.small ? 64 : 45,
+      width: btnSize != BtnSize.small ? 64 : 45,
       decoration: BoxDecoration(
           color: MaterialStateColor.resolveWith((states) =>
               BtnType.primary == btnType

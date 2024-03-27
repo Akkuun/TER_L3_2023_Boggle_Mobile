@@ -9885,23 +9885,74 @@ class NativeLibrary {
       _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int)>>('sum');
   late final _sum = _sumPtr.asFunction<int Function(int, int)>();
 
+  int CheckWord(
+    ffi.Pointer<ffi.Char> cword,
+    ffi.Pointer<ffi.Void> cdico,
+  ) {
+    return _CheckWord(
+      cword,
+      cdico,
+    );
+  }
+
+  late final _CheckWordPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Int Function(
+              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Void>)>>('CheckWord');
+  late final _CheckWord = _CheckWordPtr.asFunction<
+      int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Void>)>();
+
+  ffi.Pointer<ffi.Void> LoadDico(
+    ffi.Pointer<ffi.Char> cpath,
+    ffi.Pointer<ffi.Int> rerr,
+  ) {
+    return _LoadDico(
+      cpath,
+      rerr,
+    );
+  }
+
+  late final _LoadDicoPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<ffi.Void> Function(
+              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Int>)>>('LoadDico');
+  late final _LoadDico = _LoadDicoPtr.asFunction<
+      ffi.Pointer<ffi.Void> Function(
+          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Int>)>();
+
+  void FreeDico(
+    ffi.Pointer<ffi.Void> cdico,
+  ) {
+    return _FreeDico(
+      cdico,
+    );
+  }
+
+  late final _FreeDicoPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'FreeDico');
+  late final _FreeDico =
+      _FreeDicoPtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
   ffi.Pointer<ffi.Pointer<ffi.Char>> GetAllWord(
     ffi.Pointer<ffi.Char> cgrid,
     ffi.Pointer<ffi.Void> cdico,
+    ffi.Pointer<ffi.Int> n,
   ) {
     return _GetAllWord(
       cgrid,
       cdico,
+      n,
     );
   }
 
   late final _GetAllWordPtr = _lookup<
       ffi.NativeFunction<
-          ffi.Pointer<ffi.Pointer<ffi.Char>> Function(
-              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Void>)>>('GetAllWord');
+          ffi.Pointer<ffi.Pointer<ffi.Char>> Function(ffi.Pointer<ffi.Char>,
+              ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Int>)>>('GetAllWord');
   late final _GetAllWord = _GetAllWordPtr.asFunction<
-      ffi.Pointer<ffi.Pointer<ffi.Char>> Function(
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Void>)>();
+      ffi.Pointer<ffi.Pointer<ffi.Char>> Function(ffi.Pointer<ffi.Char>,
+          ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Int>)>();
 
   void FreeCStringArray(
     ffi.Pointer<ffi.Pointer<ffi.Char>> cstr,
