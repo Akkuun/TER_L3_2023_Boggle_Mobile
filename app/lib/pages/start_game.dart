@@ -3,7 +3,6 @@ import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
-import 'package:bouggr/utils/decode.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -77,7 +76,7 @@ class _StartGamePageState extends State<StartGamePage> {
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
 
-    if (gameServices.start(LangCode.FR)) {
+    if (gameServices.start()) {
       router.goToPage(PageName.game);
     }
   }
@@ -127,7 +126,7 @@ class _StartGamePageState extends State<StartGamePage> {
           SizedBox(height: h - 780),
           BtnBoggle(
             onPressed: () {
-              if (gameServices.start(LangCode.FR)) {
+              if (gameServices.start()) {
                 router.goToPage(PageName.game);
               }
             },

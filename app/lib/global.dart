@@ -70,7 +70,7 @@ class Globals extends InheritedWidget {
   }
 
   static DiceSet selectDiceSet(LangCode lang) {
-    return diceSets[lang]!;
+    return diceSets[lang] ?? diceSets[LangCode.FR]!;
   }
 
   static FirebaseFirestore db() {

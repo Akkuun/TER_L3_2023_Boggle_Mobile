@@ -3,35 +3,36 @@ import 'package:bouggr/utils/decode.dart';
 import 'package:bouggr/utils/game_data.dart';
 import 'package:flutter/material.dart';
 
-enum GameType {
-  solo,
-  multi;
-}
+enum GameType { solo, multi }
 
 class GameServices extends ChangeNotifier with TriggerPopUp {
-  LangCode _lang = LangCode.FR;
-  final List<String> _words = List<String>.empty(growable: true);
+  LangCode? _lang;
+  final List<String> _words = [];
 
   int _score = 0;
   int _strikes = 0;
   List<String>? _letters;
   String? _longestWord;
 
-  GameServices();
-
-  LangCode get language {
-    GameDataStorage.loadLanguage().then((value) {
-      if (value != null) {
-        _lang = Decoded.toLangCode(value);
-      } else {
-        GameDataStorage.saveLanguage("fr");
-      }
-    });
-    return _lang;
+  // Recuper la langue à partir des shared preferences
+  Future<void> _initLanguage() async {
+    _lang = await GameDataStorage.loadLanguage();
+    notifyListeners();
   }
 
-  set language(LangCode lang) {
+  GameServices() {
+    _initLanguage();
+  }
+
+  // Récupère la langue actuelle
+  LangCode get language {
+    return _lang ?? LangCode.FR;
+  }
+
+  // Definit la langue actuelle
+  void setLanguage(LangCode lang) {
     _lang = lang;
+    GameDataStorage.saveLanguage(lang);
     notifyListeners();
   }
 
@@ -51,10 +52,8 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
     super.toggle(true);
   }
 
-  bool start(LangCode lang) {
+  bool start() {
     super.toggle(false);
-    _lang = lang;
-
     notifyListeners();
 
     return true;

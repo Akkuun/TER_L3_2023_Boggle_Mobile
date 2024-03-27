@@ -1,10 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:bouggr/utils/game_data.dart';
 import 'package:bouggr/utils/lang.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/bottom_buttons.dart';
@@ -12,10 +12,8 @@ import 'package:bouggr/pages/page_name.dart';
 
 import '../global.dart';
 
-/// Page des règles du jeu
-
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({super.key});
+  const SettingsPage({Key? key}) : super(key: key);
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -74,7 +72,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     var router = Provider.of<NavigationServices>(context, listen: false);
 
-    final auth = FirebaseAuth.instance; //recuperation du services de navigation
+    final auth = FirebaseAuth.instance;
 
     const textStyleJUA = TextStyle(
       color: Colors.black,
@@ -140,7 +138,6 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Container(
                 padding: const EdgeInsets.all(20),
                 child: Column(
-                  //enfants
                   children: [
                     DropdownButton<Language>(
                       items: list
@@ -150,21 +147,25 @@ class _SettingsPageState extends State<SettingsPage> {
                           child: Text(value.name),
                         );
                       }).toList(),
-                      onChanged: (Language? newValue) {
+                      onChanged: (Language? newValue) async {
                         setState(() {
-                          GameDataStorage.saveLanguage(newValue!.code);
-                          Provider.of<GameServices>(context, listen: false)
-                              .language = newValue.langCode;
                           _selectedLanguage = newValue;
                         });
+
+                        if (newValue != null) {
+                          await GameDataStorage.saveLanguage(newValue.langCode);
+                          // ignore: use_build_context_synchronously
+                          Provider.of<GameServices>(context, listen: false)
+                              .setLanguage(newValue.langCode);
+                        }
                       },
-                      hint: const Text('Select an langage'),
+                      hint: const Text('Select an language'),
                       value: _selectedLanguage,
                     ),
-
+                    const SizedBox(height: 20),
                     Text(
-                        'Langage selected : ${_selectedLanguage?.name ?? 'None'}'),
-                    //DropDownButtonValue
+                      'Language selected: ${_selectedLanguage?.name ?? 'None'}',
+                    ),
                     const SizedBox(height: 20),
                     TextField(
                       onChanged: (value) {
@@ -209,7 +210,6 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     BtnBoggle(
                       onPressed: () {
-                        //deconnexion
                         auth.signOut();
                         Globals.gameCode = "";
                         Globals.playerName = "";
