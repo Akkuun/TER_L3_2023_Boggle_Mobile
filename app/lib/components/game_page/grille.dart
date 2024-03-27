@@ -33,6 +33,7 @@ class _BoggleGrilleState extends State<BoggleGrille> {
   void initState() {
     super.initState();
     gameServices = Provider.of<GameServices>(context, listen: false);
+
     _dictionary = Globals.selectDictionary(gameServices.language);
     _dictionary.load();
   }
@@ -135,6 +136,9 @@ class _BoggleGrilleState extends State<BoggleGrille> {
   Widget build(BuildContext context) {
     GameServices gameServices = context.watch<GameServices>();
 
+    setState(() {
+      _dictionary = Globals.selectDictionary(gameServices.language);
+    });
     var width = MediaQuery.of(context).size.width;
     return Center(
       child: Container(

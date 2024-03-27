@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 enum GameType { solo, multi }
 
 class GameServices extends ChangeNotifier with TriggerPopUp {
-  LangCode _lang = LangCode.FR;
+  LangCode? _lang;
   final List<String> _words = [];
 
   int _score = 0;
@@ -14,27 +14,26 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
   List<String>? _letters;
   String? _longestWord;
 
-  GameServices() {
-    // Récupére la langue à partir shared preferences lors de l'initialisation
-    _initLanguage();
-  }
-
   // Recuper la langue à partir des shared preferences
   Future<void> _initLanguage() async {
     _lang = await GameDataStorage.loadLanguage();
     notifyListeners();
   }
 
+  GameServices() {
+    _initLanguage();
+  }
+
   // Récupère la langue actuelle
   LangCode get language {
-    return _lang;
+    return _lang ?? LangCode.FR;
   }
 
   // Definit la langue actuelle
-  set language(LangCode lang) {
+  void setLanguage(LangCode lang) {
     _lang = lang;
-    notifyListeners();
     GameDataStorage.saveLanguage(lang);
+    notifyListeners();
   }
 
   String get longestWord {
@@ -53,10 +52,8 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
     super.toggle(true);
   }
 
-  bool start(LangCode lang) {
+  bool start() {
     super.toggle(false);
-    _lang = lang;
-
     notifyListeners();
 
     return true;
