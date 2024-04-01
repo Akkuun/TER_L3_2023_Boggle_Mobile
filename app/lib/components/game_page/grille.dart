@@ -181,7 +181,13 @@ class _BoggleGrilleState extends State<BoggleGrille> {
                         ? isCurrentWordValid
                             ? Theme.of(context).primaryColor
                             : Colors.red
-                        : Colors.white,
+                        : gameServices.tipsIndex != null
+                            ? gameServices.tipsIndex!.x +
+                                        gameServices.tipsIndex!.y * 4 ==
+                                    index
+                                ? Colors.green
+                                : Colors.white
+                            : Colors.white,
                   );
                 },
               ),

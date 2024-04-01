@@ -1,12 +1,9 @@
 import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
-
-import 'package:bouggr/global.dart';
-import 'package:bouggr/utils/decode.dart';
 import 'package:bouggr/utils/dico.dart';
 
-Future<List<Word>?> getAllWords(List<String> grid, Dictionary dico) async {
+Future<List<Word>> getAllWords(List<String> grid, Dictionary dico) async {
   HashMap<String, Word> resMap = HashMap<String, Word>();
 
   _start(grid, dico, resMap);

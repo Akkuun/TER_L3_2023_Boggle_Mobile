@@ -1,5 +1,3 @@
-import 'package:binary/binary.dart';
-
 class Decoded {
   static final Map<String, LangCode> stringLang = {
     'fr': LangCode.FR,

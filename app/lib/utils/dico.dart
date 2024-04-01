@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:binary/binary.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:flutter/services.dart';
 

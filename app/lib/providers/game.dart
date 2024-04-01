@@ -1,6 +1,7 @@
 import 'package:bouggr/components/popup.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:bouggr/utils/game_data.dart';
+import 'package:bouggr/utils/get_all_word.dart';
 import 'package:flutter/material.dart';
 
 enum GameType { solo, multi }
@@ -13,6 +14,7 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
   int _strikes = 0;
   List<String>? _letters;
   String? _longestWord;
+  Coord? _tipsIndex;
 
   // Recuper la langue à partir des shared preferences
   Future<void> _initLanguage() async {
@@ -96,7 +98,17 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
     return _strikes;
   }
 
+  Coord? get tipsIndex {
+    return _tipsIndex;
+  }
+
+  void setTipsIndex(Coord index) {
+    _tipsIndex = index;
+    notifyListeners();
+  }
+
   void reset() {
+    _tipsIndex = null;
     _score = 0;
     _words.clear();
     _strikes = 0;
