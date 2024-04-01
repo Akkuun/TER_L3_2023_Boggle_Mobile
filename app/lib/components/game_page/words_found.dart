@@ -64,7 +64,8 @@ class _AllWordsFoundState extends State<AllWordsFound> {
   Widget build(BuildContext context) {
     var gameServices = Provider.of<GameServices>(context);
     return SizedBox(
-      height: 150,
+      height: MediaQuery.of(context).size.height * 0.22,
+      width: MediaQuery.of(context).size.width * 0.95,
       child: SingleChildScrollView(
           child: Builder(builder: (BuildContext innerContext) {
         return FutureBuilder(
