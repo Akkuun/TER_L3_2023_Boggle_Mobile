@@ -119,7 +119,7 @@ class ClickableWord extends StatelessWidget {
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [Text(word.txt), Text(word.toCoordString())],
+        children: [Text(word.txt)],
       ),
     );
   }
