@@ -81,8 +81,22 @@ class PopUpWordList extends StatelessWidget {
                                 ? endGameServices.selectedWord!.isAtCoord(index)
                                     ? endGameServices.selectedWord!
                                             .isFirstChild(index)
-                                        ? Colors.green
-                                        : Theme.of(context).primaryColor
+                                        ? const Color.fromARGB(
+                                            255, 175, 149, 76)
+                                        : Color.fromARGB(
+                                            255,
+                                            0,
+                                            255 -
+                                                ((endGameServices.selectedWord!
+                                                            .indexOfCoords(
+                                                                index)) *
+                                                        256 ~/
+                                                        endGameServices
+                                                            .selectedWord!
+                                                            .txt
+                                                            .length +
+                                                    1),
+                                            200)
                                     : Colors.white
                                 : Colors.white,
                           );

@@ -158,6 +158,10 @@ class Word {
     return coords.any((element) => element.x * 4 + element.y == index);
   }
 
+  int indexOfCoords(int index) {
+    return coords.indexWhere((element) => element.x * 4 + element.y == index);
+  }
+
   bool isFirstChild(int index) {
     return coords.first.x * 4 + coords.first.y == index;
   }
