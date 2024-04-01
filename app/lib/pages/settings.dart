@@ -31,8 +31,7 @@ class _SettingsPageState extends State<SettingsPage> {
     const Language('rm', 'Roumain', LangCode.RM),
     const Language('gl', 'Global', LangCode.GLOBAL),
   ];
-  Language? _selectedLanguage = const Language('fr', 'Français', LangCode.FR);
-
+  Language? _selectedLanguage;
   void _handleButtonClick() {
     // Do something when the button is clicked
   }
@@ -66,6 +65,17 @@ class _SettingsPageState extends State<SettingsPage> {
     } catch (e) {
       // An error occurred
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedLanguage = list.firstWhere(
+      (element) =>
+          element.langCode ==
+          Provider.of<GameServices>(context, listen: false).language,
+      orElse: () => list.first,
+    );
   }
 
   @override
