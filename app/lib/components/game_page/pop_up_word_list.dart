@@ -125,6 +125,7 @@ class PopUpWordList extends StatelessWidget {
                       child: const AllWordsFound()),
                 ),
                 BtnBoggle(
+                    btnType: BtnType.secondary,
                     onPressed: () {
                       Provider.of<EndGameService>(context, listen: false)
                           .toggle(false);
