@@ -20,7 +20,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
-    var welcomeWidget;
+    Widget welcomeWidget;
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) {
@@ -34,9 +34,17 @@ class HomePage extends StatelessWidget {
           ),
           textAlign: TextAlign.center,
         );
+      } else {
+        welcomeWidget = BtnBoggle(
+          onPressed: () {
+            router.goToPage(PageName.login);
+          },
+          btnSize: BtnSize.large,
+          text: "Login",
+        );
       }
     } catch (e) {
-      // exception
+      welcomeWidget = const SizedBox();
     }
     return BottomButtons(
       child: Column(
@@ -96,7 +104,7 @@ class HomePage extends StatelessWidget {
             btnSize: BtnSize.large,
             text: "Multiplayer",
           ),
-          welcomeWidget ?? const SizedBox(),
+          welcomeWidget,
         ],
       ),
     );
