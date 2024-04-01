@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 class Dictionary {
   final String path;
   final Decoded decoder;
-  late dynamic dictionary; // dictionary[0] = key  dictionary[1] = children
+  dynamic dictionary; // dictionary[0] = key  dictionary[1] = children
 
   Dictionary({required this.path, required this.decoder});
 

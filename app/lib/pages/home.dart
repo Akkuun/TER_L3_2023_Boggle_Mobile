@@ -2,7 +2,9 @@ import 'package:bouggr/components/bottom_buttons.dart';
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/card.dart';
 import 'package:bouggr/components/title.dart';
+import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
+import 'package:bouggr/providers/end_game_service.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/utils/decode.dart';
@@ -78,9 +80,10 @@ class HomePage extends StatelessWidget {
           ),
           BtnBoggle(
             onPressed: () {
-              if (gameServices.start()) {
-                router.goToPage(PageName.startGame);
-              }
+              Globals.selectDictionary(gameServices.language).load();
+              router.goToPage(PageName.startGame);
+              Provider.of<EndGameService>(context, listen: false)
+                  .resetSelectedWord();
             },
             btnSize: BtnSize.large,
             text: "SinglePlayer",

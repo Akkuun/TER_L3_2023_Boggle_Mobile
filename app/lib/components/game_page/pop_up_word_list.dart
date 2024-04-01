@@ -129,6 +129,8 @@ class PopUpWordList extends StatelessWidget {
                     onPressed: () {
                       Provider.of<EndGameService>(context, listen: false)
                           .toggle(false);
+                      Provider.of<EndGameService>(context, listen: false)
+                          .resetSelectedWord();
                     },
                     text: 'Fermer')
               ],

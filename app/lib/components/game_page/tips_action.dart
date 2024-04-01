@@ -21,14 +21,11 @@ class TipsAction extends StatelessWidget {
                 Globals.selectDictionary(gameServices.language))
             .then((value) {
           if (value.isNotEmpty) {
-            int i = 0;
-            while (gameServices.words.contains(value[i].txt)) {
-              i++;
-              if (i >= value.length) {
-                return;
-              }
-            }
-            gameServices.setTipsIndex(value[i].coords[i]);
+            gameServices.setTipsIndex(value
+                .firstWhere(
+                    (element) => !gameServices.words.contains(element.txt))
+                .coords
+                .first);
           }
         });
       },

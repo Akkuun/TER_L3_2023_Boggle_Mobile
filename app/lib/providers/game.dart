@@ -1,4 +1,5 @@
 import 'package:bouggr/components/popup.dart';
+import 'package:bouggr/global.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:bouggr/utils/game_data.dart';
 import 'package:bouggr/utils/get_all_word.dart';
@@ -57,8 +58,7 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
   bool start() {
     super.toggle(false);
     notifyListeners();
-
-    return true;
+    return Globals.selectDictionary(language).dictionary != null;
   }
 
   int get score {
