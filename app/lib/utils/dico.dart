@@ -40,12 +40,12 @@ class Dictionary {
         for (int i = 0; i < children.length; i++) {
           if (children[i].runtimeType == int) {
             //is a leaf
-            if (decoder.getRunesFrom(children[i]) == Int8(l)) {
+            if (decoder.getRunesFrom(children[i]) == l) {
               return count == 0 && decoder.isEndingAWord(temp[1][i]);
               //check if last letter of the word & if is completing a word
             }
           } else {
-            if (decoder.getRunesFrom(children[i][0]) == Int8(l)) {
+            if (decoder.getRunesFrom(children[i][0]) == l) {
               temp = children[i];
               update = true;
               break;
@@ -82,12 +82,12 @@ class Dictionary {
         for (int i = 0; i < children.length; i++) {
           if (children[i].runtimeType == int) {
             //is a leaf
-            if (decoder.getRunesFrom(children[i]) == Int8(l)) {
+            if (decoder.getRunesFrom(children[i]) == l) {
               return count == 0;
               //check if last letter of the word
             }
           } else {
-            if (decoder.getRunesFrom(children[i][0]) == Int8(l)) {
+            if (decoder.getRunesFrom(children[i][0]) == l) {
               temp = children[i];
               update = true;
               break; //child found

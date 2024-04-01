@@ -20,8 +20,8 @@ class Decoded {
     return code & lang[langCode]! > 0;
   }
 
-  Int8 getRunesFrom(int code) {
-    return Int8(code & ((1 << 8) - 1));
+  int getRunesFrom(int code) {
+    return (code & ((1 << 8) - 1));
   }
 
   static LangCode toLangCode(String code) {
