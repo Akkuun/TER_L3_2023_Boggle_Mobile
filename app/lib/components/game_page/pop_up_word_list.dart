@@ -35,10 +35,10 @@ class PopUpWordList extends StatelessWidget {
                 )
               ],
             ),
-            height: h * 0.7,
+            height: h * 0.7 + 64,
             width: w * 0.98,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Padding(
