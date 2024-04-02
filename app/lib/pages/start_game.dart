@@ -105,7 +105,7 @@ class _StartGamePageState extends State<StartGamePage> {
             textAlign: TextAlign.center,
             style: _textStyle,
           ),
-          SizedBox(height: h - 800),
+          SizedBox(height: h*0.1),
           const Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -121,9 +121,9 @@ class _StartGamePageState extends State<StartGamePage> {
               ],
             ),
           ),
-          SizedBox(height: h - 750),
+          SizedBox(height: h*0.05),
           const Text("ou", textAlign: TextAlign.center, style: _textStyle),
-          SizedBox(height: h - 780),
+          SizedBox(height: h *0.1),
           BtnBoggle(
             onPressed: () {
               if (gameServices.start()) {
