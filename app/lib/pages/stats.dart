@@ -90,6 +90,7 @@ class StatsPage extends StatelessWidget {
                   children: [
                     for (var party in parties)
                       Stat(
+                        grid: jsonDecode(party)['grid'],
                         statName: "test",
                         statValue: jsonDecode(party)['score'].toString(),
                       )

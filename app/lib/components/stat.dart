@@ -7,10 +7,12 @@ class Stat extends StatelessWidget {
   final bool isDarker;
   final bool isFirst;
   final bool isLast;
+  final String grid;
 
   const Stat({
     super.key,
     this.fontSize = 18,
+    required this.grid,
     required this.statName,
     this.statValue = 'N/A',
     this.isDarker = false,
@@ -23,7 +25,7 @@ class Stat extends StatelessWidget {
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.05,
+          height: 128,
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
             color: Colors.lightBlue[isDarker ? 100 : 50],
@@ -35,6 +37,7 @@ class Stat extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                MiniGrid(grid: grid, height: 102, width: 102),
                 Text(
                   statName,
                   style: TextStyle(fontSize: fontSize),
@@ -48,5 +51,65 @@ class Stat extends StatelessWidget {
             ),
           ),
         ));
+  }
+}
+
+class MiniGrid extends StatelessWidget {
+  final String grid;
+  final double height;
+  final double width;
+
+  const MiniGrid({
+    super.key,
+    required this.grid,
+    this.height = 100,
+    this.width = 100,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: height,
+      width: width,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(5),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x3F000000),
+            blurRadius: 4,
+            offset: Offset(0, 4),
+            spreadRadius: 0,
+          )
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            crossAxisSpacing: 1,
+            mainAxisSpacing: 1,
+          ),
+          itemCount: grid.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(color: Colors.black),
+              ),
+              child: Center(
+                child: Text(
+                  grid[index],
+                  style: const TextStyle(fontSize: 18),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
   }
 }
