@@ -3,7 +3,6 @@
 import 'package:bouggr/global.dart';
 import 'package:bouggr/providers/end_game_service.dart';
 import 'package:bouggr/providers/game.dart';
-import 'package:bouggr/utils/decode.dart';
 import 'package:bouggr/utils/get_all_word.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
