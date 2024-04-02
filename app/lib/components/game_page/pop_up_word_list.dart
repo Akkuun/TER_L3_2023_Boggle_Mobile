@@ -18,7 +18,7 @@ class PopUpWordList extends StatelessWidget {
     var w = MediaQuery.of(context).size.width;
     return PopUp<EndGameService>(
       child: Positioned(
-        top: h * 0.05 + 32,
+        top: h * 0.05 + 36,
         left: w * 0.01,
         child: Container(
             decoration: ShapeDecoration(
@@ -35,7 +35,7 @@ class PopUpWordList extends StatelessWidget {
                 )
               ],
             ),
-            height: h * 0.7 + 64,
+            height: h * 0.7 + 72,
             width: w * 0.98,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
