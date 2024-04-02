@@ -168,7 +168,15 @@ class ClickableWord extends StatelessWidget {
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [Text(word.txt)],
+        children: [
+          Text(word.txt),
+          IconButton(
+              onPressed: () {
+                print(word.txt);
+
+
+              }, icon: Icon(Icons.chrome_reader_mode_rounded))
+        ],
       ),
     );
   }

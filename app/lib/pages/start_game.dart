@@ -35,8 +35,8 @@ class _StartGamePageState extends State<StartGamePage> {
     super.initState();
 
     accelerometre = BoggleAccelerometre(
-        fileTaille: 6,
-        seuilDetection: 20); //on donne des paramètres à l'accéléromètre
+        fileTaille: 4,
+        seuilDetection: 12); //on donne des paramètres à l'accéléromètre
     accelerometre.estSecouer.addListener(_surDetectionSecousse);
   }
 

@@ -124,6 +124,7 @@ class PopUpWordList extends StatelessWidget {
                       ),
                       child: const AllWordsFound()),
                 ),
+
                 BtnBoggle(
                     btnType: BtnType.secondary,
                     onPressed: () {
@@ -132,7 +133,8 @@ class PopUpWordList extends StatelessWidget {
                       Provider.of<EndGameService>(context, listen: false)
                           .resetSelectedWord();
                     },
-                    text: 'Fermer')
+                    text: 'Fermer'),
+
               ],
             )),
       ),
