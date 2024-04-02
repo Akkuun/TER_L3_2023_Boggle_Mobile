@@ -182,8 +182,8 @@ class _BoggleGrilleState extends State<BoggleGrille> {
                             ? Theme.of(context).primaryColor
                             : Colors.red
                         : gameServices.tipsIndex != null
-                            ? gameServices.tipsIndex!.x +
-                                        gameServices.tipsIndex!.y * 4 ==
+                            ? gameServices.tipsIndex!.x * 4 +
+                                        gameServices.tipsIndex!.y ==
                                     index
                                 ? Colors.green
                                 : Colors.white

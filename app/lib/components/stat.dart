@@ -42,11 +42,13 @@ class Stat extends StatelessWidget {
                   statName,
                   style: TextStyle(fontSize: fontSize),
                 ),
+                const SizedBox.shrink(),
                 Text(
                   statValue,
                   style: TextStyle(fontSize: fontSize),
                   textAlign: TextAlign.right,
                 ),
+                const SizedBox.shrink(),
               ],
             ),
           ),
@@ -102,7 +104,7 @@ class MiniGrid extends StatelessWidget {
               child: Center(
                 child: Text(
                   grid[index],
-                  style: const TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 16),
                   textAlign: TextAlign.center,
                 ),
               ),
