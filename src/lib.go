@@ -6,12 +6,6 @@ package main
 #include <stdio.h>
 */
 import "C"
-import (
-	"embed"
-)
-
-//go:embed dictionary/*
-var dico embed.FS
 
 //export sum
 func sum(a C.int, b C.int) C.int {
