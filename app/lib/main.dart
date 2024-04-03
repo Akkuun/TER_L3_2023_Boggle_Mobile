@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
+
 void main() async {
   //DynamicLibrary.open('libsum.so');
 
@@ -48,4 +49,8 @@ class App extends StatelessWidget {
       ),
     );
   }
+}
+
+void playMusic() async {
+
 }

@@ -33,6 +33,7 @@ dependencies:
   flutter_driver:
     sdk: flutter
   url_launcher: ^6.2.5
+  audioplayers: ^0.20.1
   native_ffi:
     # When depending on this package from a real application you should use:
     #   native_ffi: ^x.y.z
@@ -92,4 +93,5 @@ flutter:
     - assets/dictionary/en_dico.json
     - assets/dictionary/sp_dico.json
     - assets/dictionary/rm_dico.json
+    - assets.audio/Melange1.mp3
 

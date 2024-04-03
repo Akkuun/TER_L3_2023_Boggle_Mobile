@@ -8,6 +8,10 @@ import 'package:provider/provider.dart';
 
 import 'package:haptic_feedback/haptic_feedback.dart';
 
+import 'package:audioplayers/audioplayers.dart'; // Importez audioplayers
+
+AudioPlayer audioPlayer = AudioPlayer();
+
 class StartGamePage extends StatefulWidget {
   const StartGamePage({super.key});
 
@@ -73,10 +77,19 @@ class _StartGamePageState extends State<StartGamePage> {
   }
 
   void _startGame() {
+
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
 
+
+
+
+
+
     if (gameServices.start()) {
+
+
+
       router.goToPage(PageName.game);
     }
   }
@@ -146,3 +159,16 @@ class _StartGamePageState extends State<StartGamePage> {
     );
   }
 }
+
+// void playMusic() async {
+//   try {
+//     int result = await audioPlayer.play('./../Audio/Melange1.mp3', isLocal: true);
+//     if (result == 1) {
+//       print('La musique a commencé à jouer avec succès.');
+//     } else {
+//       print('Une erreur s\'est produite lors du démarrage de la lecture de la musique.');
+//     }
+//   } catch (e) {
+//     print('Une erreur s\'est produite : $e');
+//   }
+// }
