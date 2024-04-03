@@ -8,13 +8,6 @@ package main
 import "C"
 import (
 	"embed"
-	"encoding/json"
-	"errors"
-	"log"
-	"runtime"
-	"sync"
-
-	"unsafe"
 )
 
 //go:embed dictionary/*
@@ -25,17 +18,21 @@ func sum(a C.int, b C.int) C.int {
 	return a + b
 }
 
-//export get_utf8_char
-func get_utf8_char(v C.int ) C.char {
-	return C.char(v);
+//export GetChar
+func GetChar(v C.int) C.char {
+	return C.char(v)
 }
 
-//export end_of_word
-func end_of_word(v C.int ) C.int {
-	return (v&0b10000000) != 0
+//export IsSameKey
+func IsSameKey(ps *C.char, key C.int) bool {
+	s := C.GoString(ps)
+	return s[0] == byte(key)
 }
 
-
+//export EndOfWord
+func EndOfWord(v C.int) bool {
+	return (v & 0b100000000) != 0
+}
 
 //export enforce_binding
 func enforce_binding() {}
