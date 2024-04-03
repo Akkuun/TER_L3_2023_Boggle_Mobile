@@ -33,45 +33,50 @@ class WordsFound extends StatelessWidget {
           ),
           height: MediaQuery.of(context).size.height * 0.12,
           width: MediaQuery.of(context).size.width,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FutureBuilder(
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                }
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-                if (snapshot.hasData) {
-                  var words = snapshot.data;
-                  if (words == null) {
-                    return const Text('No Word in grid');
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              "Nombre de mots restant ${words.length - gameServices.words.length}"),
-                          words.firstWhere(
-                                      (element) => !gameServices.words
-                                          .contains(element.txt),
-                                      orElse: () => Word("", [])) !=
-                                  null
-                              ? Text(
-                                  "Longueur du plus long mot restant : ${words.reduce((Word value, Word element) => value.txt.length > element.txt.length ? !gameServices.words.contains(value.txt) ? value : Word("", []) : !gameServices.words.contains(element.txt) ? element : Word("", [])).txt.length}")
-                              : Text("Longueur du plus long mot restant : 0")
-                        ]),
-                  );
-                }
-                return const Text('No data');
-              },
-              future: getAllWords(gameServices.letters,
-                  Globals.selectDictionary(gameServices.language)),
-            ),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FutureBuilder(
+                  builder: (BuildContext context, AsyncSnapshot snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    }
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+                    if (snapshot.hasData) {
+                      var words = snapshot.data;
+                      if (words == null) {
+                        return const Text('No Word in grid');
+                      }
+                      return Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                  "Nombre de mots restant ${words.length - gameServices.words.length}"),
+                              words.firstWhere(
+                                          (element) => !gameServices.words
+                                              .contains(element.txt),
+                                          orElse: () => Word("", [])) !=
+                                      null
+                                  ? Text(
+                                      "Longueur du plus long mot restant : ${words.reduce((Word value, Word element) => value.txt.length > element.txt.length ? !gameServices.words.contains(value.txt) ? value : Word("", []) : !gameServices.words.contains(element.txt) ? element : Word("", [])).txt.length}")
+                                  : Text(
+                                      "Longueur du plus long mot restant : 0")
+                            ]),
+                      );
+                    }
+                    return const Text('No data');
+                  },
+                  future: getAllWords2(gameServices.letters,
+                      Globals.selectDictionary(gameServices.language)),
+                ),
+              ),
+            ],
           ),
         ));
   }
@@ -117,7 +122,7 @@ class _AllWordsFoundState extends State<AllWordsFound> {
       child: SingleChildScrollView(
           child: Builder(builder: (BuildContext innerContext) {
         return FutureBuilder(
-          future: getAllWords(gameServices.letters,
+          future: getAllWords2(gameServices.letters,
               Globals.selectDictionary(gameServices.language)),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
