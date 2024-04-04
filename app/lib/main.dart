@@ -51,6 +51,3 @@ class App extends StatelessWidget {
   }
 }
 
-void playMusic() async {
-
-}

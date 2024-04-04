@@ -95,4 +95,5 @@ flutter:
     - assets/dictionary/rm_dico.json
     - assets/audio/Melange1.mp3
     - assets/audio/Melange2.mp3
+    - assets/audio/OST.mp3
 

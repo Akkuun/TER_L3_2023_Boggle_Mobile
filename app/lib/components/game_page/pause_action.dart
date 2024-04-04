@@ -5,6 +5,7 @@ import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/timer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:bouggr/utils/BackgroundMusicPlayer.dart';
 
 class PauseAction extends StatelessWidget {
   const PauseAction({
@@ -18,9 +19,10 @@ class PauseAction extends StatelessWidget {
     GameServices gameServices =
         Provider.of<GameServices>(context, listen: true);
     return IconBtnBoggle(
-      onPressed: () {
+      onPressed: () async {
         if (gameServices.triggerPopUp) {
           timerServices.stop();
+          BackgroundMusicPlayer().stop();
         } else {
           timerServices.start();
         }
