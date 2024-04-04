@@ -16,6 +16,7 @@ import 'package:bouggr/utils/BackgroundMusicPlayer.dart';
 
 final player = AudioPlayer(); // player pour le son du début
 
+BackgroundMusicPlayer backgroundMusicPlayer = BackgroundMusicPlayer.instance;
 
 
 class StartGamePage extends StatefulWidget {
@@ -89,7 +90,7 @@ class _StartGamePageState extends State<StartGamePage> {
 
     if (gameServices.start()) {
        playSoundBegin();
-      //BackgroundMusicPlayer().playOST();
+       backgroundMusicPlayer.playOST();
       router.goToPage(PageName.game);
     }
   }
@@ -141,7 +142,7 @@ class _StartGamePageState extends State<StartGamePage> {
             onPressed: () {
               if (gameServices.start()) {
                 playSoundBegin();
-               // BackgroundMusicPlayer().playOST();
+                backgroundMusicPlayer.playOST();
                 router.goToPage(PageName.game);
               }
             },
@@ -166,8 +167,8 @@ void playSoundBegin() async {
   int i = Random().nextInt(2)+1; // Génère un nombre aléatoire entre 1 et 2
 
   String path = "audio/Melange$i.mp3"; // recupère le chemin du fichier audio associé en fonction de i (Melange 1 ou Melange 2)
-  await player.setSource(AssetSource(path));
-  await player.resume();
+  print("sound play \n\n");
+  await player.play(AssetSource(path));
 
 }
 
