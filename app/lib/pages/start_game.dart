@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bouggr/components/accelerometre.dart';
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/pages/page_name.dart';
@@ -10,7 +12,7 @@ import 'package:haptic_feedback/haptic_feedback.dart';
 
 import 'package:audioplayers/audioplayers.dart'; // Importez audioplayers
 
-AudioPlayer audioPlayer = AudioPlayer();
+final player = AudioPlayer();
 
 class StartGamePage extends StatefulWidget {
   const StartGamePage({super.key});
@@ -21,6 +23,7 @@ class StartGamePage extends StatefulWidget {
 
 class _StartGamePageState extends State<StartGamePage> {
   late BoggleAccelerometre accelerometre;
+
   // ignore: non_constant_identifier_names
   bool PageCharger = false;
   int nbSecousse = 0;
@@ -40,7 +43,7 @@ class _StartGamePageState extends State<StartGamePage> {
 
     accelerometre = BoggleAccelerometre(
         fileTaille: 4,
-        seuilDetection: 12); //on donne des paramètres à l'accéléromètre
+        seuilDetection: 10); //on donne des paramètres à l'accéléromètre
     accelerometre.estSecouer.addListener(_surDetectionSecousse);
   }
 
@@ -76,20 +79,13 @@ class _StartGamePageState extends State<StartGamePage> {
     }
   }
 
-  void _startGame() {
-
+  void _startGame() async {
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
 
-
-
-
-
-
     if (gameServices.start()) {
-
-
-
+      print("je vais tenter de lancer le son");
+      playSoundBegin();
       router.goToPage(PageName.game);
     }
   }
@@ -118,7 +114,7 @@ class _StartGamePageState extends State<StartGamePage> {
             textAlign: TextAlign.center,
             style: _textStyle,
           ),
-          SizedBox(height: h*0.1),
+          SizedBox(height: h * 0.1),
           const Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -134,9 +130,9 @@ class _StartGamePageState extends State<StartGamePage> {
               ],
             ),
           ),
-          SizedBox(height: h*0.05),
+          SizedBox(height: h * 0.05),
           const Text("ou", textAlign: TextAlign.center, style: _textStyle),
-          SizedBox(height: h *0.1),
+          SizedBox(height: h * 0.1),
           BtnBoggle(
             onPressed: () {
               if (gameServices.start()) {
@@ -160,15 +156,10 @@ class _StartGamePageState extends State<StartGamePage> {
   }
 }
 
-// void playMusic() async {
-//   try {
-//     int result = await audioPlayer.play('./../Audio/Melange1.mp3', isLocal: true);
-//     if (result == 1) {
-//       print('La musique a commencé à jouer avec succès.');
-//     } else {
-//       print('Une erreur s\'est produite lors du démarrage de la lecture de la musique.');
-//     }
-//   } catch (e) {
-//     print('Une erreur s\'est produite : $e');
-//   }
-// }
+void playSoundBegin() async {
+  int i = Random().nextInt(2)+1; // Génère un nombre aléatoire entre 1 et 2
+
+  String path = "audio/Melange$i.mp3"; // recupère le chemin du fichier audio associé en fonction de i (Melange 1 ou Melange 2)
+  await player.setSource(AssetSource(path));
+  await player.resume();
+}
