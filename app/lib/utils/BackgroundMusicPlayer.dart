@@ -1,12 +1,14 @@
 import 'package:audioplayers/audioplayers.dart';
 
 class BackgroundMusicPlayer {
+  //passage en singleton pour avoir une seule instance du lecteur sinon, création de plusieurs intance
+  //ce qui bloque le controle
   static final BackgroundMusicPlayer _instance = BackgroundMusicPlayer._internal();
 
   static BackgroundMusicPlayer get instance => _instance;
 
-  static const String path_ost = 'audio/OST.mp3';
-  final AudioPlayer _audioPlayer = AudioPlayer();
+  static const String path_ost = 'audio/OST.mp3'; //path de l'asset audio
+  final AudioPlayer _audioPlayer = AudioPlayer(); //player audio
 
   BackgroundMusicPlayer._internal();
 
