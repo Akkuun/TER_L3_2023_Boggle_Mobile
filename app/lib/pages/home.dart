@@ -19,7 +19,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var h = MediaQuery.of(context).size.height;
 
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
@@ -80,8 +79,8 @@ class HomePage extends StatelessWidget {
               const SizedBox(width: 16), // Ajoutez un espacement entre les cartes si nécessaire
               Expanded(
                 child: BoggleCard(
-                  title: "SoonTm",
-                  action: 'play',
+                  title: "W.I.P",
+                  action: 'W.I.P',
                   onPressed: () {
                     router.goToPage(PageName.rules);
                   },
