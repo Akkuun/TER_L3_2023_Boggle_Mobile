@@ -3,7 +3,8 @@ import 'package:audioplayers/audioplayers.dart';
 class BackgroundMusicPlayer {
   //passage en singleton pour avoir une seule instance du lecteur sinon, création de plusieurs intance
   //ce qui bloque le controle
-  static final BackgroundMusicPlayer _instance = BackgroundMusicPlayer._internal();
+  static final BackgroundMusicPlayer _instance =
+      BackgroundMusicPlayer._internal();
 
   static BackgroundMusicPlayer get instance => _instance;
 
