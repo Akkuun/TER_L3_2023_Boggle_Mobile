@@ -11,6 +11,8 @@ import 'package:bouggr/utils/game_result.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../global.dart';
+
 class EndGameDetail extends StatelessWidget {
   const EndGameDetail({super.key});
 
@@ -66,18 +68,18 @@ class EndGameDetail extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text("Score : ${gameServices.score}"),
-                          const Text("Score Max : NaN"),
+                          Text("${ Globals.getText(gameServices.language, 61)} ${gameServices.score}"),
+                           Text( Globals.getText(gameServices.language, 62)),
                         ],
                       ),
                       Text(
-                          "Plus long mot trouvé : ${gameServices.longestWord}"),
-                      const Text("Plus long mot trouvable : pas dispo"),
+                          "${ Globals.getText(gameServices.language, 60)} ${gameServices.longestWord}"),
+                       Text( Globals.getText(gameServices.language, 59)),
                       BtnBoggle(
                         onPressed: () {
                           endGameService.showPopUp();
                         },
-                        text: "Liste des plus long mots",
+                        text:  Globals.getText(gameServices.language, 58),
                         btnType: BtnType.third,
                       ),
                     ],
@@ -117,7 +119,7 @@ class EndGameDetail extends StatelessWidget {
                   gameServices.reset();
                   navigationServices.goToPage(PageName.home);
                 },
-                text: "new game",
+                text:  Globals.getText(gameServices.language, 25),
               ),
               BtnBoggle(
                   onPressed: () {
@@ -129,7 +131,7 @@ class EndGameDetail extends StatelessWidget {
                     timerServices.resetProgress();
                     navigationServices.goToPage(PageName.home);
                   },
-                  text: "Home",
+                  text:  Globals.getText(gameServices.language, 56),
                   btnType: BtnType.secondary),
             ],
           ),

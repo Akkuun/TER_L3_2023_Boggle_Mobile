@@ -141,6 +141,12 @@ class Globals extends InheritedWidget {
       54 : 'Aucune donnée',
       55 : 'Aucun mot dans la grille ',
       56 : 'Fermer',
+      57 : 'points',
+      58 : 'Liste des plus longs',
+      59 : 'Plus long mot trouvable : indiponible',
+      60 : 'Plus long mot trouvé : ',
+      61 : 'Score : ',
+      62 : 'Score Max : indiponible',
 
     },
     LangCode.EN: {},

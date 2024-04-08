@@ -85,7 +85,7 @@ class PopUpGameMenu extends StatelessWidget {
                     ],
                   ),
                    Text(Globals.getText(gameServices.language, 24), style: TextStyle(fontSize: 30)),
-                  Text("${gameServices.score} points",
+                  Text("${gameServices.score} ${Globals.getText(gameServices.language, 57)}",
                       style: const TextStyle(fontSize: 20)),
                   BtnBoggle(
                     onPressed: () {
