@@ -95,7 +95,9 @@ class Globals extends InheritedWidget {
       8 : 'Trouve des mots',
       9 : '&',
       10 : 'gagne des points',
-      11 :  'Règles de base\n\n,Dans une limite de temps de 3 minutes, vous devez trouver un maximum de mots en formant des chaînes de lettres contiguës. Plus le mot est long, plus les points qu\'il vous rapporte sont importants.\nVous pouvez passer d\'une lettre à la suivante située directement à gauche, à droite, en haut, en bas, ou sur l\'une des quatre cases diagonales.\n',
+      11 :  'Règles de base\n\nDans une limite de temps de 3 minutes, vous devez trouver un maximum de mots en formant des chaînes de lettres contiguës. Plus le mot est long, plus les points qu\'il vous rapporte sont importants.\nVous pouvez passer d\'une lettre à la suivante située directement à gauche, à droite, en haut, en bas, ou sur l\'une des quatre cases diagonales.\n',
+      12 : 'Décompte des points\nLe décompte des points s\'effectue après que le temps de jeu de 3 minutes se soit écoulé. Chacun des mots que vous avez trouvés vous rapporte des points, selon le barème suivant:\n',
+      13 :    '\nDécompte des points\nLe décompte des points s\'effectue après que le temps de jeu de 3 minutes se soit écoulé. Chacun des mots que vous avez trouvés vous rapporte des points, selon le barème suivant:',
 
     },
     LangCode.EN: {
@@ -111,7 +113,10 @@ class Globals extends InheritedWidget {
   };
   //retourne le texte en fonction de la langue et de l'id
   static String getText(LangCode language, int id) {
-    return texts[language]![id]!;
+    String text = texts[language]![id] ?? ''; // Récupérer le texte ou une chaîne vide si non trouvé
+
+    return text.replaceAll('\\n', '\n'); // Remplacer les occurrences de '\n' par des sauts de ligne
+
   }
 
 
