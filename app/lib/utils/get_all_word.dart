@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:convert';
 import 'package:bouggr/utils/dico.dart';
 import 'package:native_ffi/native_ffi.dart';
 /*

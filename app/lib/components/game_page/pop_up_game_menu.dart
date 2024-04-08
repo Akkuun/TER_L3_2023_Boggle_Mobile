@@ -12,7 +12,7 @@ import 'package:bouggr/utils/game_result.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../utils/BackgroundMusicPlayer.dart';
+import '../../utils/background_music_player.dart';
 
 BackgroundMusicPlayer backgroundMusicPlayer = BackgroundMusicPlayer.instance;
 

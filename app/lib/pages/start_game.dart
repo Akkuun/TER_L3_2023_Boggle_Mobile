@@ -12,12 +12,11 @@ import 'package:haptic_feedback/haptic_feedback.dart';
 
 import 'package:audioplayers/audioplayers.dart'; // Importez audioplayers
 
-import 'package:bouggr/utils/BackgroundMusicPlayer.dart';
+import 'package:bouggr/utils/background_music_player.dart';
 
 final player = AudioPlayer(); // player pour le son du début
 
 BackgroundMusicPlayer backgroundMusicPlayer = BackgroundMusicPlayer.instance;
-
 
 class StartGamePage extends StatefulWidget {
   const StartGamePage({super.key});
@@ -89,8 +88,8 @@ class _StartGamePageState extends State<StartGamePage> {
     final gameServices = Provider.of<GameServices>(context, listen: false);
 
     if (gameServices.start()) {
-       playSoundBegin();
-       backgroundMusicPlayer.playOST();
+      playSoundBegin();
+      backgroundMusicPlayer.playOST();
       router.goToPage(PageName.game);
     }
   }
@@ -164,11 +163,10 @@ class _StartGamePageState extends State<StartGamePage> {
 }
 
 void playSoundBegin() async {
-  int i = Random().nextInt(2)+1; // Génère un nombre aléatoire entre 1 et 2
+  int i = Random().nextInt(2) + 1; // Génère un nombre aléatoire entre 1 et 2
 
-  String path = "audio/Melange$i.mp3"; // recupère le chemin du fichier audio associé en fonction de i (Melange 1 ou Melange 2)
+  String path =
+      "audio/Melange$i.mp3"; // recupère le chemin du fichier audio associé en fonction de i (Melange 1 ou Melange 2)
   print("sound play \n\n");
   await player.play(AssetSource(path));
-
 }
-

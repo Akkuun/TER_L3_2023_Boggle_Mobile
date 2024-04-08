@@ -3,11 +3,12 @@
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/timer.dart';
-import 'package:bouggr/utils/BackgroundMusicPlayer.dart';
+import 'package:bouggr/utils/background_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 BackgroundMusicPlayer backgroundMusicPlayer = BackgroundMusicPlayer.instance;
+
 class PauseAction extends StatelessWidget {
   const PauseAction({
     super.key,
@@ -25,8 +26,7 @@ class PauseAction extends StatelessWidget {
           timerServices.stop();
           backgroundMusicPlayer.resume();
         } else {
-
-         backgroundMusicPlayer.pause();
+          backgroundMusicPlayer.pause();
           timerServices.start();
         }
 

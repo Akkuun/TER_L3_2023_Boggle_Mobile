@@ -184,9 +184,9 @@ class ClickableWord extends StatelessWidget {
 }
 
 Future<void> recupererDefinition(String mot) async {
-  String Mot = mot.toLowerCase(); // Mettre le mot en minuscule
+  // Mettre le mot en minuscule
   Uri url = Uri.parse(
-      'https://fr.wiktionary.org/wiki/$Mot'); // String to Uri (format adresse Web)
+      'https://fr.wiktionary.org/wiki/${mot.toLowerCase()}'); // String to Uri (format adresse Web)
   if (!await launchUrl(url)) {
     // Si l'ouverture de l'URL échoue
     throw Exception('Could not launch $url');
