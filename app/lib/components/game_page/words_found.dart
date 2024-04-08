@@ -63,8 +63,8 @@ class WordsFound extends StatelessWidget {
                                       orElse: () => Word("", [])) !=
                                   null
                               ? Text(
-                                  "Longueur du plus long mot restant : ${words.reduce((Word value, Word element) => value.txt.length > element.txt.length ? !gameServices.words.contains(value.txt) ? value : Word("", []) : !gameServices.words.contains(element.txt) ? element : Word("", [])).txt.length}")
-                              : Text("Longueur du plus long mot restant : 0")
+                              "${Globals.getText(gameServices.language, 22)} : ${words.reduce((Word value, Word element) => value.txt.length > element.txt.length ? !gameServices.words.contains(value.txt) ? value : Word("", []) : !gameServices.words.contains(element.txt) ? element : Word("", [])).txt.length}")
+                              : Text(Globals.getText(gameServices.language, 23)),
                         ]),
                   );
                 }

@@ -30,7 +30,7 @@ class RulePage extends StatelessWidget {
           btnType: BtnType.secondary,
           btnSize: BtnSize.large,
           text: Globals.getText(
-              gameServices.language, 15)
+              gameServices.language, 14)
         ),
       ],
     );

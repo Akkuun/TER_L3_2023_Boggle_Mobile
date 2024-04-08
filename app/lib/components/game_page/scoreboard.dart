@@ -2,6 +2,7 @@ import 'package:bouggr/providers/game.dart';
 import 'package:flutter/material.dart';
 import 'package:bouggr/components/game_stat.dart';
 import 'package:provider/provider.dart';
+import 'package:bouggr/global.dart';
 
 class ScoreBoard extends StatelessWidget {
   const ScoreBoard({
@@ -21,15 +22,15 @@ class ScoreBoard extends StatelessWidget {
       children: [
         if (rang != null)
           GameStat(
-            statName: 'Rang',
+            statName: Globals.getText(gameServices.language, 18),
             statValue: rang.toString(),
           ),
         GameStat(
-          statName: 'Score',
+          statName: Globals.getText(gameServices.language, 20),
           statValue: gameServices.score.toString(),
         ),
         GameStat(
-          statName: 'Strikes',
+          statName: Globals.getText(gameServices.language, 19),
           statValue: 'x${gameServices.strikes}',
         ),
       ],
