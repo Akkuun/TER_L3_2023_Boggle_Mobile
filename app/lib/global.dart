@@ -124,6 +124,8 @@ class Globals extends InheritedWidget {
       37 : 'Mot de passe oublié',
       38 : 'Adresse mail non valide!',
       39 : 'Envoi',
+      40 : 'Les mots de passe ne correspondent pas',
+      41 : 'Déjà un compte ?',
 
     },
     LangCode.EN: {},
