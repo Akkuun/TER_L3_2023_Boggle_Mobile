@@ -173,7 +173,14 @@ class _EmailCreateState extends State<EmailCreate> {
                         },
                         child: const Text('Submit'),
                       ),
-          )
+          ),BtnBoggle(
+            onPressed: () {
+              router.goToPage(PageName.login);
+            },
+            btnType: BtnType.secondary,
+            btnSize: BtnSize.small,
+            text: "Go back",
+          ),
         ]));
   }
 }

@@ -12,6 +12,10 @@ import 'package:bouggr/utils/game_result.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../utils/background_music_player.dart';
+
+BackgroundMusicPlayer backgroundMusicPlayer = BackgroundMusicPlayer.instance;
+
 class PopUpGameMenu extends StatelessWidget {
   const PopUpGameMenu({super.key});
 
@@ -70,6 +74,7 @@ class PopUpGameMenu extends StatelessWidget {
                       IconBtnBoggle(
                         icon: const Icon(Icons.close_rounded),
                         onPressed: () {
+                          backgroundMusicPlayer.resume();
                           gameServices.toggle(false);
                           timerServices.start();
                         },
@@ -84,7 +89,6 @@ class PopUpGameMenu extends StatelessWidget {
                   BtnBoggle(
                     onPressed: () {
                       gameServices.stop();
-
                       GameDataStorage.saveGameResult(gameResult);
 
                       timerServices.resetProgress();

@@ -6,6 +6,7 @@ import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/utils/get_all_word.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class WordsFound extends StatelessWidget {
   const WordsFound({
@@ -69,7 +70,7 @@ class WordsFound extends StatelessWidget {
                 }
                 return const Text('No data');
               },
-              future: getAllWords(gameServices.letters,
+              future: getAllWords2(gameServices.letters,
                   Globals.selectDictionary(gameServices.language)),
             ),
           ),
@@ -117,7 +118,7 @@ class _AllWordsFoundState extends State<AllWordsFound> {
       child: SingleChildScrollView(
           child: Builder(builder: (BuildContext innerContext) {
         return FutureBuilder(
-          future: getAllWords(gameServices.letters,
+          future: getAllWords2(gameServices.letters,
               Globals.selectDictionary(gameServices.language)),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -168,8 +169,26 @@ class ClickableWord extends StatelessWidget {
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [Text(word.txt)],
+        children: [
+          Text(word.txt),
+          IconButton(
+              onPressed: () {
+                String mot = word.txt;
+                recupererDefinition(mot);
+              },
+              icon: Icon(Icons.chrome_reader_mode_rounded))
+        ],
       ),
     );
+  }
+}
+
+Future<void> recupererDefinition(String mot) async {
+  // Mettre le mot en minuscule
+  Uri url = Uri.parse(
+      'https://fr.wiktionary.org/wiki/${mot.toLowerCase()}'); // String to Uri (format adresse Web)
+  if (!await launchUrl(url)) {
+    // Si l'ouverture de l'URL échoue
+    throw Exception('Could not launch $url');
   }
 }

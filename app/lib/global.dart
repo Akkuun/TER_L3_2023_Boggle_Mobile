@@ -91,6 +91,12 @@ class Globals extends InheritedWidget {
       4 : 'Partie solo',
       5 : 'Partie multijoueur',
       6 :'Connexion',
+      7 : 'Bienvenue',
+      8 : 'Trouve des mots',
+      9 : '&',
+      10 : 'gagne des points',
+      11 :  'Règles de base\n\n,Dans une limite de temps de 3 minutes, vous devez trouver un maximum de mots en formant des chaînes de lettres contiguës. Plus le mot est long, plus les points qu\'il vous rapporte sont importants.\nVous pouvez passer d\'une lettre à la suivante située directement à gauche, à droite, en haut, en bas, ou sur l\'une des quatre cases diagonales.\n',
+
     },
     LangCode.EN: {
 
@@ -103,8 +109,11 @@ class Globals extends InheritedWidget {
 
     },
   };
-
-  static String getText(int id) {
-    return texts[LangCode.GLOBAL]![id]!;
+  //retourne le texte en fonction de la langue et de l'id
+  static String getText(LangCode language, int id) {
+    return texts[language]![id]!;
   }
+
+
+
 }

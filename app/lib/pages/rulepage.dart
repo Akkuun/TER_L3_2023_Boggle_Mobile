@@ -4,6 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bouggr/pages/page_name.dart';
 
+import 'package:bouggr/global.dart';
+
+import '../providers/game.dart';
+
 /// Page des règles du jeu
 
 class RulePage extends StatelessWidget {
@@ -43,6 +47,7 @@ class _RulesInstruction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final gameServices = Provider.of<GameServices>(context, listen: false);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -58,14 +63,14 @@ class _RulesInstruction extends StatelessWidget {
               color: const Color.fromARGB(255, 181, 224, 255),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Padding(
+            child: Padding(
               padding: EdgeInsets.all(8.0),
               child: Text.rich(
                 TextSpan(
                   children: [
                     TextSpan(
                         text:
-                            'Règles de base\n\nDans une limite de temps de 3 minutes, vous devez trouver un maximum de mots en formant des chaînes de lettres contiguës. Plus le mot est long, plus les points qu\'il vous rapporte sont importants.\nVous pouvez passer d\'une lettre à la suivante située directement à gauche, à droite, en haut, en bas, ou sur l\'une des quatre cases diagonales.\n',
+                       "ff",
                         style: textStyleIBM),
                     TextSpan(
                         text:

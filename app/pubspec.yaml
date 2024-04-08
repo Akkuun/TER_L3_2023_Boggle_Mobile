@@ -30,7 +30,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_driver:
+    sdk: flutter
+  url_launcher: ^6.2.5
+  audioplayers: ^5.0.0
   native_ffi:
     # When depending on this package from a real application you should use:
     #   native_ffi: ^x.y.z
@@ -65,6 +68,7 @@ dev_dependencies:
   flutter_lints: ^3.0.1
   test: ^1.24.9
 
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -81,9 +85,15 @@ flutter:
         - asset: fonts/Jua-Regular.ttf
           style: normal
 
+
+
   assets:
     - assets/dictionary/global.json
     - assets/dictionary/fr_dico.json
     - assets/dictionary/en_dico.json
     - assets/dictionary/sp_dico.json
     - assets/dictionary/rm_dico.json
+    - assets/audio/Melange1.mp3
+    - assets/audio/Melange2.mp3
+    - assets/audio/OST.mp3
+
