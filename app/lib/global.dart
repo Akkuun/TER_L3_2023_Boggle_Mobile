@@ -79,4 +79,32 @@ class Globals extends InheritedWidget {
 
   @override
   bool updateShouldNotify(Globals oldWidget) => false;
+
+// Pour Chaque langue, l'ensembles des textes utilisé
+
+  static final Map<LangCode, Map<int, String>> texts = {
+    LangCode.FR: {
+      0:'Règles',
+      1 : 'lire',
+      2 : 'bientôt',
+      3 : 'Bientôt',
+      4 : 'Partie solo',
+      5 : 'Partie multijoueur',
+      6 :'Connexion',
+    },
+    LangCode.EN: {
+
+    },
+    LangCode.RM: {
+
+
+    },
+    LangCode.SP: {
+
+    },
+  };
+
+  static String getText(int id) {
+    return texts[LangCode.GLOBAL]![id]!;
+  }
 }
