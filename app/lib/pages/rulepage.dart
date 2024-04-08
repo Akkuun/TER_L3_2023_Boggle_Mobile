@@ -14,6 +14,7 @@ class RulePage extends StatelessWidget {
   const RulePage({super.key});
   @override
   Widget build(BuildContext context) {
+    final gameServices = Provider.of<GameServices>(context, listen: false);
     var router = Provider.of<NavigationServices>(context,
         listen: false); //recuperation du services de navigation
 
@@ -28,7 +29,8 @@ class RulePage extends StatelessWidget {
           },
           btnType: BtnType.secondary,
           btnSize: BtnSize.large,
-          text: "Go back",
+          text: Globals.getText(
+              gameServices.language, 15)
         ),
       ],
     );

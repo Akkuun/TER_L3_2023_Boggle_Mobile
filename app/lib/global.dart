@@ -84,41 +84,35 @@ class Globals extends InheritedWidget {
 
   static final Map<LangCode, Map<int, String>> texts = {
     LangCode.FR: {
-      0:'Règles',
-      1 : 'lire',
-      2 : 'bientôt',
-      3 : 'Bientôt',
-      4 : 'Partie solo',
-      5 : 'Partie multijoueur',
-      6 :'Connexion',
-      7 : 'Bienvenue',
-      8 : 'Trouve des mots',
-      9 : '&',
-      10 : 'gagne des points',
-      11 :  'Règles de base\n\nDans une limite de temps de 3 minutes, vous devez trouver un maximum de mots en formant des chaînes de lettres contiguës. Plus le mot est long, plus les points qu\'il vous rapporte sont importants.\nVous pouvez passer d\'une lettre à la suivante située directement à gauche, à droite, en haut, en bas, ou sur l\'une des quatre cases diagonales.\n',
-      12 : 'Décompte des points\nLe décompte des points s\'effectue après que le temps de jeu de 3 minutes se soit écoulé. Chacun des mots que vous avez trouvés vous rapporte des points, selon le barème suivant:\n',
-      13 :    '\nDécompte des points\nLe décompte des points s\'effectue après que le temps de jeu de 3 minutes se soit écoulé. Chacun des mots que vous avez trouvés vous rapporte des points, selon le barème suivant:',
-
+      0: 'Règles',
+      1: 'lire',
+      2: 'bientôt',
+      3: 'Bientôt',
+      4: 'Partie solo',
+      5: 'Partie multijoueur',
+      6: 'Connexion',
+      7: 'Bienvenue',
+      8: 'Trouve des mots',
+      9: '&',
+      10: 'gagne des points',
+      11: 'Règles de base\n\nDans une limite de temps de 3 minutes, vous devez trouver un maximum de mots en formant des chaînes de lettres contiguës. Plus le mot est long, plus les points qu\'il vous rapporte sont importants.\nVous pouvez passer d\'une lettre à la suivante située directement à gauche, à droite, en haut, en bas, ou sur l\'une des quatre cases diagonales.\n',
+      12: 'Décompte des points\nLe décompte des points s\'effectue après que le temps de jeu de 3 minutes se soit écoulé. Chacun des mots que vous avez trouvés vous rapporte des points, selon le barème suivant:\n',
+      13: '\nDécompte des points\nLe décompte des points s\'effectue après que le temps de jeu de 3 minutes se soit écoulé. Chacun des mots que vous avez trouvés vous rapporte des points, selon le barème suivant:',
+      14: 'Retour',
+      15 : 'Secouez votre téléphone pour \nlancer une partie',
+      16 : 'ou',
+      17 : 'Commencer une partie',
     },
-    LangCode.EN: {
-
-    },
-    LangCode.RM: {
-
-
-    },
-    LangCode.SP: {
-
-    },
+    LangCode.EN: {},
+    LangCode.RM: {},
+    LangCode.SP: {},
   };
+
   //retourne le texte en fonction de la langue et de l'id
   static String getText(LangCode language, int id) {
     String text = texts[language]![id] ?? ''; // Récupérer le texte ou une chaîne vide si non trouvé
 
-    return text.replaceAll('\\n', '\n'); // Remplacer les occurrences de '\n' par des sauts de ligne
-
+    return text.replaceAll('\\n',
+        '\n'); // Remplacer les occurrences de '\n' par des sauts de ligne
   }
-
-
-
 }

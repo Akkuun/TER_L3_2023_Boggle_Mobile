@@ -83,7 +83,7 @@ class HomePage extends StatelessWidget {
                   title: Globals.getText(gameServices.language, 3),
                   action:  Globals.getText(gameServices.language, 2),
                   onPressed: () {
-                    router.goToPage(PageName.rules);
+                    //router.goToPage(PageName.rules);
                   },
                 ),
               ),
