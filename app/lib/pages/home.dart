@@ -11,12 +11,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+
+
 class HomePage extends StatelessWidget {
   HomePage({super.key});
   final TextEditingController nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
     Widget welcomeWidget;
@@ -53,30 +56,35 @@ class HomePage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              BoggleCard(
-                onPressed: () {
-                  router.goToPage(PageName.rules);
-                },
-                title: "Rules",
-                action: 'read',
-                child: const Text(
-                  'Find words\n&\nearn points',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 22,
-                    fontFamily: 'Jua',
-                    fontWeight: FontWeight.w400,
-                    height: 0,
+              Expanded(
+                child: BoggleCard(
+                  onPressed: () {
+                    router.goToPage(PageName.rules);
+                  },
+                  title: "Rules",
+                  action: 'read',
+                  child: const Text(
+                    'Find words\n&\nearn points',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 22,
+                      fontFamily: 'Jua',
+                      fontWeight: FontWeight.w400,
+                      height: 0,
+                    ),
                   ),
                 ),
               ),
-              BoggleCard(
-                title: "SoonTm",
-                action: 'play',
-                onPressed: () {
-                  router.goToPage(PageName.rules);
-                },
+              const SizedBox(width: 16), // Ajoutez un espacement entre les cartes si nécessaire
+              Expanded(
+                child: BoggleCard(
+                  title: "W.I.P",
+                  action: 'W.I.P',
+                  onPressed: () {
+                    router.goToPage(PageName.rules);
+                  },
+                ),
               ),
             ],
           ),

@@ -127,7 +127,15 @@ class _EmailLogInState extends State<EmailLogIn> {
                         },
                         child: const Text('Submit'),
                       ),
-          )
+
+          ),BtnBoggle(
+            onPressed: () {
+              router.goToPage(PageName.login);
+            },
+            btnType: BtnType.secondary,
+            btnSize: BtnSize.small,
+            text: "Go back",
+          ),
         ]));
   }
 }
