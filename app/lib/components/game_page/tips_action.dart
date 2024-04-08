@@ -17,7 +17,7 @@ class TipsAction extends StatelessWidget {
         Provider.of<GameServices>(context, listen: false);
     return IconBtnBoggle(
       onPressed: () {
-        getAllWords(gameServices.letters,
+        getAllWords2(gameServices.letters,
                 Globals.selectDictionary(gameServices.language))
             .then((value) {
           if (value.isNotEmpty) {
