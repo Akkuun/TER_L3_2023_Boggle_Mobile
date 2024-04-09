@@ -33,6 +33,7 @@ class _BoggleGrilleState extends State<BoggleGrille> {
   void initState() {
     super.initState();
     gameServices = Provider.of<GameServices>(context, listen: false);
+
     _dictionary = Globals.selectDictionary(gameServices.language);
     _dictionary.load();
   }
@@ -62,7 +63,7 @@ class _BoggleGrilleState extends State<BoggleGrille> {
 
     if (_trackTaped.isNotEmpty) {
       final last = _trackTaped.last;
-      if (isAdjacent(target, last)) {
+      if (_isAdjacent(target, last)) {
         isCurrentWordValid = _isWordValid(newWord);
         _trackTaped.add(target);
         _selectIndex(target.index);
@@ -80,7 +81,7 @@ class _BoggleGrilleState extends State<BoggleGrille> {
     });
   }
 
-  bool isAdjacent(BoggleDiceRender target, BoggleDiceRender last) {
+  bool _isAdjacent(BoggleDiceRender target, BoggleDiceRender last) {
     (int, int) targetCoords = (target.index ~/ 4, target.index % 4);
     (int, int) lastCoords = (last.index ~/ 4, last.index % 4);
     return (targetCoords.$1 - lastCoords.$1).abs() <= 1 &&
@@ -135,6 +136,10 @@ class _BoggleGrilleState extends State<BoggleGrille> {
   Widget build(BuildContext context) {
     GameServices gameServices = context.watch<GameServices>();
 
+    setState(() {
+      _dictionary = Globals.selectDictionary(gameServices.language);
+    });
+    var width = MediaQuery.of(context).size.width;
     return Center(
       child: Container(
         decoration: BoxDecoration(
@@ -150,8 +155,8 @@ class _BoggleGrilleState extends State<BoggleGrille> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           child: SizedBox(
-            height: MediaQuery.of(context).size.width,
-            width: MediaQuery.of(context).size.width - 50,
+            height: width,
+            width: width - 50,
             child: Listener(
               onPointerDown:
                   !gameServices.triggerPopUp ? _detectTapedItem : null,
@@ -176,7 +181,13 @@ class _BoggleGrilleState extends State<BoggleGrille> {
                         ? isCurrentWordValid
                             ? Theme.of(context).primaryColor
                             : Colors.red
-                        : Colors.white,
+                        : gameServices.tipsIndex != null
+                            ? gameServices.tipsIndex!.x * 4 +
+                                        gameServices.tipsIndex!.y ==
+                                    index
+                                ? Colors.green
+                                : Colors.white
+                            : Colors.white,
                   );
                 },
               ),

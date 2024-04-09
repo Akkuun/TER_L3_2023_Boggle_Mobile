@@ -3,8 +3,11 @@
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/timer.dart';
+import 'package:bouggr/utils/background_music_player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+BackgroundMusicPlayer backgroundMusicPlayer = BackgroundMusicPlayer.instance;
 
 class PauseAction extends StatelessWidget {
   const PauseAction({
@@ -18,12 +21,15 @@ class PauseAction extends StatelessWidget {
     GameServices gameServices =
         Provider.of<GameServices>(context, listen: true);
     return IconBtnBoggle(
-      onPressed: () {
+      onPressed: () async {
         if (gameServices.triggerPopUp) {
           timerServices.stop();
+          backgroundMusicPlayer.resume();
         } else {
+          backgroundMusicPlayer.pause();
           timerServices.start();
         }
+
         gameServices.toggle(!gameServices.triggerPopUp);
       },
       icon: Icon(

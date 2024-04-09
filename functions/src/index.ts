@@ -9,6 +9,7 @@ import { cert } from "firebase-admin/app";
 import { log } from "firebase-functions/logger";
 
 
+// Initialize the Firebase Admin SDK
 const serviceAccount = require("../private.json");
 
 admin.initializeApp({
@@ -81,6 +82,31 @@ export const CreateGame = onCall(async (req) => {
 
 
 export const StartGame = onCall(async (req) => {
+
+    const data = req.data as { gameId: string, userId: string };
+
+    const game = admin.database().ref(`/games/${data.gameId}`);
+    const gameData = await game.get();
+    if (!gameData.exists()) {
+        return false;
+    }
+
+    if (((await game.child("status").get()).val()) === "started") {
+        return false;
+    }
+
+    const players = await game.child("players").get();
+    if (players.exists()) {
+        const playersData = players.val();
+        if (playersData[data.userId].leader) {
+            await game.update({ status: "started" });
+            await game.push({ startedAt: Date.now() });
+
+            return true;
+        }
+    }
+
+
 
     return false;
 });

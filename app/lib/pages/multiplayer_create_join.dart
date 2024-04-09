@@ -189,6 +189,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
               setState(() {
                 error =
                     "Error joining game\n${JoinGameReturn.values[_joinCode]}";
+                FocusScope.of(context).unfocus(); //force la fermeture du clavier
               });
             }
           },

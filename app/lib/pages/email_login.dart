@@ -1,9 +1,12 @@
 import 'package:bouggr/components/btn.dart';
+import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/game.dart';
 
 class EmailLogIn extends StatefulWidget {
   const EmailLogIn({super.key});
@@ -26,7 +29,7 @@ class _EmailLogInState extends State<EmailLogIn> {
   @override
   Widget build(BuildContext context) {
     final router = Provider.of<NavigationServices>(context, listen: false);
-
+    final gameservices = Provider.of<GameServices>(context, listen: false);
     void requetFireBaseConnexion() async {
       try {
         // ignore: unused_local_variable
@@ -42,12 +45,12 @@ class _EmailLogInState extends State<EmailLogIn> {
             builder: (BuildContext context) {
               return AlertDialog(
                 //pop up
-                title: const Text("Erreur"),
-                content: const Text(
-                    "Les informations d'identification fournies sont incorrectes."),
+                title:  Text(Globals.getText(gameservices.language, 28)),
+                content:  Text(
+                    Globals.getText(gameservices.language, 29)),
                 actions: [
                   ElevatedButton(
-                    child: const Text("Ok"),
+                    child:  Text(Globals.getText(gameservices.language, 30)),
                     onPressed: () {
                       Navigator.of(context).pop(); // Ferme la a pop up
                     },
@@ -58,6 +61,7 @@ class _EmailLogInState extends State<EmailLogIn> {
         setState(() {
           //on utilise le setState pour changer l'état de la variable isLoading sinon elle ne changera pas
           isLoading = false;
+          FocusScope.of(context).unfocus();// force le clavier à se fermer
         });
       }
     }
@@ -70,19 +74,20 @@ class _EmailLogInState extends State<EmailLogIn> {
               router.goToPage(PageName.emailCreate);
             },
             btnSize: BtnSize.large,
-            text: "Créé un compte",
+            text: Globals.getText(gameservices.language, 32)
           ),
           Padding(
             padding: const EdgeInsets.all(8.0), //cela cert a définir la marge
             child: TextFormField(
               controller: email,
-              decoration: const InputDecoration(labelText: "Email"),
+              decoration:  InputDecoration(labelText: Globals.getText(gameservices.language, 34)),
+              keyboardType: TextInputType.emailAddress,
               //c'est pour être sur que l'entrer soit un email fonctionnel ou non
               validator: (value) {
                 if (value!.isEmpty) {
-                  return 'Mail';
+                  return Globals.getText(gameservices.language, 34);
                 } else if (!validationEmail.hasMatch(value)) {
-                  return 'Adress mail non valide!';
+                  return Globals.getText(gameservices.language, 38);
                 }
                 return null;
               },
@@ -93,14 +98,14 @@ class _EmailLogInState extends State<EmailLogIn> {
             child: TextFormField(
               obscureText: true,
               controller: mdp,
-              decoration: const InputDecoration(
-                labelText: "Mot de passe",
+              decoration:  InputDecoration(
+                labelText:Globals.getText(gameservices.language, 35),
               ),
               validator: (value) {
                 if (value!.isEmpty) {
-                  return 'Mot de passe';
+                  return Globals.getText(gameservices.language, 35);
                 } else if (value.length < 6) {
-                  return 'Le mot de passe doit contenir au moins 6 caractères!';
+                  return Globals.getText(gameservices.language, 36);
                 }
                 return null;
               },
@@ -123,9 +128,17 @@ class _EmailLogInState extends State<EmailLogIn> {
                             requetFireBaseConnexion();
                           }
                         },
-                        child: const Text('Submit'),
+                        child:  Text(Globals.getText(gameservices.language, 39)),
                       ),
-          )
+
+          ),BtnBoggle(
+            onPressed: () {
+              router.goToPage(PageName.login);
+            },
+            btnType: BtnType.secondary,
+            btnSize: BtnSize.small,
+            text: Globals.getText(gameservices.language, 14)
+          ),
         ]));
   }
 }

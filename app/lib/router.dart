@@ -1,5 +1,6 @@
 import 'package:bouggr/pages/email_create.dart';
 import 'package:bouggr/pages/email_login.dart';
+import 'package:bouggr/pages/end_game_detail.dart';
 import 'package:bouggr/pages/home.dart';
 import 'package:bouggr/pages/login.dart';
 import 'package:bouggr/pages/page_name.dart';
@@ -24,73 +25,54 @@ class BouggrRouter extends StatefulWidget {
   State<BouggrRouter> createState() => _BouggrRouter();
 }
 
+class JoinMulti extends StatelessWidget {
+  const JoinMulti({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        return const MultiplayerCreateJoinPage();
+      } else {
+        return const LoginPage();
+      }
+    } catch (e) {
+      return const LoginPage();
+    }
+  }
+}
+
 class _BouggrRouter extends State<BouggrRouter> {
+  final Map<PageName, Function> _pages = {
+    PageName.home: () => HomePage(),
+    PageName.game: () => const GamePage(),
+    PageName.rules: () => const RulePage(),
+    PageName.multiplayerCreateJoin: () => const JoinMulti(),
+    PageName.multiplayerGame: () => const GamePage(mode: GameType.multi),
+    PageName.login: () => const LoginPage(),
+    PageName.stats: () => const StatsPage(),
+    PageName.emailLogin: () => const EmailLogIn(),
+    PageName.googleLogin: () => const LoginPage(),
+    PageName.emailCreate: () => const EmailCreate(),
+    PageName.settings: () => const SettingsPage(),
+    PageName.startGame: () => const StartGamePage(),
+    PageName.detail: () => const EndGameDetail(),
+  };
   @override
   Widget build(BuildContext context) {
     var router = context
         .watch<NavigationServices>(); //écoute du listener de NavigationServices
-    var selectedIndex = router.index; //récupération de l'index de la page
-    Widget page;
-    switch (selectedIndex) {
-      //switch pour afficher la page correspondante
-      case PageName.home:
-        page = HomePage();
-        break;
-      case PageName.game:
-        page = const GamePage();
-        break;
-      case PageName.rules:
-        page = const RulePage();
-        break;
-      case PageName.multiplayerCreateJoin:
-        try {
-          User? user = FirebaseAuth.instance.currentUser;
-          if (user != null) {
-            page = const MultiplayerCreateJoinPage();
-          } else {
-            page = const LoginPage();
-          }
-        } catch (e) {
-          page = const LoginPage();
-        }
-      case PageName.multiplayerGame:
-        page = const GamePage(mode: GameType.multi);
-        break;
-      case PageName.login:
-        page = const LoginPage();
-        break;
-      case PageName.stats:
-        page = const StatsPage();
-        break;
-      case PageName.emailLogin:
-        page = const EmailLogIn();
-      case PageName.googleLogin:
-        page = const LoginPage();
-      case PageName.emailCreate:
-        page = const EmailCreate();
-        break;
-      case PageName.settings:
-        page = const SettingsPage();
-        break;
-      case PageName.start_game:
-        page =  StartGamePage();
-        break;
-      default:
-        throw UnimplementedError('no widget for $selectedIndex');
-    }
 
     return LayoutBuilder(
       builder: (context, constraints) {
         return Scaffold(
+          resizeToAvoidBottomInset: true, // change this to true
           body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                    height: constraints.maxHeight,
-                    child: page
-                ), //affichage de la page
-              ],
+            child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
+              child: _pages[router.index]?.call() ??
+                  HomePage(), //affichage de la page
             ),
           ),
         );

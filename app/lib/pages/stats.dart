@@ -56,6 +56,7 @@ class StatsPage extends StatelessWidget {
         ),
       ),
       Container(
+        height: MediaQuery.of(context).size.height * 0.7,
         decoration: ShapeDecoration(
           color: Colors.white,
           shape: RoundedRectangleBorder(
@@ -89,6 +90,7 @@ class StatsPage extends StatelessWidget {
                   children: [
                     for (var party in parties)
                       Stat(
+                        grid: jsonDecode(party)['grid'],
                         statName: "test",
                         statValue: jsonDecode(party)['score'].toString(),
                       )

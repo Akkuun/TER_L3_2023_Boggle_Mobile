@@ -1,6 +1,5 @@
-import 'dart:async';
-import "dart:convert";
 import 'dart:ffi';
+import 'package:ffi/ffi.dart';
 import 'dart:io';
 
 import 'generated_bindings.dart';
@@ -11,6 +10,25 @@ import 'generated_bindings.dart';
 /// They will block the Dart execution while running the native function, so
 /// only do this for native functions which are guaranteed to be short-lived.
 int sum(int a, int b) => _bindings.sum(a, b);
+
+int getChar(int str) {
+  return _bindings.GetChar(str);
+}
+
+bool isSameKey(String key1, int key2) {
+// Convert the Dart string to a C string.
+  final key1Ptr = key1.toNativeUtf8();
+  try {
+    return _bindings.IsSameKey(key1Ptr as Pointer<Char>, key2) == 1;
+  } finally {
+    // Free the C string.
+    calloc.free(key1Ptr);
+  }
+}
+
+bool endOfWorld(int value) {
+  return _bindings.EndOfWord(value) == 1;
+}
 
 const String _libName = 'native_ffi';
 
@@ -30,19 +48,3 @@ final DynamicLibrary _dylib = () {
 
 /// The bindings to the native functions in [_dylib].
 final NativeLibrary _bindings = NativeLibrary(_dylib);
-
-base class GoSlice extends Struct {
-  external Pointer<Uint8> data;
-  @Int32()
-  external int len;
-  @Int32()
-  external int cap;
-
-  List<int> toList() {
-    final list = <int>[];
-    for (var i = 0; i < len; i++) {
-      list.add(data[i]);
-    }
-    return list;
-  }
-}

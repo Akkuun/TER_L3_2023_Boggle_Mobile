@@ -14,22 +14,15 @@ class GameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-    return Stack(
-      children: [
-        Stack(
-          children: [
-            Container(
-              height: size.height,
-              width: size.width,
-              color: const Color.fromRGBO(255, 237, 172, 1),
-            ),
-            const Wave(),
-            const GameFront(),
-          ],
-        ),
-        const PopUpGameMenu(),
-      ],
+    return Container(
+      color: const Color.fromRGBO(255, 237, 172, 1),
+      child: const Stack(
+        children: [
+          Wave(),
+          GameFront(),
+          PopUpGameMenu(),
+        ],
+      ),
     );
   }
 }

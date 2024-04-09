@@ -1,14 +1,23 @@
+import 'dart:math';
+
 import 'package:bouggr/components/accelerometre.dart';
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
-import 'package:bouggr/utils/decode.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:bouggr/global.dart';
 
 import 'package:haptic_feedback/haptic_feedback.dart';
+
+import 'package:audioplayers/audioplayers.dart'; // Importez audioplayers
+
+import 'package:bouggr/utils/background_music_player.dart';
+
+final player = AudioPlayer(); // player pour le son du début
+
+BackgroundMusicPlayer backgroundMusicPlayer = BackgroundMusicPlayer.instance;
 
 class StartGamePage extends StatefulWidget {
   const StartGamePage({super.key});
@@ -19,10 +28,18 @@ class StartGamePage extends StatefulWidget {
 
 class _StartGamePageState extends State<StartGamePage> {
   late BoggleAccelerometre accelerometre;
+
   // ignore: non_constant_identifier_names
   bool PageCharger = false;
   int nbSecousse = 0;
   int secousseDemander = 10;
+  static const _textStyle = TextStyle(
+    color: Colors.black,
+    fontSize: 22,
+    fontFamily: 'Jua',
+    fontWeight: FontWeight.w400,
+    height: 0,
+  );
 
   @override
   void initState() {
@@ -30,8 +47,8 @@ class _StartGamePageState extends State<StartGamePage> {
     super.initState();
 
     accelerometre = BoggleAccelerometre(
-        fileTaille: 6,
-        seuilDetection: 20); //on donne des paramètres à l'accéléromètre
+        fileTaille: 4,
+        seuilDetection: 10); //on donne des paramètres à l'accéléromètre
     accelerometre.estSecouer.addListener(_surDetectionSecousse);
   }
 
@@ -67,11 +84,13 @@ class _StartGamePageState extends State<StartGamePage> {
     }
   }
 
-  void _startGame() {
+  void _startGame() async {
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
 
-    if (gameServices.start(LangCode.FR)) {
+    if (gameServices.start()) {
+      playSoundBegin();
+      backgroundMusicPlayer.playOST();
       router.goToPage(PageName.game);
     }
   }
@@ -89,23 +108,18 @@ class _StartGamePageState extends State<StartGamePage> {
 
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
+    var h = MediaQuery.of(context).size.height;
 
     return Center(
       child: Column(
         children: [
           accelerometre,
-          const Text(
-            "Secouer votre téléphone pour lancer une partie",
+           Text(
+            Globals.getText(gameServices.language, 15),
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 22,
-              fontFamily: 'Jua',
-              fontWeight: FontWeight.w400,
-              height: 0,
-            ),
+            style: _textStyle,
           ),
-          SizedBox(height: MediaQuery.of(context).size.height - 800),
+          SizedBox(height: h * 0.1),
           const Center(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -121,27 +135,19 @@ class _StartGamePageState extends State<StartGamePage> {
               ],
             ),
           ),
-          SizedBox(height: MediaQuery.of(context).size.height - 750),
-          const Text(
-            "ou",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 22,
-              fontFamily: 'Jua',
-              fontWeight: FontWeight.w400,
-              height: 0,
-            ),
-          ),
-          SizedBox(height: MediaQuery.of(context).size.height - 780),
+          SizedBox(height: h * 0.05),
+           Text( Globals.getText(gameServices.language, 16), textAlign: TextAlign.center, style: _textStyle),
+          SizedBox(height: h * 0.1),
           BtnBoggle(
             onPressed: () {
-              if (gameServices.start(LangCode.FR)) {
+              if (gameServices.start()) {
+                playSoundBegin();
+                backgroundMusicPlayer.playOST();
                 router.goToPage(PageName.game);
               }
             },
             btnSize: BtnSize.large,
-            text: "Commencer une partie",
+            text: Globals.getText(gameServices.language, 17)
           ),
           BtnBoggle(
             onPressed: () {
@@ -149,10 +155,19 @@ class _StartGamePageState extends State<StartGamePage> {
             },
             btnType: BtnType.secondary,
             btnSize: BtnSize.small,
-            text: "Go back",
+            text: Globals.getText(gameServices.language, 14)
           ),
         ],
       ),
     );
   }
+}
+
+void playSoundBegin() async {
+  int i = Random().nextInt(2) + 1; // Génère un nombre aléatoire entre 1 et 2
+
+  String path =
+      "audio/Melange$i.mp3"; // recupère le chemin du fichier audio associé en fonction de i (Melange 1 ou Melange 2)
+  print("sound play \n\n");
+  await player.play(AssetSource(path));
 }

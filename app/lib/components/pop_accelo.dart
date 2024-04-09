@@ -1,13 +1,9 @@
 import 'package:bouggr/components/accelerometre.dart';
 import 'package:bouggr/components/popup.dart';
-import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/game.dart';
-import 'package:bouggr/providers/navigation.dart';
-import 'package:bouggr/utils/decode.dart';
 import 'package:flutter/material.dart';
-// ignore: depend_on_referenced_packages
+
 import 'package:haptic_feedback/haptic_feedback.dart';
-import 'package:provider/provider.dart';
 
 class ReStartGamePage extends StatefulWidget {
   ReStartGamePage({super.key});
@@ -28,7 +24,7 @@ class ReStartGamePage extends StatefulWidget {
 
 class _ReStartGamePageState extends State<ReStartGamePage> {
   late BoggleAccelerometre accelerometre;
-  
+
   // ignore: non_constant_identifier_names
   bool PageCharger = false;
   int nbSecousse = 0;

@@ -1,7 +1,10 @@
-import 'package:bouggr/providers/navigation.dart';
-import 'package:bouggr/utils/game_data.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:bouggr/providers/game.dart';
+import 'package:bouggr/providers/navigation.dart';
+import 'package:bouggr/utils/decode.dart';
+import 'package:bouggr/utils/game_data.dart';
+import 'package:bouggr/utils/lang.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/bottom_buttons.dart';
@@ -9,27 +12,32 @@ import 'package:bouggr/pages/page_name.dart';
 
 import '../global.dart';
 
-/// Page des règles du jeu
-
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({super.key});
 
   @override
-  _SettingsPageState createState() => _SettingsPageState();
+  State<SettingsPage> createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  String? _selectedLanguage;
   String? _password;
   String? _confirmPassword;
   String? errorText;
   bool changeSuccess = false;
-
+  final list = <Language>[
+    const Language('fr', 'Français', LangCode.FR),
+    const Language('en', 'English', LangCode.EN),
+    const Language('es', 'Español', LangCode.SP),
+    const Language('rm', 'Roumain', LangCode.RM),
+    const Language('gl', 'Global', LangCode.GLOBAL),
+  ];
+  Language? _selectedLanguage;
   void _handleButtonClick() {
     // Do something when the button is clicked
   }
 
   Future<void> _changePassword() async {
+    final gameservices = Provider.of<GameServices>(context, listen: false);
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null && _password != null && _confirmPassword != null) {
@@ -42,17 +50,17 @@ class _SettingsPageState extends State<SettingsPage> {
             });
           } else {
             setState(() {
-              errorText = "Password must be at least 6 characters long";
+              errorText = Globals.getText(gameservices.language, 36);
             });
           }
         } else {
           setState(() {
-            errorText = "Passwords don't match";
+            errorText =  Globals.getText(gameservices.language, 40);
           });
         }
       } else {
         setState(() {
-          errorText = "User is not signed in or passwords are empty";
+          errorText =  Globals.getText(gameservices.language, 53);
         });
       }
     } catch (e) {
@@ -61,11 +69,21 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    var router = Provider.of<NavigationServices>(context,
-        listen: false);
+  void initState() {
+    super.initState();
+    _selectedLanguage = list.firstWhere(
+      (element) =>
+          element.langCode ==
+          Provider.of<GameServices>(context, listen: false).language,
+      orElse: () => list.first,
+    );
+  }
 
-    final auth = FirebaseAuth.instance;//recuperation du services de navigation
+  @override
+  Widget build(BuildContext context) {
+    var router = Provider.of<NavigationServices>(context, listen: false);
+    final gameservices = Provider.of<GameServices>(context, listen: false);
+    final auth = FirebaseAuth.instance;
 
     const textStyleJUA = TextStyle(
       color: Colors.black,
@@ -74,11 +92,12 @@ class _SettingsPageState extends State<SettingsPage> {
       fontWeight: FontWeight.w400,
       height: 0,
     );
+
     return BottomButtons(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          const Padding(
+           Padding(
             padding: EdgeInsets.all(16),
             child: SizedBox(
               width: 430,
@@ -87,11 +106,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 TextSpan(
                   children: [
                     TextSpan(
-                      text: 'Se',
+                      text: Globals.getText(gameservices.language, 42),
                       style: textStyleJUA,
                     ),
                     TextSpan(
-                      text: 'tt',
+                      text: Globals.getText(gameservices.language, 43),
                       style: TextStyle(
                         color: Color(0xFF1F87B3),
                         fontSize: 64,
@@ -101,7 +120,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                     TextSpan(
-                      text: 'ings',
+                      text: Globals.getText(gameservices.language, 44),
                       style: textStyleJUA,
                     ),
                   ],
@@ -130,27 +149,35 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Container(
                 padding: const EdgeInsets.all(20),
                 child: Column(
-                  //enfants
                   children: [
-                    DropdownButton<String>(
-                      items: <String>['French', 'Global']
-                          .map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
+                    DropdownButton<Language>(
+                      items: list
+                          .map<DropdownMenuItem<Language>>((Language value) {
+                        return DropdownMenuItem<Language>(
                           value: value,
-                          child: Text(value),
+                          child: Text(value.name),
                         );
                       }).toList(),
-                      onChanged: (String? newValue) {
+                      onChanged: (Language? newValue) async {
                         setState(() {
                           _selectedLanguage = newValue;
                         });
+
+                        if (newValue != null) {
+                          await GameDataStorage.saveLanguage(newValue.langCode);
+                          // ignore: use_build_context_synchronously
+                          Provider.of<GameServices>(context, listen: false)
+                              .setLanguage(newValue.langCode);
+                        }
                       },
-                      hint: const Text('Select an langage'),
+                      hint: Text(Globals.getText(gameservices.language, 45)),
                       value: _selectedLanguage,
                     ),
+                    const SizedBox(height: 20),
+                    Text(
+                     "${Globals.getText(gameservices.language, 46)} ${_selectedLanguage?.name ?? Globals.getText(gameservices.language, 47)}",
 
-                    Text('Langage selected : ${_selectedLanguage ?? 'None'}'),
-                    //DropDownButtonValue
+                    ),
                     const SizedBox(height: 20),
                     TextField(
                       onChanged: (value) {
@@ -158,9 +185,9 @@ class _SettingsPageState extends State<SettingsPage> {
                           _password = value;
                         });
                       },
-                      decoration: const InputDecoration(
+                      decoration:  InputDecoration(
                         border: OutlineInputBorder(),
-                        labelText: 'Password',
+                        labelText: Globals.getText(gameservices.language, 35),
                       ),
                       obscureText: true,
                       enabled: FirebaseAuth.instance.currentUser != null,
@@ -174,7 +201,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       },
                       decoration: InputDecoration(
                         border: const OutlineInputBorder(),
-                        labelText: 'Confirm Password',
+                        labelText:  Globals.getText(gameservices.language, 48),
                         errorText: errorText,
                       ),
                       obscureText: true,
@@ -184,25 +211,24 @@ class _SettingsPageState extends State<SettingsPage> {
                       onPressed: () {
                         _changePassword();
                       },
-                      child: const Text('Change Password'),
+                      child:  Text( Globals.getText(gameservices.language, 39)),
                     ),
                     if (changeSuccess)
-                      const Text(
-                        'Password changed successfully!',
+                       Text(
+                        Globals.getText(gameservices.language, 50),
                         style: TextStyle(
                           color: Colors.green,
                         ),
                       ),
                     BtnBoggle(
                       onPressed: () {
-                        //deconnexion
                         auth.signOut();
                         Globals.gameCode = "";
                         Globals.playerName = "";
                         router.goToPage(PageName.home);
                       },
                       btnSize: BtnSize.large,
-                      text: "Déconnexion",
+                      text:  Globals.getText(gameservices.language, 51),
                     ),
                     BtnBoggle(
                       onPressed: () {
@@ -210,7 +236,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       },
                       btnType: BtnType.secondary,
                       btnSize: BtnSize.small,
-                      text: "Delete cache",
+                      text:  Globals.getText(gameservices.language, 52),
                     ),
                   ],
                 ),

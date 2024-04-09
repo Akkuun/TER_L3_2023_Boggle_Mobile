@@ -1,26 +1,46 @@
-import 'dart:ffi';
-
 import 'package:bouggr/components/popup.dart';
+import 'package:bouggr/global.dart';
 import 'package:bouggr/utils/decode.dart';
+import 'package:bouggr/utils/game_data.dart';
+import 'package:bouggr/utils/get_all_word.dart';
 import 'package:flutter/material.dart';
 
-enum GameType {
-  solo,
-  multi;
-}
+enum GameType { solo, multi }
 
 class GameServices extends ChangeNotifier with TriggerPopUp {
-  LangCode _lang = LangCode.FR;
-  final List<String> _words = List<String>.empty(growable: true);
+  LangCode? _lang;
+  final List<String> _words = [];
 
   int _score = 0;
   int _strikes = 0;
   List<String>? _letters;
+  String? _longestWord;
+  Coord? _tipsIndex;
 
-  GameServices();
+  // Recuper la langue à partir des shared preferences
+  Future<void> _initLanguage() async {
+    _lang = await GameDataStorage.loadLanguage();
+    notifyListeners();
+  }
 
+  GameServices() {
+    _initLanguage();
+  }
+
+  // Récupère la langue actuelle
   LangCode get language {
-    return _lang;
+    return _lang ?? LangCode.FR;
+  }
+
+  // Definit la langue actuelle
+  void setLanguage(LangCode lang) {
+    _lang = lang;
+    GameDataStorage.saveLanguage(lang);
+    notifyListeners();
+  }
+
+  String get longestWord {
+    return _longestWord ?? '';
   }
 
   List<String> get letters {
@@ -35,13 +55,10 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
     super.toggle(true);
   }
 
-  bool start(LangCode lang) {
+  bool start() {
     super.toggle(false);
-    _lang = lang;
-
     notifyListeners();
-
-    return true;
+    return Globals.selectDictionary(language).dictionary != null;
   }
 
   int get score {
@@ -57,6 +74,12 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
   }
 
   void addWord(String word) {
+    if (_words.contains(word)) {
+      return;
+    }
+    if (word.length > (_longestWord?.length ?? 0)) {
+      _longestWord = word;
+    }
     _words.add(word);
     notifyListeners();
   }
@@ -75,7 +98,17 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
     return _strikes;
   }
 
+  Coord? get tipsIndex {
+    return _tipsIndex;
+  }
+
+  void setTipsIndex(Coord index) {
+    _tipsIndex = index;
+    notifyListeners();
+  }
+
   void reset() {
+    _tipsIndex = null;
     _score = 0;
     _words.clear();
     _strikes = 0;
