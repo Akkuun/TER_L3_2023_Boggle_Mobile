@@ -9,6 +9,7 @@ import { cert } from "firebase-admin/app";
 import { log } from "firebase-functions/logger";
 
 
+// Initialize the Firebase Admin SDK
 const serviceAccount = require("../private.json");
 
 admin.initializeApp({
