@@ -7,6 +7,7 @@ import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/end_game_service.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
+import 'package:bouggr/utils/decode.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +43,7 @@ class HomePage extends StatelessWidget {
             router.goToPage(PageName.login);
           },
           btnSize: BtnSize.large,
-          text: "Login",
+          text: Globals.getText(gameServices.language,6),
         );
       }
     } catch (e) {
@@ -61,14 +62,14 @@ class HomePage extends StatelessWidget {
                   onPressed: () {
                     router.goToPage(PageName.rules);
                   },
-                  title: "Rules",
-                  action: 'read',
-                  child: const Text(
-                    'Find words\n&\nearn points',
+                  title: Globals.getText(gameServices.language, 0),
+                  action: Globals.getText(gameServices.language, 1),
+                  child: Text(
+                    '${Globals.getText(gameServices.language, 8)}\n${Globals.getText(gameServices.language, 9)}\n${Globals.getText(gameServices.language, 10)}',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
-                      fontSize: 22,
+                      fontSize: 20,
                       fontFamily: 'Jua',
                       fontWeight: FontWeight.w400,
                       height: 0,
@@ -76,13 +77,13 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 16), // Ajoutez un espacement entre les cartes si nécessaire
+              const SizedBox(width: 0), // Ajoutez un espacement entre les cartes si nécessaire
               Expanded(
                 child: BoggleCard(
-                  title: "W.I.P",
-                  action: 'W.I.P',
+                  title: Globals.getText(gameServices.language, 3),
+                  action:  Globals.getText(gameServices.language, 2),
                   onPressed: () {
-                    router.goToPage(PageName.rules);
+                    //router.goToPage(PageName.rules);
                   },
                 ),
               ),
@@ -101,7 +102,7 @@ class HomePage extends StatelessWidget {
                   .resetSelectedWord();
             },
             btnSize: BtnSize.large,
-            text: "SinglePlayer",
+            text: Globals.getText(gameServices.language, 4),
           ),
           BtnBoggle(
             onPressed: () {
@@ -109,7 +110,7 @@ class HomePage extends StatelessWidget {
             },
             btnType: BtnType.secondary,
             btnSize: BtnSize.large,
-            text: "Multiplayer",
+            text: Globals.getText(gameServices.language, 5),
           ),
           welcomeWidget,
         ],

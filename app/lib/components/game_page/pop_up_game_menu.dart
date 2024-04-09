@@ -3,6 +3,7 @@
 import 'dart:math';
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/popup.dart';
+import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
@@ -83,8 +84,8 @@ class PopUpGameMenu extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const Text("Game Paused", style: TextStyle(fontSize: 30)),
-                  Text("${gameServices.score} points",
+                   Text(Globals.getText(gameServices.language, 24), style: TextStyle(fontSize: 30)),
+                  Text("${gameServices.score} ${Globals.getText(gameServices.language, 57)}",
                       style: const TextStyle(fontSize: 20)),
                   BtnBoggle(
                     onPressed: () {
@@ -95,7 +96,7 @@ class PopUpGameMenu extends StatelessWidget {
 
                       navigationServices.goToPage(PageName.detail);
                     },
-                    text: "detail",
+                    text: Globals.getText(gameServices.language, 27),
                   ),
                   BtnBoggle(
                     onPressed: () {
@@ -107,7 +108,7 @@ class PopUpGameMenu extends StatelessWidget {
                       gameServices.reset();
                       navigationServices.goToPage(PageName.home);
                     },
-                    text: "new game",
+                    text: Globals.getText(gameServices.language, 25),
                   ),
                   BtnBoggle(
                       onPressed: () {
@@ -118,7 +119,7 @@ class PopUpGameMenu extends StatelessWidget {
                         timerServices.resetProgress();
                         navigationServices.goToPage(PageName.home);
                       },
-                      text: "Home",
+                      text: Globals.getText(gameServices.language, 26),
                       btnType: BtnType.secondary),
                 ],
               ),

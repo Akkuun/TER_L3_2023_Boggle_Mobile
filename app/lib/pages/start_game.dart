@@ -7,6 +7,7 @@ import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:bouggr/global.dart';
 
 import 'package:haptic_feedback/haptic_feedback.dart';
 
@@ -113,8 +114,8 @@ class _StartGamePageState extends State<StartGamePage> {
       child: Column(
         children: [
           accelerometre,
-          const Text(
-            "Secouer votre téléphone pour lancer une partie",
+           Text(
+            Globals.getText(gameServices.language, 15),
             textAlign: TextAlign.center,
             style: _textStyle,
           ),
@@ -135,7 +136,7 @@ class _StartGamePageState extends State<StartGamePage> {
             ),
           ),
           SizedBox(height: h * 0.05),
-          const Text("ou", textAlign: TextAlign.center, style: _textStyle),
+           Text( Globals.getText(gameServices.language, 16), textAlign: TextAlign.center, style: _textStyle),
           SizedBox(height: h * 0.1),
           BtnBoggle(
             onPressed: () {
@@ -146,7 +147,7 @@ class _StartGamePageState extends State<StartGamePage> {
               }
             },
             btnSize: BtnSize.large,
-            text: "Commencer une partie",
+            text: Globals.getText(gameServices.language, 17)
           ),
           BtnBoggle(
             onPressed: () {
@@ -154,7 +155,7 @@ class _StartGamePageState extends State<StartGamePage> {
             },
             btnType: BtnType.secondary,
             btnSize: BtnSize.small,
-            text: "Go back",
+            text: Globals.getText(gameServices.language, 14)
           ),
         ],
       ),

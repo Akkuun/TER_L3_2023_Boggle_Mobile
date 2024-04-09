@@ -47,7 +47,7 @@ class WordsFound extends StatelessWidget {
                 if (snapshot.hasData) {
                   var words = snapshot.data;
                   if (words == null) {
-                    return const Text('No Word in grid');
+                    return Text( Globals.getText(gameServices.language, 55));
                   }
                   return Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -56,19 +56,20 @@ class WordsFound extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                              "Nombre de mots restant ${words.length - gameServices.words.length}"),
+
+                              "${ Globals.getText(gameServices.language, 21)} ${words.length - gameServices.words.length}"),
                           words.firstWhere(
                                       (element) => !gameServices.words
                                           .contains(element.txt),
                                       orElse: () => Word("", [])) !=
                                   null
                               ? Text(
-                                  "Longueur du plus long mot restant : ${words.reduce((Word value, Word element) => value.txt.length > element.txt.length ? !gameServices.words.contains(value.txt) ? value : Word("", []) : !gameServices.words.contains(element.txt) ? element : Word("", [])).txt.length}")
-                              : Text("Longueur du plus long mot restant : 0")
+                              "${Globals.getText(gameServices.language, 22)}  ${words.reduce((Word value, Word element) => value.txt.length > element.txt.length ? !gameServices.words.contains(value.txt) ? value : Word("", []) : !gameServices.words.contains(element.txt) ? element : Word("", [])).txt.length}")
+                              : Text(Globals.getText(gameServices.language, 23)),
                         ]),
                   );
                 }
-                return const Text('No data');
+                return Text( Globals.getText(gameServices.language, 54));
               },
               future: getAllWords2(gameServices.letters,
                   Globals.selectDictionary(gameServices.language)),
@@ -130,7 +131,7 @@ class _AllWordsFoundState extends State<AllWordsFound> {
             if (snapshot.hasData) {
               var words = snapshot.data;
               if (words == null) {
-                return const Text('No Word in grid');
+                return Text( Globals.getText(gameServices.language, 55));
               }
               return Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -144,7 +145,7 @@ class _AllWordsFoundState extends State<AllWordsFound> {
                 ),
               );
             }
-            return const Text('No data');
+            return Text( Globals.getText(gameServices.language, 54));
           },
         );
       })),
