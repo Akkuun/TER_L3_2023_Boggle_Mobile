@@ -7,6 +7,8 @@ import 'package:bouggr/providers/game.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../global.dart';
+
 class PopUpWordList extends StatelessWidget {
   const PopUpWordList({super.key});
 
@@ -124,6 +126,7 @@ class PopUpWordList extends StatelessWidget {
                       ),
                       child: const AllWordsFound()),
                 ),
+
                 BtnBoggle(
                     btnType: BtnType.secondary,
                     onPressed: () {
@@ -132,7 +135,8 @@ class PopUpWordList extends StatelessWidget {
                       Provider.of<EndGameService>(context, listen: false)
                           .resetSelectedWord();
                     },
-                    text: 'Fermer')
+                    text:  Globals.getText(gameServices.language, 56)),
+
               ],
             )),
       ),

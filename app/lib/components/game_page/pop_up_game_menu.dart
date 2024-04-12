@@ -3,6 +3,7 @@
 import 'dart:math';
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/popup.dart';
+import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
@@ -11,6 +12,10 @@ import 'package:bouggr/utils/game_data.dart';
 import 'package:bouggr/utils/game_result.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../utils/background_music_player.dart';
+
+BackgroundMusicPlayer backgroundMusicPlayer = BackgroundMusicPlayer.instance;
 
 class PopUpGameMenu extends StatelessWidget {
   const PopUpGameMenu({super.key});
@@ -70,6 +75,7 @@ class PopUpGameMenu extends StatelessWidget {
                       IconBtnBoggle(
                         icon: const Icon(Icons.close_rounded),
                         onPressed: () {
+                          backgroundMusicPlayer.resume();
                           gameServices.toggle(false);
                           timerServices.start();
                         },
@@ -78,20 +84,19 @@ class PopUpGameMenu extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const Text("Game Paused", style: TextStyle(fontSize: 30)),
-                  Text("${gameServices.score} points",
+                   Text(Globals.getText(gameServices.language, 24), style: TextStyle(fontSize: 30)),
+                  Text("${gameServices.score} ${Globals.getText(gameServices.language, 57)}",
                       style: const TextStyle(fontSize: 20)),
                   BtnBoggle(
                     onPressed: () {
                       gameServices.stop();
-
                       GameDataStorage.saveGameResult(gameResult);
 
                       timerServices.resetProgress();
 
                       navigationServices.goToPage(PageName.detail);
                     },
-                    text: "detail",
+                    text: Globals.getText(gameServices.language, 27),
                   ),
                   BtnBoggle(
                     onPressed: () {
@@ -103,7 +108,7 @@ class PopUpGameMenu extends StatelessWidget {
                       gameServices.reset();
                       navigationServices.goToPage(PageName.home);
                     },
-                    text: "new game",
+                    text: Globals.getText(gameServices.language, 25),
                   ),
                   BtnBoggle(
                       onPressed: () {
@@ -114,7 +119,7 @@ class PopUpGameMenu extends StatelessWidget {
                         timerServices.resetProgress();
                         navigationServices.goToPage(PageName.home);
                       },
-                      text: "Home",
+                      text: Globals.getText(gameServices.language, 26),
                       btnType: BtnType.secondary),
                 ],
               ),
