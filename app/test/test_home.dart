@@ -10,9 +10,22 @@ import 'package:provider/provider.dart';
 import 'package:bouggr/pages/home.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:mockito/mockito.dart';
+import 'package:bouggr/global.dart';
+import 'package:bouggr/utils/decode.dart';
 
 // Créez une classe Mock pour simuler le comportement du NavigationServices
-class MockGameServices extends Mock implements GameServices {}
+class MockGameServices extends Mock implements GameServices {
+  MockGameServices() {
+    when(this.language).thenReturn(LangCode.FR);
+  }
+
+  @override
+  LangCode get language => super.noSuchMethod(
+    Invocation.getter(#language),
+    returnValue: LangCode.FR,
+    returnValueForMissingStub: LangCode.FR,
+  );
+}
 
 class MockNavigationServices extends Mock implements NavigationServices {
   @override
@@ -36,8 +49,7 @@ void main() {
       final mockGameServices = MockGameServices();
       final mockNavigationServices = MockNavigationServices();
 
-      await tester.binding.setSurfaceSize(
-          Size(1080, 1920)); // Définir une taille d'écran plus grande
+      await tester.binding.setSurfaceSize(Size(1080, 1920)); // Définir une taille d'écran plus grande
 
       // Construisez notre application et déclenchez un "frame"
       await tester.pumpWidget(
