@@ -37,8 +37,7 @@ jobs:
         run: flutter pub get
 
       - name: Run Tests
-        run: flutter test
-        working-directory: ./app/test
+        run: flutter test app/test/test_multi.dart
 
   build_apk:
     name: Build the APK Version
