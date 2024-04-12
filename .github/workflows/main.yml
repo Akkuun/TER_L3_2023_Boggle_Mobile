@@ -67,13 +67,12 @@ jobs:
       - name: Build APK
         run: flutter build apk
         working-directory: app
-
         # Archive the APK as an artifact
       - name: Archive APK
         uses: actions/upload-artifact@v2
         with:
           name: release-apk
-          path: build/app/outputs/flutter-apk/
+          path: app/build/app/outputs/flutter-apk/
 
   push_to_release:
     runs-on: macos-latest
@@ -83,13 +82,13 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: release-apk
-        path: build/app/outputs/flutter-apk/
+        path: app/build/app/outputs/flutter-apk/
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          build/app/outputs/flutter-apk/*.apk
+          app/build/app/outputs/flutter-apk/*.apk
         token: ${{ secrets.PIPELINE_SECRET_BOOGLE_L3 }}
         tag_name: v1.0.${{ github.run_number }}
         release_name: Release v1.0.${{ github.run_number }}
