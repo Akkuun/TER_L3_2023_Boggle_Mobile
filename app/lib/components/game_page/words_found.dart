@@ -17,8 +17,7 @@ class WordsFound extends StatelessWidget {
   Widget build(BuildContext context) {
     final gameServices = Provider.of<GameServices>(context);
 
-    return Padding(
-        padding: const EdgeInsets.all(2.0),
+    return SizedBox(
         child: Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -32,11 +31,9 @@ class WordsFound extends StatelessWidget {
               )
             ],
           ),
-          height: MediaQuery.of(context).size.height * 0.12,
+          height: MediaQuery.of(context).size.height * 0.1,
           width: MediaQuery.of(context).size.width,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FutureBuilder(
+          child: FutureBuilder(
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
@@ -75,7 +72,7 @@ class WordsFound extends StatelessWidget {
                   Globals.selectDictionary(gameServices.language)),
             ),
           ),
-        ));
+        );
   }
 }
 
@@ -83,7 +80,6 @@ class AllWordsFound extends StatefulWidget {
   const AllWordsFound({
     super.key,
   });
-
   @override
   State<AllWordsFound> createState() {
     return _AllWordsFoundState();

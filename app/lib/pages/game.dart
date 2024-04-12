@@ -71,7 +71,7 @@ class _GamePageState extends State<GamePage> {
         gameServices.letters =
             Globals.selectDiceSet(gameServices.language).roll();
         return Globals(child: Builder(builder: (BuildContext innerContext) {
-          return const GameWidget();
+          return const GameWidget(gameType: GameType.solo);
         }));
       case GameType.multi:
         final letters = _fetchLetters();
@@ -81,7 +81,7 @@ class _GamePageState extends State<GamePage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 gameServices.letters = snapshot.data!;
-                return const GameWidget();
+                return const GameWidget(gameType: GameType.multi);
               } else {
                 return const CircularProgressIndicator();
               }
