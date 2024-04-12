@@ -1,12 +1,10 @@
 import { onCall } from "firebase-functions/v2/https";
 // The Firebase Admin SDK to access the Firebase Realtime Database.
 import * as admin from "firebase-admin";
-import { JoinGameReturn } from "./enums/JoinGameReturn";
 import { DictionariesHandler } from "./services/dictionnaries_handler";
-import { LangCode, SendWordI, recreateWord } from "./utils/lang";
-
+import { LangCode } from "./utils/lang";
+import { check_word } from "./routes/check_word";
 import { cert } from "firebase-admin/app";
-import { log } from "firebase-functions/logger";
 import { join_game } from "./routes/join_game";
 
 
@@ -110,7 +108,7 @@ export const StartGame = onCall(async (req) => {
     return false;
 });
 
-
+//allow a player to join a game
 export const JoinGame = onCall(join_game);
 
 export const LeaveGame = onCall(async (req) => {
@@ -131,40 +129,6 @@ export const LeaveGame = onCall(async (req) => {
 
 
 
-export const SendWord = onCall(async (req) => {
-    log("sendWord called with", req.data)
-    const data = req.data as SendWordI;
-    const game = admin.database().ref(`/games/${data.gameId}`);
-    const gameData = await game.get();
-    if (!gameData.exists()) {
-        return 3;
-    }
-
-    log("gameData game found")
-
-    const grid = (await game.child("letters").get()).val();
-    const word = data.word;
-    const wordStr = recreateWord(grid, word);
-
-    log("wordStr", wordStr)
-
-
-    const dico = dictionariesHandler.getDictionary((await game.child("lang").get()).val());
-
-    //const checkWord = await game.child("players/" + data.userId + "/words").orderByChild("word").equalTo(wordStr).get();
-    try {
-        if (dico.contain(wordStr)) {
-            await game.child("players/" + data.userId).push({ word: wordStr });
-
-            return 0;
-        }
-
-
-        else {
-            return 1;
-        }
-    } catch (e) {
-        log("error", e)
-        return 1;
-    }
-});
+export const SendWord = onCall(
+    check_word(dictionariesHandler)
+);
