@@ -72,7 +72,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: release-apk
-          path: app/build/app/outputs/flutter-apk/
+          path: build/app/outputs/flutter-apk/
 
   push_to_release:
     runs-on: macos-latest
@@ -82,7 +82,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: release-apk
-        path: app/build/app/outputs/flutter-apk/
+        path: build/app/outputs/flutter-apk/
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
