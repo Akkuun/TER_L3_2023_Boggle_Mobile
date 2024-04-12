@@ -67,6 +67,7 @@ jobs:
       - name: Build APK
         run: flutter build apk
         working-directory: app
+
         # Archive the APK as an artifact
       - name: Archive APK
         uses: actions/upload-artifact@v2
