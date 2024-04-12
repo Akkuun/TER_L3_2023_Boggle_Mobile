@@ -3,10 +3,11 @@ import { onCall } from "firebase-functions/v2/https";
 import * as admin from "firebase-admin";
 import { JoinGameReturn } from "./enums/JoinGameReturn";
 import { DictionariesHandler } from "./services/dictionnaries_handler";
-import { SendWordI, recreateWord } from "./utils/lang";
+import { LangCode, SendWordI, recreateWord } from "./utils/lang";
 
 import { cert } from "firebase-admin/app";
 import { log } from "firebase-functions/logger";
+import { join_game } from "./routes/join_game";
 
 
 // Initialize the Firebase Admin SDK
@@ -19,21 +20,19 @@ admin.initializeApp({
 });
 
 
-// storage
-const bucket = admin.storage().bucket();
+const DictionaryConfig = [
+    {
+        lang: LangCode.FR,
+        path: "fr_dico.json"
+    },
 
-let dico = bucket.file("fr_dico.json");
+];
+
+const dictionariesHandler = new DictionariesHandler(
+    DictionaryConfig
+);
 
 
-
-
-const dictionariesHandler = new DictionariesHandler();
-
-
-dico.download().then((data) => {
-    const dico = JSON.parse(data.toString());
-    dictionariesHandler.addDictionary(0, dico);
-});
 
 
 interface User {
@@ -112,34 +111,7 @@ export const StartGame = onCall(async (req) => {
 });
 
 
-export const JoinGame = onCall(async (req) => {
-    const data = req.data as { userId: string, gameId: string, email: string };
-    const game = admin.database().ref(`/games/${data.gameId}`);
-    const dataGame = await game.get();
-    if (!dataGame.exists()) {
-        return JoinGameReturn.GAME_NOT_FOUND;
-    }
-
-    if ((await game.child("status").get()).val() === "started") {
-        return JoinGameReturn.GAME_STARTED;
-    }
-
-    const gameData = await game.child("players").get();
-    if (gameData.exists()) {
-        const player = game.child("players/" + data.userId)
-        if ((await player.get()).exists()) {
-            return JoinGameReturn.ALREADY_IN_GAME;
-        }
-        player.set({
-            "email": data.email,
-            "score": 0,
-            "leader": false
-        });
-        return JoinGameReturn.SUCCESS;
-    } else {
-        return JoinGameReturn.GAME_NOT_FOUND;
-    }
-});
+export const JoinGame = onCall(join_game);
 
 export const LeaveGame = onCall(async (req) => {
     const data = req.data;
