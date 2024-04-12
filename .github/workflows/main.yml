@@ -38,7 +38,7 @@ jobs:
 
       - name: Run Tests
         run: flutter test
-        working-directory: ./app
+        working-directory: ./app/test
 
   build_apk:
     name: Build the APK Version
