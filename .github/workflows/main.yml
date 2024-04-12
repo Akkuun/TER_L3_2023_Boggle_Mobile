@@ -61,7 +61,7 @@ jobs:
       - name: Change to app directory
         run: cd app
       - name: Build APK
-        run: flutter build apk --target=lib/main.dart
+        run: flutter build apk
         # Archive the APK as an artifact
       - name: Archive APK
         uses: actions/upload-artifact@v2
