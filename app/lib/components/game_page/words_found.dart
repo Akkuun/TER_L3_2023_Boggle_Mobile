@@ -6,6 +6,7 @@ import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/utils/get_all_word.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class WordsFound extends StatelessWidget {
   const WordsFound({
@@ -46,7 +47,7 @@ class WordsFound extends StatelessWidget {
                 if (snapshot.hasData) {
                   var words = snapshot.data;
                   if (words == null) {
-                    return const Text('No Word in grid');
+                    return Text( Globals.getText(gameServices.language, 55));
                   }
                   return Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -55,21 +56,22 @@ class WordsFound extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                              "Nombre de mots restant ${words.length - gameServices.words.length}"),
+
+                              "${ Globals.getText(gameServices.language, 21)} ${words.length - gameServices.words.length}"),
                           words.firstWhere(
                                       (element) => !gameServices.words
                                           .contains(element.txt),
                                       orElse: () => Word("", [])) !=
                                   null
                               ? Text(
-                                  "Longueur du plus long mot restant : ${words.reduce((Word value, Word element) => value.txt.length > element.txt.length ? !gameServices.words.contains(value.txt) ? value : Word("", []) : !gameServices.words.contains(element.txt) ? element : Word("", [])).txt.length}")
-                              : Text("Longueur du plus long mot restant : 0")
+                              "${Globals.getText(gameServices.language, 22)}  ${words.reduce((Word value, Word element) => value.txt.length > element.txt.length ? !gameServices.words.contains(value.txt) ? value : Word("", []) : !gameServices.words.contains(element.txt) ? element : Word("", [])).txt.length}")
+                              : Text(Globals.getText(gameServices.language, 23)),
                         ]),
                   );
                 }
-                return const Text('No data');
+                return Text( Globals.getText(gameServices.language, 54));
               },
-              future: getAllWords(gameServices.letters,
+              future: getAllWords2(gameServices.letters,
                   Globals.selectDictionary(gameServices.language)),
             ),
           ),
@@ -117,7 +119,7 @@ class _AllWordsFoundState extends State<AllWordsFound> {
       child: SingleChildScrollView(
           child: Builder(builder: (BuildContext innerContext) {
         return FutureBuilder(
-          future: getAllWords(gameServices.letters,
+          future: getAllWords2(gameServices.letters,
               Globals.selectDictionary(gameServices.language)),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -129,7 +131,7 @@ class _AllWordsFoundState extends State<AllWordsFound> {
             if (snapshot.hasData) {
               var words = snapshot.data;
               if (words == null) {
-                return const Text('No Word in grid');
+                return Text( Globals.getText(gameServices.language, 55));
               }
               return Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -143,7 +145,7 @@ class _AllWordsFoundState extends State<AllWordsFound> {
                 ),
               );
             }
-            return const Text('No data');
+            return Text( Globals.getText(gameServices.language, 54));
           },
         );
       })),
@@ -168,8 +170,26 @@ class ClickableWord extends StatelessWidget {
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [Text(word.txt)],
+        children: [
+          Text(word.txt),
+          IconButton(
+              onPressed: () {
+                String mot = word.txt;
+                recupererDefinition(mot);
+              },
+              icon: Icon(Icons.chrome_reader_mode_rounded))
+        ],
       ),
     );
+  }
+}
+
+Future<void> recupererDefinition(String mot) async {
+  // Mettre le mot en minuscule
+  Uri url = Uri.parse(
+      'https://fr.wiktionary.org/wiki/${mot.toLowerCase()}'); // String to Uri (format adresse Web)
+  if (!await launchUrl(url)) {
+    // Si l'ouverture de l'URL échoue
+    throw Exception('Could not launch $url');
   }
 }

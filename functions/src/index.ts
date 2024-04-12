@@ -1,14 +1,14 @@
 import { onCall } from "firebase-functions/v2/https";
 // The Firebase Admin SDK to access the Firebase Realtime Database.
 import * as admin from "firebase-admin";
-import { JoinGameReturn } from "./enums/JoinGameReturn";
 import { DictionariesHandler } from "./services/dictionnaries_handler";
-import { SendWordI, recreateWord } from "./utils/lang";
-
+import { LangCode } from "./utils/lang";
+import { check_word } from "./routes/check_word";
 import { cert } from "firebase-admin/app";
-import { log } from "firebase-functions/logger";
+import { join_game } from "./routes/join_game";
 
 
+// Initialize the Firebase Admin SDK
 const serviceAccount = require("../private.json");
 
 admin.initializeApp({
@@ -18,21 +18,19 @@ admin.initializeApp({
 });
 
 
-// storage
-const bucket = admin.storage().bucket();
+const DictionaryConfig = [
+    {
+        lang: LangCode.FR,
+        path: "fr_dico.json"
+    },
 
-let dico = bucket.file("fr_dico.json");
+];
+
+const dictionariesHandler = new DictionariesHandler(
+    DictionaryConfig
+);
 
 
-
-
-const dictionariesHandler = new DictionariesHandler();
-
-
-dico.download().then((data) => {
-    const dico = JSON.parse(data.toString());
-    dictionariesHandler.addDictionary(0, dico);
-});
 
 
 interface User {
@@ -110,35 +108,8 @@ export const StartGame = onCall(async (req) => {
     return false;
 });
 
-
-export const JoinGame = onCall(async (req) => {
-    const data = req.data as { userId: string, gameId: string, email: string };
-    const game = admin.database().ref(`/games/${data.gameId}`);
-    const dataGame = await game.get();
-    if (!dataGame.exists()) {
-        return JoinGameReturn.GAME_NOT_FOUND;
-    }
-
-    if ((await game.child("status").get()).val() === "started") {
-        return JoinGameReturn.GAME_STARTED;
-    }
-
-    const gameData = await game.child("players").get();
-    if (gameData.exists()) {
-        const player = game.child("players/" + data.userId)
-        if ((await player.get()).exists()) {
-            return JoinGameReturn.ALREADY_IN_GAME;
-        }
-        player.set({
-            "email": data.email,
-            "score": 0,
-            "leader": false
-        });
-        return JoinGameReturn.SUCCESS;
-    } else {
-        return JoinGameReturn.GAME_NOT_FOUND;
-    }
-});
+//allow a player to join a game
+export const JoinGame = onCall(join_game);
 
 export const LeaveGame = onCall(async (req) => {
     const data = req.data;
@@ -158,40 +129,6 @@ export const LeaveGame = onCall(async (req) => {
 
 
 
-export const SendWord = onCall(async (req) => {
-    log("sendWord called with", req.data)
-    const data = req.data as SendWordI;
-    const game = admin.database().ref(`/games/${data.gameId}`);
-    const gameData = await game.get();
-    if (!gameData.exists()) {
-        return 3;
-    }
-
-    log("gameData game found")
-
-    const grid = (await game.child("letters").get()).val();
-    const word = data.word;
-    const wordStr = recreateWord(grid, word);
-
-    log("wordStr", wordStr)
-
-
-    const dico = dictionariesHandler.getDictionary((await game.child("lang").get()).val());
-
-    //const checkWord = await game.child("players/" + data.userId + "/words").orderByChild("word").equalTo(wordStr).get();
-    try {
-        if (dico.contain(wordStr)) {
-            await game.child("players/" + data.userId).push({ word: wordStr });
-
-            return 0;
-        }
-
-
-        else {
-            return 1;
-        }
-    } catch (e) {
-        log("error", e)
-        return 1;
-    }
-});
+export const SendWord = onCall(
+    check_word(dictionariesHandler)
+);

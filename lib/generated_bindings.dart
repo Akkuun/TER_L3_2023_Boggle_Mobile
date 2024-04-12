@@ -9885,91 +9885,45 @@ class NativeLibrary {
       _lookup<ffi.NativeFunction<ffi.Int Function(ffi.Int, ffi.Int)>>('sum');
   late final _sum = _sumPtr.asFunction<int Function(int, int)>();
 
-  int CheckWord(
-    ffi.Pointer<ffi.Char> cword,
-    ffi.Pointer<ffi.Void> cdico,
+  int GetChar(
+    int v,
   ) {
-    return _CheckWord(
-      cword,
-      cdico,
+    return _GetChar(
+      v,
     );
   }
 
-  late final _CheckWordPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Int Function(
-              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Void>)>>('CheckWord');
-  late final _CheckWord = _CheckWordPtr.asFunction<
-      int Function(ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Void>)>();
+  late final _GetCharPtr =
+      _lookup<ffi.NativeFunction<ffi.Char Function(ffi.Int)>>('GetChar');
+  late final _GetChar = _GetCharPtr.asFunction<int Function(int)>();
 
-  ffi.Pointer<ffi.Void> LoadDico(
-    ffi.Pointer<ffi.Char> cpath,
-    ffi.Pointer<ffi.Int> rerr,
+  int IsSameKey(
+    ffi.Pointer<ffi.Char> ps,
+    int key,
   ) {
-    return _LoadDico(
-      cpath,
-      rerr,
+    return _IsSameKey(
+      ps,
+      key,
     );
   }
 
-  late final _LoadDicoPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Void> Function(
-              ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Int>)>>('LoadDico');
-  late final _LoadDico = _LoadDicoPtr.asFunction<
-      ffi.Pointer<ffi.Void> Function(
-          ffi.Pointer<ffi.Char>, ffi.Pointer<ffi.Int>)>();
+  late final _IsSameKeyPtr = _lookup<
+          ffi.NativeFunction<GoUint8 Function(ffi.Pointer<ffi.Char>, ffi.Int)>>(
+      'IsSameKey');
+  late final _IsSameKey =
+      _IsSameKeyPtr.asFunction<int Function(ffi.Pointer<ffi.Char>, int)>();
 
-  void FreeDico(
-    ffi.Pointer<ffi.Void> cdico,
+  int EndOfWord(
+    int v,
   ) {
-    return _FreeDico(
-      cdico,
+    return _EndOfWord(
+      v,
     );
   }
 
-  late final _FreeDicoPtr =
-      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
-          'FreeDico');
-  late final _FreeDico =
-      _FreeDicoPtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-
-  ffi.Pointer<ffi.Pointer<ffi.Char>> GetAllWord(
-    ffi.Pointer<ffi.Char> cgrid,
-    ffi.Pointer<ffi.Void> cdico,
-    ffi.Pointer<ffi.Int> n,
-  ) {
-    return _GetAllWord(
-      cgrid,
-      cdico,
-      n,
-    );
-  }
-
-  late final _GetAllWordPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Pointer<ffi.Pointer<ffi.Char>> Function(ffi.Pointer<ffi.Char>,
-              ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Int>)>>('GetAllWord');
-  late final _GetAllWord = _GetAllWordPtr.asFunction<
-      ffi.Pointer<ffi.Pointer<ffi.Char>> Function(ffi.Pointer<ffi.Char>,
-          ffi.Pointer<ffi.Void>, ffi.Pointer<ffi.Int>)>();
-
-  void FreeCStringArray(
-    ffi.Pointer<ffi.Pointer<ffi.Char>> cstr,
-    int size,
-  ) {
-    return _FreeCStringArray(
-      cstr,
-      size,
-    );
-  }
-
-  late final _FreeCStringArrayPtr = _lookup<
-      ffi.NativeFunction<
-          ffi.Void Function(ffi.Pointer<ffi.Pointer<ffi.Char>>,
-              ffi.Int)>>('FreeCStringArray');
-  late final _FreeCStringArray = _FreeCStringArrayPtr.asFunction<
-      void Function(ffi.Pointer<ffi.Pointer<ffi.Char>>, int)>();
+  late final _EndOfWordPtr =
+      _lookup<ffi.NativeFunction<GoUint8 Function(ffi.Int)>>('EndOfWord');
+  late final _EndOfWord = _EndOfWordPtr.asFunction<int Function(int)>();
 
   void enforce_binding() {
     return _enforce_binding();
@@ -10157,6 +10111,8 @@ final class GoSlice extends ffi.Struct {
 typedef GoInt = GoInt64;
 typedef GoInt64 = ffi.LongLong;
 typedef DartGoInt64 = int;
+typedef GoUint8 = ffi.UnsignedChar;
+typedef DartGoUint8 = int;
 
 const int _VCRT_COMPILER_PREPROCESSOR = 1;
 

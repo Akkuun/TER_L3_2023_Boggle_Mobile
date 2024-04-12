@@ -1,3 +1,5 @@
+import 'package:native_ffi/native_ffi.dart';
+
 class Decoded {
   static final Map<String, LangCode> stringLang = {
     'fr': LangCode.FR,
@@ -11,7 +13,7 @@ class Decoded {
   Decoded({required this.lang});
 
   bool isEndingAWord(int code) {
-    return code & (1 << 8) > 0;
+    return endOfWorld(code);
   }
 
   bool isFrom(int code, LangCode langCode) {
@@ -19,7 +21,7 @@ class Decoded {
   }
 
   int getRunesFrom(int code) {
-    return (code & ((1 << 8) - 1));
+    return getChar(code);
   }
 
   static LangCode toLangCode(String code) {

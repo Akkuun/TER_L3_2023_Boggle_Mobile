@@ -11,67 +11,23 @@ import 'generated_bindings.dart';
 /// only do this for native functions which are guaranteed to be short-lived.
 int sum(int a, int b) => _bindings.sum(a, b);
 
-class NativeStringArray {
-  final Pointer<Pointer<Char>> ptr;
-  final int length;
+int getChar(int str) {
+  return _bindings.GetChar(str);
+}
 
-  NativeStringArray(this.ptr, this.length);
-
-  List<String> toList() {
-    final List<String> result = [];
-    for (var i = 0; i < length; i++) {
-      result.add((ptr + i).value.cast<Char>().toString());
-    }
-    return result;
-  }
-
-  String get(int index) {
-    if (index < 0 || index >= length) throw RangeError("Index out of range");
-    return (ptr + index).value.cast<Char>().toString();
-  }
-
-  free() {
-    _bindings.FreeCStringArray(ptr, length);
+bool isSameKey(String key1, int key2) {
+// Convert the Dart string to a C string.
+  final key1Ptr = key1.toNativeUtf8();
+  try {
+    return _bindings.IsSameKey(key1Ptr as Pointer<Char>, key2) == 1;
+  } finally {
+    // Free the C string.
+    calloc.free(key1Ptr);
   }
 }
 
-Pointer<Void> loadDictionary(String path) {
-  //path to Pointer<Char>
-  //convert path to pointer<Char>
-  final Pointer<Char> pathPtr = path.toNativeUtf8().cast<Char>();
-
-  var n = calloc<Int>();
-
-  final voidPtr = _bindings.LoadDico(pathPtr, n);
-
-  if (n.value < 0) {
-    throw Exception(
-        "Failed to load dictionary from $path with error code ${n.value}");
-  }
-
-  return voidPtr;
-}
-
-void freeDico(Pointer<Void> dico) => _bindings.FreeDico(dico);
-
-bool checkWord(Pointer<Void> dico, String word) {
-  //word to Pointer<Char>
-  //convert word to pointer<Char>
-  final Pointer<Char> wordPtr = word.toNativeUtf8().cast<Char>();
-
-  return _bindings.CheckWord(wordPtr, dico) == 1;
-}
-
-NativeStringArray getAllWords(String grid, Pointer<Void> dico) {
-  //grid to Pointer<Char>
-  //convert grid to pointer<Char>
-  final Pointer<Char> gridPtr = grid.toNativeUtf8().cast<Char>();
-
-  var n = calloc<Int>();
-  n.value = 0;
-  var ptr = _bindings.GetAllWord(gridPtr, dico, n);
-  print("success get all words ${n.value}");
-  return NativeStringArray(ptr, n.value);
+bool endOfWorld(int value) {
+  return _bindings.EndOfWord(value) == 1;
 }
 
 const String _libName = 'native_ffi';

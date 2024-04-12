@@ -13,10 +13,10 @@ packages:
     dependency: transitive
     description:
       name: _flutterfire_internals
-      sha256: fe4c077084ddda88f327dc1c96d16631cd68d4948644593fcbcd911c2c89e2fa
+      sha256: "4eec93681221723a686ad580c2e7d960e1017cf1a4e0a263c2573c2c6b0bf5cd"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.23"
+    version: "1.3.25"
   analyzer:
     dependency: transitive
     description:
@@ -57,14 +57,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
-  cli_util:
-    dependency: transitive
-    description:
-      name: cli_util
-      sha256: c05b7406fdabc7a49a3929d4af76bcaccbbffcbcdcf185b082e1ae07da323d19
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.1"
   clock:
     dependency: transitive
     description:
@@ -145,14 +137,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
-  ffigen:
-    dependency: "direct dev"
-    description:
-      name: ffigen
-      sha256: dead012f29db2be71ea152458f5eab600de98fbc244e01088ae6bf2616bceca7
-      url: "https://pub.dev"
-    source: hosted
-    version: "11.0.0"
   file:
     dependency: transitive
     description:
@@ -189,26 +173,26 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_database
-      sha256: cf63ff58e011729b042d34f93725f05c10d634617b049193485c687ebf714598
+      sha256: "7f6eb8b0a91e8596b53c2ca727acb8cea7cc32b776b8f9252389cce8adfbcbe0"
       url: "https://pub.dev"
     source: hosted
-    version: "10.4.7"
+    version: "10.4.9"
   firebase_database_platform_interface:
     dependency: transitive
     description:
       name: firebase_database_platform_interface
-      sha256: "6f8b7e85e9a9d0afba5c3beac87843bcdd953ab12483d5a01c92764dc9ea34a3"
+      sha256: bf28ef7212b90cdbd2a1319f14a16459ec49a29bdbc98a28d9902d18a58d5156
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.5+23"
+    version: "0.2.5+25"
   firebase_database_web:
     dependency: transitive
     description:
       name: firebase_database_web
-      sha256: "56f80bce191257bff17e98a39784bbdfc9278a681e8fed32efdaa3d9b5ba5bd0"
+      sha256: "6fdd5c77826bf73f00f672d48c1ec352a2359fff301bcf52bc661149812fc37a"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.3+23"
+    version: "0.2.3+25"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -218,10 +202,10 @@ packages:
     dependency: "direct dev"
     description:
       name: flutter_lints
-      sha256: e2a421b7e59244faef694ba7b30562e489c2b489866e505074eb005cd7060db7
+      sha256: "9e8c3858111da373efc5aa341de011d9bd23e2c5c5e0c62bccf32438e192d7b1"
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.1"
+    version: "3.0.2"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -384,14 +368,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
-  quiver:
-    dependency: transitive
-    description:
-      name: quiver
-      sha256: b1c1ac5ce6688d77f65f3375a9abb9319b3cb32486bdc7a1e0fdf004d7ba4e47
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.2.1"
   shelf:
     dependency: transitive
     description:
@@ -573,14 +549,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.2"
-  yaml_edit:
-    dependency: transitive
-    description:
-      name: yaml_edit
-      sha256: "1579d4a0340a83cf9e4d580ea51a16329c916973bffd5bd4b45e911b25d46bfd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.1"
 sdks:
   dart: ">=3.2.3 <4.0.0"
   flutter: ">=3.3.0"

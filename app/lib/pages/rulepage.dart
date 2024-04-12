@@ -4,12 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bouggr/pages/page_name.dart';
 
+import 'package:bouggr/global.dart';
+
+import '../providers/game.dart';
+
 /// Page des règles du jeu
 
 class RulePage extends StatelessWidget {
   const RulePage({super.key});
   @override
   Widget build(BuildContext context) {
+    final gameServices = Provider.of<GameServices>(context, listen: false);
     var router = Provider.of<NavigationServices>(context,
         listen: false); //recuperation du services de navigation
 
@@ -24,7 +29,8 @@ class RulePage extends StatelessWidget {
           },
           btnType: BtnType.secondary,
           btnSize: BtnSize.large,
-          text: "Go back",
+          text: Globals.getText(
+              gameServices.language, 14)
         ),
       ],
     );
@@ -43,6 +49,7 @@ class _RulesInstruction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final gameServices = Provider.of<GameServices>(context, listen: false);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
@@ -58,19 +65,19 @@ class _RulesInstruction extends StatelessWidget {
               color: const Color.fromARGB(255, 181, 224, 255),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Padding(
+            child: Padding(
               padding: EdgeInsets.all(8.0),
               child: Text.rich(
                 TextSpan(
                   children: [
                     TextSpan(
                         text:
-                            'Règles de base\n\nDans une limite de temps de 3 minutes, vous devez trouver un maximum de mots en formant des chaînes de lettres contiguës. Plus le mot est long, plus les points qu\'il vous rapporte sont importants.\nVous pouvez passer d\'une lettre à la suivante située directement à gauche, à droite, en haut, en bas, ou sur l\'une des quatre cases diagonales.\n',
+                       Globals.getText(gameServices.language, 11),
                         style: textStyleIBM),
                     TextSpan(
                         text:
-                            'Une lettre ne peut pas être utilisée plus d\'une fois pour un même mot.\nSeuls les mots de trois lettres ou plus comptent.\nLes accents ne sont pas importants. E peut être utilisé comme E, E, E, etc.\n',
-                        style: textStyleIBM),
+                        Globals.getText(gameServices.language, 12),
+                            style: textStyleIBM),
                   ],
                 ),
                 textAlign: TextAlign.justify,
@@ -86,15 +93,14 @@ class _RulesInstruction extends StatelessWidget {
               color: const Color.fromARGB(255, 181, 224, 255),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Padding(
+            child: Padding(
               padding: EdgeInsets.all(8.0),
               child: Text.rich(
                 TextSpan(
                   children: [
                     TextSpan(
                         text:
-                            '\nDécompte des points\nLe décompte des points s\'effectue après que le temps de jeu de 3 minutes se soit écoulé. Chacun des mots que vous avez trouvés vous rapporte des points, selon le barème suivant:',
-                        style: textStyleIBM),
+                        Globals.getText(gameServices.language, 13),  style: textStyleIBM),
                   ],
                 ),
                 textAlign: TextAlign.justify,

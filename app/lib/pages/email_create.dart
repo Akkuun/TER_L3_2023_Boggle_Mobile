@@ -1,9 +1,12 @@
 import 'package:bouggr/components/btn.dart';
+import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../providers/game.dart';
 
 class EmailCreate extends StatefulWidget {
   const EmailCreate({super.key});
@@ -27,7 +30,7 @@ class _EmailCreateState extends State<EmailCreate> {
   @override
   Widget build(BuildContext context) {
     final router = Provider.of<NavigationServices>(context, listen: false);
-
+    final gameservices = Provider.of<GameServices>(context, listen: false);
     Future<void> requetFireBaseCreation() async {
       if (mdp.text != mdp2.text) {
         // Les mots de passe ne correspondent pas
@@ -36,11 +39,11 @@ class _EmailCreateState extends State<EmailCreate> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: const Text("Erreur"),
-                content: const Text("Les mots de passe ne correspondent pas."),
+                title: Text(Globals.getText(gameservices.language,28)),
+                content:  Text(Globals.getText(gameservices.language,40)),
                 actions: [
                   ElevatedButton(
-                    child: const Text("Ok"),
+                    child:  Text(Globals.getText(gameservices.language,30)),
                     onPressed: () {
                       Navigator.of(context).pop(); // Ferme la boîte de dialogue
                     },
@@ -70,11 +73,11 @@ class _EmailCreateState extends State<EmailCreate> {
               builder: (BuildContext context) {
                 return AlertDialog(
                   //pop up
-                  title: const Text("Erreur"),
+                  title:  Text(Globals.getText(gameservices.language, 28)),
                   content: text,
                   actions: [
                     ElevatedButton(
-                      child: const Text("Ok"),
+                      child:  Text(Globals.getText(gameservices.language, 30)),
                       onPressed: () {
                         Navigator.of(context).pop(); // Ferme la a pop up
                       },
@@ -99,20 +102,20 @@ class _EmailCreateState extends State<EmailCreate> {
               router.goToPage(PageName.emailLogin);
             },
             btnSize: BtnSize.large,
-            text: "Déjà un compte?",
+            text:Globals.getText(gameservices.language, 41)
           ),
           Padding(
             padding: const EdgeInsets.all(8.0), //cela cert a définir la marge
             child: TextFormField(
               controller: email,
-              decoration: const InputDecoration(labelText: "Email"),
+              decoration: InputDecoration(labelText: Globals.getText(gameservices.language, 34)),
               keyboardType: TextInputType.emailAddress,
               //c'est pour être sur que l'entrer soit un email fonctionnel ou non
               validator: (value) {
                 if (value!.isEmpty) {
-                  return 'Mail';
+                  return Globals.getText(gameservices.language, 34);
                 } else if (!validationEmail.hasMatch(value)) {
-                  return 'Adress mail non valide!';
+                  return Globals.getText(gameservices.language, 38);
                 }
                 return null;
               },
@@ -123,14 +126,14 @@ class _EmailCreateState extends State<EmailCreate> {
             child: TextFormField(
               obscureText: true,
               controller: mdp,
-              decoration: const InputDecoration(
-                labelText: "Mot de passe",
+              decoration:  InputDecoration(
+                labelText: Globals.getText(gameservices.language, 35),
               ),
               validator: (value) {
                 if (value!.isEmpty) {
-                  return 'Mot de passe';
+                  return Globals.getText(gameservices.language, 35);
                 } else if (value.length < 6) {
-                  return 'Le mot de passe doit contenir au moins 6 caractères!';
+                  return Globals.getText(gameservices.language, 36);
                 }
                 return null;
               },
@@ -141,14 +144,14 @@ class _EmailCreateState extends State<EmailCreate> {
             child: TextFormField(
               obscureText: true,
               controller: mdp2,
-              decoration: const InputDecoration(
-                labelText: "Mot de passe",
+              decoration:  InputDecoration(
+                labelText: Globals.getText(gameservices.language, 35),
               ),
               validator: (value) {
                 if (value!.isEmpty) {
-                  return 'Mot de passe';
+                  return Globals.getText(gameservices.language, 35);
                 } else if (value.length < 6) {
-                  return 'Le mot de passe doit contenir au moins 6 caractères!';
+                  return Globals.getText(gameservices.language, 36);
                 }
                 return null;
               },
@@ -171,9 +174,16 @@ class _EmailCreateState extends State<EmailCreate> {
                             requetFireBaseCreation();
                           }
                         },
-                        child: const Text('Submit'),
+                        child: Text(Globals.getText(gameservices.language, 39)),
                       ),
-          )
+          ),BtnBoggle(
+            onPressed: () {
+              router.goToPage(PageName.login);
+            },
+            btnType: BtnType.secondary,
+            btnSize: BtnSize.small,
+            text: Globals.getText(gameservices.language, 14),
+          ),
         ]));
   }
 }
