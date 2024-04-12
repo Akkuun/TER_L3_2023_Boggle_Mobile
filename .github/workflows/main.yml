@@ -38,6 +38,7 @@ jobs:
 
       - name: Run Tests
         run: flutter test
+        working-directory: ./app
 
   build_apk:
     name: Build the APK Version
@@ -46,7 +47,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-     
+
 
       - name: Set up Java
         uses: actions/setup-java@v1
@@ -59,13 +60,13 @@ jobs:
           flutter-version: '3.16.7'
 
       - name: Build APK
-        run: flutter build apk 
+        run: flutter build apk
         # Archive the APK as an artifact
       - name: Archive APK
         uses: actions/upload-artifact@v2
         with:
           name: release-apk
-          path: build/app/outputs/flutter-apk/
+          path: app/build/app/outputs/flutter-apk/
 
   push_to_release:
     runs-on: macos-latest
@@ -75,7 +76,7 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: release-apk
-        path: build/app/outputs/flutter-apk/
+        path: app/build/app/outputs/flutter-apk/
 
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
@@ -88,6 +89,6 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.PIPELINE_SECRET_BOOGLE_L3 }}
 
-    
-      
-          
+
+
+
