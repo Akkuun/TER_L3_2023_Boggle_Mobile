@@ -13,6 +13,8 @@ import 'package:mockito/mockito.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/utils/decode.dart';
 
+class MockFirebaseAuth extends Mock implements FirebaseAuth {}
+
 // Créez une classe Mock pour simuler le comportement du NavigationServices
 class MockGameServices extends Mock implements GameServices {
   MockGameServices() {
@@ -21,15 +23,16 @@ class MockGameServices extends Mock implements GameServices {
 
   @override
   LangCode get language => super.noSuchMethod(
-    Invocation.getter(#language),
-    returnValue: LangCode.FR,
-    returnValueForMissingStub: LangCode.FR,
-  );
+        Invocation.getter(#language),
+        returnValue: LangCode.FR,
+        returnValueForMissingStub: LangCode.FR,
+      );
 }
 
 class MockNavigationServices extends Mock implements NavigationServices {
   @override
-  PageName get index => PageName.home; // Retourne une valeur par défaut pour index
+  PageName get index =>
+      PageName.home; // Retourne une valeur par défaut pour index
 
   @override
   void goToPage(PageName page) {
@@ -45,34 +48,10 @@ void main() {
   group('HomePage unitaire', () {
     testWidgets('Test pour vérifier si on est sur la page HomePage',
         (WidgetTester tester) async {
-      // Créez une instance de MockGameServices et MockNavigationServices
+      // Créez une instance de MockGameServices, MockNavigationServices et MockFirebaseAuth
       final mockGameServices = MockGameServices();
       final mockNavigationServices = MockNavigationServices();
-
-      await tester.binding.setSurfaceSize(Size(1080, 1920)); // Définir une taille d'écran plus grande
-
-      // Construisez notre application et déclenchez un "frame"
-      await tester.pumpWidget(
-        MultiProvider(
-          providers: [
-            ChangeNotifierProvider<GameServices>.value(value: mockGameServices),
-            ChangeNotifierProvider<NavigationServices>.value(
-                value: mockNavigationServices),
-          ],
-          child: MaterialApp(
-            home: HomePage(), // HomePage est le widget que nous testons
-          ),
-        ),
-      );
-
-      // Vérifiez que le widget HomePage est bien présent
-      expect(find.byType(HomePage), findsOneWidget);
-    });
-    /*testWidgets('Test de redirection vers la page Rules',
-        (WidgetTester tester) async {
-      // Créez une instance de MockGameServices et MockNavigationServices
-      final mockGameServices = MockGameServices();
-      final mockNavigationServices = MockNavigationServices();
+      final mockFirebaseAuth = MockFirebaseAuth();
 
       await tester.binding.setSurfaceSize(
           Size(1080, 1920)); // Définir une taille d'écran plus grande
@@ -84,6 +63,9 @@ void main() {
             ChangeNotifierProvider<GameServices>.value(value: mockGameServices),
             ChangeNotifierProvider<NavigationServices>.value(
                 value: mockNavigationServices),
+            Provider<FirebaseAuth>.value(
+                value:
+                    mockFirebaseAuth), // Ajoutez FirebaseAuth à vos providers
           ],
           child: MaterialApp(
             home: HomePage(), // HomePage est le widget que nous testons
@@ -91,17 +73,8 @@ void main() {
         ),
       );
 
-      // Trouvez le bouton Rules par le titre
-      final rulesButton = find.byWidgetPredicate(
-        (Widget widget) => widget is BoggleCard && widget.title == 'Rules',
-        description: 'BoggleCard with title Rules',
-      );
-
-      // Appuyez sur le bouton Rules
-      await tester.tap(rulesButton);
-      await tester.pumpAndSettle();
-      verify(mockNavigationServices.goToPage(PageName.rules)).called(
-          1); // Vérifiez que la méthode goToPage a été appelée exactement une fois
-    });*/
+      // Vérifiez que le widget HomePage est bien présent
+      expect(find.byType(HomePage), findsOneWidget);
+    });
   });
 }

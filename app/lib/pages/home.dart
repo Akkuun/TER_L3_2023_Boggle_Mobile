@@ -23,9 +23,10 @@ class HomePage extends StatelessWidget {
 
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
+    final firebaseAuth = Provider.of<FirebaseAuth>(context, listen: false);
     Widget welcomeWidget;
     try {
-      User? user = FirebaseAuth.instance.currentUser;
+      User? user = firebaseAuth.currentUser;
       if (user != null) {
         welcomeWidget = Text(
           "Bienvenue,\n ${user.email}",
