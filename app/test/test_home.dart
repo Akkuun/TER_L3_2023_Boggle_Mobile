@@ -4,6 +4,7 @@ import 'package:bouggr/providers/game.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -48,13 +49,12 @@ void main() {
   group('HomePage unitaire', () {
     testWidgets('Test pour vérifier si on est sur la page HomePage',
         (WidgetTester tester) async {
-      // Créez une instance de MockGameServices, MockNavigationServices et MockFirebaseAuth
+      // Créez une instance de MockGameServices, MockNavigationServices et MockFirebaseAuth (Les Providers présent sur la page HomePage)
       final mockGameServices = MockGameServices();
       final mockNavigationServices = MockNavigationServices();
       final mockFirebaseAuth = MockFirebaseAuth();
 
-      await tester.binding.setSurfaceSize(
-          Size(1080, 1920)); // Définir une taille d'écran plus grande
+      await tester.binding.setSurfaceSize(Size(1080, 1920));
 
       // Construisez notre application et déclenchez un "frame"
       await tester.pumpWidget(
@@ -76,5 +76,11 @@ void main() {
       // Vérifiez que le widget HomePage est bien présent
       expect(find.byType(HomePage), findsOneWidget);
     });
+  });
+
+  //Fermer l'application car les tests se sont effectuer
+  tearDownAll(() {
+    print('Fermeture de l\'application');
+    SystemNavigator.pop();
   });
 }

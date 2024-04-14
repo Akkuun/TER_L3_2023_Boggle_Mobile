@@ -4,6 +4,7 @@ import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -197,5 +198,11 @@ void main() {
         findsOneWidget);
     print('Bienvenue affiché');
     print('Test connection a un compte terminé');
+  });
+
+  //Fermer l'application car les tests se sont effectuer
+  tearDownAll(() {
+    print('Fermeture de l\'application');
+    SystemNavigator.pop();
   });
 }
