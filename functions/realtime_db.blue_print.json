@@ -4,16 +4,17 @@
     },
     "games" : {
         "[game_id]" : {
-            "start_time" : "@data",
+            "end_time" : "@date",
             "lang" : "@int",
             "players" : {
                 "[id]" : {
-                    "email" : "@string",
+                    "(name)" : "@string",
+                    "(email)" : "@string",
                     "score" : "@int",
                     "leader" : "@bool"
                 }
             },
-            "status" : "@string"
+            "status" : "@enumGameStatus"
         }
     }
 }

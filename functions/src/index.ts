@@ -6,6 +6,7 @@ import { LangCode } from "./utils/lang";
 import { check_word } from "./routes/check_word";
 import { cert } from "firebase-admin/app";
 import { join_game } from "./routes/join_game";
+import { start_game } from "./routes/start_game";
 
 
 // Initialize the Firebase Admin SDK
@@ -78,35 +79,8 @@ export const CreateGame = onCall(async (req) => {
 );
 
 
-export const StartGame = onCall(async (req) => {
-
-    const data = req.data as { gameId: string, userId: string };
-
-    const game = admin.database().ref(`/games/${data.gameId}`);
-    const gameData = await game.get();
-    if (!gameData.exists()) {
-        return false;
-    }
-
-    if (((await game.child("status").get()).val()) === "started") {
-        return false;
-    }
-
-    const players = await game.child("players").get();
-    if (players.exists()) {
-        const playersData = players.val();
-        if (playersData[data.userId].leader) {
-            await game.update({ status: "started" });
-            await game.push({ startedAt: Date.now() });
-
-            return true;
-        }
-    }
-
-
-
-    return false;
-});
+//allow a player to start a game
+export const StartGame = onCall(start_game);
 
 //allow a player to join a game
 export const JoinGame = onCall(join_game);
