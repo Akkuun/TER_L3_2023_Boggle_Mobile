@@ -4,6 +4,7 @@
     },
     "games" : {
         "[game_id]" : {
+            "startedAt" : "@date",
             "end_time" : "@date",
             "lang" : "@int",
             "players" : {
