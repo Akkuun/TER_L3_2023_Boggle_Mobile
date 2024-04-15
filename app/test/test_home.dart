@@ -13,6 +13,10 @@ import 'package:bouggr/providers/navigation.dart';
 import 'package:mockito/mockito.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/utils/decode.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:bouggr/components/game_page/grille.dart';
+import 'package:bouggr/utils/dico.dart';
+
 
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 
@@ -76,6 +80,12 @@ void main() {
       // Vérifiez que le widget HomePage est bien présent
       expect(find.byType(HomePage), findsOneWidget);
     });
+  });
+
+  group('BoggleGrille', () {
+    //fiare test sur une grille qui se génère
+    //faire test sur tout les mots trouver sur grille
+    //faire test sur un mot est validé ou non
   });
 
   //Fermer l'application car les tests se sont effectuer

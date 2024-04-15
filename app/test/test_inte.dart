@@ -52,6 +52,47 @@ class MockFirebaseAuth extends Mock implements FirebaseAuth {
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
+  testWidgets("Lance une partie", (WidgetTester tester) async {
+    // Créez un mock de FirebaseAuth avec un utilisateur non connecté
+    final mockFirebaseAuth = MockFirebaseAuth(signedIn: false);
+
+    // Lancez l'application avec le mock
+    await tester.pumpWidget(
+      Provider<FirebaseAuth>.value(
+        value: mockFirebaseAuth,
+        child: App(),
+      ),
+    );
+
+    // Trouvez le bouton
+    final soloButtonFinder = find.text('Partie solo');
+    print('Bouton Partie solo trouvé');
+
+    // Appuyez sur bouton
+    await tester.tap(soloButtonFinder);
+    await tester
+        .pumpAndSettle(Durations.long1); //obliger de mettre le test en premier avec une durée pour que le test fonctionne dans une battrie de test, car la page créé des éléments gourment
+    print('Bouton Partie solo appuyé');
+
+    final cpButtonFinder = find.text('Commencer une partie');
+    print('Bouton Commencer une partie trouvé');
+
+    await tester.tap(cpButtonFinder);
+    await tester.pumpAndSettle();
+    print('Bouton Commencer une partie appuyé');
+
+    // Maitenant on essayer de trouver le nombre de mots restant sur la page pour être sur d'avoir lancer une partie
+    expect(
+        find.byWidgetPredicate(
+          (Widget widget) =>
+              widget is Text &&
+              widget.data?.contains('Nombre de mots restant') == true,
+        ),
+        findsOneWidget);
+    print('Nombre de mots restant affiché');
+    print('Test Lance une partie terminé');
+  });
+
   testWidgets("naviguer vers la page Rules depuis la page d'accueil",
       (WidgetTester tester) async {
     // Créez un mock de FirebaseAuth avec un utilisateur non connecté
@@ -199,6 +240,27 @@ void main() {
     print('Bienvenue affiché');
     print('Test connection a un compte terminé');
   });
+
+  /**
+   * A faire par la personne qui c'est occuper de faire les case de la page HOme
+   */
+
+  /*testWidgets("deconnection d'un compte", (WidgetTester tester) async {
+    // Créez un mock de FirebaseAuth avec un utilisateur connecté
+    final mockFirebaseAuth = MockFirebaseAuth(
+        signedIn: true, user: MockUser(uid: '123', email: 'test@test.test'));
+    
+    // Lancez l'application avec le mock
+    await tester.pumpWidget(
+      Provider<FirebaseAuth>.value(
+        value: mockFirebaseAuth,
+        child: App(),
+      ),
+    );
+
+    // Trouvez le bouton
+
+  });*/
 
   //Fermer l'application car les tests se sont effectuer
   tearDownAll(() {
