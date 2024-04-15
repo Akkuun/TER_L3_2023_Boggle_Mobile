@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,6 +18,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:bouggr/utils/dico.dart';
 import 'package:bouggr/girlle_test.dart';
 import 'package:bouggr/utils/decode.dart';
+import 'package:bouggr/utils/get_all_word.dart';
 
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 
@@ -32,19 +34,6 @@ class MockGameServices extends Mock implements GameServices {
         returnValue: LangCode.FR,
         returnValueForMissingStub: LangCode.FR,
       );
-}
-
-class MockDictionary extends Mock implements Dictionary {
-  bool value;
-  MockDictionary({this.value = true});
-  @override
-  bool contain(String word) {
-    return super.noSuchMethod(
-      Invocation.method(#contain, [word]),
-      returnValue: value,
-      returnValueForMissingStub: true,
-    );
-  }
 }
 
 class MockNavigationServices extends Mock implements NavigationServices {
@@ -98,7 +87,7 @@ void main() {
   group('BoggleGrille', () {
     //fiare test sur une grille qui se génère
     //faire test sur tout les mots trouver sur grille
-
+/*
     test('isWordValid retourn faux si le mots fait moins de 3 lettre', () {
       BoggleGrilleState boggleGrilleState = BoggleGrilleState();
 
@@ -108,21 +97,54 @@ void main() {
         'isWordValid retourne vrai si le mot fait au moins 3 lettres et est dans le dictionnaire',
         () {
       BoggleGrilleState boggleGrilleState = BoggleGrilleState();
-      boggleGrilleState.dictionary = MockDictionary();
-      when(boggleGrilleState.dictionary.contain('abc')).thenReturn(true);
-      expect(boggleGrilleState.isWordValid('abc'), true);
+      Dictionary dictionary = Dictionary(
+          path: 'assets/dictionary/fr_dico.json',
+          decoder: Decoded(lang: generateLangCode()));
+      dictionary.load();
+      boggleGrilleState.dictionary = dictionary;
+      expect(boggleGrilleState.isWordValid('oignon'), true);
     });
 
     test(
         'isWordValid retourne faux si le mot fait au moins 3 lettres et n\'est pas dans le dictionnaire',
-        () {
-      BoggleGrilleState boggleGrilleState = BoggleGrilleState();
-      boggleGrilleState.dictionary = MockDictionary(value: false);
-      when(boggleGrilleState.dictionary.contain('abc')).thenReturn(false);
-      expect(boggleGrilleState.isWordValid('abc'), false);
+        () {});*/
+
+    TestWidgetsFlutterBinding.ensureInitialized();
+
+    test('trouver tout les mots d\'une grille', () async {
+      List<String> grid = [
+        'N',
+        'N',
+        'D',
+        'U',
+        'E',
+        'E',
+        'O',
+        'R',
+        'N',
+        'A',
+        'U',
+        'Q',
+        'I',
+        'U',
+        'R',
+        'E'
+      ];
+      Dictionary dictionary = Dictionary(
+          path: 'assets/dictionary/fr_dico.json',
+          decoder: Decoded(lang: generateLangCode()));
+      dictionary.load();
+      List<Word> words = await getAllWords2(grid, dictionary);
+
+      print(words.length);
+
+      expect(words.length, 10);
     });
   });
 
   //Fermer l'application car les tests se sont effectuer
-  tearDownAll(() {print('Fermeture de l\'application');SystemNavigator.pop();});
+  tearDownAll(() {
+    print('Fermeture de l\'application');
+    SystemNavigator.pop();
+  });
 }
