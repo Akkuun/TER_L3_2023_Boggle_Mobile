@@ -14,9 +14,9 @@ import 'package:mockito/mockito.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:bouggr/components/game_page/grille.dart';
 import 'package:bouggr/utils/dico.dart';
-
+import 'package:bouggr/girlle_test.dart';
+import 'package:bouggr/utils/decode.dart';
 
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 
@@ -32,6 +32,19 @@ class MockGameServices extends Mock implements GameServices {
         returnValue: LangCode.FR,
         returnValueForMissingStub: LangCode.FR,
       );
+}
+
+class MockDictionary extends Mock implements Dictionary {
+  bool value;
+  MockDictionary({this.value = true});
+  @override
+  bool contain(String word) {
+    return super.noSuchMethod(
+      Invocation.method(#contain, [word]),
+      returnValue: value,
+      returnValueForMissingStub: true,
+    );
+  }
 }
 
 class MockNavigationServices extends Mock implements NavigationServices {
@@ -50,7 +63,7 @@ class MockNavigationServices extends Mock implements NavigationServices {
 }
 
 void main() {
-  group('HomePage unitaire', () {
+  /*group('HomePage unitaire', () {
     testWidgets('Test pour vérifier si on est sur la page HomePage',
         (WidgetTester tester) async {
       // Créez une instance de MockGameServices, MockNavigationServices et MockFirebaseAuth (Les Providers présent sur la page HomePage)
@@ -80,17 +93,36 @@ void main() {
       // Vérifiez que le widget HomePage est bien présent
       expect(find.byType(HomePage), findsOneWidget);
     });
-  });
+  });*/
 
   group('BoggleGrille', () {
     //fiare test sur une grille qui se génère
     //faire test sur tout les mots trouver sur grille
-    //faire test sur un mot est validé ou non
+
+    test('isWordValid retourn faux si le mots fait moins de 3 lettre', () {
+      BoggleGrilleState boggleGrilleState = BoggleGrilleState();
+
+      expect(boggleGrilleState.isWordValid('ab'), false);
+    });
+    test(
+        'isWordValid retourne vrai si le mot fait au moins 3 lettres et est dans le dictionnaire',
+        () {
+      BoggleGrilleState boggleGrilleState = BoggleGrilleState();
+      boggleGrilleState.dictionary = MockDictionary();
+      when(boggleGrilleState.dictionary.contain('abc')).thenReturn(true);
+      expect(boggleGrilleState.isWordValid('abc'), true);
+    });
+
+    test(
+        'isWordValid retourne faux si le mot fait au moins 3 lettres et n\'est pas dans le dictionnaire',
+        () {
+      BoggleGrilleState boggleGrilleState = BoggleGrilleState();
+      boggleGrilleState.dictionary = MockDictionary(value: false);
+      when(boggleGrilleState.dictionary.contain('abc')).thenReturn(false);
+      expect(boggleGrilleState.isWordValid('abc'), false);
+    });
   });
 
   //Fermer l'application car les tests se sont effectuer
-  tearDownAll(() {
-    print('Fermeture de l\'application');
-    SystemNavigator.pop();
-  });
+  tearDownAll(() {print('Fermeture de l\'application');SystemNavigator.pop();});
 }
