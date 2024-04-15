@@ -38,8 +38,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _changePassword() async {
     final gameservices = Provider.of<GameServices>(context, listen: false);
+    final auth = Provider.of<FirebaseAuth>(context, listen: false);
     try {
-      User? user = FirebaseAuth.instance.currentUser;
+      User? user = auth.currentUser;
       if (user != null && _password != null && _confirmPassword != null) {
         if (_password == _confirmPassword) {
           if (_password!.length >= 6) {
@@ -83,7 +84,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     var router = Provider.of<NavigationServices>(context, listen: false);
     final gameservices = Provider.of<GameServices>(context, listen: false);
-    final auth = FirebaseAuth.instance;
+    final auth = Provider.of<FirebaseAuth>(context, listen: false);
 
     const textStyleJUA = TextStyle(
       color: Colors.black,
@@ -190,7 +191,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         labelText: Globals.getText(gameservices.language, 35),
                       ),
                       obscureText: true,
-                      enabled: FirebaseAuth.instance.currentUser != null,
+                      enabled: auth.currentUser != null,
                     ),
                     const SizedBox(height: 20),
                     TextField(
@@ -205,7 +206,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         errorText: errorText,
                       ),
                       obscureText: true,
-                      enabled: FirebaseAuth.instance.currentUser != null,
+                      enabled: auth.currentUser != null,
                     ),
                     ElevatedButton(
                       onPressed: () {

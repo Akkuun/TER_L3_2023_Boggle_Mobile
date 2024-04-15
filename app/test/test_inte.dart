@@ -47,6 +47,13 @@ class MockFirebaseAuth extends Mock implements FirebaseAuth {
 
   @override
   User? get currentUser => signedIn ? user : null;
+
+  @override
+  Future<void> signOut() {
+    signedIn = false;
+    user = null;
+    return Future.value();
+  }
 }
 
 void main() {
@@ -241,11 +248,7 @@ void main() {
     print('Test connection a un compte terminé');
   });
 
-  /**
-   * A faire par la personne qui c'est occuper de faire les case de la page HOme
-   */
-
-  /*testWidgets("deconnection d'un compte", (WidgetTester tester) async {
+  testWidgets("deconnection d'un compte", (WidgetTester tester) async {
     // Créez un mock de FirebaseAuth avec un utilisateur connecté
     final mockFirebaseAuth = MockFirebaseAuth(
         signedIn: true, user: MockUser(uid: '123', email: 'test@test.test'));
@@ -259,8 +262,28 @@ void main() {
     );
 
     // Trouvez le bouton
+    final settingButton = find.byKey(const Key('settingsButton'));
+    print('Bouton settingsButton trouvé');
 
-  });*/
+    // Appuyez sur bouton
+    await tester.tap(settingButton);
+    await tester.pumpAndSettle(Durations.extralong4);
+    print('Bouton settingsButton appuyé');
+
+    // Trouvez le bouton
+    final singoutButton =  find.text('Deconnexion');
+    print('Bouton Deconnexion trouvé');
+
+    // Appuyez sur bouton
+    await tester.tap(singoutButton);
+    await tester.pumpAndSettle();
+    print('Bouton Deconnexion appuyé');
+
+    // Maitenant que l'on est deconnecte, on doit voir le bouton Connexion
+    expect(find.text('Connexion'), findsOneWidget);
+    print('Bouton Connexion affiché');
+    print('Test deconnection d\'un compte terminé');
+  });
 
   //Fermer l'application car les tests se sont effectuer
   tearDownAll(() {
