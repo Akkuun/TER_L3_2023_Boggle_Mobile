@@ -1,0 +1,19 @@
+{
+    "player_ingame" : {
+        "[id]" : "[game_id]"
+    },
+    "games" : {
+        "[game_id]" : {
+            "start_time" : "@data",
+            "lang" : "@int",
+            "players" : {
+                "[id]" : {
+                    "email" : "@string",
+                    "score" : "@int",
+                    "leader" : "@bool"
+                }
+            },
+            "status" : "@string"
+        }
+    }
+}
