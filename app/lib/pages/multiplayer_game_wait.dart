@@ -36,6 +36,7 @@ class _GameWaitPageState extends State<GameWaitPage> {
   late GameServices gameServices;
   final Stream<QuerySnapshot> _usersStream =
     FirebaseFirestore.instance.collection('games/${Globals.gameCode}/players').snapshots();
+  late Widget playerList;
 
   @override
   void initState() {
@@ -44,7 +45,14 @@ class _GameWaitPageState extends State<GameWaitPage> {
   }
 
   void updatePlayers(data) {
-    print('Data : $data');
+    playerList = ListView.builder(
+      itemCount: data.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(data[index]['name']),
+        );
+      },
+    );
   }
 
   @override
@@ -68,13 +76,23 @@ class _GameWaitPageState extends State<GameWaitPage> {
       router.goToPage(PageName.login);
     }
 
+
+    updatePlayers(
+      [
+        {"name": user!.uid},
+      ]
+    );
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const AppTitle(),
         const Text('Waiting for other players...'),
-
+        SizedBox(
+          height: 200,
+            child: playerList
+        ),
         BtnBoggle( // Start game
           onPressed: (){
 
