@@ -1,4 +1,5 @@
 import { onCall } from "firebase-functions/v2/https";
+import { onSchedule } from "firebase-functions/v2/scheduler";
 // The Firebase Admin SDK to access the Firebase Realtime Database.
 import * as admin from "firebase-admin";
 import { DictionariesHandler } from "./services/dictionnaries_handler";
@@ -9,6 +10,9 @@ import { join_game } from "./routes/join_game";
 import { start_game } from "./routes/start_game";
 import { create_game } from "./routes/create_game";
 import { leave_game } from "./routes/leave_game";
+import { cancel_game } from "./routes/cancel_game";
+import { remove_party } from "./cron_task/remove_party";
+import { clear_player_list } from "./cron_task/clear_player_list";
 
 
 // Initialize the Firebase Admin SDK
@@ -35,10 +39,9 @@ const dictionariesHandler = new DictionariesHandler(
 
 
 
+export const CronClearGames = onSchedule("every day 05:00", remove_party);
 
-//cron task to remove games after 10 minutes
-
-
+export const CronClearPlayerList = onSchedule("every day 05:00", clear_player_list);
 
 export const CreateGame = onCall(create_game);
 
@@ -51,7 +54,7 @@ export const JoinGame = onCall(join_game);
 export const LeaveGame = onCall(leave_game);
 
 
-
+export const CancelGame = onCall(cancel_game);
 
 
 export const SendWord = onCall(
