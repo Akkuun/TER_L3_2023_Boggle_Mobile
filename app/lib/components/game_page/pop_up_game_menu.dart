@@ -10,6 +10,7 @@ import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/timer.dart';
 import 'package:bouggr/utils/game_data.dart';
 import 'package:bouggr/utils/game_result.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +19,14 @@ import '../../utils/background_music_player.dart';
 BackgroundMusicPlayer backgroundMusicPlayer = BackgroundMusicPlayer.instance;
 
 class PopUpGameMenu extends StatelessWidget {
-  const PopUpGameMenu({super.key});
+  final String uid;
+  final GameType gameType;
+
+  const PopUpGameMenu({
+    super.key,
+    required this.gameType,
+    this.uid = '',
+  });
 
   /// Count the number of words found by length in the current game
   List<int> _countWordsByLength(GameServices gameServices) {
@@ -84,7 +92,7 @@ class PopUpGameMenu extends StatelessWidget {
                       ),
                     ],
                   ),
-                   Text(Globals.getText(gameServices.language, 24), style: TextStyle(fontSize: 30)),
+                   Text(Globals.getText(gameServices.language, 24), style: const TextStyle(fontSize: 30)),
                   Text("${gameServices.score} ${Globals.getText(gameServices.language, 57)}",
                       style: const TextStyle(fontSize: 20)),
                   BtnBoggle(
@@ -117,6 +125,13 @@ class PopUpGameMenu extends StatelessWidget {
                         GameDataStorage.saveGameResult(gameResult);
                         gameServices.reset();
                         timerServices.resetProgress();
+
+                        FirebaseFunctions.instance.httpsCallable('LeaveGame').call(
+                          {
+                            "userId": uid,
+                          },
+                        );
+
                         navigationServices.goToPage(PageName.home);
                       },
                       text: Globals.getText(gameServices.language, 26),

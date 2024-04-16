@@ -16,7 +16,7 @@ class LeaderBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     final GameServices gameServices = Provider.of<GameServices>(context);
 
-    return Column(
+    return const SizedBox();/*Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -34,6 +34,6 @@ class LeaderBoard extends StatelessWidget {
             statValue: 'x${gameServices.strikes}',
           ),
         ]
-    );
+    );*/
   }
 }

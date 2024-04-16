@@ -78,11 +78,15 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
           "lang": lang.index,
           "userId": playerUID,
           "email": FirebaseAuth.instance.currentUser!.email,
+          "name" : "testname",
         },
       );
-      final response = result.data as String;
+
+      final response = result.data as Map<String, dynamic>;
+      // print response
+      print("Response : $response");
       print("Succesfully created game $response server-side");
-      Globals.gameCode = response;
+      //Globals.gameCode = response;
       Globals.currentMultiplayerGame = letters.join('');
       router.goToPage(PageName.multiplayerGame);
     } catch (e) {
