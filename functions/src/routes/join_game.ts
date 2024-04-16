@@ -1,8 +1,8 @@
 import { JoinGameReturn } from "../enums/JoinGameReturn";
 import * as admin from "firebase-admin";
 
-export const join_game = async (req: { data: { userId: string; gameId: string; email: string; }; }) => {
-    const data = req.data as { userId: string, gameId: string, email: string }; //infer the type of data
+export const join_game = async (req: { data: { userId: string; gameId: string; email: string; name: string }; }) => {
+    const data = req.data as { userId: string, gameId: string, email: string, name: string }; //infer the type of data
     const player_in_game = admin.database().ref(`/player_ingame/${data.userId}`);
 
     /**
@@ -38,6 +38,7 @@ export const join_game = async (req: { data: { userId: string; gameId: string; e
             return JoinGameReturn.ALREADY_IN_GAME;
         }
         player.set({
+            "name": data.name,
             "email": data.email,
             "score": 0,
             "leader": false
