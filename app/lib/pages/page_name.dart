@@ -3,6 +3,7 @@ enum PageName {
   game,
   multiplayerGame,
   multiplayerCreateJoin,
+  multiplayerGameWait,
   rules,
   stats,
   login,

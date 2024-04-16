@@ -55,13 +55,14 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
         "gameId": _gameUID,
         "userId": playerUID,
         "email": FirebaseAuth.instance.currentUser!.email,
+        "name" : "testnamejoin",
       },
     );
     final response = result.data;
     print("Trting to join game $_gameUID. Return code : $response");
     if (response == JoinGameReturn.success.index) {
       Globals.gameCode = _gameUID!;
-      router.goToPage(PageName.multiplayerGame);
+      router.goToPage(PageName.multiplayerGameWait);
     }
     return response;
   }
@@ -78,7 +79,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
           "lang": lang.index,
           "userId": playerUID,
           "email": FirebaseAuth.instance.currentUser!.email,
-          "name" : "testname",
+          "name" : "testnamecreate",
         },
       );
 
@@ -86,9 +87,9 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
       // print response
       print("Response : $response");
       print("Succesfully created game $response server-side");
-      //Globals.gameCode = response;
+      Globals.gameCode = response['gameId'];
       Globals.currentMultiplayerGame = letters.join('');
-      router.goToPage(PageName.multiplayerGame);
+      router.goToPage(PageName.multiplayerGameWait);
     } catch (e) {
       print("ERROR CREATING GAME ? $e");
     }
@@ -188,7 +189,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
             _joinCode = await _joinGame(user!.uid);
             print("Joining game $_gameUID with code $_joinCode");
             if (_joinCode == 0) {
-              router.goToPage(PageName.multiplayerGame);
+              router.goToPage(PageName.multiplayerGameWait);
             } else {
               setState(() {
                 error =

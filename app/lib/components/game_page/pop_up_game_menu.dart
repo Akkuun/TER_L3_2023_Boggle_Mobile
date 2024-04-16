@@ -114,6 +114,9 @@ class PopUpGameMenu extends StatelessWidget {
 
                       timerServices.resetProgress();
                       gameServices.reset();
+
+                      FirebaseFunctions.instance.httpsCallable('LeaveGame').call({"userId": uid,});
+
                       navigationServices.goToPage(PageName.home);
                     },
                     text: Globals.getText(gameServices.language, 25),
@@ -126,11 +129,7 @@ class PopUpGameMenu extends StatelessWidget {
                         gameServices.reset();
                         timerServices.resetProgress();
 
-                        FirebaseFunctions.instance.httpsCallable('LeaveGame').call(
-                          {
-                            "userId": uid,
-                          },
-                        );
+                        FirebaseFunctions.instance.httpsCallable('LeaveGame').call({"userId": uid,});
 
                         navigationServices.goToPage(PageName.home);
                       },

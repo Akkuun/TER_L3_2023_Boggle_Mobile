@@ -7,6 +7,7 @@ import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/pages/rulepage.dart';
 import 'package:bouggr/pages/multiplayer_create_join.dart';
 import 'package:bouggr/pages/game.dart';
+import 'package:bouggr/pages/multiplayer_game_wait.dart';
 import 'package:bouggr/pages/start_game.dart';
 
 import 'package:bouggr/pages/stats.dart';
@@ -50,6 +51,7 @@ class _BouggrRouter extends State<BouggrRouter> {
     PageName.rules: () => const RulePage(),
     PageName.multiplayerCreateJoin: () => const JoinMulti(),
     PageName.multiplayerGame: () => const GamePage(mode: GameType.multi),
+    PageName.multiplayerGameWait: () => const GameWaitPage(),
     PageName.login: () => const LoginPage(),
     PageName.stats: () => const StatsPage(),
     PageName.emailLogin: () => const EmailLogIn(),

@@ -147,6 +147,8 @@ class Globals extends InheritedWidget {
       60 : 'Plus long mot trouvé : ',
       61 : 'Score : ',
       62 : 'Score Max : indiponible',
+      63 : 'Démarrer la partie',
+      64 : 'Quitter la partie',
 
     },
     LangCode.EN: {
@@ -213,6 +215,8 @@ class Globals extends InheritedWidget {
       60 : 'Longest word found: ',
       61 : 'Score: ',
       62 : 'Max score: unavailable',
+      63 : 'Start the game',
+      64 : 'Leave the game',
     },
     //roumain
     LangCode.RM: {
@@ -279,6 +283,8 @@ class Globals extends InheritedWidget {
       60 : 'Cel mai lung cuvânt găsit: ',
       61 : 'Punctaj: ',
       62 : 'Punctaj maxim: indisponibil',
+      63 : 'Începe jocul',
+      64 : 'Părăsește jocul',
 
     },
     LangCode.SP: {  0: 'Reglas',
@@ -343,7 +349,10 @@ class Globals extends InheritedWidget {
       59 : 'Palabra más larga disponible: no disponible',
       60 : 'Palabra más larga encontrada: ',
       61 : 'Puntos: ',
-      62 : 'Puntuación máxima: no disponible',},
+      62 : 'Puntuación máxima: no disponible',
+      63 : 'Comenzar el juego',
+      64 : 'Dejar el juego',
+    },
 
     LangCode.GLOBAL : {
       0: 'Règles',
@@ -409,6 +418,8 @@ class Globals extends InheritedWidget {
       60 : 'Plus long mot trouvé : ',
       61 : 'Score : ',
       62 : 'Score Max : indiponible',
+      63 : 'Démarrer la partie',
+      64 : 'Quitter la partie',
     },
   };
 
