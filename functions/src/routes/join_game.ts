@@ -43,6 +43,7 @@ export const join_game = async (req: { data: { userId: string; gameId: string; e
             "score": 0,
             "leader": false
         });
+        player_in_game.set(data.gameId);
         return JoinGameReturn.SUCCESS;
     } else {
         return JoinGameReturn.GAME_NOT_FOUND;
