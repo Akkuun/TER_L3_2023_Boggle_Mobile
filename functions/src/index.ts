@@ -7,6 +7,8 @@ import { check_word } from "./routes/check_word";
 import { cert } from "firebase-admin/app";
 import { join_game } from "./routes/join_game";
 import { start_game } from "./routes/start_game";
+import { create_game } from "./routes/create_game";
+import { leave_game } from "./routes/leave_game";
 
 
 // Initialize the Firebase Admin SDK
@@ -34,50 +36,11 @@ const dictionariesHandler = new DictionariesHandler(
 
 
 
-interface User {
-    email: string,
-    score: number,
-    leader: boolean,
-}
-
-interface GameInterface {
-    status: string;
-    players: { [key: string]: User };
-    letters: string;
-    lang: number;
-}
-
-
-
 //cron task to remove games after 10 minutes
 
 
 
-export const CreateGame = onCall(async (req) => {
-    const data = req.data as { userId: string, email: string, letters: string, lang: number };
-    const game = admin.database().ref("/games").push();
-    const gameId = game.key as string;
-
-
-    const payload: GameInterface = {
-        "status": "created",
-        "letters": data.letters,
-        "players": {
-            [data.userId]: {
-                "email": data.email,
-                "score": 0,
-                "leader": true
-            }
-        },
-        "lang": data.lang,
-    };
-
-    await game.set(payload);
-
-    return gameId;
-}
-);
-
+export const CreateGame = onCall(create_game);
 
 //allow a player to start a game
 export const StartGame = onCall(start_game);
@@ -85,19 +48,7 @@ export const StartGame = onCall(start_game);
 //allow a player to join a game
 export const JoinGame = onCall(join_game);
 
-export const LeaveGame = onCall(async (req) => {
-    const data = req.data;
-    const game = admin.database().ref(`/games/${data.gameId}`);
-    const gameData: any = await game.get();
-    if (gameData.status === "started") {
-        return "Game already started";
-    } else {
-        // leave game
-        game.update({ players: gameData.players.filter((player: string) => player !== data.userId) });
-
-        return "Game left";
-    }
-});
+export const LeaveGame = onCall(leave_game);
 
 
 
