@@ -1,6 +1,10 @@
 import 'dart:collection';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+
+import '../global.dart';
 
 class RealtimeGameProvider extends ChangeNotifier {
   HashMap<String, dynamic> _players = HashMap<String, dynamic>();
@@ -8,9 +12,15 @@ class RealtimeGameProvider extends ChangeNotifier {
   void initListeners() {
     // Ici on va initialiser les listeners pour écouter les changements
     // dans la base de données
+    DatabaseReference starCountRef = FirebaseDatabase.instance.ref('games/${Globals.gameCode}/players');
+    starCountRef.onValue.listen((DatabaseEvent event) {
+      final data = event.snapshot.value;
+      print("Data : $data");
+      _updatePlayers(data);
+    });
   }
 
-  void _updatePlayers(HashMap<String, dynamic> players) {
+  void _updatePlayers(players) {
     _players = players;
     notifyListeners();
   }

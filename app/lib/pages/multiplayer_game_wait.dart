@@ -19,6 +19,7 @@ import 'package:provider/provider.dart';
 import '../components/game_page/game_widget.dart';
 import '../components/title.dart';
 import '../providers/navigation.dart';
+import '../providers/realtimegame.dart';
 
 class GameWaitPage extends StatefulWidget {
   final GameType mode;
@@ -37,44 +38,21 @@ class GameWaitPage extends StatefulWidget {
 class _GameWaitPageState extends State<GameWaitPage> {
   late GameServices gameServices;
   late final lastData;
-  final Stream<QuerySnapshot> _usersStream =
-    FirebaseFirestore.instance.collection('games/${Globals.gameCode}/players').snapshots();
-  late Widget playerList;
-  DatabaseReference starCountRef = FirebaseDatabase.instance.ref('games/${Globals.gameCode}/players');
+  late ListView playerList;
+
 
   @override
   void initState() {
     super.initState();
     gameServices = Provider.of<GameServices>(context, listen: false);
+    Provider.of<RealtimeGameProvider>(context, listen: false).initListeners();
   }
 
-  void updatePlayers(data) {
-    if (data == lastData) {
-      return;
-    } else {
-      lastData = data;
-    }
-    setState(() {
-      playerList = ListView.builder(
-        itemCount: data.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(data[index]["name"]),
-          );
-        },
-      );
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     print("Game code : ${Globals.gameCode}");
-
-    starCountRef.onValue.listen((DatabaseEvent event) {
-      final data = event.snapshot.value;
-      print("Data : $data");
-      updatePlayers(data);
-    });
+    final data = context.watch<RealtimeGameProvider>().players;
 
     User? user;
     final router = Provider.of<NavigationServices>(context, listen: false);
@@ -85,15 +63,8 @@ class _GameWaitPageState extends State<GameWaitPage> {
       }
     } catch (e) {
       router.goToPage(PageName.login);
-
     }
 
-
-    updatePlayers(
-      [
-        {"name": user!.uid},
-      ]
-    );
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -103,7 +74,14 @@ class _GameWaitPageState extends State<GameWaitPage> {
         const Text('Waiting for other players...'),
         SizedBox(
           height: 200,
-            child: playerList
+            child: ListView.builder(
+              itemCount: data.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(data[index]["name"]),
+                );
+              },
+            ),
         ),
         BtnBoggle( // Start game
           onPressed: (){
