@@ -30,16 +30,13 @@ class GameWaitPage extends StatefulWidget {
   });
 
   @override
-  State<GameWaitPage> createState() => _GameWaitPageState(
-
-  );
+  State<GameWaitPage> createState() => _GameWaitPageState();
 }
 
 class _GameWaitPageState extends State<GameWaitPage> {
   late GameServices gameServices;
   late final lastData;
   late ListView playerList;
-
 
   @override
   void initState() {
@@ -48,6 +45,11 @@ class _GameWaitPageState extends State<GameWaitPage> {
     Provider.of<RealtimeGameProvider>(context, listen: false).initListeners();
   }
 
+  @override
+  void dispose() {
+    Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +67,6 @@ class _GameWaitPageState extends State<GameWaitPage> {
       router.goToPage(PageName.login);
     }
 
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -74,26 +75,29 @@ class _GameWaitPageState extends State<GameWaitPage> {
         const Text('Waiting for other players...'),
         SizedBox(
           height: 200,
-            child: ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(data[index]["name"]),
-                );
-              },
-            ),
+          child: ListView.builder(
+            itemCount: data.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                title: Text(data[index]["name"]),
+              );
+            },
+          ),
         ),
-        BtnBoggle( // Start game
-          onPressed: (){
-
-          },
+        BtnBoggle(
+          // Start game
+          onPressed: () {},
           text: Globals.getText(gameServices.language, 63),
         ),
-        BtnBoggle( // Leave game
-          onPressed: (){
-            FirebaseFunctions.instance.httpsCallable('LeaveGame').call({"userId": user!.uid,});
+        BtnBoggle(
+          // Leave game
+          onPressed: () {
+            FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
+              "userId": user!.uid,
+            });
             router.goToPage(PageName.home);
-          }, text: Globals.getText(gameServices.language, 64),
+          },
+          text: Globals.getText(gameServices.language, 64),
           btnType: BtnType.secondary,
         ),
       ],

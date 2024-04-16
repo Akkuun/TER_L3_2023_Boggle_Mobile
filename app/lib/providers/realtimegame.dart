@@ -8,16 +8,20 @@ import '../global.dart';
 
 class RealtimeGameProvider extends ChangeNotifier {
   HashMap<String, dynamic> _players = HashMap<String, dynamic>();
-
+  late DatabaseReference dbRef;
   void initListeners() {
     // Ici on va initialiser les listeners pour écouter les changements
     // dans la base de données
-    DatabaseReference starCountRef = FirebaseDatabase.instance.ref('games/${Globals.gameCode}/players');
-    starCountRef.onValue.listen((DatabaseEvent event) {
+    dbRef = FirebaseDatabase.instance.ref('games/${Globals.gameCode}/players');
+    dbRef.onValue.listen((DatabaseEvent event) {
       final data = event.snapshot.value;
       print("Data : $data");
       _updatePlayers(data);
     });
+  }
+
+  void onDispose() {
+    dbRef.onDisconnect();
   }
 
   void _updatePlayers(players) {
