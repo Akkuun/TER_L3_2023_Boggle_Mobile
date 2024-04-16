@@ -34,14 +34,13 @@ export async function cancel_game(req: any) {
         return CancelGameReturn.GAME_NOT_FOUND;
     }
 
-    const players = await game.child("players");
+    const players = game.child("players");
     const targetPlayer = players.child(data.userId);
     if (!(await targetPlayer.get()).exists()) { // if player does not exist
         return CancelGameReturn.NOT_IN_GAME;
-    } else {
-        if (!(await targetPlayer.child("leader").get()).val()) { //if player is not a leader
-            return CancelGameReturn.NOT_LEADER;
-        }
+    } else if (!(await targetPlayer.child("leader").get()).val()) { //if player is not a leader
+        return CancelGameReturn.NOT_LEADER;
+
     }
 
     // player exist in the game & is a leader

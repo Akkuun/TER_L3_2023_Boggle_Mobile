@@ -3,7 +3,7 @@
 fire functions
 bg=red</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>330</x><y>160</y><w>100</w><h>30</h></coordinates><panel_attributes>realtime db
 fg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>330</x><y>430</y><w>100</w><h>40</h></coordinates><panel_attributes>firestore
-fg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>180</x><y>170</y><w>170</w><h>140</h></coordinates><panel_attributes>lt=&lt;&lt;-&gt;&gt;
+fg=green</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>180</x><y>170</y><w>170</w><h>140</h></coordinates><panel_attributes>lt=&lt;&lt;-&gt;&gt;
 read-only (update game)</panel_attributes><additional_attributes>10;120;150;10</additional_attributes></element><element><id>Relation</id><coordinates><x>230</x><y>290</y><w>120</w><h>50</h></coordinates><panel_attributes>lt=&lt;&lt;-
 send data
 (multi)</panel_attributes><additional_attributes>100;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>380</x><y>180</y><w>100</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;-
