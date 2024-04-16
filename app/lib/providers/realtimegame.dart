@@ -36,4 +36,8 @@ class RealtimeGameProvider extends ChangeNotifier {
       }
     }
   }
+
+  get players {
+    return _players.entries;
+  }
 }
