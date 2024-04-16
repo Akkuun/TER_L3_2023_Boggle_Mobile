@@ -33,6 +33,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.2.0"
+  archive:
+    dependency: transitive
+    description:
+      name: archive
+      sha256: "22600aa1e926be775fa5fe7e6894e7fb3df9efda8891c73f70fb3262399a432d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.4.10"
   args:
     dependency: transitive
     description:
@@ -411,6 +419,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_launcher_icons:
+    dependency: "direct dev"
+    description:
+      name: flutter_launcher_icons
+      sha256: "559c600f056e7c704bd843723c21e01b5fba47e8824bd02422165bcc02a5de1d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.3"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -482,6 +498,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  image:
+    dependency: transitive
+    description:
+      name: image
+      sha256: "8e9d133755c3e84c73288363e6343157c383a0c6c56fc51afcc5d4d7180306d6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.0"
   integration_test:
     dependency: "direct main"
     description: flutter
@@ -662,6 +686,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.1"
+  petitparser:
+    dependency: transitive
+    description:
+      name: petitparser
+      sha256: c15605cd28af66339f8eb6fbe0e541bfe2d1b72d5825efc6598f3e0a31b9ad27
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.2"
   platform:
     dependency: transitive
     description:
@@ -1091,6 +1123,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  xml:
+    dependency: transitive
+    description:
+      name: xml
+      sha256: b015a8ad1c488f66851d762d3090a21c600e479dc75e68328c52774040cf9226
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.5.0"
   yaml:
     dependency: transitive
     description:

@@ -1,0 +1,4 @@
+flutter pub run flutter_launcher_icons:main
+
+and settup in local.properties 
+flutter.minSdkVersion=8 (or an other version of the SDK)
