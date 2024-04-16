@@ -1,0 +1,3 @@
+class RealtimeGameProvider extends ChangeNotifier {
+
+}

@@ -29,14 +29,18 @@ class GameWaitPage extends StatefulWidget {
   });
 
   @override
-  State<GameWaitPage> createState() => _GameWaitPageState();
+  State<GameWaitPage> createState() => _GameWaitPageState(
+
+  );
 }
 
 class _GameWaitPageState extends State<GameWaitPage> {
   late GameServices gameServices;
+  late final lastData;
   final Stream<QuerySnapshot> _usersStream =
     FirebaseFirestore.instance.collection('games/${Globals.gameCode}/players').snapshots();
   late Widget playerList;
+  DatabaseReference starCountRef = FirebaseDatabase.instance.ref('games/${Globals.gameCode}/players');
 
   @override
   void initState() {
@@ -45,23 +49,30 @@ class _GameWaitPageState extends State<GameWaitPage> {
   }
 
   void updatePlayers(data) {
-    playerList = ListView.builder(
-      itemCount: data.length,
-      itemBuilder: (context, index) {
-        return ListTile(
-          title: Text(data[index]['name']),
-        );
-      },
-    );
+    if (data == lastData) {
+      return;
+    } else {
+      lastData = data;
+    }
+    setState(() {
+      playerList = ListView.builder(
+        itemCount: data.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(data[index]["name"]),
+          );
+        },
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     print("Game code : ${Globals.gameCode}");
-    DatabaseReference starCountRef =
-    FirebaseDatabase.instance.ref('games/${Globals.gameCode}/players');
+
     starCountRef.onValue.listen((DatabaseEvent event) {
       final data = event.snapshot.value;
+      print("Data : $data");
       updatePlayers(data);
     });
 
@@ -74,6 +85,7 @@ class _GameWaitPageState extends State<GameWaitPage> {
       }
     } catch (e) {
       router.goToPage(PageName.login);
+
     }
 
 
