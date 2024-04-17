@@ -138,7 +138,16 @@ class _GameWaitPageState extends State<GameWaitPage> {
           ),
           BtnBoggle(
             // Start game
-            onPressed: () {},
+            onPressed: () async {
+              final rep = await FirebaseFunctions.instance.httpsCallable('StartGame').call({
+                "gameId": Globals.gameCode,
+                "userId": user!.uid,
+              });
+              int? code = rep.data;
+              if (code == 0) {
+                router.goToPage(PageName.multiplayerGame);
+              }
+            },
             text: Globals.getText(gameServices.language, 63),
           ),
           Padding(
