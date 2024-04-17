@@ -42,7 +42,7 @@ class GameWidget extends StatelessWidget {
         children: [
           const Wave(),
           GameFront(gameType: gameType),
-          PopUpGameMenu(gameType: gameType, uid :user!.uid),
+          PopUpGameMenu(gameType: gameType, uid: user?.uid ?? ''),
         ],
       ),
     );

@@ -115,7 +115,9 @@ class PopUpGameMenu extends StatelessWidget {
                       timerServices.resetProgress();
                       gameServices.reset();
 
-                      FirebaseFunctions.instance.httpsCallable('LeaveGame').call({"userId": uid,});
+                      if (gameType == GameType.multi) {
+                        FirebaseFunctions.instance.httpsCallable('LeaveGame').call({"userId": uid,});
+                      }
 
                       navigationServices.goToPage(PageName.home);
                     },
@@ -129,7 +131,9 @@ class PopUpGameMenu extends StatelessWidget {
                         gameServices.reset();
                         timerServices.resetProgress();
 
-                        FirebaseFunctions.instance.httpsCallable('LeaveGame').call({"userId": uid,});
+                        if (gameType == GameType.multi) {
+                          FirebaseFunctions.instance.httpsCallable('LeaveGame').call({"userId": uid,});
+                        }
 
                         navigationServices.goToPage(PageName.home);
                       },
