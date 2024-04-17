@@ -1,5 +1,8 @@
 //globals
+import 'dart:convert';
+
 import 'package:bouggr/components/btn.dart';
+import 'package:bouggr/components/player_in_list.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
 
@@ -55,6 +58,12 @@ class _GameWaitPageState extends State<GameWaitPage> {
   Widget build(BuildContext context) {
     print("Game code : ${Globals.gameCode}");
     final data = context.watch<RealtimeGameProvider>().players;
+    TextStyle textStyle = const TextStyle(
+      color: Colors.black,
+      fontSize: 20,
+      fontFamily: 'Jua',
+      fontWeight: FontWeight.w400,
+    );
 
     User? user;
     final router = Provider.of<NavigationServices>(context, listen: false);
@@ -67,40 +76,87 @@ class _GameWaitPageState extends State<GameWaitPage> {
       router.goToPage(PageName.login);
     }
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const AppTitle(),
-        const Text('Waiting for other players...'),
-        SizedBox(
-          height: 200,
-          child: ListView.builder(
-            itemCount: data.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(data[index]["name"]),
-              );
-            },
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(top: 32),
+            child: AppTitle(),
           ),
-        ),
-        BtnBoggle(
-          // Start game
-          onPressed: () {},
-          text: Globals.getText(gameServices.language, 63),
-        ),
-        BtnBoggle(
-          // Leave game
-          onPressed: () {
-            FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
-              "userId": user!.uid,
-            });
-            router.goToPage(PageName.home);
-          },
-          text: Globals.getText(gameServices.language, 64),
-          btnType: BtnType.secondary,
-        ),
-      ],
+          Text(
+          "Joueurs présents :",
+          style: textStyle,
+          textAlign: TextAlign.center,
+          ),
+          Expanded(
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height * 0.5,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color:  Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: const Color.fromARGB(255, 89, 150, 194),
+                      width: 1,
+                    ),
+                    boxShadow: const [
+                    BoxShadow(
+                      color: Color(0x3F000000),
+                      blurRadius: 4,
+                      offset: Offset(0, 4),
+                      spreadRadius: 0,
+                    ),],
+                  ),
+                  child: ListView.builder(
+                    itemCount: data.length,
+                    itemBuilder: (context, index) {
+                      try {
+                        return PlayerInList(
+                          playerName: data.elementAt(index).value["name"],
+                          color: index % 2 == 0
+                              ? const Color.fromARGB(255, 89, 150, 194)
+                              : const Color.fromARGB(255, 181, 224, 255),
+                        );
+                      } catch (e) {
+                        return PlayerInList(
+                          playerName: "Joueur",
+                          color: index % 2 == 0
+                              ? const Color.fromARGB(255, 89, 150, 194)
+                              : const Color.fromARGB(255, 181, 224, 255),
+                        );
+                      }
+                    },
+                  ),
+                ),
+              ),
+            ),
+          ),
+          BtnBoggle(
+            // Start game
+            onPressed: () {},
+            text: Globals.getText(gameServices.language, 63),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 32),
+            child: BtnBoggle(
+              // Leave game
+              onPressed: () {
+                FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
+                  "userId": user!.uid,
+                });
+                router.goToPage(PageName.home);
+              },
+              text: Globals.getText(gameServices.language, 64),
+              btnType: BtnType.secondary,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
