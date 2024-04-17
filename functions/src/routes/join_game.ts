@@ -37,13 +37,13 @@ export const join_game = async (req: { data: { userId: string; gameId: string; e
         if ((await player.get()).exists()) {
             return JoinGameReturn.ALREADY_IN_GAME;
         }
-        player.set({
+        await player.set({
             "name": data.name,
             "email": data.email,
             "score": 0,
             "leader": false
         });
-        player_in_game.set(data.gameId);
+        await player_in_game.set(data.gameId);
         return JoinGameReturn.SUCCESS;
     } else {
         return JoinGameReturn.GAME_NOT_FOUND;
