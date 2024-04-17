@@ -5,6 +5,7 @@ import { DictionariesHandler } from '../services/dictionnaries_handler';
 import * as admin from "firebase-admin";
 
 import { SendWordI, recreateWord } from "../utils/lang";
+import { GameState } from '../enums/gameState';
 
 
 export const check_word = (dictionariesHandler: DictionariesHandler) => async (req: any) => {
@@ -18,7 +19,7 @@ export const check_word = (dictionariesHandler: DictionariesHandler) => async (r
     }
 
     //game is started && player is in game && game is not finished
-    if ((await game.child("status").get()).val() != "started") {
+    if ((await game.child("status").get()).val() != GameState.InProgress) {
         return 2;
     }
 
@@ -42,7 +43,13 @@ export const check_word = (dictionariesHandler: DictionariesHandler) => async (r
 
 
     const dico = dictionariesHandler.getDictionary((await game.child("lang").get()).val());
+    if (dictionariesHandler.dicoExists((await game.child("lang").get()).val()) == false) {
+        return 102;
+    }
 
+    if (dico == null) {
+        return 101;
+    }
     //const checkWord = await game.child("players/" + data.userId + "/words").orderByChild("word").equalTo(wordStr).get();
     try {
         if (dico.contain(wordStr)) {
@@ -53,13 +60,11 @@ export const check_word = (dictionariesHandler: DictionariesHandler) => async (r
 
             return 0;
         }
-
-
         else {
             return 1;
         }
     } catch (e) {
 
-        return 1;
+        return 100;
     }
 }

@@ -50,11 +50,11 @@ export async function start_game(req: any) {
         return StartGameReturn.ALREADY_IN_PROGRESS;
     }
 
-    await game.update({ status: GameState.InProgress });
+
     // 3min game
     const start = Date.now();
-    await game.push({ startedAt: start });
-    await game.push({ end_time: start + 180000 });
+    await game.update({ status: GameState.InProgress, startedAt: start, end_time: start + 180000 });
+
 
     return StartGameReturn.SUCCESS;
 }

@@ -1,19 +1,25 @@
+
 import { JoinGameReturn } from "../enums/JoinGameReturn";
 import * as admin from "firebase-admin";
 
 export const join_game = async (req: { data: { userId: string; gameId: string; email: string; name: string }; }) => {
     const data = req.data as { userId: string, gameId: string, email: string, name: string }; //infer the type of data
-    const player_in_game = admin.database().ref(`/player_ingame/${data.userId}`);
+    const player_in_game = admin.database().ref(`/player_ingame`);
 
     /**
      * Check if player is already in a game
      */
-    const dataPlayerInGame = await player_in_game.get();
+    const dataPlayerInGame = await player_in_game.child(data.userId).get();
     if (dataPlayerInGame.exists()) { //if player is in a game
         if (dataPlayerInGame.val() != data.gameId) {  //if game target is not same as player target
-            return JoinGameReturn.ALREADY_IN_GAME;
+            return {
+                code: JoinGameReturn.WRONG_GAME_ID, error: "Player already in game"
+            };
         } else {
-            return JoinGameReturn.SUCCESS;
+            return {
+                code: JoinGameReturn.SUCCESS, error: null
+
+            }
         }
     }
 
@@ -24,18 +30,25 @@ export const join_game = async (req: { data: { userId: string; gameId: string; e
     const game = admin.database().ref(`/games/${data.gameId}`);
     const dataGame = await game.get();
     if (!dataGame.exists()) {
-        return JoinGameReturn.GAME_NOT_FOUND;
+        return {
+            code: JoinGameReturn.GAME_NOT_FOUND, error: `${data.gameId} not found`
+        }
     }
 
     if ((await game.child("status").get()).val() === "started") {
-        return JoinGameReturn.GAME_STARTED;
+        return {
+            code: JoinGameReturn.GAME_STARTED, error: "Game already started"
+        }
     }
 
     const gameData = await game.child("players").get();
     if (gameData.exists()) {
         const player = game.child("players/" + data.userId)
         if ((await player.get()).exists()) {
-            return JoinGameReturn.ALREADY_IN_GAME;
+            return {
+                code: JoinGameReturn.ALREADY_IN_GAME, error: `${((await player.get()).child("name").val() || "Player")
+                    } already in game`
+            };
         }
         await player.set({
             "name": data.name,
@@ -43,9 +56,14 @@ export const join_game = async (req: { data: { userId: string; gameId: string; e
             "score": 0,
             "leader": false
         });
-        await player_in_game.set(data.gameId);
-        return JoinGameReturn.SUCCESS;
+        await player_in_game.child(data.userId).set(data.gameId);
+        return {
+            code: JoinGameReturn.SUCCESS, error: null
+        };
+
     } else {
-        return JoinGameReturn.GAME_NOT_FOUND;
+        return {
+            code: JoinGameReturn.GAME_NOT_FOUND, error: `${data.gameId} not found`
+        }
     }
 }

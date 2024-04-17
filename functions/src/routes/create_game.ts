@@ -32,7 +32,7 @@ export async function create_game(req: any) {
     const game = admin.database().ref("/games").push();
     const gameId = game.key as string;
 
-    await player_ingame.set(gameId);
+
     const payload: GameInterface = {
         "status": GameState.NotStarted,
         "letters": data.letters,
@@ -48,6 +48,6 @@ export async function create_game(req: any) {
     };
 
     await game.set(payload);
-
+    await player_ingame.set(gameId);
     return { gameId: gameId }
 }
