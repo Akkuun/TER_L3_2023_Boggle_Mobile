@@ -3,14 +3,18 @@ import 'package:bouggr/global.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/utils/dico.dart';
 import 'package:bouggr/utils/word_score.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 class BoggleGrille extends StatefulWidget {
+  final GameType gameType;
   const BoggleGrille({
     super.key,
+    required this.gameType,
   });
 
   @override
@@ -105,6 +109,18 @@ class _BoggleGrilleState extends State<BoggleGrille> {
     if (gameServices.isInWordList(word) || !_isWordValid(word)) {
       gameServices.addStrike();
       return false;
+    }
+    if (widget.gameType == GameType.multi) {
+      User? user = FirebaseAuth.instance.currentUser;
+      print("Sending word ${indexes.map((e) => {"x": e.$1, "y": e.$2}).toList()} to server");
+      FirebaseFunctions.instance.httpsCallable('SendWord').call({
+        "gameId": Globals.gameCode,
+        "userId": user!.uid,
+        "word": indexes.map((e) => {"x": e.$1, "y": e.$2}).toList(),
+      }).then((value) {
+        print("Word sent");
+        print("Value: ${value.data}");
+      });
     }
     gameServices.addScore(wordScore(word));
     gameServices.addWord(word);

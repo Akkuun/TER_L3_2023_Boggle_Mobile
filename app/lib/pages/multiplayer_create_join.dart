@@ -87,6 +87,17 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
       // print response
       print("Response : $response");
       print("Succesfully created game $response server-side");
+      if (response["error"] == "User is already in a game") {
+        print("${response["error"]}. Trying to leave it and create a new one");
+        FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
+          "userId": playerUID,
+        }).then((value) => _createGame(playerUID));
+        return;
+      }
+      if (response["error"] != null) {
+        print("Error creating game : ${response["error"]}");
+        return;
+      }
       Globals.gameCode = response['gameId'];
       Globals.currentMultiplayerGame = letters.join('');
       router.goToPage(PageName.multiplayerGameWait);

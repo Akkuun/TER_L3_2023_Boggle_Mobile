@@ -3,6 +3,8 @@ import 'package:bouggr/global.dart';
 
 //services
 import 'package:bouggr/providers/game.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
@@ -27,6 +29,15 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> {
   late GameServices gameServices;
+
+  @override
+  void dispose() {
+    if (widget.mode == GameType.multi) {
+      User? user = FirebaseAuth.instance.currentUser;
+      FirebaseFunctions.instance.httpsCallable('LeaveGame').call({"userId": user!.uid,});
+    }
+    super.dispose();
+  }
 
   @override
   void initState() {
