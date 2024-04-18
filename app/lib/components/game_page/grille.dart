@@ -116,7 +116,7 @@ class _BoggleGrilleState extends State<BoggleGrille> {
       FirebaseFunctions.instance.httpsCallable('SendWord').call({
         "gameId": Globals.gameCode,
         "userId": user!.uid,
-        "word": indexes.map((e) => {"x": e.$1, "y": e.$2}).toList(),
+        "word": indexes.map((e) => {"x": e.$2, "y": e.$1}).toList(), // Coordonnées inversées pour le serveur
       }).then((value) {
         print("Word sent");
         print("Value: ${value.data}");
