@@ -265,6 +265,7 @@ describe('Test CheckWord', () => {
                         const pg2 = await player_in_game2.get()
                         expect(pg2.exists()).toBe(true);
                         pg2.ref.remove();
+                        pg.ref.remove();
 
 
                     }).finally(() => {
