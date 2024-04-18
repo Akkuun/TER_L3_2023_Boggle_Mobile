@@ -157,55 +157,58 @@ class _BoggleGrilleState extends State<BoggleGrille> {
     });
     var width = MediaQuery.of(context).size.width;
     return Center(
-      child: Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Theme.of(context).secondaryHeaderColor,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.25),
-                blurRadius: 4,
-                offset: const Offset(4, 4),
-              ),
-            ]),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-          child: SizedBox(
-            height: width,
-            width: width - 50,
-            child: Listener(
-              onPointerDown:
-                  !gameServices.triggerPopUp ? _detectTapedItem : null,
-              onPointerMove:
-                  !gameServices.triggerPopUp ? _detectTapedItem : null,
-              onPointerUp: _sendWordToGameLogicAndClear,
-              child: GridView.builder(
-                key: key,
-                itemCount: 16,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  childAspectRatio: 1.0,
-                  crossAxisSpacing: 16.0,
-                  mainAxisSpacing: 16.0,
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Theme.of(context).secondaryHeaderColor,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.25),
+                  blurRadius: 4,
+                  offset: const Offset(4, 4),
                 ),
-                itemBuilder: (context, index) {
-                  return BoggleDice(
-                    index: index,
-                    letter: gameServices.letters[index],
-                    color: selectedIndexes.contains(index)
-                        ? isCurrentWordValid
-                            ? Theme.of(context).primaryColor
-                            : Colors.red
-                        : gameServices.tipsIndex != null
-                            ? gameServices.tipsIndex!.x * 4 +
-                                        gameServices.tipsIndex!.y ==
-                                    index
-                                ? Colors.green
-                                : Colors.white
-                            : Colors.white,
-                  );
-                },
+              ]),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            child: SizedBox(
+              height: width,
+              width: width - 50,
+              child: Listener(
+                onPointerDown:
+                    !gameServices.triggerPopUp ? _detectTapedItem : null,
+                onPointerMove:
+                    !gameServices.triggerPopUp ? _detectTapedItem : null,
+                onPointerUp: _sendWordToGameLogicAndClear,
+                child: GridView.builder(
+                  key: key,
+                  itemCount: 16,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    childAspectRatio: 1.0,
+                    crossAxisSpacing: 16.0,
+                    mainAxisSpacing: 16.0,
+                  ),
+                  itemBuilder: (context, index) {
+                    return BoggleDice(
+                      index: index,
+                      letter: gameServices.letters[index],
+                      color: selectedIndexes.contains(index)
+                          ? isCurrentWordValid
+                              ? Theme.of(context).primaryColor
+                              : Colors.red
+                          : gameServices.tipsIndex != null
+                              ? gameServices.tipsIndex!.x * 4 +
+                                          gameServices.tipsIndex!.y ==
+                                      index
+                                  ? Colors.green
+                                  : Colors.white
+                              : Colors.white,
+                    );
+                  },
+                ),
               ),
             ),
           ),

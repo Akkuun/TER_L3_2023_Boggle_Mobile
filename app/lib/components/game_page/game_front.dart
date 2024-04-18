@@ -25,7 +25,7 @@ class GameFront extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const AppTitle(fontSize: 56),
+            AppTitle(fontSize: gameType == GameType.multi ? 46 : 56),
             if (gameType == GameType.multi) const LeaderBoard(),
             ScoreBoard(gameType: gameType),
             BoggleGrille(gameType: gameType),
