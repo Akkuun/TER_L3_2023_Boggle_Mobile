@@ -1,6 +1,7 @@
 
 import { JoinGameReturn } from "../enums/JoinGameReturn";
 import * as admin from "firebase-admin";
+import { GameState } from "../enums/gameState";
 
 export const join_game = async (req: { data: { userId: string; gameId: string; email: string; name: string }; }) => {
     const data = req.data as { userId: string, gameId: string, email: string, name: string }; //infer the type of data
@@ -35,7 +36,7 @@ export const join_game = async (req: { data: { userId: string; gameId: string; e
         }
     }
 
-    if ((await game.child("status").get()).val() === "started") {
+    if ((await game.child("status").get()).val() === GameState.InProgress) {
         return {
             code: JoinGameReturn.GAME_STARTED, error: "Game already started"
         }
