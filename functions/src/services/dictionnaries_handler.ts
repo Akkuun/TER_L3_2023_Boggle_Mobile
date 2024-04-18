@@ -24,7 +24,7 @@ export class DictionariesHandler {
 
     private dictionaries: Map<number, Dictionary> = new Map<number, Dictionary>();
 
-    private addDictionary(lang: number, dictionary: Dictionary) {
+    public addDictionary(lang: number, dictionary: Dictionary) {
         this.dictionaries.set(lang, dictionary);
     }
 

@@ -25,17 +25,15 @@ admin.initializeApp({
 });
 
 
-const DictionaryConfig = [
-    {
+const DictionaryConfig = {
+    [LangCode.FR]: {
         lang: LangCode.FR,
         path: "fr_dico.json"
     },
 
-];
+};
 
-const dictionariesHandler = new DictionariesHandler(
-    DictionaryConfig
-);
+const dictionariesHandler = { ptr: new DictionariesHandler() }
 
 
 
@@ -58,5 +56,5 @@ export const CancelGame = onCall(cancel_game);
 
 
 export const SendWord = onCall(
-    check_word(dictionariesHandler)
+    check_word(dictionariesHandler, DictionaryConfig)
 );

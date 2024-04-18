@@ -6,9 +6,10 @@ import * as admin from "firebase-admin";
 
 import { SendWordI, recreateWord } from "../utils/lang";
 import { GameState } from '../enums/gameState';
+import { Dictionary } from '../entity/dictionnary';
 
 
-export const check_word = (dictionariesHandler: DictionariesHandler) => async (req: any) => {
+export const check_word = (dictionariesHandler: { ptr: DictionariesHandler }, DictionaryConfig: any) => async (req: any) => {
 
 
     const data = req.data as SendWordI;
@@ -42,11 +43,17 @@ export const check_word = (dictionariesHandler: DictionariesHandler) => async (r
     const wordStr = recreateWord(grid, word);
 
 
-    const dico = dictionariesHandler.getDictionary((await game.child("lang").get()).val());
-    if (dictionariesHandler.dicoExists((await game.child("lang").get()).val()) == false) {
-        return 102;
-    }
 
+    const gameLang = (await game.child("lang").get()).val();
+    if (!dictionariesHandler.ptr.dicoExists(gameLang)) {
+        const file = await admin.storage().bucket().file(
+            DictionaryConfig[gameLang].path).download()
+
+        const dicoParsed = JSON.parse(file.toString());
+        dictionariesHandler.ptr.addDictionary(gameLang, new Dictionary(dicoParsed));
+
+    }
+    const dico = dictionariesHandler.ptr.getDictionary(gameLang);
     if (dico == null) {
         return 101;
     }

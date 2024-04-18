@@ -54,9 +54,13 @@ describe('Test dictionnary', () => {
         dictionariesHandler.init(DictionaryConfig).then(() => {
 
             expect(dictionariesHandler.dicoExists(0)).toBe(true);
-            expect(dictionariesHandler.getDictionary(0)).not.toBeNull();
-            expect(dictionariesHandler.getDictionary(0)?.contain("AAS")).toBe(true);
 
+            const dico = dictionariesHandler.getDictionary(0);
+            expect(dico).not.toBeNull();
+            expect(dico?.graph).not.toBeNull();
+            expect(dico?.graph[0]).toBe(79);
+
+            expect(dico?.contain("test")).toBe(false);
         }).finally(() => {
             done();
         });
