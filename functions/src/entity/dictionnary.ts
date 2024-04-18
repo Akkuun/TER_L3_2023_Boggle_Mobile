@@ -25,7 +25,7 @@ export class Dictionary {
               return count == 0 && (element & 0b100000000) > 0;
               //check if last letter of the word & if is completing a word
             }
-          } else if ((element & 0b11111111) == l) {
+          } else if ((element[0] & 0b11111111) == l) {
             temp = element;
             update = true;
             break;
