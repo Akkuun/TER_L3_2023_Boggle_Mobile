@@ -90,9 +90,10 @@ class _GamePageState extends State<GamePage> {
           return const GameWidget(gameType: GameType.solo);
         }));
       case GameType.multi:
-        final data = context.watch<RealtimeGameProvider>().players;
-        print("data : $data");
-        print("type : ${data.runtimeType}");
+        final data = context.watch<RealtimeGameProvider>().game;
+        final players = Map<String, dynamic>.from(data["players"]).entries.toList();
+        print("data : $players");
+        print("type : ${players.runtimeType}");
         final letters = _fetchLetters();
         return Globals(child: Builder(builder: (BuildContext innerContext) {
           return FutureBuilder (
@@ -100,7 +101,7 @@ class _GamePageState extends State<GamePage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 gameServices.letters = snapshot.data!;
-                return GameWidget(gameType: GameType.multi, players : data);
+                return GameWidget(gameType: GameType.multi, players : players);
               } else {
                 return const CircularProgressIndicator();
               }
