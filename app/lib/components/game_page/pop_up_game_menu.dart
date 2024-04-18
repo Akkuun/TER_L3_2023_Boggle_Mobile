@@ -116,6 +116,7 @@ class PopUpGameMenu extends StatelessWidget {
                       gameServices.reset();
 
                       if (gameType == GameType.multi) {
+                        Globals.resetMultiplayerData();
                         FirebaseFunctions.instance.httpsCallable('LeaveGame').call({"userId": uid,});
                       }
 
@@ -132,6 +133,7 @@ class PopUpGameMenu extends StatelessWidget {
                         timerServices.resetProgress();
 
                         if (gameType == GameType.multi) {
+                          Globals.resetMultiplayerData();
                           FirebaseFunctions.instance.httpsCallable('LeaveGame').call({"userId": uid,});
                         }
 

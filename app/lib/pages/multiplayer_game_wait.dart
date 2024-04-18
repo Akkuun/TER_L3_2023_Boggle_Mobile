@@ -39,11 +39,13 @@ class GameWaitPage extends StatefulWidget {
 
 class _GameWaitPageState extends State<GameWaitPage> {
   late GameServices gameServices;
+  late NavigationServices router;
   late ListView playerList;
 
   @override
   void initState() {
     super.initState();
+    router = Provider.of<NavigationServices>(context, listen: false);
     gameServices = Provider.of<GameServices>(context, listen: false);
     Provider.of<RealtimeGameProvider>(context, listen: false).initListeners();
   }
@@ -56,13 +58,16 @@ class _GameWaitPageState extends State<GameWaitPage> {
 
   @override
   Widget build(BuildContext context) {
+
     print("[GAME WAIT] Game code : ${Globals.gameCode}");
     var data = context.watch<RealtimeGameProvider>().game;
     var gameStatus = data["status"];
     print("[GAME WAIT] Game status : $gameStatus");
+    print("[GAME WAIT] Game  : $data");
     if (gameStatus == 0) {
-      final router = Provider.of<NavigationServices>(context, listen: false);
-      router.goToPage(PageName.multiplayerGame);
+      WidgetsBinding.instance.addPostFrameCallback((_){
+        router.goToPage(PageName.multiplayerGame);
+      });
     }
     TextStyle textStyle = const TextStyle(
       color: Colors.black,
@@ -71,8 +76,9 @@ class _GameWaitPageState extends State<GameWaitPage> {
       fontWeight: FontWeight.w400,
     );
 
+
     User? user;
-    final router = Provider.of<NavigationServices>(context, listen: false);
+
     try {
       user = FirebaseAuth.instance.currentUser;
       if (user == null) {
@@ -80,6 +86,32 @@ class _GameWaitPageState extends State<GameWaitPage> {
       }
     } catch (e) {
       router.goToPage(PageName.login);
+    }
+    Widget listView;
+    try {
+      listView = ListView.builder(
+        itemCount: data["players"].length,
+        itemBuilder: (context, index) {
+          try {
+            String key = data["players"].keys.elementAt(index);
+            return PlayerInList(
+              playerName: data["players"][key]["name"],
+              color: index % 2 == 0
+                  ? const Color.fromARGB(255, 89, 150, 194)
+                  : const Color.fromARGB(255, 181, 224, 255),
+            );
+          } catch (e) {
+            return PlayerInList(
+              playerName: "Joueur",
+              color: index % 2 == 0
+                  ? const Color.fromARGB(255, 89, 150, 194)
+                  : const Color.fromARGB(255, 181, 224, 255),
+            );
+          }
+        },
+      );
+    } catch (e) {
+      listView = const SizedBox();
     }
 
     return SizedBox(
@@ -136,27 +168,7 @@ class _GameWaitPageState extends State<GameWaitPage> {
                       spreadRadius: 0,
                     ),],
                   ),
-                  child: ListView.builder(
-                    itemCount: data["players"].length,
-                    itemBuilder: (context, index) {
-                      try {
-                        String key = data["players"].keys.elementAt(index);
-                        return PlayerInList(
-                          playerName: data["players"][key]["name"],
-                          color: index % 2 == 0
-                              ? const Color.fromARGB(255, 89, 150, 194)
-                              : const Color.fromARGB(255, 181, 224, 255),
-                        );
-                      } catch (e) {
-                        return PlayerInList(
-                          playerName: "Joueur",
-                          color: index % 2 == 0
-                              ? const Color.fromARGB(255, 89, 150, 194)
-                              : const Color.fromARGB(255, 181, 224, 255),
-                        );
-                      }
-                    },
-                  ),
+                  child: listView,
                 ),
               ),
             ),

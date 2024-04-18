@@ -430,4 +430,9 @@ class Globals extends InheritedWidget {
     return text.replaceAll('\\n',
         '\n'); // Remplacer les occurrences de '\n' par des sauts de ligne
   }
+
+  static void resetMultiplayerData() {
+    gameCode = '';
+    currentMultiplayerGame = '';
+  }
 }
