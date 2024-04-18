@@ -121,8 +121,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
 
   @override
   Widget build(BuildContext context) {
-    Globals.gameCode = '';
-    Globals.currentMultiplayerGame = '';
+    Globals.resetMultiplayerData();
     final router = Provider.of<NavigationServices>(context, listen: false);
     User? user;
     try {

@@ -7,11 +7,7 @@ import 'package:bouggr/components/game_page/words_found.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bouggr/providers/game.dart';
-import 'package:provider/provider.dart';
 
-import '../../pages/page_name.dart';
-import '../../pages/start_game.dart';
-import '../../providers/navigation.dart';
 import 'package:bouggr/utils/player_leaderboard.dart';
 
 class GameFront extends StatelessWidget {
@@ -30,9 +26,7 @@ class GameFront extends StatelessWidget {
     PlayerLeaderboard playerLeaderboard = PlayerLeaderboard();
     playerLeaderboard.init();
     int? rank;
-    print("players: $players");
     if (gameType == GameType.multi) {
-      User? user = FirebaseAuth.instance.currentUser;
       if (players != null) {
         for (int i = 0; i < players!.length; i++) {
           try {

@@ -7,7 +7,6 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/foundation.dart';
 
 //flutter
 import 'package:flutter/material.dart';
@@ -51,18 +50,8 @@ class _GamePageState extends State<GamePage> {
   }
 
   Future<List<String>> _fetchLetters() async {
-    if (kDebugMode) {
-      print("Fetching letters");
-    }
     if (Globals.currentMultiplayerGame.isNotEmpty) {
-      if (kDebugMode) {
-        print(
-            "Letters already fetched before : ${Globals.currentMultiplayerGame}");
-      }
       return Globals.currentMultiplayerGame.split('');
-    }
-    if (kDebugMode) {
-      print("Fetching letters from firebase");
     }
     final database = FirebaseDatabase.instance;
     final gameUID = Globals.gameCode;
@@ -72,9 +61,6 @@ class _GamePageState extends State<GamePage> {
     var res = List<String>.filled(letters.length, '');
     for (var i = 0; i < letters.length; i++) {
       res[i] = letters[i];
-    }
-    if (kDebugMode) {
-      print("Letters fetched : $res");
     }
     Globals.currentMultiplayerGame = letters;
     return res;
@@ -92,8 +78,6 @@ class _GamePageState extends State<GamePage> {
       case GameType.multi:
         final data = context.watch<RealtimeGameProvider>().game;
         final players = Map<String, dynamic>.from(data["players"]).entries.toList();
-        print("data : $players");
-        print("type : ${players.runtimeType}");
         final letters = _fetchLetters();
         return Globals(child: Builder(builder: (BuildContext innerContext) {
           return FutureBuilder (
