@@ -55,7 +55,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
         "gameId": _gameUID,
         "userId": playerUID,
         "email": FirebaseAuth.instance.currentUser!.email,
-        "name": "testnamejoin",
+        "name": FirebaseAuth.instance.currentUser!.email,
       },
     );
     final response = result.data;
@@ -79,7 +79,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
           "lang": lang.index,
           "userId": playerUID,
           "email": FirebaseAuth.instance.currentUser!.email,
-          "name": "testnamecreate",
+          "name": FirebaseAuth.instance.currentUser!.email,
         },
       );
 
