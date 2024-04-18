@@ -1,7 +1,9 @@
 import * as testInit from 'firebase-functions-test';
 import * as admin from 'firebase-admin';
-//import { JoinGameReturn } from '../../src/enums/JoinGameReturn';
-
+import { JoinGameReturn } from '../../src/enums/JoinGameReturn';
+const create_game = require('../../src/index').CreateGame;
+const join_game = require('../../src/index').JoinGame;
+const start_game = require('../../src/index').StartGame;
 // Initialize test environment
 const test = testInit(
     {
@@ -49,12 +51,12 @@ describe('Test CreateGame', () => {
     });
 
     it('should fail to create 2 identical games', (done) => {
-        const create_game = require('../../src/index').CreateGame;
+
         const wrapped_create = test.wrap(create_game);
         const data = {
             data: {
                 lang: 0,
-                letters: 'test',
+                letters: 'OVERFCEANAEBRUAS',
                 name: 'test_d',
                 email: 'test@testd.test',
                 userId: 'test_d',
@@ -85,10 +87,10 @@ describe('Test CreateGame', () => {
         });
     });
 });
-/*
+
 describe('Test JoinGame', () => {
     it('should fail to found a game', (done) => {
-        const join_game = require('../../src/index').JoinGame;
+
         const wrapped_join = test.wrap(join_game);
 
         const data = {
@@ -100,9 +102,9 @@ describe('Test JoinGame', () => {
             }
         };
 
-        wrapped_join(data).then(async (result: number) => {
+        wrapped_join(data).then(async (result: any) => {
 
-            expect(result).toBe(JoinGameReturn.GAME_NOT_FOUND);
+            expect(result.code).toBe(JoinGameReturn.GAME_NOT_FOUND);
 
 
         }).finally(() => {
@@ -116,25 +118,98 @@ describe('Test JoinGame', () => {
     );
 
 });
-*/
-/*
+
+
+
 describe('Test StartGame', () => {
     it('should start a game', (done) => {
-        const create_game = require('../../src/index').CreateGame;
+
         const wrapped_create = test.wrap(create_game);
+
+        const wrapped_start = test.wrap(start_game);
+        const wrapped_join = test.wrap(join_game);
+
         const data = {
             data: {
                 lang: 0,
-                letters: 'test',
-                name: 'test',
+                letters: 'OVERFCEANAEBRUAS',
+                name: 'test_start_game_1',
                 email: 'zg',
-                userId: 'test',
+                userId: 'test_start_game_1',
             }
         };
+        let gameId: string = '';
+
+        wrapped_create(data).then(async (result: { gameId: string }) => {
+            expect(result.gameId).not.toBeNull();
+            gameId = result.gameId;
+            const join_data = {
+                data: {
+                    gameId: gameId,
+                    name: 'test_start_game_2',
+                    email: 'email',
+                    userId: 'test_start_game_2',
+                }
+            };
+
+            wrapped_join(join_data).then(async (result: any) => {
+                expect(result.code).toBe(JoinGameReturn.SUCCESS);
+
+
+                const start_data = {
+                    data: {
+                        gameId: gameId,
+                        userId: 'test_start_game_1',
+                    }
+                };
+                wrapped_start(start_data).then(async (result: any) => {
+                    expect(result).toBe(0);
+                    const game = admin.database().ref("/games").child(gameId);
+                    const gm = await game.get()
+                    expect(gm.exists()).toBe(true);
+                    expect(gm.val().status).toBe(0);
+                    gm.ref.remove();
+                    const player_in_game = admin.database().ref(`/player_ingame/${data.data.userId}`);
+                    const pg = await player_in_game.get()
+                    expect(pg.exists()).toBe(true);
+                    const player_in_game2 = admin.database().ref(`/player_ingame/${join_data.data.userId}`);
+                    const pg2 = await player_in_game2.get()
+                    expect(pg2.exists()).toBe(true);
+                    pg2.ref.remove();
+
+
+                    pg.ref.remove();
+                    done();
+                });
+            })
+        });
+    });
+
+});
+
+/*
+describe('Test CheckWord', () => {
+    it('should check a word', (done) => {
+        const check_word = require('../../src/index').CheckWord;
+        const wrapped_check = test.wrap(check_word);
+
+        const data = {
+            data: {
+                gameId: 'test',
+                userId: 'test',
+                word: 'test',
+            }
+        };
+        wrapped_check(data).then(async (result: any) => {
+            expect(result).toBe(true);
+        }).finally(() => {
+            done();
+        });
     });
 });
-*/
 
+
+*/
 
 
 
