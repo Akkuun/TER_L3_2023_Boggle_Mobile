@@ -64,7 +64,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
       Globals.gameCode = _gameUID!;
       router.goToPage(PageName.multiplayerGameWait);
     }
-    return response.code;
+    return (response as Map<String, dynamic>)["code"];
   }
 
   _createGame(String playerUID) async {
