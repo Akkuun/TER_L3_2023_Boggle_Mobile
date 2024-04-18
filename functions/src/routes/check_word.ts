@@ -63,7 +63,7 @@ export const check_word = (dictionariesHandler: { ptr: DictionariesHandler }, Di
             await game.child("players/" + data.userId).push({ word: wordStr });
             //update score
             const score = (await player.child("score").get()).val();
-            player.update({ score: score + wordStr.length });
+            player.update({ score: score + wordScore(wordStr) });
 
             return 0;
         }
@@ -77,5 +77,28 @@ export const check_word = (dictionariesHandler: { ptr: DictionariesHandler }, Di
     } catch (e) {
 
         return 100;
+    }
+}
+
+function wordScore(word: string) {
+    const wordLength = word.length;
+
+    if (wordLength < 3) {
+        return 0;
+    }
+
+    switch (wordLength) {
+        case 3:
+            return 1;
+        case 4:
+            return 1;
+        case 5:
+            return 2;
+        case 6:
+            return 3;
+        case 7:
+            return 5;
+        default:
+            return 11;
     }
 }

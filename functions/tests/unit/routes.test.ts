@@ -121,6 +121,43 @@ describe('Test JoinGame', () => {
     }
     );
 
+    it('should join a game', (done) => {
+
+        admin.database().ref("/games").push({
+            status: 0,
+            players: {
+                test_join_game: {
+                    name: 'test_2_join_game',
+                    email: 'email',
+                    score: 0,
+                    leader: true
+                }
+            },
+            letters: 'test',
+            lang: 0
+        }).then(async (game) => {
+
+
+            const wrapped_join = test.wrap(join_game);
+
+            const data = {
+                data: {
+                    gameId: game.key,
+                    name: 'test_2_join_game_2',
+                    email: 'email',
+                    userId: 'test_2_join_game',
+                }
+            };
+
+            const result = await wrapped_join(data)
+            expect(result.code).toBe(JoinGameReturn.SUCCESS);
+            game.ref.remove();
+            const player_in_game = admin.database().ref(`/player_ingame/${data.data.userId}`);
+            player_in_game.remove();
+        }).finally(() => {
+            done();
+        });
+    });
 });
 
 
@@ -196,9 +233,7 @@ describe('Test CheckWord', () => {
     it('AAS should be in the grid', (done) => {
 
         const wrapped_check = test.wrap(check_word);
-
         const wrapped_create = test.wrap(create_game);
-
         const wrapped_start = test.wrap(start_game);
         const wrapped_join = test.wrap(join_game);
 
