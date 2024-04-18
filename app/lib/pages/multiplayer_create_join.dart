@@ -55,7 +55,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
         "gameId": _gameUID,
         "userId": playerUID,
         "email": FirebaseAuth.instance.currentUser!.email,
-        "name" : "testnamejoin",
+        "name": "testnamejoin",
       },
     );
     final response = result.data;
@@ -64,7 +64,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
       Globals.gameCode = _gameUID!;
       router.goToPage(PageName.multiplayerGameWait);
     }
-    return response;
+    return response.code;
   }
 
   _createGame(String playerUID) async {
@@ -79,7 +79,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
           "lang": lang.index,
           "userId": playerUID,
           "email": FirebaseAuth.instance.currentUser!.email,
-          "name" : "testnamecreate",
+          "name": "testnamecreate",
         },
       );
 
@@ -205,7 +205,8 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
               setState(() {
                 error =
                     "Error joining game\n${JoinGameReturn.values[_joinCode]}";
-                FocusScope.of(context).unfocus(); //force la fermeture du clavier
+                FocusScope.of(context)
+                    .unfocus(); //force la fermeture du clavier
               });
             }
           },
