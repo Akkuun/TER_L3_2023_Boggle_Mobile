@@ -5,6 +5,7 @@ import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/player_in_list.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
+import 'package:flutter/services.dart';
 
 //services
 import 'package:bouggr/providers/game.dart';
@@ -56,8 +57,10 @@ class _GameWaitPageState extends State<GameWaitPage> {
   @override
   Widget build(BuildContext context) {
     print("Game code : ${Globals.gameCode}");
-    final data = context.watch<RealtimeGameProvider>().players;
-    final gameStatus = context.watch<RealtimeGameProvider>().gameStatus;
+    var data = context.watch<RealtimeGameProvider>().players;
+    var gameStatus = context.watch<RealtimeGameProvider>().gameStatus;
+    print("Game status : $gameStatus");
+    print("Game status type : ${gameStatus.runtimeType}");
     if (gameStatus == 0) {
       final router = Provider.of<NavigationServices>(context, listen: false);
       router.goToPage(PageName.multiplayerGame);
@@ -90,6 +93,24 @@ class _GameWaitPageState extends State<GameWaitPage> {
             padding: EdgeInsets.only(top: 32),
             child: AppTitle(),
           ),
+          ElevatedButton(
+            onPressed: ()async {
+              await Clipboard.setData(ClipboardData(text: Globals.gameCode));
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateColor.resolveWith((states) => const Color.fromARGB(255, 89, 150, 194)),
+            ),
+            child: Text(
+                "Code : ${Globals.gameCode}",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontFamily: 'Jua',
+                  fontWeight: FontWeight.w400,
+                ),
+            ),
+          ),
+
           Text(
           "Joueurs présents :",
           style: textStyle,

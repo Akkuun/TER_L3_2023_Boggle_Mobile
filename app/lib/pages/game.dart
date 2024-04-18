@@ -95,7 +95,7 @@ class _GamePageState extends State<GamePage> {
         print("type : ${data.runtimeType}");
         final letters = _fetchLetters();
         return Globals(child: Builder(builder: (BuildContext innerContext) {
-          return FutureBuilder<List<String>>(
+          return FutureBuilder (
             future: letters,
             builder: (context, snapshot) {
               if (snapshot.hasData) {

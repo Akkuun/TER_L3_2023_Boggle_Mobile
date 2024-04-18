@@ -49,7 +49,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
 
   Future<int> _joinGame(String playerUID) async {
     final router = Provider.of<NavigationServices>(context, listen: false);
-    final result =
+    var result =
         await FirebaseFunctions.instance.httpsCallable('JoinGame').call(
       {
         "gameId": _gameUID,
@@ -58,8 +58,21 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
         "name": FirebaseAuth.instance.currentUser!.email,
       },
     );
-    final response = result.data;
+    var response = result.data;
     print("Trting to join game $_gameUID. Return code : $response");
+    if (response["error"] == "User is already in a game") {
+      print("${response["error"]}. Trying to leave it and join again");
+      result =
+      await FirebaseFunctions.instance.httpsCallable('JoinGame').call(
+        {
+          "gameId": _gameUID,
+          "userId": playerUID,
+          "email": FirebaseAuth.instance.currentUser!.email,
+          "name": FirebaseAuth.instance.currentUser!.email,
+        },
+      );
+      response = result.data;
+    }
     if (response == JoinGameReturn.success.index) {
       Globals.gameCode = _gameUID!;
       router.goToPage(PageName.multiplayerGameWait);
@@ -200,6 +213,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
             _joinCode = await _joinGame(user!.uid);
             print("Joining game $_gameUID with code $_joinCode");
             if (_joinCode == 0) {
+              Globals.gameCode = _gameUID!;
               router.goToPage(PageName.multiplayerGameWait);
             } else {
               setState(() {

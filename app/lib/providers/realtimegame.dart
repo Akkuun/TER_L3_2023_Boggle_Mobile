@@ -16,8 +16,8 @@ class RealtimeGameProvider extends ChangeNotifier {
     dbRef = FirebaseDatabase.instance.ref('games/${Globals.gameCode}');
     dbRef.onValue.listen((DatabaseEvent event) {
       final data = HashMap<String,dynamic>.from (event.snapshot.value! as Map);
-      print("Data QUE JE VEUX : ${data["players"]}");
-      _updatePlayers(data["players"]);
+      print("Data of game from provider : ${data}");
+      _updatePlayers(Map<String, dynamic>.from(data["players"]));
       _updateGameStatus(data["status"]);
     });
   }
@@ -32,6 +32,7 @@ class RealtimeGameProvider extends ChangeNotifier {
   }
 
   void _updateGameStatus(status) {
+    print("Updating game status to $status");
     _gameStatus = status;
     notifyListeners();
   }
@@ -54,6 +55,7 @@ class RealtimeGameProvider extends ChangeNotifier {
     if (event is HashMap<String, dynamic>) {
       if (_isUpdated(event)) {
         _updatePlayers(event);
+        _updateGameStatus(event);
       }
     }
   }
@@ -63,6 +65,6 @@ class RealtimeGameProvider extends ChangeNotifier {
   }
 
   get gameStatus {
-    return _gameStatus;
+    return _gameStatus.toInt();
   }
 }
