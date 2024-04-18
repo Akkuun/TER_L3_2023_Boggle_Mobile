@@ -68,7 +68,11 @@ export const check_word = (dictionariesHandler: { ptr: DictionariesHandler }, Di
             return 0;
         }
         else {
-            return 1;
+            return {
+                code: 1,
+                error: "Word not found in dictionary",
+                word: wordStr
+            }
         }
     } catch (e) {
 

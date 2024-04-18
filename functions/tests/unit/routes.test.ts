@@ -1,9 +1,13 @@
 import * as testInit from 'firebase-functions-test';
 import * as admin from 'firebase-admin';
 import { JoinGameReturn } from '../../src/enums/JoinGameReturn';
+
+
 const create_game = require('../../src/index').CreateGame;
 const join_game = require('../../src/index').JoinGame;
 const start_game = require('../../src/index').StartGame;
+const check_word = require('../../src/index').SendWord;
+
 // Initialize test environment
 const test = testInit(
     {
@@ -187,29 +191,95 @@ describe('Test StartGame', () => {
 
 });
 
-/*
+
 describe('Test CheckWord', () => {
-    it('should check a word', (done) => {
-        const check_word = require('../../src/index').CheckWord;
+    it('AAS should be in the grid', (done) => {
+
         const wrapped_check = test.wrap(check_word);
+
+        const wrapped_create = test.wrap(create_game);
+
+        const wrapped_start = test.wrap(start_game);
+        const wrapped_join = test.wrap(join_game);
 
         const data = {
             data: {
-                gameId: 'test',
-                userId: 'test',
-                word: 'test',
+                lang: 0,
+                letters: 'OVERFCEANAEBRUAS',
+                name: 'test_check_game_1',
+                email: 'zg',
+                userId: 'test_check_game_1',
             }
         };
-        wrapped_check(data).then(async (result: any) => {
-            expect(result).toBe(true);
-        }).finally(() => {
-            done();
-        });
-    });
+        let gameId: string = '';
+
+        wrapped_create(data).then(async (result: { gameId: string }) => {
+            expect(result.gameId).not.toBeNull();
+            gameId = result.gameId;
+            const join_data = {
+                data: {
+                    gameId: gameId,
+                    name: 'test_check_game_2',
+                    email: 'email',
+                    userId: 'test_check_game_2',
+                }
+            };
+
+            wrapped_join(join_data).then(async (result: any) => {
+                expect(result.code).toBe(JoinGameReturn.SUCCESS);
+
+
+                const start_data = {
+                    data: {
+                        gameId: gameId,
+                        userId: 'test_check_game_1',
+                    }
+                };
+                wrapped_start(start_data).then(async (result: any) => {
+                    expect(result).toBe(0);
+
+                    const check_data = {
+                        data: {
+                            gameId: gameId,
+                            userId: 'test_check_game_1',
+                            str: 'AAS',
+                            word: [
+                                { x: 1, y: 2 },
+                                { x: 2, y: 3 },
+                                { x: 3, y: 3 },
+                            ]
+
+                        }
+                    };
+                    wrapped_check(check_data).then(async (result: any) => {
+                        expect(result).toBe(0);
+                        const game = admin.database().ref("/games").child(gameId);
+                        const gm = await game.get()
+                        expect(gm.exists()).toBe(true);
+                        expect(gm.val().status).toBe(0);
+                        gm.ref.remove();
+                        const player_in_game = admin.database().ref(`/player_ingame/${data.data.userId}`);
+                        const pg = await player_in_game.get()
+                        expect(pg.exists()).toBe(true);
+                        const player_in_game2 = admin.database().ref(`/player_ingame/${join_data.data.userId}`);
+                        const pg2 = await player_in_game2.get()
+                        expect(pg2.exists()).toBe(true);
+                        pg2.ref.remove();
+
+
+                    }).finally(() => {
+                        const game = admin.database().ref("/games").child(gameId);
+                        game.remove();
+                        done();
+                    });
+                })
+            });
+        })
+    }, 10000);
 });
 
 
-*/
+
 
 
 
