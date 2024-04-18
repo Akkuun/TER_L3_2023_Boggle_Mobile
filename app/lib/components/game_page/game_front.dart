@@ -35,12 +35,21 @@ class GameFront extends StatelessWidget {
       User? user = FirebaseAuth.instance.currentUser;
       if (players != null) {
         for (int i = 0; i < players!.length; i++) {
-          playerLeaderboard.addPlayer(
-            PlayerStats(
-                name: players![i].value['name'],
-                score: players![i].value['score'],
-                uid: players![i].key),
-          );
+          try {
+            playerLeaderboard.addPlayer(
+              PlayerStats(
+                  name: players![i].value['email'],
+                  score: players![i].value['score'],
+                  uid: players![i].key),
+            );
+          } catch (e) {
+            playerLeaderboard.addPlayer(
+              PlayerStats(
+                  name: 'Player ${i + 1}',
+                  score: -1,
+                  uid: players![i].key),
+            );
+          }
         }
       }
     }

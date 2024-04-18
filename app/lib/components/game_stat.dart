@@ -21,6 +21,13 @@ class GameStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    TextStyle textStyle = TextStyle(
+      color: Colors.black,
+      fontSize: fontSize,
+      fontFamily: 'Jua',
+      fontWeight: FontWeight.w400,
+    );
+
     return Container(
         decoration: BoxDecoration(
           color: Colors.white,
@@ -36,12 +43,12 @@ class GameStat extends StatelessWidget {
         ),
         width: (orientation == Axis.horizontal) ? MediaQuery.of(context).size.width * width * 1.05 : MediaQuery.of(context).size.width * width,
         height: (orientation == Axis.horizontal) ? MediaQuery.of(context).size.height * height/3 : MediaQuery.of(context).size.width * height,
-        child: orientedStats(orientation, statName, statValue, fontSize),
+        child: orientedStats(orientation, statName, statValue, textStyle),
     );
   }
 }
 
-Widget orientedStats(Axis orientation, String statName, String statValue, double fontSize) {
+Widget orientedStats(Axis orientation, String statName, String statValue, TextStyle textStyle) {
   if (orientation == Axis.horizontal) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -49,11 +56,11 @@ Widget orientedStats(Axis orientation, String statName, String statValue, double
       children: [
         Text(
           statName,
-          style: TextStyle(fontSize: fontSize),
+          style: textStyle,
         ),
         Text(
-          ' ' + statValue,
-          style: TextStyle(fontSize: fontSize),
+          ' $statValue',
+          style: textStyle,
         ),
       ],
     );
@@ -64,11 +71,11 @@ Widget orientedStats(Axis orientation, String statName, String statValue, double
     children: [
       Text(
         statName,
-        style: TextStyle(fontSize: fontSize),
+        style: textStyle,
       ),
       Text(
         statValue,
-        style: TextStyle(fontSize: fontSize),
+        style: textStyle,
       ),
     ],
   );
