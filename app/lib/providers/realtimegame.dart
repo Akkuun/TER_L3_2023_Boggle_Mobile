@@ -7,16 +7,18 @@ import 'package:flutter/material.dart';
 import '../global.dart';
 
 class RealtimeGameProvider extends ChangeNotifier {
-  HashMap<String, dynamic> _players = HashMap<String, dynamic>();
+  dynamic _players = HashMap<String, dynamic>();
+  int _gameStatus = 3;
   late DatabaseReference dbRef;
   void initListeners() {
     // Ici on va initialiser les listeners pour écouter les changements
     // dans la base de données
-    dbRef = FirebaseDatabase.instance.ref('games/${Globals.gameCode}/players');
+    dbRef = FirebaseDatabase.instance.ref('games/${Globals.gameCode}');
     dbRef.onValue.listen((DatabaseEvent event) {
       final data = HashMap<String,dynamic>.from (event.snapshot.value! as Map);
-      print("Data QUE JE VEUX : $data");
-      _updatePlayers(data);
+      print("Data QUE JE VEUX : ${data["players"]}");
+      _updatePlayers(data["players"]);
+      _updateGameStatus(data["status"]);
     });
   }
 
@@ -26,6 +28,11 @@ class RealtimeGameProvider extends ChangeNotifier {
 
   void _updatePlayers(players) {
     _players = players;
+    notifyListeners();
+  }
+
+  void _updateGameStatus(status) {
+    _gameStatus = status;
     notifyListeners();
   }
 
@@ -53,5 +60,9 @@ class RealtimeGameProvider extends ChangeNotifier {
 
   get players {
     return _players.entries.toList();
+  }
+
+  get gameStatus {
+    return _gameStatus;
   }
 }

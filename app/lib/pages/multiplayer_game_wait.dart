@@ -57,6 +57,11 @@ class _GameWaitPageState extends State<GameWaitPage> {
   Widget build(BuildContext context) {
     print("Game code : ${Globals.gameCode}");
     final data = context.watch<RealtimeGameProvider>().players;
+    final gameStatus = context.watch<RealtimeGameProvider>().gameStatus;
+    if (gameStatus == 0) {
+      final router = Provider.of<NavigationServices>(context, listen: false);
+      router.goToPage(PageName.multiplayerGame);
+    }
     TextStyle textStyle = const TextStyle(
       color: Colors.black,
       fontSize: 20,
