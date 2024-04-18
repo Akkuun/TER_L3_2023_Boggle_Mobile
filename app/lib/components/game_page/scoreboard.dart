@@ -8,33 +8,33 @@ class ScoreBoard extends StatelessWidget {
   final GameType gameType;
   const ScoreBoard({
     super.key,
-    this.rang,
+    this.rank,
     required this.gameType,
   });
 
-  final int? rang;
+  final int? rank;
 
   @override
   Widget build(BuildContext context) {
     final GameServices gameServices = Provider.of<GameServices>(context);
-    final statHeight = gameType == GameType.multi ? 0.2 : 0.2;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        if (gameType == GameType.multi && rang != null)
+        if (gameType == GameType.multi && rank != null)
           GameStat(
-            height: statHeight,
+            orientation: (gameType == GameType.multi) ? Axis.horizontal : Axis.vertical,
             statName: Globals.getText(gameServices.language, 18),
-            statValue: rang.toString(),
+            statValue: rank.toString(),
           ),
         GameStat(
-          height: statHeight,
+          orientation: (gameType == GameType.multi) ? Axis.horizontal : Axis.vertical,
           statName: Globals.getText(gameServices.language, 20),
           statValue: gameServices.score.toString(),
         ),
         GameStat(
+          orientation: (gameType == GameType.multi) ? Axis.horizontal : Axis.vertical,
           statName: Globals.getText(gameServices.language, 19),
           statValue: 'x${gameServices.strikes}',
         ),

@@ -38,7 +38,6 @@ class GameWaitPage extends StatefulWidget {
 
 class _GameWaitPageState extends State<GameWaitPage> {
   late GameServices gameServices;
-  late final lastData;
   late ListView playerList;
 
   @override

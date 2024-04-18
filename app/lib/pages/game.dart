@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../components/game_page/game_widget.dart';
+import '../providers/realtimegame.dart';
 
 class GamePage extends StatefulWidget {
   final GameType mode;
@@ -35,6 +36,7 @@ class _GamePageState extends State<GamePage> {
     if (widget.mode == GameType.multi) {
       User? user = FirebaseAuth.instance.currentUser;
       FirebaseFunctions.instance.httpsCallable('LeaveGame').call({"userId": user!.uid,});
+      Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
     }
     super.dispose();
   }
@@ -43,6 +45,9 @@ class _GamePageState extends State<GamePage> {
   void initState() {
     super.initState();
     gameServices = Provider.of<GameServices>(context, listen: false);
+    if (widget.mode == GameType.multi) {
+      Provider.of<RealtimeGameProvider>(context, listen: false).initListeners();
+    }
   }
 
   Future<List<String>> _fetchLetters() async {
@@ -85,6 +90,9 @@ class _GamePageState extends State<GamePage> {
           return const GameWidget(gameType: GameType.solo);
         }));
       case GameType.multi:
+        final data = context.watch<RealtimeGameProvider>().players;
+        print("data : $data");
+        print("type : ${data.runtimeType}");
         final letters = _fetchLetters();
         return Globals(child: Builder(builder: (BuildContext innerContext) {
           return FutureBuilder<List<String>>(
@@ -92,7 +100,7 @@ class _GamePageState extends State<GamePage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 gameServices.letters = snapshot.data!;
-                return const GameWidget(gameType: GameType.multi);
+                return GameWidget(gameType: GameType.multi, players : data);
               } else {
                 return const CircularProgressIndicator();
               }

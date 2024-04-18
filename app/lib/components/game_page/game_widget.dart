@@ -16,9 +16,11 @@ import '../../providers/navigation.dart';
 /// Contains the animation for the background and the game front  and the pop up menu
 class GameWidget extends StatelessWidget {
   final GameType gameType;
+  final List<MapEntry<String, dynamic>>? players;
   const GameWidget({
     super.key,
-    required this.gameType
+    required this.gameType,
+    this.players,
   });
 
   @override
@@ -41,7 +43,7 @@ class GameWidget extends StatelessWidget {
       child: Stack(
         children: [
           const Wave(),
-          GameFront(gameType: gameType),
+          GameFront(gameType: gameType, players: players),
           PopUpGameMenu(gameType: gameType, uid: user?.uid ?? ''),
         ],
       ),
