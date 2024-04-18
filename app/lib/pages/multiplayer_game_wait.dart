@@ -56,11 +56,10 @@ class _GameWaitPageState extends State<GameWaitPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("Game code : ${Globals.gameCode}");
-    var data = context.watch<RealtimeGameProvider>().players;
-    var gameStatus = context.watch<RealtimeGameProvider>().gameStatus;
-    print("Game status : $gameStatus");
-    print("Game status type : ${gameStatus.runtimeType}");
+    print("[GAME WAIT] Game code : ${Globals.gameCode}");
+    var data = context.watch<RealtimeGameProvider>().game;
+    var gameStatus = data["status"];
+    print("[GAME WAIT] Game status : $gameStatus");
     if (gameStatus == 0) {
       final router = Provider.of<NavigationServices>(context, listen: false);
       router.goToPage(PageName.multiplayerGame);
@@ -138,11 +137,12 @@ class _GameWaitPageState extends State<GameWaitPage> {
                     ),],
                   ),
                   child: ListView.builder(
-                    itemCount: data.length,
+                    itemCount: data["players"].length,
                     itemBuilder: (context, index) {
                       try {
+                        String key = data["players"].keys.elementAt(index);
                         return PlayerInList(
-                          playerName: data.elementAt(index).value["name"],
+                          playerName: data["players"][key]["name"],
                           color: index % 2 == 0
                               ? const Color.fromARGB(255, 89, 150, 194)
                               : const Color.fromARGB(255, 181, 224, 255),
