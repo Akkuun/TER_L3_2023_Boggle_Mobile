@@ -73,8 +73,30 @@ class EndGameDetail extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              if (gameServices.gameType == GameType.multi)
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                      decoration: ShapeDecoration(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      shadows: const [
+                        BoxShadow(
+                          color: Color(0x3F000000),
+                          blurRadius: 4,
+                          offset: Offset(0, 4),
+                          spreadRadius: 0,
+                        )
+                      ],
+                    ),
+                    width: size.width * 0.9,
+                    child:LeaderBoard(players: playerLeaderboard.firstn(3))
+                  ),
+                ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all((gameServices.gameType == GameType.multi) ? 2.0 : 8.0),
                 child: Container(
                   decoration: ShapeDecoration(
                     color: Colors.white,
@@ -95,8 +117,6 @@ class EndGameDetail extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      if (gameServices.gameType == GameType.multi)
-                        LeaderBoard(players: playerLeaderboard.firstn(3)),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -119,27 +139,28 @@ class EndGameDetail extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                    decoration: ShapeDecoration(
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                      decoration: ShapeDecoration(
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        shadows: const [
+                          BoxShadow(
+                            color: Color(0x3F000000),
+                            blurRadius: 4,
+                            offset: Offset(0, 4),
+                            spreadRadius: 0,
+                          )
+                        ],
                       ),
-                      shadows: const [
-                        BoxShadow(
-                          color: Color(0x3F000000),
-                          blurRadius: 4,
-                          offset: Offset(0, 4),
-                          spreadRadius: 0,
-                        )
-                      ],
-                    ),
-                    width: size.width * 0.9,
-                    height: size.height * 0.45,
-                    child: const Padding(
-                        padding: EdgeInsets.all(8.0), child: WordsFound())),
+                      width: size.width * 0.9,
+                      child: const Padding(
+                          padding: EdgeInsets.all(8.0), child: WordsFound())),
+                ),
               ),
               BtnBoggle(
                 onPressed: () {
