@@ -12,6 +12,8 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
   final List<String> _words = [];
 
   int _score = 0;
+  GameType? _gameType;
+  Map<String, dynamic> _multiResult = {};
   int _strikes = 0;
   List<String>? _letters;
   String? _longestWord;
@@ -49,6 +51,22 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
 
   set letters(List<String> letters) {
     _letters = letters;
+  }
+
+  set gameType(GameType gameType) {
+    _gameType = gameType;
+  }
+
+  GameType get gameType {
+    return _gameType!;
+  }
+
+  set multiResult(Map<String, dynamic> result) {
+    _multiResult = result;
+  }
+
+  Map<String, dynamic> get multiResult {
+    return _multiResult;
   }
 
   void stop() {

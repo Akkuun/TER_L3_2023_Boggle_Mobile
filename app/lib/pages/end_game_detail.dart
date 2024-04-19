@@ -1,4 +1,5 @@
 import 'package:bouggr/components/btn.dart';
+import 'package:bouggr/components/game_page/leaderboard.dart';
 import 'package:bouggr/components/game_page/pop_up_word_list.dart';
 import 'package:bouggr/components/game_page/words_found.dart';
 import 'package:bouggr/pages/page_name.dart';
@@ -8,6 +9,8 @@ import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/timer.dart';
 import 'package:bouggr/utils/game_data.dart';
 import 'package:bouggr/utils/game_result.dart';
+import 'package:bouggr/utils/player_leaderboard.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,6 +35,33 @@ class EndGameDetail extends StatelessWidget {
         score: gameServices.score,
         grid: gameServices.letters.join(),
         words: []);
+    final playerLeaderboard = PlayerLeaderboard();
+    int rank = -1;
+    playerLeaderboard.init();
+    if (gameServices.gameType == GameType.multi) {
+      final players = gameServices.multiResult.isEmpty ? null : Map<String, dynamic>.from(gameServices.multiResult["players"]).entries.toList();
+      if (players != null) {
+        for (int i = 0; i < players.length; i++) {
+          try {
+            playerLeaderboard.addPlayer(
+              PlayerStats(
+                  name: players[i].value['email'],
+                  score: players[i].value['score'],
+                  uid: players[i].key),
+            );
+          } catch (e) {
+            playerLeaderboard.addPlayer(
+              PlayerStats(
+                  name: 'Player ${i + 1}',
+                  score: -1,
+                  uid: players[i].key),
+            );
+          }
+        }
+        playerLeaderboard.computeRank();
+        rank = playerLeaderboard.getPlayer(FirebaseAuth.instance.currentUser!.uid).rank ?? -1;
+      }
+    }
 
     var size = MediaQuery.of(context).size;
     return Stack(
@@ -65,11 +95,14 @@ class EndGameDetail extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      if (gameServices.gameType == GameType.multi)
+                        LeaderBoard(players: playerLeaderboard.firstn(3)),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
+                          if (gameServices.gameType == GameType.multi) Text("${ Globals.getText(gameServices.language, 18)} $rank"),
                           Text("${ Globals.getText(gameServices.language, 61)} ${gameServices.score}"),
-                           Text( Globals.getText(gameServices.language, 62)),
+                          Text( Globals.getText(gameServices.language, 62)),
                         ],
                       ),
                       Text(

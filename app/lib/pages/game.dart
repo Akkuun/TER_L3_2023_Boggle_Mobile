@@ -77,6 +77,7 @@ class _GamePageState extends State<GamePage> {
   Widget build(BuildContext context) {
     switch (widget.mode) {
       case GameType.solo:
+        gameServices.gameType = GameType.solo;
         gameServices.letters =
             Globals.selectDiceSet(gameServices.language).roll();
         return Globals(child: Builder(builder: (BuildContext innerContext) {
@@ -84,7 +85,7 @@ class _GamePageState extends State<GamePage> {
         }));
       case GameType.multi:
         final data = context.watch<RealtimeGameProvider>().game;
-        final players = Map<String, dynamic>.from(data["players"]).entries.toList();
+        final players = data == null ? null : Map<String, dynamic>.from(data["players"]).entries.toList();
         final letters = _fetchLetters();
         return Globals(child: Builder(builder: (BuildContext innerContext) {
           return FutureBuilder (
@@ -92,6 +93,7 @@ class _GamePageState extends State<GamePage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 gameServices.letters = snapshot.data!;
+                gameServices.gameType = GameType.multi;
                 return GameWidget(gameType: GameType.multi, players : players);
               } else {
                 return const CircularProgressIndicator();

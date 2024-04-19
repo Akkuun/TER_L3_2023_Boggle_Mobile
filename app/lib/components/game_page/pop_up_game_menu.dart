@@ -102,6 +102,7 @@ class PopUpGameMenu extends StatelessWidget {
                       GameDataStorage.saveGameResult(gameResult);
 
                       timerServices.resetProgress();
+                      gameServices.multiResult = Provider.of<RealtimeGameProvider>(context, listen: false).game;
                       Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
                       navigationServices.goToPage(PageName.detail);
                     },
