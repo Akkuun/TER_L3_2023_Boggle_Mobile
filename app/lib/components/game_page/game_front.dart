@@ -46,9 +46,9 @@ class GameFront extends StatelessWidget {
           }
         }
       }
+      playerLeaderboard.computeRank();
+      rank = playerLeaderboard.getPlayer(FirebaseAuth.instance.currentUser!.uid).rank;
     }
-    playerLeaderboard.computeRank();
-    rank = playerLeaderboard.getPlayer(FirebaseAuth.instance.currentUser!.uid).rank;
 
     return SizedBox(
       height: MediaQuery.of(context).size.height,
