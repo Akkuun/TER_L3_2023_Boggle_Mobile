@@ -8,6 +8,7 @@ import '../global.dart';
 
 class RealtimeGameProvider extends ChangeNotifier {
   dynamic _game = HashMap<String, dynamic>();
+  String _lastGameCode = "";
   late DatabaseReference dbRef;
   void initListeners() {
     // Ici on va initialiser les listeners pour écouter les changements
@@ -16,11 +17,18 @@ class RealtimeGameProvider extends ChangeNotifier {
     dbRef.onValue.listen((DatabaseEvent event) {
       final data = HashMap<String,dynamic>.from (event.snapshot.value! as Map);
       print("[PROVIDER] Data of game : ${data}");
+      if (_lastGameCode == Globals.gameCode) {
+        return;
+      }
       _updateGame(Map<String, dynamic>.from(data));
     });
   }
 
   void onDispose() {
+    print("[PROVIDER] Disposing of the game");
+    dbRef.onValue.listen((DatabaseEvent event) {}).cancel();
+    _updateGame({"status": -1});
+    _lastGameCode = Globals.gameCode;
     dbRef.onDisconnect();
   }
 

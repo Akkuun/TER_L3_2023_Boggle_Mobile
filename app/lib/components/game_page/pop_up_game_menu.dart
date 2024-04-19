@@ -14,6 +14,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../providers/realtimegame.dart';
 import '../../utils/background_music_player.dart';
 
 BackgroundMusicPlayer backgroundMusicPlayer = BackgroundMusicPlayer.instance;
@@ -101,7 +102,7 @@ class PopUpGameMenu extends StatelessWidget {
                       GameDataStorage.saveGameResult(gameResult);
 
                       timerServices.resetProgress();
-
+                      Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
                       navigationServices.goToPage(PageName.detail);
                     },
                     text: Globals.getText(gameServices.language, 27),
@@ -119,7 +120,7 @@ class PopUpGameMenu extends StatelessWidget {
                         Globals.resetMultiplayerData();
                         FirebaseFunctions.instance.httpsCallable('LeaveGame').call({"userId": uid,});
                       }
-
+                      Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
                       navigationServices.goToPage(PageName.home);
                     },
                     text: Globals.getText(gameServices.language, 25),
@@ -136,7 +137,7 @@ class PopUpGameMenu extends StatelessWidget {
                           Globals.resetMultiplayerData();
                           FirebaseFunctions.instance.httpsCallable('LeaveGame').call({"userId": uid,});
                         }
-
+                        Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
                         navigationServices.goToPage(PageName.home);
                       },
                       text: Globals.getText(gameServices.language, 26),

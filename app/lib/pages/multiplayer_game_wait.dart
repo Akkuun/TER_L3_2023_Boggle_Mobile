@@ -52,7 +52,6 @@ class _GameWaitPageState extends State<GameWaitPage> {
 
   @override
   void dispose() {
-    Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
     super.dispose();
   }
 
@@ -195,6 +194,7 @@ class _GameWaitPageState extends State<GameWaitPage> {
                 FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
                   "userId": user!.uid,
                 });
+                Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
                 router.goToPage(PageName.home);
               },
               text: Globals.getText(gameServices.language, 64),

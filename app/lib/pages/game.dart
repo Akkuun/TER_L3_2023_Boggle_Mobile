@@ -29,13 +29,20 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> {
   late GameServices gameServices;
+  late NavigatorState _navigator;
+
+  @override
+  void didChangeDependencies() {
+    _navigator = Navigator.of(context);
+    super.didChangeDependencies();
+  }
 
   @override
   void dispose() {
     if (widget.mode == GameType.multi) {
       User? user = FirebaseAuth.instance.currentUser;
       FirebaseFunctions.instance.httpsCallable('LeaveGame').call({"userId": user!.uid,});
-      Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
+      //Provider.of<RealtimeGameProvider>(_navigator.context, listen: false).onDispose();
     }
     super.dispose();
   }
