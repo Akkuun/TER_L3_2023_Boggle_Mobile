@@ -179,10 +179,10 @@ class _StatsPageState extends State<StatsPage> {
   static Future<List<String>> _fetchGameResults() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      // Utilisateur connecté, récupérer les données depuis Firebase
+      // récupérer les données depuis Firebase
       return _fetchFirebaseGameResults();
     } else {
-      // Utilisateur non connecté, récupérer les données depuis le stockage local
+      // récupérer les données depuis le stockage local
       return GameDataStorage.loadGameResults();
     }
   }
