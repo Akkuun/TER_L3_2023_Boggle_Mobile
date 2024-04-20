@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.25"
+  adaptive_number:
+    dependency: transitive
+    description:
+      name: adaptive_number
+      sha256: "3a567544e9b5c9c803006f51140ad544aedc79604fd4f3f2c1380003f97c1d77"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   analyzer:
     dependency: transitive
     description:
@@ -25,6 +33,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.2.0"
+  archive:
+    dependency: transitive
+    description:
+      name: archive
+      sha256: "22600aa1e926be775fa5fe7e6894e7fb3df9efda8891c73f70fb3262399a432d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.4.10"
   args:
     dependency: transitive
     description:
@@ -249,6 +265,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.6"
+  dart_jsonwebtoken:
+    dependency: transitive
+    description:
+      name: dart_jsonwebtoken
+      sha256: "40dc3a4788c02a44bc97ea0c8c4a078ae58c9a45acc2312ee6a689b0e8f5b5b9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.13.0"
   dart_style:
     dependency: transitive
     description:
@@ -257,6 +281,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.6"
+  ed25519_edwards:
+    dependency: transitive
+    description:
+      name: ed25519_edwards
+      sha256: "6ce0112d131327ec6d42beede1e5dfd526069b18ad45dcf654f15074ad9276cd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.1"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      sha256: c2b87cb7756efdf69892005af546c56c0b5037f54d2a88269b4f347a505e3ca2
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.5"
   fake_async:
     dependency: transitive
     description:
@@ -289,6 +329,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.17.8"
+  firebase_auth_mocks:
+    dependency: "direct dev"
+    description:
+      name: firebase_auth_mocks
+      sha256: "1d04d1c14d1ead8be29b255f945a8448e11abcb8dda4cc143e5af9e3583f253a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.13.0"
   firebase_auth_platform_interface:
     dependency: transitive
     description:
@@ -371,6 +419,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_launcher_icons:
+    dependency: "direct dev"
+    description:
+      name: flutter_launcher_icons
+      sha256: "559c600f056e7c704bd843723c21e01b5fba47e8824bd02422165bcc02a5de1d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.3"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -442,6 +498,19 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  image:
+    dependency: transitive
+    description:
+      name: image
+      sha256: "8e9d133755c3e84c73288363e6343157c383a0c6c56fc51afcc5d4d7180306d6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.0"
+  integration_test:
+    dependency: "direct main"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   io:
     dependency: transitive
     description:
@@ -538,6 +607,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  mock_exceptions:
+    dependency: transitive
+    description:
+      name: mock_exceptions
+      sha256: "6e3e623712d2c6106ffe9e14732912522b565ddaa82a8dcee6cd4441b5984056"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.2"
   mockito:
     dependency: "direct main"
     description:
@@ -633,6 +710,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.1"
+  petitparser:
+    dependency: transitive
+    description:
+      name: petitparser
+      sha256: c15605cd28af66339f8eb6fbe0e541bfe2d1b72d5825efc6598f3e0a31b9ad27
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.2"
   platform:
     dependency: transitive
     description:
@@ -649,6 +734,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
+  pointycastle:
+    dependency: transitive
+    description:
+      name: pointycastle
+      sha256: "70fe966348fe08c34bf929582f1d8247d9d9408130723206472b4687227e4333"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.8.0"
   pool:
     dependency: transitive
     description:
@@ -1054,6 +1147,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  xml:
+    dependency: transitive
+    description:
+      name: xml
+      sha256: b015a8ad1c488f66851d762d3090a21c600e479dc75e68328c52774040cf9226
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.5.0"
   yaml:
     dependency: transitive
     description:

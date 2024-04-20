@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   //DynamicLibrary.open('libsum.so');
@@ -19,7 +20,12 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(const App());
+  runApp(
+    Provider<FirebaseAuth>(
+      create: (_) => FirebaseAuth.instance,
+      child: const App(),
+    ),
+  );
 }
 
 class App extends StatelessWidget {

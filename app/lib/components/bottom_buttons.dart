@@ -54,6 +54,7 @@ class BottomButtons extends StatelessWidget {
                         : BtnType.secondary,
                   ),
                   IconBtnBoggle(
+                    key:const Key('settingsButton'),
                     icon: const Icon(Icons.settings),
                     onPressed: () {
                       router.goToPage(PageName.settings);
