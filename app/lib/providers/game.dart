@@ -132,6 +132,8 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
     _score = 0;
     _words.clear();
     _strikes = 0;
+    _longestWord = null;
+    _multiResult = {};
     notifyListeners();
   }
 }

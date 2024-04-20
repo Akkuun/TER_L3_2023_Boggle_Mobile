@@ -15,7 +15,7 @@ class RealtimeGameProvider extends ChangeNotifier {
     // dans la base de données
     dbRef = FirebaseDatabase.instance.ref('games/${Globals.gameCode}');
     dbRef.onValue.listen((DatabaseEvent event) {
-      final data = HashMap<String,dynamic>.from (event.snapshot.value! as Map);
+      final data = HashMap<String, dynamic>.from(event.snapshot.value! as Map);
       print("[PROVIDER] Data of game : ${data}");
       if (_lastGameCode == Globals.gameCode) {
         return;
@@ -27,8 +27,8 @@ class RealtimeGameProvider extends ChangeNotifier {
   void onDispose() {
     print("[PROVIDER] Disposing of the game");
     dbRef.onValue.listen((DatabaseEvent event) {}).cancel();
-    _updateGame({"status": -1});
     _lastGameCode = Globals.gameCode;
+    _game = HashMap<String, dynamic>();
     dbRef.onDisconnect();
   }
 
