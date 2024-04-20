@@ -102,12 +102,17 @@ class PopUpGameMenu extends StatelessWidget {
                       GameDataStorage.saveGameResult(gameResult);
 
                       timerServices.resetProgress();
-                      gameServices.multiResult =
-                          Provider.of<RealtimeGameProvider>(context,
-                                  listen: false)
-                              .game;
-                      Provider.of<RealtimeGameProvider>(context, listen: false)
-                          .onDispose();
+
+                      if (gameServices.gameType == GameType.multi) {
+                        gameServices.multiResult =
+                            Provider
+                                .of<RealtimeGameProvider>(context,
+                                listen: false)
+                                .game;
+                        Provider.of<RealtimeGameProvider>(
+                            context, listen: false)
+                            .onDispose();
+                      }
                       navigationServices.goToPage(PageName.detail);
                     },
                     text: Globals.getText(gameServices.language, 27),
@@ -128,9 +133,9 @@ class PopUpGameMenu extends StatelessWidget {
                             .call({
                           "userId": uid,
                         });
+                        Provider.of<RealtimeGameProvider>(context, listen: false)
+                            .onDispose();
                       }
-                      Provider.of<RealtimeGameProvider>(context, listen: false)
-                          .onDispose();
                       navigationServices.goToPage(PageName.home);
                     },
                     text: Globals.getText(gameServices.language, 25),
@@ -150,10 +155,10 @@ class PopUpGameMenu extends StatelessWidget {
                               .call({
                             "userId": uid,
                           });
-                        }
-                        Provider.of<RealtimeGameProvider>(context,
+                          Provider.of<RealtimeGameProvider>(context,
                                 listen: false)
                             .onDispose();
+                        }
                         navigationServices.goToPage(PageName.home);
                       },
                       text: Globals.getText(gameServices.language, 26),
