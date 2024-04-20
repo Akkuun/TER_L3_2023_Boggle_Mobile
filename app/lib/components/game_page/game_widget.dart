@@ -38,11 +38,11 @@ class GameWidget extends StatelessWidget {
 
     return Container(
       color: const Color.fromRGBO(255, 237, 172, 1),
-      child: Stack(
+      child: const Stack(
         children: [
-          const Wave(),
-          const GameFront(),
-          PopUpGameMenu(uid: user?.uid ?? ''),
+          Wave(),
+          GameFront(),
+          PopUpGameMenu(),
         ],
       ),
     );

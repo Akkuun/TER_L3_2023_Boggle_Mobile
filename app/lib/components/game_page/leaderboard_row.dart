@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 class LeaderboardRow extends StatelessWidget {
   const LeaderboardRow({
     super.key,
-    this.rank,
-    this.score,
-    this.name,
-    this.color,
+    required this.rank,
+    required this.score,
+    required this.name,
+    required this.color,
   });
 
-  final int? rank;
-  final int? score;
-  final String? name;
-  final Color? color;
+  final int rank;
+  final int score;
+  final String name;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {

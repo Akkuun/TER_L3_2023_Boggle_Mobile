@@ -17,22 +17,18 @@ class ScoreBoard extends StatelessWidget {
     final GameServices gameServices = Provider.of<GameServices>(context);
     PlayerLeaderboard playerLeaderboard = PlayerLeaderboard();
 
-    int? rank;
+    int rank = 1;
     var gameType = gameServices.gameType;
     var players = Provider.of<RealtimeGameProvider>(context).game['players'];
     if (gameType == GameType.multi) {
       if (players != null) {
         for (var player in players!.entries) {
-          try {
-            playerLeaderboard.addPlayer(
-              PlayerStats(
-                  name: player.value['email'],
-                  score: player.value['score'],
-                  uid: player.key),
-            );
-          } catch (e) {
-            print(e);
-          }
+          playerLeaderboard.addPlayer(
+            PlayerStats(
+                name: player.value['email'],
+                score: player.value['score'],
+                uid: player.key),
+          );
         }
       }
       playerLeaderboard.computeRank();
@@ -42,7 +38,7 @@ class ScoreBoard extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        if (gameType == GameType.multi && rank != null)
+        if (gameType == GameType.multi)
           GameStat(
             orientation:
                 (gameType == GameType.multi) ? Axis.horizontal : Axis.vertical,

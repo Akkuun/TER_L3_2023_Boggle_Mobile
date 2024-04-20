@@ -11,6 +11,7 @@ import 'package:bouggr/providers/timer.dart';
 import 'package:bouggr/utils/game_data.dart';
 import 'package:bouggr/utils/game_result.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,11 +21,8 @@ import '../../utils/background_music_player.dart';
 BackgroundMusicPlayer backgroundMusicPlayer = BackgroundMusicPlayer.instance;
 
 class PopUpGameMenu extends StatelessWidget {
-  final String uid;
-
   const PopUpGameMenu({
     super.key,
-    this.uid = '',
   });
 
   /// Count the number of words found by length in the current game
@@ -43,6 +41,7 @@ class PopUpGameMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var uid = FirebaseAuth.instance.currentUser?.uid ?? "";
     // is in listen: false because we don't need to get the update from the navigation action
     NavigationServices navigationServices =
         Provider.of<NavigationServices>(context, listen: false);
@@ -105,12 +104,11 @@ class PopUpGameMenu extends StatelessWidget {
 
                       if (gameServices.gameType == GameType.multi) {
                         gameServices.multiResult =
-                            Provider
-                                .of<RealtimeGameProvider>(context,
-                                listen: false)
+                            Provider.of<RealtimeGameProvider>(context,
+                                    listen: false)
                                 .game;
-                        Provider.of<RealtimeGameProvider>(
-                            context, listen: false)
+                        Provider.of<RealtimeGameProvider>(context,
+                                listen: false)
                             .onDispose();
                       }
                       navigationServices.goToPage(PageName.detail);
@@ -133,7 +131,8 @@ class PopUpGameMenu extends StatelessWidget {
                             .call({
                           "userId": uid,
                         });
-                        Provider.of<RealtimeGameProvider>(context, listen: false)
+                        Provider.of<RealtimeGameProvider>(context,
+                                listen: false)
                             .onDispose();
                       }
                       navigationServices.goToPage(PageName.home);
@@ -156,8 +155,8 @@ class PopUpGameMenu extends StatelessWidget {
                             "userId": uid,
                           });
                           Provider.of<RealtimeGameProvider>(context,
-                                listen: false)
-                            .onDispose();
+                                  listen: false)
+                              .onDispose();
                         }
                         navigationServices.goToPage(PageName.home);
                       },

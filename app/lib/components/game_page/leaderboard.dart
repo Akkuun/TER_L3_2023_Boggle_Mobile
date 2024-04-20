@@ -1,7 +1,6 @@
 import 'package:bouggr/components/game_page/leaderboard_row.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/realtimegame.dart';
-import 'package:bouggr/utils/player_leaderboard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -45,23 +44,15 @@ class LeaderBoard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            LeaderboardRow(
-                rank: 1,
-                score: players![0].score,
-                name: players![0].name,
-                color: colors[0]),
-            if (players!.length >= 2)
-              LeaderboardRow(
-                  rank: 2,
-                  score: players![1].score,
-                  name: players![1].name,
-                  color: colors[1]),
-            if (players!.length >= 3)
-              LeaderboardRow(
-                  rank: 3,
-                  score: players![2].score,
-                  name: players![2].name,
-                  color: colors[2]),
+            for (var i = 0; i < players!.length && i < 3; i++)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: LeaderboardRow(
+                    rank: i + 1,
+                    score: players![i].score,
+                    name: players![i].name,
+                    color: colors[i]),
+              ),
           ]),
     );
   }
