@@ -3,6 +3,8 @@ import 'package:bouggr/global.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/utils/dico.dart';
 import 'package:bouggr/utils/word_score.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -106,6 +108,23 @@ class _BoggleGrilleState extends State<BoggleGrille> {
       gameServices.addStrike();
       return false;
     }
+    if (gameServices.gameType == GameType.multi) {
+      User? user = FirebaseAuth.instance.currentUser;
+      print("Sending word ${indexes.map((e) => {
+            "x": e.$1,
+            "y": e.$2
+          }).toList()} to server");
+      FirebaseFunctions.instance.httpsCallable('SendWord').call({
+        "gameId": Globals.gameCode,
+        "userId": user!.uid,
+        "word": indexes
+            .map((e) => {"x": e.$2, "y": e.$1})
+            .toList(), // Coordonnées inversées pour le serveur
+      }).then((value) {
+        print("Word sent");
+        print("Value: ${value.data}");
+      });
+    }
     gameServices.addScore(wordScore(word));
     gameServices.addWord(word);
     return true;
@@ -141,55 +160,58 @@ class _BoggleGrilleState extends State<BoggleGrille> {
     });
     var width = MediaQuery.of(context).size.width;
     return Center(
-      child: Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Theme.of(context).secondaryHeaderColor,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.25),
-                blurRadius: 4,
-                offset: const Offset(4, 4),
-              ),
-            ]),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-          child: SizedBox(
-            height: width,
-            width: width - 50,
-            child: Listener(
-              onPointerDown:
-                  !gameServices.triggerPopUp ? _detectTapedItem : null,
-              onPointerMove:
-                  !gameServices.triggerPopUp ? _detectTapedItem : null,
-              onPointerUp: _sendWordToGameLogicAndClear,
-              child: GridView.builder(
-                key: key,
-                itemCount: 16,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  childAspectRatio: 1.0,
-                  crossAxisSpacing: 16.0,
-                  mainAxisSpacing: 16.0,
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Theme.of(context).secondaryHeaderColor,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.25),
+                  blurRadius: 4,
+                  offset: const Offset(4, 4),
                 ),
-                itemBuilder: (context, index) {
-                  return BoggleDice(
-                    index: index,
-                    letter: gameServices.letters[index],
-                    color: selectedIndexes.contains(index)
-                        ? isCurrentWordValid
-                            ? Theme.of(context).primaryColor
-                            : Colors.red
-                        : gameServices.tipsIndex != null
-                            ? gameServices.tipsIndex!.x * 4 +
-                                        gameServices.tipsIndex!.y ==
-                                    index
-                                ? Colors.green
-                                : Colors.white
-                            : Colors.white,
-                  );
-                },
+              ]),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            child: SizedBox(
+              height: width,
+              width: width - 50,
+              child: Listener(
+                onPointerDown:
+                    !gameServices.triggerPopUp ? _detectTapedItem : null,
+                onPointerMove:
+                    !gameServices.triggerPopUp ? _detectTapedItem : null,
+                onPointerUp: _sendWordToGameLogicAndClear,
+                child: GridView.builder(
+                  key: key,
+                  itemCount: 16,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    childAspectRatio: 1.0,
+                    crossAxisSpacing: 16.0,
+                    mainAxisSpacing: 16.0,
+                  ),
+                  itemBuilder: (context, index) {
+                    return BoggleDice(
+                      index: index,
+                      letter: gameServices.letters[index],
+                      color: selectedIndexes.contains(index)
+                          ? isCurrentWordValid
+                              ? Theme.of(context).primaryColor
+                              : Colors.red
+                          : gameServices.tipsIndex != null
+                              ? gameServices.tipsIndex!.x * 4 +
+                                          gameServices.tipsIndex!.y ==
+                                      index
+                                  ? Colors.green
+                                  : Colors.white
+                              : Colors.white,
+                    );
+                  },
+                ),
               ),
             ),
           ),

@@ -1,6 +1,7 @@
 import 'package:bouggr/providers/end_game_service.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
+import 'package:bouggr/providers/realtimegame.dart';
 import 'package:bouggr/providers/timer.dart';
 import 'package:bouggr/router.dart';
 
@@ -9,7 +10,6 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-
 
 void main() async {
   //DynamicLibrary.open('libsum.so');
@@ -36,6 +36,7 @@ class App extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => GameServices()),
         ChangeNotifierProvider(create: (context) => TimerServices()),
         ChangeNotifierProvider(create: (context) => EndGameService()),
+        ChangeNotifierProvider(create: (context) => RealtimeGameProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -50,4 +51,3 @@ class App extends StatelessWidget {
     );
   }
 }
-

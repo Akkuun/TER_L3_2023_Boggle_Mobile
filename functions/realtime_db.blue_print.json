@@ -1,0 +1,22 @@
+{
+    "player_ingame" : {
+        "[id]" : "[game_id]"
+    },
+    "games" : {
+        "[game_id]" : {
+            "letters" : "@string",
+            "startedAt" : "@date",
+            "end_time" : "@date",
+            "lang" : "@int",
+            "players" : {
+                "[id]" : {
+                    "(name)" : "@string",
+                    "(email)" : "@string",
+                    "score" : "@int",
+                    "leader" : "@bool"
+                }
+            },
+            "status" : "@enumGameStatus"
+        }
+    }
+}
