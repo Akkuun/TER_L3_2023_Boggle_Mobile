@@ -65,7 +65,7 @@ void main() {
         child: const App(),
       ),
     );
-
+    
     // Trouvez le bouton
     final soloButtonFinder = find.text('Partie solo');
     print('Bouton Partie solo trouvé');
