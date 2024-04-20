@@ -34,6 +34,10 @@ void _init(List<String> grid, int i, int j, Dictionary dico, String point,
 Future<List<Word>> getAllWords2(List<String> grid, Dictionary dico) async {
   HashMap<String, Word> resMap = HashMap<String, Word>();
 
+  while (dico.dictionary == null) {
+    await dico.ayncLoad();
+  }
+
   _start2(grid, dico, resMap);
 
   var res = resMap.values.toList();

@@ -7,7 +7,6 @@ import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/end_game_service.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
-import 'package:bouggr/utils/decode.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

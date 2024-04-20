@@ -29,6 +29,7 @@ enum JoinGameReturn {
   gameNotFound,
   alreadyInGame,
   invalidPassword,
+  wrongGameId,
 }
 
 class MultiplayerCreateJoinPage extends StatefulWidget {
@@ -49,21 +50,34 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
 
   Future<int> _joinGame(String playerUID) async {
     final router = Provider.of<NavigationServices>(context, listen: false);
-    final result =
+    var result =
         await FirebaseFunctions.instance.httpsCallable('JoinGame').call(
       {
         "gameId": _gameUID,
         "userId": playerUID,
         "email": FirebaseAuth.instance.currentUser!.email,
+        "name": FirebaseAuth.instance.currentUser!.email,
       },
     );
-    final response = result.data;
+    var response = result.data;
     print("Trting to join game $_gameUID. Return code : $response");
+    if (response["error"] == "User is already in a game") {
+      print("${response["error"]}. Trying to leave it and join again");
+      result = await FirebaseFunctions.instance.httpsCallable('JoinGame').call(
+        {
+          "gameId": _gameUID,
+          "userId": playerUID,
+          "email": FirebaseAuth.instance.currentUser!.email,
+          "name": FirebaseAuth.instance.currentUser!.email,
+        },
+      );
+      response = result.data;
+    }
     if (response == JoinGameReturn.success.index) {
       Globals.gameCode = _gameUID!;
-      router.goToPage(PageName.multiplayerGame);
+      router.goToPage(PageName.multiplayerGameWait);
     }
-    return response;
+    return (response as Map<String, dynamic>)["code"];
   }
 
   _createGame(String playerUID) async {
@@ -78,13 +92,28 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
           "lang": lang.index,
           "userId": playerUID,
           "email": FirebaseAuth.instance.currentUser!.email,
+          "name": FirebaseAuth.instance.currentUser!.email,
         },
       );
-      final response = result.data as String;
+
+      final response = result.data as Map<String, dynamic>;
+      // print response
+      print("Response : $response");
       print("Succesfully created game $response server-side");
-      Globals.gameCode = response;
+      if (response["gameId"] == null) {
+        print("${response["error"]}. Trying to leave it and create a new one");
+        FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
+          "userId": playerUID,
+        }).then((value) => _createGame(playerUID));
+        return;
+      }
+      if (response["error"] != null) {
+        print("Error creating game : ${response["error"]}");
+        return;
+      }
+      Globals.gameCode = response['gameId'];
       Globals.currentMultiplayerGame = letters.join('');
-      router.goToPage(PageName.multiplayerGame);
+      router.goToPage(PageName.multiplayerGameWait);
     } catch (e) {
       print("ERROR CREATING GAME ? $e");
     }
@@ -92,8 +121,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
 
   @override
   Widget build(BuildContext context) {
-    Globals.gameCode = '';
-    Globals.currentMultiplayerGame = '';
+    Globals.resetMultiplayerData();
     final router = Provider.of<NavigationServices>(context, listen: false);
     User? user;
     try {
@@ -184,12 +212,14 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
             _joinCode = await _joinGame(user!.uid);
             print("Joining game $_gameUID with code $_joinCode");
             if (_joinCode == 0) {
-              router.goToPage(PageName.multiplayerGame);
+              Globals.gameCode = _gameUID!;
+              router.goToPage(PageName.multiplayerGameWait);
             } else {
               setState(() {
                 error =
                     "Error joining game\n${JoinGameReturn.values[_joinCode]}";
-                FocusScope.of(context).unfocus(); //force la fermeture du clavier
+                FocusScope.of(context)
+                    .unfocus(); //force la fermeture du clavier
               });
             }
           },

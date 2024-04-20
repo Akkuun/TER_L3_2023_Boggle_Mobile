@@ -3,6 +3,7 @@ import 'package:bouggr/global.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:bouggr/utils/game_data.dart';
 import 'package:bouggr/utils/get_all_word.dart';
+import 'package:bouggr/utils/player_leaderboard.dart';
 import 'package:flutter/material.dart';
 
 enum GameType { solo, multi }
@@ -10,8 +11,11 @@ enum GameType { solo, multi }
 class GameServices extends ChangeNotifier with TriggerPopUp {
   LangCode? _lang;
   final List<String> _words = [];
+  PlayerLeaderboard playerLeaderboard = PlayerLeaderboard();
 
   int _score = 0;
+  GameType? _gameType;
+  Map<String, dynamic> _multiResult = {};
   int _strikes = 0;
   List<String>? _letters;
   String? _longestWord;
@@ -49,6 +53,22 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
 
   set letters(List<String> letters) {
     _letters = letters;
+  }
+
+  set gameType(GameType gameType) {
+    _gameType = gameType;
+  }
+
+  GameType get gameType {
+    return _gameType!;
+  }
+
+  set multiResult(Map<String, dynamic> result) {
+    _multiResult = result;
+  }
+
+  Map<String, dynamic> get multiResult {
+    return _multiResult;
   }
 
   void stop() {
@@ -112,6 +132,8 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
     _score = 0;
     _words.clear();
     _strikes = 0;
+    _longestWord = null;
+    _multiResult = {};
     notifyListeners();
   }
 }

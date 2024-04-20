@@ -10,15 +10,20 @@ import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/timer.dart';
 import 'package:bouggr/utils/game_data.dart';
 import 'package:bouggr/utils/game_result.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../providers/realtimegame.dart';
 import '../../utils/background_music_player.dart';
 
 BackgroundMusicPlayer backgroundMusicPlayer = BackgroundMusicPlayer.instance;
 
 class PopUpGameMenu extends StatelessWidget {
-  const PopUpGameMenu({super.key});
+  const PopUpGameMenu({
+    super.key,
+  });
 
   /// Count the number of words found by length in the current game
   List<int> _countWordsByLength(GameServices gameServices) {
@@ -36,6 +41,7 @@ class PopUpGameMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var uid = FirebaseAuth.instance.currentUser?.uid ?? "";
     // is in listen: false because we don't need to get the update from the navigation action
     NavigationServices navigationServices =
         Provider.of<NavigationServices>(context, listen: false);
@@ -84,8 +90,10 @@ class PopUpGameMenu extends StatelessWidget {
                       ),
                     ],
                   ),
-                   Text(Globals.getText(gameServices.language, 24), style: TextStyle(fontSize: 30)),
-                  Text("${gameServices.score} ${Globals.getText(gameServices.language, 57)}",
+                  Text(Globals.getText(gameServices.language, 24),
+                      style: const TextStyle(fontSize: 30)),
+                  Text(
+                      "${gameServices.score} ${Globals.getText(gameServices.language, 57)}",
                       style: const TextStyle(fontSize: 20)),
                   BtnBoggle(
                     onPressed: () {
@@ -94,6 +102,15 @@ class PopUpGameMenu extends StatelessWidget {
 
                       timerServices.resetProgress();
 
+                      if (gameServices.gameType == GameType.multi) {
+                        gameServices.multiResult =
+                            Provider.of<RealtimeGameProvider>(context,
+                                    listen: false)
+                                .game;
+                        Provider.of<RealtimeGameProvider>(context,
+                                listen: false)
+                            .onDispose();
+                      }
                       navigationServices.goToPage(PageName.detail);
                     },
                     text: Globals.getText(gameServices.language, 27),
@@ -106,6 +123,18 @@ class PopUpGameMenu extends StatelessWidget {
 
                       timerServices.resetProgress();
                       gameServices.reset();
+
+                      if (gameServices.gameType == GameType.multi) {
+                        Globals.resetMultiplayerData();
+                        FirebaseFunctions.instance
+                            .httpsCallable('LeaveGame')
+                            .call({
+                          "userId": uid,
+                        });
+                        Provider.of<RealtimeGameProvider>(context,
+                                listen: false)
+                            .onDispose();
+                      }
                       navigationServices.goToPage(PageName.home);
                     },
                     text: Globals.getText(gameServices.language, 25),
@@ -117,6 +146,18 @@ class PopUpGameMenu extends StatelessWidget {
                         GameDataStorage.saveGameResult(gameResult);
                         gameServices.reset();
                         timerServices.resetProgress();
+
+                        if (gameServices.gameType == GameType.multi) {
+                          Globals.resetMultiplayerData();
+                          FirebaseFunctions.instance
+                              .httpsCallable('LeaveGame')
+                              .call({
+                            "userId": uid,
+                          });
+                          Provider.of<RealtimeGameProvider>(context,
+                                  listen: false)
+                              .onDispose();
+                        }
                         navigationServices.goToPage(PageName.home);
                       },
                       text: Globals.getText(gameServices.language, 26),
