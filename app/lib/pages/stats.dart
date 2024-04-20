@@ -11,7 +11,7 @@ class StatsPage extends StatefulWidget {
   const StatsPage({super.key});
 
   @override
-  _StatsPageState createState() => _StatsPageState();
+  State<StatsPage> createState() => _StatsPageState();
 }
 
 class _StatsPageState extends State<StatsPage> {
@@ -22,9 +22,9 @@ class _StatsPageState extends State<StatsPage> {
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double appBarHeight = AppBar().preferredSize.height;
-    final double bottomButtonHeight = 40.0;
-    final double titleHeight = 60.0;
-    final double paginationButtonsHeight = 50.0;
+    const double bottomButtonHeight = 40.0;
+    const double titleHeight = 60.0;
+    const double paginationButtonsHeight = 50.0;
     final double statContainerHeight = screenHeight -
         appBarHeight -
         bottomButtonHeight -
@@ -35,11 +35,11 @@ class _StatsPageState extends State<StatsPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
+          const Padding(
+            padding: EdgeInsets.all(16),
             child: SizedBox(
               height: titleHeight,
-              child: const Center(
+              child: Center(
                 child: Text.rich(
                   TextSpan(
                     children: [
@@ -100,7 +100,7 @@ class _StatsPageState extends State<StatsPage> {
               future: _fetchGameResults(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 } else if (snapshot.hasError) {
@@ -158,10 +158,15 @@ class _StatsPageState extends State<StatsPage> {
               currentPageIndex = i;
             });
           },
-          child: Text((i + 1).toString()),
-          style: ElevatedButton.styleFrom(
-            primary: Color(0xFF1F87B0),
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(
+              i == currentPageIndex ? const Color(0xFF1F87B3) : Colors.white,
+            ),
+            foregroundColor: MaterialStateProperty.all<Color>(
+              i == currentPageIndex ? Colors.white : const Color(0xFF1F87B3),
+            ),
           ),
+          child: Text((i + 1).toString()),
         ),
       );
     }
