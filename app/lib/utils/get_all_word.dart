@@ -35,7 +35,7 @@ Future<List<Word>> getAllWords2(List<String> grid, Dictionary dico) async {
   HashMap<String, Word> resMap = HashMap<String, Word>();
 
   while (dico.dictionary == null) {
-    await Future.delayed(const Duration(milliseconds: 100));
+    await dico.ayncLoad();
   }
 
   _start2(grid, dico, resMap);

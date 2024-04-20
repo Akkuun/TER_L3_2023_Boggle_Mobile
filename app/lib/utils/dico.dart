@@ -17,6 +17,11 @@ class Dictionary {
         .then((value) => {dictionary = jsonDecode(value)});
   }
 
+  ayncLoad() async {
+    final value = await rootBundle.loadString(path);
+    dictionary = jsonDecode(value);
+  }
+
   /// The function "unload" sets the variable "dictionary" to null.
   void unload() {
     dictionary = null;
