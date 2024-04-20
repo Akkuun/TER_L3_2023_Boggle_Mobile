@@ -1,8 +1,4 @@
-import 'package:bouggr/providers/game.dart';
 import 'package:flutter/material.dart';
-import 'package:bouggr/components/game_stat.dart';
-import 'package:provider/provider.dart';
-import 'package:bouggr/global.dart';
 
 class LeaderboardRow extends StatelessWidget {
   const LeaderboardRow({
@@ -80,7 +76,8 @@ class LeaderboardSubContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 2.0, right: 2.0, top: 4.0, bottom: 4.0),
+      padding:
+          const EdgeInsets.only(left: 2.0, right: 2.0, top: 4.0, bottom: 4.0),
       child: SizedBox(
         width: width,
         child: Container(

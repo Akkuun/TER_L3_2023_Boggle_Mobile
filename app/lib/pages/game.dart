@@ -29,11 +29,9 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> {
   late GameServices gameServices;
-  late NavigatorState _navigator;
 
   @override
   void didChangeDependencies() {
-    _navigator = Navigator.of(context);
     super.didChangeDependencies();
   }
 
@@ -41,7 +39,9 @@ class _GamePageState extends State<GamePage> {
   void dispose() {
     if (widget.mode == GameType.multi) {
       User? user = FirebaseAuth.instance.currentUser;
-      FirebaseFunctions.instance.httpsCallable('LeaveGame').call({"userId": user!.uid,});
+      FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
+        "userId": user!.uid,
+      });
       //Provider.of<RealtimeGameProvider>(_navigator.context, listen: false).onDispose();
     }
     super.dispose();
@@ -85,16 +85,18 @@ class _GamePageState extends State<GamePage> {
         }));
       case GameType.multi:
         final data = context.watch<RealtimeGameProvider>().game;
-        final players = data == null ? null : Map<String, dynamic>.from(data["players"]).entries.toList();
+        final players = data == null
+            ? null
+            : Map<String, dynamic>.from(data["players"]).entries.toList();
         final letters = _fetchLetters();
         return Globals(child: Builder(builder: (BuildContext innerContext) {
-          return FutureBuilder (
+          return FutureBuilder(
             future: letters,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 gameServices.letters = snapshot.data!;
                 gameServices.gameType = GameType.multi;
-                return GameWidget(gameType: GameType.multi, players : players);
+                return GameWidget(gameType: GameType.multi, players: players);
               } else {
                 return const CircularProgressIndicator();
               }

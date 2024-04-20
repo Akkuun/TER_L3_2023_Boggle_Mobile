@@ -7,12 +7,9 @@ import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/end_game_service.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
-import 'package:bouggr/utils/decode.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -20,7 +17,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
     Widget welcomeWidget;
@@ -43,7 +39,7 @@ class HomePage extends StatelessWidget {
             router.goToPage(PageName.login);
           },
           btnSize: BtnSize.large,
-          text: Globals.getText(gameServices.language,6),
+          text: Globals.getText(gameServices.language, 6),
         );
       }
     } catch (e) {
@@ -77,11 +73,13 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 0), // Ajoutez un espacement entre les cartes si nécessaire
+              const SizedBox(
+                  width:
+                      0), // Ajoutez un espacement entre les cartes si nécessaire
               Expanded(
                 child: BoggleCard(
                   title: Globals.getText(gameServices.language, 3),
-                  action:  Globals.getText(gameServices.language, 2),
+                  action: Globals.getText(gameServices.language, 2),
                   onPressed: () {
                     //router.goToPage(PageName.rules);
                   },
