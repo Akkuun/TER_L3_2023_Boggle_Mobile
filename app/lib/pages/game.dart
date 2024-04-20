@@ -38,7 +38,8 @@ class _GamePageState extends State<GamePage> {
   @override
   void dispose() {
     if (widget.mode == GameType.multi) {
-      User? user = FirebaseAuth.instance.currentUser;
+      User? user =
+          Provider.of<FirebaseAuth>(context, listen: false).currentUser;
       FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
         "userId": user!.uid,
       });

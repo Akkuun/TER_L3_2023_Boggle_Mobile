@@ -41,7 +41,9 @@ class PopUpGameMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var uid = FirebaseAuth.instance.currentUser?.uid ?? "";
+    var uid =
+        Provider.of<FirebaseAuth>(context, listen: false).currentUser?.uid ??
+            "";
     // is in listen: false because we don't need to get the update from the navigation action
     NavigationServices navigationServices =
         Provider.of<NavigationServices>(context, listen: false);

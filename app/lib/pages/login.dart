@@ -21,7 +21,7 @@ class LoginPage extends StatelessWidget {
     // ignore: dead_code
     if (debug) {
       // ignore: no_leading_underscores_for_local_identifiers
-      final _auth = FirebaseAuth.instance;
+      final _auth = Provider.of<FirebaseAuth>(context, listen: false);
       // ignore: unused_local_variable
       User? user;
       _auth.authStateChanges().listen((User? user) {

@@ -1,23 +1,18 @@
-import 'package:bouggr/components/btn.dart';
-import 'package:bouggr/components/card.dart';
-import 'package:bouggr/global.dart';
-import 'package:bouggr/pages/login.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:bouggr/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 
 class UserCredentialMock extends Mock implements UserCredential {}
 
 class MockUser extends Mock implements User {
+  @override
   final String uid;
+  @override
   final String email;
 
   MockUser({required this.uid, required this.email});
@@ -67,7 +62,7 @@ void main() {
     await tester.pumpWidget(
       Provider<FirebaseAuth>.value(
         value: mockFirebaseAuth,
-        child: App(),
+        child: const App(),
       ),
     );
 
@@ -77,8 +72,8 @@ void main() {
 
     // Appuyez sur bouton
     await tester.tap(soloButtonFinder);
-    await tester
-        .pumpAndSettle(Durations.long1); //obliger de mettre le test en premier avec une durée pour que le test fonctionne dans une battrie de test, car la page créé des éléments gourment
+    await tester.pumpAndSettle(Durations
+        .long1); //obliger de mettre le test en premier avec une durée pour que le test fonctionne dans une battrie de test, car la page créé des éléments gourment
     print('Bouton Partie solo appuyé');
 
     final cpButtonFinder = find.text('Commencer une partie');
@@ -109,7 +104,7 @@ void main() {
     await tester.pumpWidget(
       Provider<FirebaseAuth>.value(
         value: mockFirebaseAuth,
-        child: App(),
+        child: const App(),
       ),
     );
     // Trouvez le bouton Rules par son texte
@@ -135,7 +130,7 @@ void main() {
     await tester.pumpWidget(
       Provider<FirebaseAuth>.value(
         value: mockFirebaseAuth,
-        child: App(),
+        child: const App(),
       ),
     );
 
@@ -198,7 +193,7 @@ void main() {
     await tester.pumpWidget(
       Provider<FirebaseAuth>.value(
         value: mockFirebaseAuth,
-        child: App(),
+        child: const App(),
       ),
     );
 
@@ -252,12 +247,12 @@ void main() {
     // Créez un mock de FirebaseAuth avec un utilisateur connecté
     final mockFirebaseAuth = MockFirebaseAuth(
         signedIn: true, user: MockUser(uid: '123', email: 'test@test.test'));
-    
+
     // Lancez l'application avec le mock
     await tester.pumpWidget(
       Provider<FirebaseAuth>.value(
         value: mockFirebaseAuth,
-        child: App(),
+        child: const App(),
       ),
     );
 
@@ -271,7 +266,7 @@ void main() {
     print('Bouton settingsButton appuyé');
 
     // Trouvez le bouton
-    final singoutButton =  find.text('Deconnexion');
+    final singoutButton = find.text('Deconnexion');
     print('Bouton Deconnexion trouvé');
 
     // Appuyez sur bouton

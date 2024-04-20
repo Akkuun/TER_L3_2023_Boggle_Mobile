@@ -1,27 +1,11 @@
-import 'dart:io';
-
-import 'package:bouggr/components/card.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/utils/dice_set.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_driver/flutter_driver.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:bouggr/pages/home.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:mockito/mockito.dart';
-import 'package:bouggr/global.dart';
 import 'package:bouggr/utils/decode.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:bouggr/utils/dico.dart';
-import 'package:bouggr/girlle_test.dart';
-import 'package:bouggr/utils/decode.dart';
-import 'package:bouggr/utils/get_all_word.dart';
 
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 

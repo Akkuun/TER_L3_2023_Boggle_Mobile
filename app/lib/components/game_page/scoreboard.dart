@@ -32,7 +32,8 @@ class ScoreBoard extends StatelessWidget {
         }
       }
       playerLeaderboard.computeRank();
-      rank = playerLeaderboard.getRank(FirebaseAuth.instance.currentUser!.uid);
+      rank = playerLeaderboard.getRank(
+          Provider.of<FirebaseAuth>(context, listen: false).currentUser!.uid);
     }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -27,7 +27,7 @@ class GameWidget extends StatelessWidget {
     if (gameType == GameType.multi) {
       final router = Provider.of<NavigationServices>(context, listen: false);
       try {
-        user = FirebaseAuth.instance.currentUser;
+        user = Provider.of<FirebaseAuth>(context, listen: false).currentUser;
         if (user == null) {
           router.goToPage(PageName.login);
         }

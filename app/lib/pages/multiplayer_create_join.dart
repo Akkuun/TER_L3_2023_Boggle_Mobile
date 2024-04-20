@@ -55,8 +55,12 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
       {
         "gameId": _gameUID,
         "userId": playerUID,
-        "email": FirebaseAuth.instance.currentUser!.email,
-        "name": FirebaseAuth.instance.currentUser!.email,
+        "email": Provider.of<FirebaseAuth>(context, listen: false)
+            .currentUser!
+            .email,
+        "name": Provider.of<FirebaseAuth>(context, listen: false)
+            .currentUser!
+            .email,
       },
     );
     var response = result.data;
@@ -67,8 +71,12 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
         {
           "gameId": _gameUID,
           "userId": playerUID,
-          "email": FirebaseAuth.instance.currentUser!.email,
-          "name": FirebaseAuth.instance.currentUser!.email,
+          "email": Provider.of<FirebaseAuth>(context, listen: false)
+              .currentUser!
+              .email,
+          "name": Provider.of<FirebaseAuth>(context, listen: false)
+              .currentUser!
+              .email,
         },
       );
       response = result.data;
@@ -91,8 +99,12 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
           "letters": letters.join(''),
           "lang": lang.index,
           "userId": playerUID,
-          "email": FirebaseAuth.instance.currentUser!.email,
-          "name": FirebaseAuth.instance.currentUser!.email,
+          "email": Provider.of<FirebaseAuth>(context, listen: false)
+              .currentUser!
+              .email,
+          "name": Provider.of<FirebaseAuth>(context, listen: false)
+              .currentUser!
+              .email,
         },
       );
 
@@ -125,7 +137,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
     final router = Provider.of<NavigationServices>(context, listen: false);
     User? user;
     try {
-      user = FirebaseAuth.instance.currentUser;
+      user = Provider.of<FirebaseAuth>(context, listen: false).currentUser;
       if (user == null) {
         router.goToPage(PageName.login);
       }

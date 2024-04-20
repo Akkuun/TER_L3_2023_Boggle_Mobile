@@ -85,7 +85,7 @@ class _GameWaitPageState extends State<GameWaitPage> {
     User? user;
 
     try {
-      user = FirebaseAuth.instance.currentUser;
+      user = Provider.of<FirebaseAuth>(context, listen : false).currentUser;
       if (user == null) {
         router.goToPage(PageName.login);
       }
@@ -179,23 +179,27 @@ class _GameWaitPageState extends State<GameWaitPage> {
               ),
             ),
           ),
-          if (data == {} && data["players"][FirebaseAuth.instance.currentUser!.uid]["leader"] == true)
-          BtnBoggle(
-            // Start game
-            onPressed: () async {
-              final rep = await FirebaseFunctions.instance
-                  .httpsCallable('StartGame')
-                  .call({
-                "gameId": Globals.gameCode,
-                "userId": user!.uid,
-              });
-              int? code = rep.data;
-              if (code == 0) {
-                router.goToPage(PageName.multiplayerGame);
-              }
-            },
-            text: Globals.getText(gameServices.language, 63),
-          ),
+          if (data == {} &&
+              data["players"]
+                          [Provider.of<FirebaseAuth>(context, listen : false).currentUser!.uid]
+                      ["leader"] ==
+                  true)
+            BtnBoggle(
+              // Start game
+              onPressed: () async {
+                final rep = await FirebaseFunctions.instance
+                    .httpsCallable('StartGame')
+                    .call({
+                  "gameId": Globals.gameCode,
+                  "userId": user!.uid,
+                });
+                int? code = rep.data;
+                if (code == 0) {
+                  router.goToPage(PageName.multiplayerGame);
+                }
+              },
+              text: Globals.getText(gameServices.language, 63),
+            ),
           Padding(
             padding: const EdgeInsets.only(bottom: 32),
             child: BtnBoggle(

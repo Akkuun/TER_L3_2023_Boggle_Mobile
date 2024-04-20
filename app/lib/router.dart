@@ -32,7 +32,7 @@ class JoinMulti extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     try {
-      User? user = FirebaseAuth.instance.currentUser;
+      User? user = Provider.of<FirebaseAuth>(context, listen : false).currentUser;
       if (user != null) {
         return const MultiplayerCreateJoinPage();
       } else {

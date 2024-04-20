@@ -109,7 +109,8 @@ class _BoggleGrilleState extends State<BoggleGrille> {
       return false;
     }
     if (gameServices.gameType == GameType.multi) {
-      User? user = FirebaseAuth.instance.currentUser;
+      User? user =
+          Provider.of<FirebaseAuth>(context, listen: false).currentUser;
       print("Sending word ${indexes.map((e) => {
             "x": e.$1,
             "y": e.$2

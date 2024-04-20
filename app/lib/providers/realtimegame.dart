@@ -37,36 +37,6 @@ class RealtimeGameProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool _isUpdated(HashMap<String, dynamic> data) {
-    print("[PROVIDER] Checking if game is updated");
-    print("[PROVIDER] Game : $_game");
-    print("[PROVIDER] Data : $data\n-------------------\n");
-
-    if (_game["status"] != data["status"]) {
-      return true;
-    }
-
-    for (var player in data["players"].keys) {
-      if (_game["players"][player] == null) {
-        return true;
-      }
-    }
-
-    if (_game["players"].length != data.length) {
-      return true;
-    }
-
-    return true;
-  }
-
-  void _listenerEvent(dynamic event) {
-    if (event is HashMap<String, dynamic>) {
-      if (_isUpdated(event)) {
-        _updateGame(event);
-      }
-    }
-  }
-
   get game {
     return _game;
   }
