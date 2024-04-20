@@ -32,9 +32,6 @@ class _SettingsPageState extends State<SettingsPage> {
     const Language('gl', 'Global', LangCode.GLOBAL),
   ];
   Language? _selectedLanguage;
-  void _handleButtonClick() {
-    // Do something when the button is clicked
-  }
 
   Future<void> _changePassword() async {
     final gameservices = Provider.of<GameServices>(context, listen: false);
@@ -56,12 +53,12 @@ class _SettingsPageState extends State<SettingsPage> {
           }
         } else {
           setState(() {
-            errorText =  Globals.getText(gameservices.language, 40);
+            errorText = Globals.getText(gameservices.language, 40);
           });
         }
       } else {
         setState(() {
-          errorText =  Globals.getText(gameservices.language, 53);
+          errorText = Globals.getText(gameservices.language, 53);
         });
       }
     } catch (e) {
@@ -98,8 +95,8 @@ class _SettingsPageState extends State<SettingsPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-           Padding(
-            padding: EdgeInsets.all(16),
+          Padding(
+            padding: const EdgeInsets.all(16),
             child: SizedBox(
               width: 430,
               height: 90,
@@ -112,7 +109,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     TextSpan(
                       text: Globals.getText(gameservices.language, 43),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Color(0xFF1F87B3),
                         fontSize: 64,
                         fontFamily: 'Jua',
@@ -176,8 +173,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     const SizedBox(height: 20),
                     Text(
-                     "${Globals.getText(gameservices.language, 46)} ${_selectedLanguage?.name ?? Globals.getText(gameservices.language, 47)}",
-
+                      "${Globals.getText(gameservices.language, 46)} ${_selectedLanguage?.name ?? Globals.getText(gameservices.language, 47)}",
                     ),
                     const SizedBox(height: 20),
                     TextField(
@@ -186,8 +182,8 @@ class _SettingsPageState extends State<SettingsPage> {
                           _password = value;
                         });
                       },
-                      decoration:  InputDecoration(
-                        border: OutlineInputBorder(),
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
                         labelText: Globals.getText(gameservices.language, 35),
                       ),
                       obscureText: true,
@@ -202,7 +198,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       },
                       decoration: InputDecoration(
                         border: const OutlineInputBorder(),
-                        labelText:  Globals.getText(gameservices.language, 48),
+                        labelText: Globals.getText(gameservices.language, 48),
                         errorText: errorText,
                       ),
                       obscureText: true,
@@ -212,12 +208,12 @@ class _SettingsPageState extends State<SettingsPage> {
                       onPressed: () {
                         _changePassword();
                       },
-                      child:  Text( Globals.getText(gameservices.language, 39)),
+                      child: Text(Globals.getText(gameservices.language, 39)),
                     ),
                     if (changeSuccess)
-                       Text(
+                      Text(
                         Globals.getText(gameservices.language, 50),
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.green,
                         ),
                       ),
@@ -230,7 +226,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         });
                       },
                       btnSize: BtnSize.large,
-                      text:  Globals.getText(gameservices.language, 51),
+                      text: Globals.getText(gameservices.language, 51),
                     ),
                     BtnBoggle(
                       onPressed: () {
@@ -238,7 +234,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       },
                       btnType: BtnType.secondary,
                       btnSize: BtnSize.small,
-                      text:  Globals.getText(gameservices.language, 52),
+                      text: Globals.getText(gameservices.language, 52),
                     ),
                   ],
                 ),
