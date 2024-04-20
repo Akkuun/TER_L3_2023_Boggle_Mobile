@@ -24,9 +24,11 @@ class LeaderBoard extends StatelessWidget {
     var game = Provider.of<RealtimeGameProvider>(context).game;
     var players = game['players'];
     if (gameType == GameType.multi) {
-      for (var player in players) {
-        gameServices.playerLeaderboard
-            .updatePlayer(player.key, player.value['score']);
+      if (players != null) {
+        for (var player in players!.entries) {
+          gameServices.playerLeaderboard
+              .updatePlayer(player.key, player.value['score']);
+        }
       }
 
       gameServices.playerLeaderboard.computeRank();
