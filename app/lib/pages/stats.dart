@@ -8,7 +8,7 @@ import 'package:bouggr/components/stat.dart';
 import 'package:bouggr/utils/game_data.dart';
 
 class StatsPage extends StatefulWidget {
-  const StatsPage({Key? key}) : super(key: key);
+  const StatsPage({super.key});
 
   @override
   _StatsPageState createState() => _StatsPageState();
