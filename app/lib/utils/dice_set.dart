@@ -10,6 +10,7 @@ class DiceSet {
     for (var row in dices) {
       usedLetters.add(row[Random().nextInt(row.length)]);
     }
+    usedLetters.shuffle();
     return usedLetters;
   }
 }

@@ -3,8 +3,7 @@ import * as admin from "firebase-admin";
 import { GameState } from "../enums/gameState";
 
 
-
-enum StartGameReturn {
+enum CancelGameReturn {
     SUCCESS = 0,
     GAME_NOT_FOUND = 1,
     GAME_STARTED = 2,
@@ -14,47 +13,46 @@ enum StartGameReturn {
     WRONG_GAME_ID = 6
 }
 
-export async function start_game(req: any) {
+export async function cancel_game(req: any) {
 
     const data = req.data as { gameId: string, userId: string };
 
     const player_ingame = admin.database().ref(`/player_ingame/${data.userId}`);
     const playerInGameData = await player_ingame.get();
     if (!playerInGameData.exists()) { //if player is not in a game
-        return StartGameReturn.NOT_IN_GAME;
+        return CancelGameReturn.NOT_IN_GAME;
     }
 
     if ((playerInGameData.val()) != data.gameId) { //if game target is not same as player target
-        return StartGameReturn.WRONG_GAME_ID;
+        return CancelGameReturn.WRONG_GAME_ID;
     }
 
 
     const game = admin.database().ref(`/games/${data.gameId}`);
     const gameData = await game.get();
     if (!gameData.exists()) { //if game does not exist
-        return StartGameReturn.GAME_NOT_FOUND;
+        return CancelGameReturn.GAME_NOT_FOUND;
     }
 
-    const players = await game.child("players");
+    const players = game.child("players");
     const targetPlayer = players.child(data.userId);
     if (!(await targetPlayer.get()).exists()) { // if player does not exist
-        return StartGameReturn.NOT_IN_GAME;
-    } else {
-        if (!(await targetPlayer.child("leader").get()).val()) { //if player is not a leader
-            return StartGameReturn.NOT_LEADER;
-        }
+        return CancelGameReturn.NOT_IN_GAME;
+    } else if (!(await targetPlayer.child("leader").get()).val()) { //if player is not a leader
+        return CancelGameReturn.NOT_LEADER;
+
     }
 
     // player exist in the game & is a leader
     if ((await game.child("status").get()).val() != GameState.NotStarted) { //game already started
-        return StartGameReturn.ALREADY_IN_PROGRESS;
+        return CancelGameReturn.ALREADY_IN_PROGRESS;
     }
 
 
-    // 3min game
-    const start = Date.now();
-    await game.update({ status: GameState.InProgress, startedAt: start, end_time: start + 180000 });
+    await game.update({ status: GameState.Cancelled });
+    if ((await players.get()).val().length == 0) {
+        await game.remove();
+    }
 
-
-    return StartGameReturn.SUCCESS;
+    return CancelGameReturn.SUCCESS;
 }

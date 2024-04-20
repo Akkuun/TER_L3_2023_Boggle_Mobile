@@ -223,10 +223,11 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     BtnBoggle(
                       onPressed: () {
-                        auth.signOut();
-                        Globals.gameCode = "";
+                        Globals.resetMultiplayerData();
                         Globals.playerName = "";
-                        router.goToPage(PageName.home);
+                        auth.signOut().then((value) {
+                          router.goToPage(PageName.login);
+                        });
                       },
                       btnSize: BtnSize.large,
                       text:  Globals.getText(gameservices.language, 51),

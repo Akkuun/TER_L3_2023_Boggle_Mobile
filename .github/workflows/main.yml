@@ -1,0 +1,100 @@
+name: "Build & Release"
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  setup_and_test:
+    name: Setup, Test & Cache
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11.x'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.7'
+
+      - name: Cache Flutter packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.pub-cache
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
+
+      - name: Install Dependencies
+        run: flutter pub get
+
+      - name: Run Tests
+        run: flutter test app/test/test_multi.dart
+
+  build_apk:
+    name: Build the APK Version
+    runs-on: macos-latest
+    needs: setup_and_test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+
+      - name: Set up Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11.x'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.7'
+
+      - name: Change to app directory
+        run: |
+          cd app 
+          ls -l 
+          pwd
+
+      - name: Build APK
+        run: flutter build apk
+        working-directory: app
+        # Archive the APK as an artifact
+      - name: Archive APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: release-apk
+          path: app/build/app/outputs/flutter-apk/
+
+  push_to_release:
+    runs-on: macos-latest
+    needs: build_apk
+    steps:
+    - name: Download APK artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: release-apk
+        path: app/build/app/outputs/flutter-apk/
+
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          app/build/app/outputs/flutter-apk/*.apk
+        token: ${{ secrets.PIPELINE_SECRET_BOOGLE_L3 }}
+        tag_name: v1.0.${{ github.run_number }}
+        release_name: Release v1.0.${{ github.run_number }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.PIPELINE_SECRET_BOOGLE_L3 }}
+
+
+
+

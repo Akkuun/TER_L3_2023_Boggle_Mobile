@@ -6,26 +6,30 @@ export interface DictionaryConfig {
 }
 
 export class DictionariesHandler {
+    isReady: boolean = false;
+    testValue: number = 0;
 
-    constructor(
-        dictionaries: DictionaryConfig[]
-    ) {
-        dictionaries.forEach((dico) => {
-            admin.storage().bucket().file(dico.path).download().then((data) => {
-                const dico = JSON.parse(data.toString());
-                this.addDictionary(dico.lang, dico);
-            });
-        });
+    public async init(dictionaries: DictionaryConfig[]) {
+
+        for (const dictionary of dictionaries) {
+            const file = await admin.storage().bucket().file(dictionary.path).download()
+
+            const dicoParsed = JSON.parse(file.toString());
+            this.addDictionary(dictionary.lang, new Dictionary(dicoParsed));
+
+        }
+
+
     }
 
     private dictionaries: Map<number, Dictionary> = new Map<number, Dictionary>();
 
-    private addDictionary(lang: number, dictionary: Dictionary) {
+    public addDictionary(lang: number, dictionary: Dictionary) {
         this.dictionaries.set(lang, dictionary);
     }
 
     public getDictionary(lang: number) {
-        return this.dictionaries.get(lang) as Dictionary;
+        return this.dictionaries.get(lang) ?? null;
     }
 
     public dicoExists(lang: number) {

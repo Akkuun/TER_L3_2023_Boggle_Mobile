@@ -10,7 +10,7 @@ class Stat extends StatelessWidget {
   final String grid;
 
   const Stat({
-    super.key,
+    Key? key,
     this.fontSize = 18,
     required this.grid,
     required this.statName,
@@ -18,41 +18,45 @@ class Stat extends StatelessWidget {
     this.isDarker = false,
     this.isFirst = false,
     this.isLast = false,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          height: 128,
-          padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            color: Colors.lightBlue[isDarker ? 100 : 50],
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        height: 128,
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: Colors.lightBlue[isDarker ? 100 : 50],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            SizedBox(width: 8),
+            MiniGrid(grid: grid, height: 102, width: 102),
+            SizedBox(width: 8),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                MiniGrid(grid: grid, height: 102, width: 102),
+                Text(
+                  'Score : $statValue',
+                  style: TextStyle(
+                      fontSize: fontSize, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
                 Text(
                   statName,
-                  style: TextStyle(fontSize: fontSize),
+                  style: TextStyle(
+                      fontSize: fontSize - 2, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox.shrink(),
-                Text(
-                  statValue,
-                  style: TextStyle(fontSize: fontSize),
-                  textAlign: TextAlign.right,
-                ),
-                const SizedBox.shrink(),
               ],
             ),
-          ),
-        ));
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -62,11 +66,11 @@ class MiniGrid extends StatelessWidget {
   final double width;
 
   const MiniGrid({
-    super.key,
+    Key? key,
     required this.grid,
     this.height = 100,
     this.width = 100,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

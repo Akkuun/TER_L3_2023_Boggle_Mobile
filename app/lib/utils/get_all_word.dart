@@ -6,6 +6,10 @@ import 'package:native_ffi/native_ffi.dart';
 Future<List<Word>> getAllWords2(List<String> grid, Dictionary dico) async {
   HashMap<String, Word> resMap = HashMap<String, Word>();
 
+  while (dico.dictionary == null) {
+    await dico.ayncLoad();
+  }
+
   _start2(grid, dico, resMap);
 
   var res = resMap.values.toList();

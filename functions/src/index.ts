@@ -1,4 +1,5 @@
 import { onCall } from "firebase-functions/v2/https";
+import { onSchedule } from "firebase-functions/v2/scheduler";
 // The Firebase Admin SDK to access the Firebase Realtime Database.
 import * as admin from "firebase-admin";
 import { DictionariesHandler } from "./services/dictionnaries_handler";
@@ -6,6 +7,12 @@ import { LangCode } from "./utils/lang";
 import { check_word } from "./routes/check_word";
 import { cert } from "firebase-admin/app";
 import { join_game } from "./routes/join_game";
+import { start_game } from "./routes/start_game";
+import { create_game } from "./routes/create_game";
+import { leave_game } from "./routes/leave_game";
+import { cancel_game } from "./routes/cancel_game";
+import { remove_party } from "./cron_task/remove_party";
+import { clear_player_list } from "./cron_task/clear_player_list";
 
 
 // Initialize the Firebase Admin SDK
@@ -18,117 +25,36 @@ admin.initializeApp({
 });
 
 
-const DictionaryConfig = [
-    {
+const DictionaryConfig = {
+    [LangCode.FR]: {
         lang: LangCode.FR,
         path: "fr_dico.json"
     },
 
-];
+};
 
-const dictionariesHandler = new DictionariesHandler(
-    DictionaryConfig
-);
+const dictionariesHandler = { ptr: new DictionariesHandler() }
 
 
 
+export const CronClearGames = onSchedule("every day 05:00", remove_party);
 
-interface User {
-    email: string,
-    score: number,
-    leader: boolean,
-}
+export const CronClearPlayerList = onSchedule("every day 05:00", clear_player_list);
 
-interface GameInterface {
-    status: string;
-    players: { [key: string]: User };
-    letters: string;
-    lang: number;
-}
+export const CreateGame = onCall(create_game);
 
-
-
-//cron task to remove games after 10 minutes
-
-
-
-export const CreateGame = onCall(async (req) => {
-    const data = req.data as { userId: string, email: string, letters: string, lang: number };
-    const game = admin.database().ref("/games").push();
-    const gameId = game.key as string;
-
-
-    const payload: GameInterface = {
-        "status": "created",
-        "letters": data.letters,
-        "players": {
-            [data.userId]: {
-                "email": data.email,
-                "score": 0,
-                "leader": true
-            }
-        },
-        "lang": data.lang,
-    };
-
-    await game.set(payload);
-
-    return gameId;
-}
-);
-
-
-export const StartGame = onCall(async (req) => {
-
-    const data = req.data as { gameId: string, userId: string };
-
-    const game = admin.database().ref(`/games/${data.gameId}`);
-    const gameData = await game.get();
-    if (!gameData.exists()) {
-        return false;
-    }
-
-    if (((await game.child("status").get()).val()) === "started") {
-        return false;
-    }
-
-    const players = await game.child("players").get();
-    if (players.exists()) {
-        const playersData = players.val();
-        if (playersData[data.userId].leader) {
-            await game.update({ status: "started" });
-            await game.push({ startedAt: Date.now() });
-
-            return true;
-        }
-    }
-
-
-
-    return false;
-});
+//allow a player to start a game
+export const StartGame = onCall(start_game);
 
 //allow a player to join a game
 export const JoinGame = onCall(join_game);
 
-export const LeaveGame = onCall(async (req) => {
-    const data = req.data;
-    const game = admin.database().ref(`/games/${data.gameId}`);
-    const gameData: any = await game.get();
-    if (gameData.status === "started") {
-        return "Game already started";
-    } else {
-        // leave game
-        game.update({ players: gameData.players.filter((player: string) => player !== data.userId) });
-
-        return "Game left";
-    }
-});
+export const LeaveGame = onCall(leave_game);
 
 
-
+export const CancelGame = onCall(cancel_game);
 
 
 export const SendWord = onCall(
-    check_word(dictionariesHandler)
+    check_word(dictionariesHandler, DictionaryConfig)
 );
