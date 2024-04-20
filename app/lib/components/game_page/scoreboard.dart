@@ -16,7 +16,7 @@ class ScoreBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     final GameServices gameServices = Provider.of<GameServices>(context);
     PlayerLeaderboard playerLeaderboard = PlayerLeaderboard();
-    playerLeaderboard.init();
+
     int? rank;
     var gameType = gameServices.gameType;
     var players = Provider.of<RealtimeGameProvider>(context).game['players'];
@@ -36,9 +36,7 @@ class ScoreBoard extends StatelessWidget {
         }
       }
       playerLeaderboard.computeRank();
-      rank = playerLeaderboard
-          .getPlayer(FirebaseAuth.instance.currentUser!.uid)
-          .rank;
+      rank = playerLeaderboard.getRank(FirebaseAuth.instance.currentUser!.uid);
     }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

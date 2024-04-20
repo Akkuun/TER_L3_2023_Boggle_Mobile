@@ -29,6 +29,7 @@ enum JoinGameReturn {
   gameNotFound,
   alreadyInGame,
   invalidPassword,
+  wrongGameId,
 }
 
 class MultiplayerCreateJoinPage extends StatefulWidget {
@@ -62,8 +63,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
     print("Trting to join game $_gameUID. Return code : $response");
     if (response["error"] == "User is already in a game") {
       print("${response["error"]}. Trying to leave it and join again");
-      result =
-      await FirebaseFunctions.instance.httpsCallable('JoinGame').call(
+      result = await FirebaseFunctions.instance.httpsCallable('JoinGame').call(
         {
           "gameId": _gameUID,
           "userId": playerUID,

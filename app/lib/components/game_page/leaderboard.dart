@@ -18,28 +18,20 @@ class LeaderBoard extends StatelessWidget {
       const Color(0xFFFF7D1E), // bronze
     ];
 
-    PlayerLeaderboard playerLeaderboard = PlayerLeaderboard();
-    playerLeaderboard.init();
+    var gameServices = Provider.of<GameServices>(context);
+    var gameType = gameServices.gameType;
 
-    var gameType = Provider.of<GameServices>(context, listen: false).gameType;
-    var players = Provider.of<RealtimeGameProvider>(context).game['players'];
+    var game = Provider.of<RealtimeGameProvider>(context).game;
+    var players = game['players'];
     if (gameType == GameType.multi) {
-      if (players != null) {
-        for (var player in players!.entries) {
-          try {
-            playerLeaderboard.addPlayer(
-              PlayerStats(
-                  name: player.value['email'],
-                  score: player.value['score'],
-                  uid: player.key),
-            );
-          } catch (e) {
-            print(e);
-          }
-        }
+      for (var player in players) {
+        gameServices.playerLeaderboard
+            .updatePlayer(player.key, player.value['score']);
       }
-      playerLeaderboard.computeRank();
-      players = playerLeaderboard.players ?? [];
+
+      gameServices.playerLeaderboard.computeRank();
+
+      players = gameServices.playerLeaderboard.players;
     }
 
     return Container(

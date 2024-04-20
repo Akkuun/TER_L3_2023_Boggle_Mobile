@@ -37,29 +37,29 @@ class EndGameDetail extends StatelessWidget {
         words: []);
     final playerLeaderboard = PlayerLeaderboard();
     int rank = -1;
-    playerLeaderboard.init();
+
     if (gameServices.gameType == GameType.multi) {
-      final players = gameServices.multiResult.isEmpty ? null : Map<String, dynamic>.from(gameServices.multiResult["players"]).entries.toList();
+      final players = gameServices.multiResult.isEmpty
+          ? null
+          : Map<String, dynamic>.from(gameServices.multiResult["players"])
+              .entries
+              .toList();
       if (players != null) {
-        for (int i = 0; i < players.length; i++) {
+        for (var player in players) {
           try {
             playerLeaderboard.addPlayer(
               PlayerStats(
-                  name: players[i].value['email'],
-                  score: players[i].value['score'],
-                  uid: players[i].key),
+                  name: player.value['email'],
+                  score: player.value['score'],
+                  uid: player.key),
             );
           } catch (e) {
-            playerLeaderboard.addPlayer(
-              PlayerStats(
-                  name: 'Player ${i + 1}',
-                  score: -1,
-                  uid: players[i].key),
-            );
+            print(e);
           }
         }
         playerLeaderboard.computeRank();
-        rank = playerLeaderboard.getPlayer(FirebaseAuth.instance.currentUser!.uid).rank ?? -1;
+        rank =
+            playerLeaderboard.getRank(FirebaseAuth.instance.currentUser!.uid);
       }
     }
 
@@ -80,23 +80,23 @@ class EndGameDetail extends StatelessWidget {
                       decoration: ShapeDecoration(
                         color: Colors.white,
                         shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        shadows: const [
+                          BoxShadow(
+                            color: Color(0x3F000000),
+                            blurRadius: 4,
+                            offset: Offset(0, 4),
+                            spreadRadius: 0,
+                          )
+                        ],
                       ),
-                      shadows: const [
-                        BoxShadow(
-                          color: Color(0x3F000000),
-                          blurRadius: 4,
-                          offset: Offset(0, 4),
-                          spreadRadius: 0,
-                        )
-                      ],
-                    ),
-                    width: size.width * 0.9,
-                    child:const LeaderBoard()
-                  ),
+                      width: size.width * 0.9,
+                      child: const LeaderBoard()),
                 ),
               Padding(
-                padding: EdgeInsets.all((gameServices.gameType == GameType.multi) ? 2.0 : 8.0),
+                padding: EdgeInsets.all(
+                    (gameServices.gameType == GameType.multi) ? 2.0 : 8.0),
                 child: Container(
                   decoration: ShapeDecoration(
                     color: Colors.white,
@@ -120,19 +120,22 @@ class EndGameDetail extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          if (gameServices.gameType == GameType.multi) Text("${ Globals.getText(gameServices.language, 18)} $rank"),
-                          Text("${ Globals.getText(gameServices.language, 61)} ${gameServices.score}"),
-                          Text( Globals.getText(gameServices.language, 62)),
+                          if (gameServices.gameType == GameType.multi)
+                            Text(
+                                "${Globals.getText(gameServices.language, 18)} $rank"),
+                          Text(
+                              "${Globals.getText(gameServices.language, 61)} ${gameServices.score}"),
+                          Text(Globals.getText(gameServices.language, 62)),
                         ],
                       ),
                       Text(
-                          "${ Globals.getText(gameServices.language, 60)} ${gameServices.longestWord}"),
-                       Text( Globals.getText(gameServices.language, 59)),
+                          "${Globals.getText(gameServices.language, 60)} ${gameServices.longestWord}"),
+                      Text(Globals.getText(gameServices.language, 59)),
                       BtnBoggle(
                         onPressed: () {
                           endGameService.showPopUp();
                         },
-                        text:  Globals.getText(gameServices.language, 58),
+                        text: Globals.getText(gameServices.language, 58),
                         btnType: BtnType.third,
                       ),
                     ],
@@ -173,7 +176,7 @@ class EndGameDetail extends StatelessWidget {
                   gameServices.reset();
                   navigationServices.goToPage(PageName.home);
                 },
-                text:  Globals.getText(gameServices.language, 25),
+                text: Globals.getText(gameServices.language, 25),
               ),
               BtnBoggle(
                   onPressed: () {
@@ -185,7 +188,7 @@ class EndGameDetail extends StatelessWidget {
                     timerServices.resetProgress();
                     navigationServices.goToPage(PageName.home);
                   },
-                  text:  Globals.getText(gameServices.language, 56),
+                  text: Globals.getText(gameServices.language, 56),
                   btnType: BtnType.secondary),
             ],
           ),

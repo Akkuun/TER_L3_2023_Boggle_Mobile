@@ -4,13 +4,13 @@ import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/player_in_list.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
+import 'package:bouggr/utils/player_leaderboard.dart';
 import 'package:flutter/services.dart';
 
 //services
 import 'package:bouggr/providers/game.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 
 //flutter
 import 'package:flutter/material.dart';
@@ -52,14 +52,26 @@ class _GameWaitPageState extends State<GameWaitPage> {
 
   @override
   Widget build(BuildContext context) {
-
     print("[GAME WAIT] Game code : ${Globals.gameCode}");
     var data = context.watch<RealtimeGameProvider>().game;
+    var players = data["players"];
     var gameStatus = data["status"];
+    if (players != null && players!.isNotEmpty && gameStatus == 3) {
+      for (var player in players!.entries) {
+        gameServices.playerLeaderboard.addPlayer(
+          PlayerStats(
+              name: player.value['email'],
+              score: player.value['score'],
+              uid: player.key),
+        );
+      }
+      gameServices.playerLeaderboard.remove(players.keys.toList());
+    }
+
     print("[GAME WAIT] Game status : $gameStatus");
     print("[GAME WAIT] Game  : $data");
     if (gameStatus == 0) {
-      WidgetsBinding.instance.addPostFrameCallback((_){
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         router.goToPage(PageName.multiplayerGame);
       });
     }
@@ -69,7 +81,6 @@ class _GameWaitPageState extends State<GameWaitPage> {
       fontFamily: 'Jua',
       fontWeight: FontWeight.w400,
     );
-
 
     User? user;
 
@@ -119,27 +130,27 @@ class _GameWaitPageState extends State<GameWaitPage> {
             child: AppTitle(),
           ),
           ElevatedButton(
-            onPressed: ()async {
+            onPressed: () async {
               await Clipboard.setData(ClipboardData(text: Globals.gameCode));
             },
             style: ButtonStyle(
-              backgroundColor: MaterialStateColor.resolveWith((states) => const Color.fromARGB(255, 89, 150, 194)),
+              backgroundColor: MaterialStateColor.resolveWith(
+                  (states) => const Color.fromARGB(255, 89, 150, 194)),
             ),
             child: Text(
-                "Code : ${Globals.gameCode}",
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontFamily: 'Jua',
-                  fontWeight: FontWeight.w400,
-                ),
+              "Code : ${Globals.gameCode}",
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontFamily: 'Jua',
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
-
           Text(
-          "Joueurs présents :",
-          style: textStyle,
-          textAlign: TextAlign.center,
+            "Joueurs présents :",
+            style: textStyle,
+            textAlign: TextAlign.center,
           ),
           Expanded(
             child: SizedBox(
@@ -148,19 +159,20 @@ class _GameWaitPageState extends State<GameWaitPage> {
                 padding: const EdgeInsets.all(16.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color:  Colors.white,
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                       color: const Color.fromARGB(255, 89, 150, 194),
                       width: 1,
                     ),
                     boxShadow: const [
-                    BoxShadow(
-                      color: Color(0x3F000000),
-                      blurRadius: 4,
-                      offset: Offset(0, 4),
-                      spreadRadius: 0,
-                    ),],
+                      BoxShadow(
+                        color: Color(0x3F000000),
+                        blurRadius: 4,
+                        offset: Offset(0, 4),
+                        spreadRadius: 0,
+                      ),
+                    ],
                   ),
                   child: listView,
                 ),
@@ -170,7 +182,9 @@ class _GameWaitPageState extends State<GameWaitPage> {
           BtnBoggle(
             // Start game
             onPressed: () async {
-              final rep = await FirebaseFunctions.instance.httpsCallable('StartGame').call({
+              final rep = await FirebaseFunctions.instance
+                  .httpsCallable('StartGame')
+                  .call({
                 "gameId": Globals.gameCode,
                 "userId": user!.uid,
               });
@@ -189,7 +203,8 @@ class _GameWaitPageState extends State<GameWaitPage> {
                 FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
                   "userId": user!.uid,
                 });
-                Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
+                Provider.of<RealtimeGameProvider>(context, listen: false)
+                    .onDispose();
                 router.goToPage(PageName.home);
               },
               text: Globals.getText(gameServices.language, 64),

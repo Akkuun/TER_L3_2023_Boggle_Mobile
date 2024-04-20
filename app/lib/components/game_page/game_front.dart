@@ -4,12 +4,9 @@ import 'package:bouggr/components/game_page/scoreboard.dart';
 import 'package:bouggr/components/game_page/leaderboard.dart';
 import 'package:bouggr/components/title.dart';
 import 'package:bouggr/components/game_page/words_found.dart';
-import 'package:bouggr/providers/realtimegame.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bouggr/providers/game.dart';
 
-import 'package:bouggr/utils/player_leaderboard.dart';
 import 'package:provider/provider.dart';
 
 class GameFront extends StatelessWidget {
