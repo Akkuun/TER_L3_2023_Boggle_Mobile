@@ -11,10 +11,8 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 
 class BoggleGrille extends StatefulWidget {
-  final GameType gameType;
   const BoggleGrille({
     super.key,
-    required this.gameType,
   });
 
   @override
@@ -110,13 +108,18 @@ class _BoggleGrilleState extends State<BoggleGrille> {
       gameServices.addStrike();
       return false;
     }
-    if (widget.gameType == GameType.multi) {
+    if (gameServices.gameType == GameType.multi) {
       User? user = FirebaseAuth.instance.currentUser;
-      print("Sending word ${indexes.map((e) => {"x": e.$1, "y": e.$2}).toList()} to server");
+      print("Sending word ${indexes.map((e) => {
+            "x": e.$1,
+            "y": e.$2
+          }).toList()} to server");
       FirebaseFunctions.instance.httpsCallable('SendWord').call({
         "gameId": Globals.gameCode,
         "userId": user!.uid,
-        "word": indexes.map((e) => {"x": e.$2, "y": e.$1}).toList(), // Coordonnées inversées pour le serveur
+        "word": indexes
+            .map((e) => {"x": e.$2, "y": e.$1})
+            .toList(), // Coordonnées inversées pour le serveur
       }).then((value) {
         print("Word sent");
         print("Value: ${value.data}");

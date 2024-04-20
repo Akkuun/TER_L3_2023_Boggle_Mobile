@@ -14,17 +14,16 @@ import '../../providers/navigation.dart';
 
 /// Contains the animation for the background and the game front  and the pop up menu
 class GameWidget extends StatelessWidget {
-  final GameType gameType;
   final List<MapEntry<String, dynamic>>? players;
   const GameWidget({
     super.key,
-    required this.gameType,
     this.players,
   });
 
   @override
   Widget build(BuildContext context) {
     User? user;
+    var gameType = Provider.of<GameServices>(context, listen: false).gameType;
     if (gameType == GameType.multi) {
       final router = Provider.of<NavigationServices>(context, listen: false);
       try {
@@ -42,8 +41,8 @@ class GameWidget extends StatelessWidget {
       child: Stack(
         children: [
           const Wave(),
-          GameFront(gameType: gameType, players: players),
-          PopUpGameMenu(gameType: gameType, uid: user?.uid ?? ''),
+          const GameFront(),
+          PopUpGameMenu(uid: user?.uid ?? ''),
         ],
       ),
     );

@@ -92,7 +92,7 @@ class EndGameDetail extends StatelessWidget {
                       ],
                     ),
                     width: size.width * 0.9,
-                    child:LeaderBoard(players: playerLeaderboard.firstn(3))
+                    child:const LeaderBoard()
                   ),
                 ),
               Padding(

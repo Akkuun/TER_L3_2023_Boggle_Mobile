@@ -81,13 +81,9 @@ class _GamePageState extends State<GamePage> {
         gameServices.letters =
             Globals.selectDiceSet(gameServices.language).roll();
         return Globals(child: Builder(builder: (BuildContext innerContext) {
-          return const GameWidget(gameType: GameType.solo);
+          return const GameWidget();
         }));
       case GameType.multi:
-        final data = context.watch<RealtimeGameProvider>().game;
-        final players = data == null
-            ? null
-            : Map<String, dynamic>.from(data["players"]).entries.toList();
         final letters = _fetchLetters();
         return Globals(child: Builder(builder: (BuildContext innerContext) {
           return FutureBuilder(
@@ -96,7 +92,7 @@ class _GamePageState extends State<GamePage> {
               if (snapshot.hasData) {
                 gameServices.letters = snapshot.data!;
                 gameServices.gameType = GameType.multi;
-                return GameWidget(gameType: GameType.multi, players: players);
+                return const GameWidget();
               } else {
                 return const CircularProgressIndicator();
               }

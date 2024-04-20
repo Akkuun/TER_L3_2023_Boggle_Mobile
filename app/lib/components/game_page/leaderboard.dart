@@ -1,14 +1,14 @@
 import 'package:bouggr/components/game_page/leaderboard_row.dart';
+import 'package:bouggr/providers/game.dart';
+import 'package:bouggr/providers/realtimegame.dart';
 import 'package:bouggr/utils/player_leaderboard.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LeaderBoard extends StatelessWidget {
   const LeaderBoard({
     super.key,
-    this.players,
   });
-
-  final List<PlayerStats>? players;
 
   @override
   Widget build(BuildContext context) {
@@ -18,20 +18,57 @@ class LeaderBoard extends StatelessWidget {
       const Color(0xFFFF7D1E), // bronze
     ];
 
+    PlayerLeaderboard playerLeaderboard = PlayerLeaderboard();
+    playerLeaderboard.init();
+
+    var gameType = Provider.of<GameServices>(context, listen: false).gameType;
+    var players = Provider.of<RealtimeGameProvider>(context).game['players'];
+    if (gameType == GameType.multi) {
+      if (players != null) {
+        for (var player in players!.entries) {
+          try {
+            playerLeaderboard.addPlayer(
+              PlayerStats(
+                  name: player.value['email'],
+                  score: player.value['score'],
+                  uid: player.key),
+            );
+          } catch (e) {
+            print(e);
+          }
+        }
+      }
+      playerLeaderboard.computeRank();
+      players = playerLeaderboard.players ?? [];
+    }
+
     return Container(
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(8)),
         color: Colors.white,
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          LeaderboardRow(rank: 1, score: players![0].score, name: players![0].name, color: colors[0]),
-            if (players!.length >= 2) LeaderboardRow(rank: 2, score: players![1].score, name: players![1].name, color: colors[1]),
-            if (players!.length >= 3) LeaderboardRow(rank: 3, score: players![2].score, name: players![2].name, color: colors[2]),
-          ]
-      ),
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            LeaderboardRow(
+                rank: 1,
+                score: players![0].score,
+                name: players![0].name,
+                color: colors[0]),
+            if (players!.length >= 2)
+              LeaderboardRow(
+                  rank: 2,
+                  score: players![1].score,
+                  name: players![1].name,
+                  color: colors[1]),
+            if (players!.length >= 3)
+              LeaderboardRow(
+                  rank: 3,
+                  score: players![2].score,
+                  name: players![2].name,
+                  color: colors[2]),
+          ]),
     );
   }
 }

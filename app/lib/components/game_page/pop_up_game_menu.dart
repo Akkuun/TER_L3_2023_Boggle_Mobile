@@ -21,11 +21,9 @@ BackgroundMusicPlayer backgroundMusicPlayer = BackgroundMusicPlayer.instance;
 
 class PopUpGameMenu extends StatelessWidget {
   final String uid;
-  final GameType gameType;
 
   const PopUpGameMenu({
     super.key,
-    required this.gameType,
     this.uid = '',
   });
 
@@ -93,8 +91,10 @@ class PopUpGameMenu extends StatelessWidget {
                       ),
                     ],
                   ),
-                   Text(Globals.getText(gameServices.language, 24), style: const TextStyle(fontSize: 30)),
-                  Text("${gameServices.score} ${Globals.getText(gameServices.language, 57)}",
+                  Text(Globals.getText(gameServices.language, 24),
+                      style: const TextStyle(fontSize: 30)),
+                  Text(
+                      "${gameServices.score} ${Globals.getText(gameServices.language, 57)}",
                       style: const TextStyle(fontSize: 20)),
                   BtnBoggle(
                     onPressed: () {
@@ -102,8 +102,12 @@ class PopUpGameMenu extends StatelessWidget {
                       GameDataStorage.saveGameResult(gameResult);
 
                       timerServices.resetProgress();
-                      gameServices.multiResult = Provider.of<RealtimeGameProvider>(context, listen: false).game;
-                      Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
+                      gameServices.multiResult =
+                          Provider.of<RealtimeGameProvider>(context,
+                                  listen: false)
+                              .game;
+                      Provider.of<RealtimeGameProvider>(context, listen: false)
+                          .onDispose();
                       navigationServices.goToPage(PageName.detail);
                     },
                     text: Globals.getText(gameServices.language, 27),
@@ -117,11 +121,16 @@ class PopUpGameMenu extends StatelessWidget {
                       timerServices.resetProgress();
                       gameServices.reset();
 
-                      if (gameType == GameType.multi) {
+                      if (gameServices.gameType == GameType.multi) {
                         Globals.resetMultiplayerData();
-                        FirebaseFunctions.instance.httpsCallable('LeaveGame').call({"userId": uid,});
+                        FirebaseFunctions.instance
+                            .httpsCallable('LeaveGame')
+                            .call({
+                          "userId": uid,
+                        });
                       }
-                      Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
+                      Provider.of<RealtimeGameProvider>(context, listen: false)
+                          .onDispose();
                       navigationServices.goToPage(PageName.home);
                     },
                     text: Globals.getText(gameServices.language, 25),
@@ -134,11 +143,17 @@ class PopUpGameMenu extends StatelessWidget {
                         gameServices.reset();
                         timerServices.resetProgress();
 
-                        if (gameType == GameType.multi) {
+                        if (gameServices.gameType == GameType.multi) {
                           Globals.resetMultiplayerData();
-                          FirebaseFunctions.instance.httpsCallable('LeaveGame').call({"userId": uid,});
+                          FirebaseFunctions.instance
+                              .httpsCallable('LeaveGame')
+                              .call({
+                            "userId": uid,
+                          });
                         }
-                        Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
+                        Provider.of<RealtimeGameProvider>(context,
+                                listen: false)
+                            .onDispose();
                         navigationServices.goToPage(PageName.home);
                       },
                       text: Globals.getText(gameServices.language, 26),
