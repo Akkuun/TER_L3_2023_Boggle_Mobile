@@ -2,13 +2,14 @@ import 'dart:collection';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class RealtimeGameProvider extends ChangeNotifier {
   dynamic _game = HashMap<String, dynamic>();
   String _lastGameCode = "";
-  late DatabaseReference dbRef;
+  DatabaseReference? dbRef;
   String _gameCode = '';
-
+  final logger = Logger();
   String get gameCode {
     return _gameCode;
   }
@@ -21,10 +22,12 @@ class RealtimeGameProvider extends ChangeNotifier {
   void initListeners() {
     // Ici on va initialiser les listeners pour écouter les changements
     // dans la base de données
+
     dbRef = FirebaseDatabase.instance.ref('games/${_gameCode}');
-    dbRef.onValue.listen((DatabaseEvent event) {
-      final data = HashMap<String, dynamic>.from(event.snapshot.value! as Map);
-      print("[PROVIDER] Data of game : ${data}");
+    dbRef!.onValue.listen((DatabaseEvent event) {
+      final data =
+          HashMap<String, dynamic>.from(event.snapshot.value as Map? ?? {});
+      logger.d("[PROVIDER] Data of game : $data");
       if (_lastGameCode == _gameCode) {
         return;
       }
@@ -32,17 +35,22 @@ class RealtimeGameProvider extends ChangeNotifier {
     });
   }
 
-  void onDispose() {
-    print("[PROVIDER] Disposing of the game");
-    dbRef.onValue.listen((DatabaseEvent event) {}).cancel();
+  Future<void> onDispose() async {
+    if (dbRef == null) {
+      return;
+    }
+    logger.d("[PROVIDER] Disposing of the game");
+
+    await dbRef!.onValue.listen((DatabaseEvent event) {}).cancel();
     _lastGameCode = _gameCode;
     gameCode = '';
     _game = HashMap<String, dynamic>();
-    dbRef.onDisconnect();
+    dbRef!.onDisconnect();
+    logger.d("[PROVIDER] game disposed");
   }
 
   void _updateGame(game) {
-    print("[PROVIDER] Updating game to $game");
+    logger.d("[PROVIDER] Updating game to $game");
     _game = game;
     notifyListeners();
   }

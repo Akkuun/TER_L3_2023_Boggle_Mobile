@@ -14,6 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 //flutter
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import '../components/title.dart';
@@ -33,6 +34,7 @@ class GameWaitPage extends StatefulWidget {
 }
 
 class _GameWaitPageState extends State<GameWaitPage> {
+  final logger = Logger();
   late GameServices gameServices;
   late NavigationServices router;
   late ListView playerList;
@@ -52,6 +54,7 @@ class _GameWaitPageState extends State<GameWaitPage> {
   @override
   void initState() {
     super.initState();
+    logger.d("[GAME WAIT] Init");
     router = Provider.of<NavigationServices>(context, listen: false);
     gameServices = Provider.of<GameServices>(context, listen: false);
     Provider.of<RealtimeGameProvider>(context, listen: false).initListeners();
@@ -60,7 +63,7 @@ class _GameWaitPageState extends State<GameWaitPage> {
   @override
   Widget build(BuildContext context) {
     var rm = context.watch<RealtimeGameProvider>();
-    print("[GAME WAIT] Game code : ${rm.gameCode}");
+    logger.i("[GAME WAIT] Game code : ${rm.gameCode}");
     var data = rm.game;
     if (data == null) {
       return const Center(
@@ -81,8 +84,8 @@ class _GameWaitPageState extends State<GameWaitPage> {
       gameServices.playerLeaderboard.remove(players.keys.toList());
     }
 
-    print("[GAME WAIT] Game status : $gameStatus");
-    print("[GAME WAIT] Game  : $data");
+    logger.i("[GAME WAIT] Game status : $gameStatus && $data");
+
     if (gameStatus == 0) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         router.goToPage(PageName.multiplayerGame);
@@ -178,8 +181,7 @@ class _GameWaitPageState extends State<GameWaitPage> {
                 FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
                   "userId": user!.uid,
                 });
-                Provider.of<RealtimeGameProvider>(context, listen: false)
-                    .onDispose();
+
                 router.goToPage(PageName.home);
               },
               text: Globals.getText(gameServices.language, 64),
@@ -202,10 +204,13 @@ class PlayerWaitingList extends StatelessWidget {
     var rm = context.watch<RealtimeGameProvider>();
     var data = rm.game;
     if (data == null) {
+      Logger().e("[PLAYER WAITING LIST] Data is null");
       return const SizedBox();
     }
 
     if (data["players"] == null) {
+      Logger().e("[PLAYER WAITING LIST] Data is null");
+
       return const SizedBox();
     }
 
