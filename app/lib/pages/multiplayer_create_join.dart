@@ -78,6 +78,11 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
     if (response == JoinGameReturn.success.index) {
       router.goToPage(PageName.multiplayerGameWait);
     }
+
+    if (response.runtimeType == int) {
+      return response;
+    }
+
     return (response as Map<String, dynamic>)["code"];
   }
 
