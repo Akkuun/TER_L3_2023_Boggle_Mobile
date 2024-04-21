@@ -4,6 +4,7 @@ import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/game.dart';
@@ -33,7 +34,7 @@ class _EmailCreateState extends State<EmailCreate> {
     final gameservices = Provider.of<GameServices>(context, listen: false);
     final auth = Provider.of<FirebaseAuth>(context, listen: false);
 
-    Future<void> requetFireBaseCreation() async {
+    void requetFireBaseCreation() {
       if (mdp.text != mdp2.text) {
         // Les mots de passe ne correspondent pas
         isLoading = false;
@@ -55,20 +56,18 @@ class _EmailCreateState extends State<EmailCreate> {
             });
       } else {
         try {
-          // ignore: unused_local_variable
-          final credential = await auth.createUserWithEmailAndPassword(
-              email: email.text, password: mdp.text);
-          router.goToPage(PageName.home);
+          auth
+              .createUserWithEmailAndPassword(
+                  email: email.text, password: mdp.text)
+              .then((value) => router.goToPage(PageName.home));
         } on FirebaseAuthException catch (e) {
-          // ignore: avoid_print
-          print(e.message);
+          Logger().e(e.message);
           Widget text;
           if (e.code == 'email-already-in-use') {
             text = const Text('L\'email est déjà utilisé par un autre compte.');
           } else {
             text = const Text('Erreur inconnue');
           }
-          // ignore: use_build_context_synchronously
           showDialog(
               context: context,
               builder: (BuildContext context) {

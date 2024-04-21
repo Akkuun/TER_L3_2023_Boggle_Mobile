@@ -114,7 +114,7 @@ class _StartGamePageState extends State<StartGamePage> {
       child: Column(
         children: [
           accelerometre,
-           Text(
+          Text(
             Globals.getText(gameServices.language, 15),
             textAlign: TextAlign.center,
             style: _textStyle,
@@ -136,27 +136,26 @@ class _StartGamePageState extends State<StartGamePage> {
             ),
           ),
           SizedBox(height: h * 0.05),
-           Text( Globals.getText(gameServices.language, 16), textAlign: TextAlign.center, style: _textStyle),
+          Text(Globals.getText(gameServices.language, 16),
+              textAlign: TextAlign.center, style: _textStyle),
           SizedBox(height: h * 0.1),
           BtnBoggle(
-            onPressed: () {
-              if (gameServices.start()) {
-                playSoundBegin();
-                backgroundMusicPlayer.playOST();
-                router.goToPage(PageName.game);
-              }
-            },
-            btnSize: BtnSize.large,
-            text: Globals.getText(gameServices.language, 17)
-          ),
+              onPressed: () {
+                if (gameServices.start()) {
+                  playSoundBegin();
+                  backgroundMusicPlayer.playOST();
+                  router.goToPage(PageName.game);
+                }
+              },
+              btnSize: BtnSize.large,
+              text: Globals.getText(gameServices.language, 17)),
           BtnBoggle(
-            onPressed: () {
-              router.goToPage(PageName.home);
-            },
-            btnType: BtnType.secondary,
-            btnSize: BtnSize.small,
-            text: Globals.getText(gameServices.language, 14)
-          ),
+              onPressed: () {
+                router.goToPage(PageName.home);
+              },
+              btnType: BtnType.secondary,
+              btnSize: BtnSize.small,
+              text: Globals.getText(gameServices.language, 14)),
         ],
       ),
     );
@@ -168,6 +167,5 @@ void playSoundBegin() async {
 
   String path =
       "audio/Melange$i.mp3"; // recupère le chemin du fichier audio associé en fonction de i (Melange 1 ou Melange 2)
-  print("sound play \n\n");
   await player.play(AssetSource(path));
 }

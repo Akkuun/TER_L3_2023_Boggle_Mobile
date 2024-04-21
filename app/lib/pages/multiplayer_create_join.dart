@@ -226,11 +226,12 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
         ),
         BtnBoggle(
           onPressed: () async {
+            var logger = Logger();
             var joinCode = await _joinGame(user!.uid, rm, router, user);
-            print("Joining game ${rm.gameCode} with code $joinCode");
+            logger.i("Joining game ${rm.gameCode} with code $joinCode");
             if (joinCode == 0) {
               if (rm.gameCode == '') {
-                print("Error joining game : game code is null");
+                logger.e("Error joining game : game code is null");
                 return;
               }
 
