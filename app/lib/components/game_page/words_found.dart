@@ -170,7 +170,7 @@ class ClickableWord extends StatelessWidget {
                 String mot = word.txt;
                 recupererDefinition(mot);
               },
-              icon: Icon(Icons.chrome_reader_mode_rounded))
+              icon: const Icon(Icons.chrome_reader_mode_rounded))
         ],
       ),
     );
