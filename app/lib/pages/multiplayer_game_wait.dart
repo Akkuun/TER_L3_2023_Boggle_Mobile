@@ -107,19 +107,7 @@ class _GameWaitPageState extends State<GameWaitPage> {
             padding: EdgeInsets.only(top: 32),
             child: AppTitle(),
           ),
-          ElevatedButton(
-            onPressed: () async {
-              await Clipboard.setData(ClipboardData(text: rm.gameCode));
-            },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateColor.resolveWith(
-                  (states) => const Color.fromARGB(255, 89, 150, 194)),
-            ),
-            child: Text(
-              "Code : ${rm.gameCode}",
-              style: textStyle2,
-            ),
-          ),
+          const CopyPasteCode(textStyle2: textStyle2),
           const Text(
             "Joueurs présents :",
             style: textStyle,
@@ -128,6 +116,7 @@ class _GameWaitPageState extends State<GameWaitPage> {
           Expanded(
             child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.5,
+              width: MediaQuery.of(context).size.width * 0.8,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Container(
@@ -189,6 +178,33 @@ class _GameWaitPageState extends State<GameWaitPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class CopyPasteCode extends StatelessWidget {
+  const CopyPasteCode({
+    super.key,
+    required this.textStyle2,
+  });
+
+  final TextStyle textStyle2;
+
+  @override
+  Widget build(BuildContext context) {
+    var rm = context.watch<RealtimeGameProvider>();
+    return ElevatedButton(
+      onPressed: () async {
+        await Clipboard.setData(ClipboardData(text: rm.gameCode));
+      },
+      style: ButtonStyle(
+        backgroundColor: MaterialStateColor.resolveWith(
+            (states) => const Color.fromARGB(255, 89, 150, 194)),
+      ),
+      child: Text(
+        "Code : ${rm.gameCode}",
+        style: textStyle2,
       ),
     );
   }
