@@ -16,6 +16,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 //flutter
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import 'package:bouggr/components/bottom_buttons.dart';
@@ -49,6 +50,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
 
   Future<int> _joinGame(String playerUID, RealtimeGameProvider rm,
       NavigationServices router, User? user) async {
+    var logger = Logger();
     var result =
         await FirebaseFunctions.instance.httpsCallable('JoinGame').call(
       {
@@ -59,9 +61,10 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
       },
     );
     var response = result.data;
-    print("Trting to join game ${rm.gameCode} . Return code : $response");
+
+    logger.i("Trting to join game ${rm.gameCode} . Return code : $response");
     if (response["error"] != null) {
-      print("${response["error"]}. Trying to leave it and join again");
+      logger.e("${response["error"]}. Trying to leave it and join again");
       result = await FirebaseFunctions.instance.httpsCallable('JoinGame').call(
         {
           "gameId": rm.gameCode,
@@ -70,10 +73,9 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
           "name": user?.email ?? "",
         },
       );
-      response = result.data;
+      response = result.data["code"];
     }
     if (response == JoinGameReturn.success.index) {
-      rm.gameCode = rm.gameCode;
       router.goToPage(PageName.multiplayerGameWait);
     }
     return (response as Map<String, dynamic>)["code"];
@@ -81,6 +83,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
 
   _createGame(String playerUID, User? user, RealtimeGameProvider rm,
       NavigationServices router, LangCode lang) async {
+    final logger = Logger();
     final letters = Globals.selectDiceSet(lang).roll();
     final result =
         await FirebaseFunctions.instance.httpsCallable('CreateGame').call(
@@ -94,31 +97,31 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
     );
 
     if (result.data == null) {
-      print("Error creating game : response is null");
+      logger.e("Error creating game : response is null");
       return;
     }
 
     final response = result.data as Map<String, dynamic>;
     if (response["error"] != null) {
-      print("Error creating game : ${response["error"]}");
+      logger.e("Error creating game : ${response["error"]}");
       return;
     }
 
     // print response
-    print("Response : $response");
-    print("Succesfully created game $response server-side");
+    logger.i("Response : $response");
+    logger.i("Succesfully created game $response server-side");
     if (response["gameId"] == null) {
-      print("${response["error"]}. Trying to leave it and create a new one");
+      logger.e("${response["error"]}. Trying to leave it and create a new one");
       FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
         "userId": playerUID,
       }).then((value) {
         //should not be recursive
-        print("Left game, $value");
+        logger.i("Left game, $value");
       });
       return;
     }
     if (response["error"] != null) {
-      print("Error creating game : ${response["error"]}");
+      logger.e("Error creating game : ${response["error"]}");
       return;
     }
     rm.gameCode = response['gameId'];

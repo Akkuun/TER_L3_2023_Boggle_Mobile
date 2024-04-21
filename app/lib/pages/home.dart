@@ -10,6 +10,7 @@ import 'package:bouggr/providers/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:logger/logger.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -21,6 +22,7 @@ class HomePage extends StatelessWidget {
     final gameServices = Provider.of<GameServices>(context, listen: false);
     final firebaseAuth = Provider.of<FirebaseAuth>(context, listen: false);
     Widget welcomeWidget;
+    var logger = Logger();
 
     User? user = firebaseAuth.currentUser;
     if (user != null) {
@@ -103,6 +105,7 @@ class HomePage extends StatelessWidget {
           ),
           BtnBoggle(
             onPressed: () {
+              logger.i('Create or join a multiplayer game');
               router.goToPage(PageName.multiplayerCreateJoin);
             },
             btnType: BtnType.secondary,
