@@ -49,12 +49,6 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
 
   // Leave game
 
-  @override
-  void dispose() {
-    super.dispose();
-    Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
-  }
-
   Future<int> _joinGame(String playerUID) async {
     final rm = Provider.of<RealtimeGameProvider>(context, listen: false);
     final router = Provider.of<NavigationServices>(context, listen: false);
