@@ -156,16 +156,16 @@ class _SettingsPageState extends State<SettingsPage> {
                           child: Text(value.name),
                         );
                       }).toList(),
-                      onChanged: (Language? newValue) async {
+                      onChanged: (Language? newValue) {
                         setState(() {
                           _selectedLanguage = newValue;
                         });
 
                         if (newValue != null) {
-                          await GameDataStorage.saveLanguage(newValue.langCode);
-
-                          Provider.of<GameServices>(context, listen: false)
-                              .setLanguage(newValue.langCode);
+                          GameDataStorage.saveLanguage(newValue.langCode).then(
+                              (value) => Provider.of<GameServices>(context,
+                                      listen: false)
+                                  .setLanguage(newValue.langCode));
                         }
                       },
                       hint: Text(Globals.getText(gameservices.language, 45)),
