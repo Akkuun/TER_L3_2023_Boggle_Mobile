@@ -5,6 +5,7 @@ import 'package:bouggr/utils/decode.dart';
 import 'package:bouggr/utils/game_data.dart';
 import 'package:bouggr/utils/lang.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/bottom_buttons.dart';
@@ -62,7 +63,7 @@ class _SettingsPageState extends State<SettingsPage> {
         });
       }
     } catch (e) {
-      // An error occurred
+      Logger().e(e);
     }
   }
 
