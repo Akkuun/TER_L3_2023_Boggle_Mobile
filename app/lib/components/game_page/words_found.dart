@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:bouggr/global.dart';
 import 'package:bouggr/providers/end_game_service.dart';
 import 'package:bouggr/providers/game.dart';
@@ -18,61 +16,60 @@ class WordsFound extends StatelessWidget {
     final gameServices = Provider.of<GameServices>(context);
 
     return SizedBox(
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x3F000000),
-                blurRadius: 4,
-                offset: Offset(0, 4),
-                spreadRadius: 0,
-              )
-            ],
-          ),
-          height: MediaQuery.of(context).size.height * 0.1,
-          width: MediaQuery.of(context).size.width,
-          child: FutureBuilder(
-              builder: (BuildContext context, AsyncSnapshot snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const CircularProgressIndicator();
-                }
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-                if (snapshot.hasData) {
-                  var words = snapshot.data;
-                  if (words == null) {
-                    return Text( Globals.getText(gameServices.language, 55));
-                  }
-                  return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-
-                              "${ Globals.getText(gameServices.language, 21)} ${words.length - gameServices.words.length}"),
-                          words.firstWhere(
-                                      (element) => !gameServices.words
-                                          .contains(element.txt),
-                                      orElse: () => Word("", [])) !=
-                                  null
-                              ? Text(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x3F000000),
+              blurRadius: 4,
+              offset: Offset(0, 4),
+              spreadRadius: 0,
+            )
+          ],
+        ),
+        height: MediaQuery.of(context).size.height * 0.1,
+        width: MediaQuery.of(context).size.width,
+        child: FutureBuilder(
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            }
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
+            if (snapshot.hasData) {
+              var words = snapshot.data;
+              if (words == null) {
+                return Text(Globals.getText(gameServices.language, 55));
+              }
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                          "${Globals.getText(gameServices.language, 21)} ${words.length - gameServices.words.length}"),
+                      words.firstWhere(
+                                  (element) =>
+                                      !gameServices.words.contains(element.txt),
+                                  orElse: () => Word("", [])) !=
+                              null
+                          ? Text(
                               "${Globals.getText(gameServices.language, 22)}  ${words.reduce((Word value, Word element) => value.txt.length > element.txt.length ? !gameServices.words.contains(value.txt) ? value : Word("", []) : !gameServices.words.contains(element.txt) ? element : Word("", [])).txt.length}")
-                              : Text(Globals.getText(gameServices.language, 23)),
-                        ]),
-                  );
-                }
-                return Text( Globals.getText(gameServices.language, 54));
-              },
-              future: getAllWords2(gameServices.letters,
-                  Globals.selectDictionary(gameServices.language)),
-            ),
-          ),
-        );
+                          : Text(Globals.getText(gameServices.language, 23)),
+                    ]),
+              );
+            }
+            return Text(Globals.getText(gameServices.language, 54));
+          },
+          future: getAllWords2(gameServices.letters,
+              Globals.selectDictionary(gameServices.language)),
+        ),
+      ),
+    );
   }
 }
 
@@ -127,7 +124,7 @@ class _AllWordsFoundState extends State<AllWordsFound> {
             if (snapshot.hasData) {
               var words = snapshot.data;
               if (words == null) {
-                return Text( Globals.getText(gameServices.language, 55));
+                return Text(Globals.getText(gameServices.language, 55));
               }
               return Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -141,7 +138,7 @@ class _AllWordsFoundState extends State<AllWordsFound> {
                 ),
               );
             }
-            return Text( Globals.getText(gameServices.language, 54));
+            return Text(Globals.getText(gameServices.language, 54));
           },
         );
       })),
