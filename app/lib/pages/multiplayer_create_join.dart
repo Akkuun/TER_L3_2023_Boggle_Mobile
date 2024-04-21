@@ -8,6 +8,7 @@ import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/title.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/realtimegame.dart';
+import 'package:bouggr/utils/decode.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 
 //utils
@@ -81,11 +82,8 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
     return (response as Map<String, dynamic>)["code"];
   }
 
-  _createGame(String playerUID) async {
-    final fireAuth = Provider.of<FirebaseAuth>(context, listen: false);
-    final rm = Provider.of<RealtimeGameProvider>(context, listen: false);
-    final router = Provider.of<NavigationServices>(context, listen: false);
-    final lang = Provider.of<GameServices>(context, listen: false).language;
+  _createGame(String playerUID, User? user, RealtimeGameProvider rm,
+      NavigationServices router, LangCode lang) async {
     final letters = Globals.selectDiceSet(lang).roll();
     final result =
         await FirebaseFunctions.instance.httpsCallable('CreateGame').call(
@@ -93,8 +91,8 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
         "letters": letters.join(''),
         "lang": lang.index,
         "userId": playerUID,
-        "email": fireAuth.currentUser!.email,
-        "name": fireAuth.currentUser!.email,
+        "email": user?.email ?? "",
+        "name": user?.email ?? "",
       },
     );
 
@@ -104,6 +102,11 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
     }
 
     final response = result.data as Map<String, dynamic>;
+    if (response["error"] != null) {
+      print("Error creating game : ${response["error"]}");
+      return;
+    }
+
     // print response
     print("Response : $response");
     print("Succesfully created game $response server-side");
@@ -111,7 +114,10 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
       print("${response["error"]}. Trying to leave it and create a new one");
       FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
         "userId": playerUID,
-      }).then((value) => _createGame(playerUID));
+      }).then((value) {
+        //should not be recursive
+        print("Left game, $value");
+      });
       return;
     }
     if (response["error"] != null) {
@@ -182,7 +188,8 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
               router.goToPage(PageName.login);
               return;
             }
-            await _createGame(user.uid);
+            await _createGame(user.uid, fireAuth.currentUser, rm, router,
+                Provider.of<GameServices>(context, listen: false).language);
           },
           btnSize: BtnSize.large,
           text: "Create a game",
@@ -201,7 +208,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
           width: size.width * 0.8,
           child: TextField(
             onChanged: (value) {
-              if (value == null || value!.isEmpty) {
+              if (value.isEmpty) {
                 setState(() {
                   _btnType = BtnType.secondary;
                 });
