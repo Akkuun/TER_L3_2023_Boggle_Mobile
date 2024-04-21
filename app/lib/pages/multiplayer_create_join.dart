@@ -47,18 +47,15 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
   BtnType _btnType = BtnType.secondary;
   String error = '';
 
-  Future<int> _joinGame(String playerUID) async {
-    final rm = Provider.of<RealtimeGameProvider>(context, listen: false);
-    final router = Provider.of<NavigationServices>(context, listen: false);
-    final fireAuth = Provider.of<FirebaseAuth>(context, listen: false);
-
+  Future<int> _joinGame(String playerUID, RealtimeGameProvider rm,
+      NavigationServices router, User? user) async {
     var result =
         await FirebaseFunctions.instance.httpsCallable('JoinGame').call(
       {
         "gameId": rm.gameCode,
         "userId": playerUID,
-        "email": fireAuth.currentUser!.email,
-        "name": fireAuth.currentUser!.email,
+        "email": user?.email ?? "",
+        "name": user?.email ?? "",
       },
     );
     var response = result.data;
@@ -69,8 +66,8 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
         {
           "gameId": rm.gameCode,
           "userId": playerUID,
-          "email": fireAuth.currentUser!.email,
-          "name": fireAuth.currentUser!.email,
+          "email": user?.email ?? "",
+          "name": user?.email ?? "",
         },
       );
       response = result.data;
@@ -226,7 +223,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
         ),
         BtnBoggle(
           onPressed: () async {
-            var joinCode = await _joinGame(user!.uid);
+            var joinCode = await _joinGame(user!.uid, rm, router, user);
             print("Joining game ${rm.gameCode} with code $joinCode");
             if (joinCode == 0) {
               if (rm.gameCode == '') {
