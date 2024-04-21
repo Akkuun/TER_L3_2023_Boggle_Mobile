@@ -10,6 +10,7 @@ import 'package:bouggr/providers/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:logger/logger.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({super.key});
@@ -21,31 +22,30 @@ class HomePage extends StatelessWidget {
     final gameServices = Provider.of<GameServices>(context, listen: false);
     final firebaseAuth = Provider.of<FirebaseAuth>(context, listen: false);
     Widget welcomeWidget;
-    try {
-      User? user = firebaseAuth.currentUser;
-      if (user != null) {
-        welcomeWidget = Text(
-          "Bienvenue,\n ${user.email}",
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 28,
-            fontFamily: 'Jua',
-            fontWeight: FontWeight.w400,
-          ),
-          textAlign: TextAlign.center,
-        );
-      } else {
-        welcomeWidget = BtnBoggle(
-          onPressed: () {
-            router.goToPage(PageName.login);
-          },
-          btnSize: BtnSize.large,
-          text: Globals.getText(gameServices.language, 6),
-        );
-      }
-    } catch (e) {
-      welcomeWidget = const SizedBox();
+    var logger = Logger();
+
+    User? user = firebaseAuth.currentUser;
+    if (user != null) {
+      welcomeWidget = Text(
+        "Bienvenue,\n ${user.email}",
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 28,
+          fontFamily: 'Jua',
+          fontWeight: FontWeight.w400,
+        ),
+        textAlign: TextAlign.center,
+      );
+    } else {
+      welcomeWidget = BtnBoggle(
+        onPressed: () {
+          router.goToPage(PageName.login);
+        },
+        btnSize: BtnSize.large,
+        text: Globals.getText(gameServices.language, 6),
+      );
     }
+
     return BottomButtons(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -105,6 +105,7 @@ class HomePage extends StatelessWidget {
           ),
           BtnBoggle(
             onPressed: () {
+              logger.i('Create or join a multiplayer game');
               router.goToPage(PageName.multiplayerCreateJoin);
             },
             btnType: BtnType.secondary,

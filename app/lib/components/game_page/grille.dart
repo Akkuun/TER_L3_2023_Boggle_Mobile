@@ -1,6 +1,7 @@
 import 'package:bouggr/components/game_page/dices.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/providers/game.dart';
+import 'package:bouggr/providers/realtimegame.dart';
 import 'package:bouggr/utils/dico.dart';
 import 'package:bouggr/utils/word_score.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -8,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 class BoggleGrille extends StatefulWidget {
@@ -111,19 +113,17 @@ class _BoggleGrilleState extends State<BoggleGrille> {
     if (gameServices.gameType == GameType.multi) {
       User? user =
           Provider.of<FirebaseAuth>(context, listen: false).currentUser;
-      print("Sending word ${indexes.map((e) => {
-            "x": e.$1,
-            "y": e.$2
-          }).toList()} to server");
+
       FirebaseFunctions.instance.httpsCallable('SendWord').call({
-        "gameId": Globals.gameCode,
+        "gameId":
+            Provider.of<RealtimeGameProvider>(context, listen: false).gameCode,
         "userId": user!.uid,
         "word": indexes
             .map((e) => {"x": e.$2, "y": e.$1})
             .toList(), // Coordonnées inversées pour le serveur
       }).then((value) {
-        print("Word sent");
-        print("Value: ${value.data}");
+        var logger = Logger();
+        logger.i(value.data);
       });
     }
     gameServices.addScore(wordScore(word));

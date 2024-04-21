@@ -13,6 +13,7 @@ import 'package:bouggr/pages/start_game.dart';
 import 'package:bouggr/pages/stats.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/game.dart';
+import 'package:bouggr/providers/realtimegame.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,14 +32,10 @@ class JoinMulti extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    try {
-      User? user = Provider.of<FirebaseAuth>(context, listen : false).currentUser;
-      if (user != null) {
-        return const MultiplayerCreateJoinPage();
-      } else {
-        return const LoginPage();
-      }
-    } catch (e) {
+    User? user = Provider.of<FirebaseAuth>(context, listen: false).currentUser;
+    if (user != null) {
+      return const MultiplayerCreateJoinPage();
+    } else {
       return const LoginPage();
     }
   }
@@ -65,7 +62,8 @@ class _BouggrRouter extends State<BouggrRouter> {
   Widget build(BuildContext context) {
     var router = context
         .watch<NavigationServices>(); //écoute du listener de NavigationServices
-
+    var rm =
+        Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
     return LayoutBuilder(
       builder: (context, constraints) {
         return Scaffold(

@@ -10,7 +10,7 @@ class Stat extends StatelessWidget {
   final String grid;
 
   const Stat({
-    Key? key,
+    super.key,
     this.fontSize = 18,
     required this.grid,
     required this.statName,
@@ -18,7 +18,7 @@ class Stat extends StatelessWidget {
     this.isDarker = false,
     this.isFirst = false,
     this.isLast = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +33,9 @@ class Stat extends StatelessWidget {
         ),
         child: Row(
           children: [
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             MiniGrid(grid: grid, height: 102, width: 102),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,7 +45,7 @@ class Stat extends StatelessWidget {
                   style: TextStyle(
                       fontSize: fontSize, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   statName,
                   style: TextStyle(
@@ -66,11 +66,11 @@ class MiniGrid extends StatelessWidget {
   final double width;
 
   const MiniGrid({
-    Key? key,
+    super.key,
     required this.grid,
     this.height = 100,
     this.width = 100,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

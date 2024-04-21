@@ -58,11 +58,13 @@ class _GamePageState extends State<GamePage> {
   }
 
   Future<List<String>> _fetchLetters() async {
+    final rm = Provider.of<RealtimeGameProvider>(context, listen: false);
+
     if (Globals.currentMultiplayerGame.isNotEmpty) {
       return Globals.currentMultiplayerGame.split('');
     }
     final database = FirebaseDatabase.instance;
-    final gameUID = Globals.gameCode;
+    final gameUID = rm.gameCode;
     final gameRef = database.ref('games/$gameUID');
     final snapshot = await gameRef.child('letters').get();
     final letters = snapshot.value as String;

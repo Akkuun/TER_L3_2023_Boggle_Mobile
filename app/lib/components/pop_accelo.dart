@@ -4,6 +4,7 @@ import 'package:bouggr/providers/game.dart';
 import 'package:flutter/material.dart';
 
 import 'package:haptic_feedback/haptic_feedback.dart';
+import 'package:logger/logger.dart';
 
 class ReStartGamePage extends StatefulWidget {
   ReStartGamePage({super.key});
@@ -73,7 +74,7 @@ class _ReStartGamePageState extends State<ReStartGamePage> {
   }
 
   void _restartGame() {
-    print("restart pop");
+    Logger().i('Restart Game');
     widget.setRestart(true);
   }
 

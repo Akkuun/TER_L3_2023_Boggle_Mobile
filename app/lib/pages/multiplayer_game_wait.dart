@@ -14,6 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 //flutter
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import '../components/title.dart';
@@ -33,27 +34,42 @@ class GameWaitPage extends StatefulWidget {
 }
 
 class _GameWaitPageState extends State<GameWaitPage> {
+  final logger = Logger();
   late GameServices gameServices;
   late NavigationServices router;
   late ListView playerList;
+  static const TextStyle textStyle = TextStyle(
+    color: Colors.black,
+    fontSize: 20,
+    fontFamily: 'Jua',
+    fontWeight: FontWeight.w400,
+  );
+  static const textStyle2 = TextStyle(
+    color: Colors.white,
+    fontSize: 20,
+    fontFamily: 'Jua',
+    fontWeight: FontWeight.w400,
+  );
 
   @override
   void initState() {
     super.initState();
+    logger.d("[GAME WAIT] Init");
     router = Provider.of<NavigationServices>(context, listen: false);
     gameServices = Provider.of<GameServices>(context, listen: false);
     Provider.of<RealtimeGameProvider>(context, listen: false).initListeners();
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    print("[GAME WAIT] Game code : ${Globals.gameCode}");
-    var data = context.watch<RealtimeGameProvider>().game;
+    var rm = context.watch<RealtimeGameProvider>();
+    logger.i("[GAME WAIT] Game code : ${rm.gameCode}");
+    var data = rm.game;
+    if (data == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     var players = data["players"];
     var gameStatus = data["status"];
     if (players != null && players!.isNotEmpty && gameStatus == 3) {
@@ -68,55 +84,17 @@ class _GameWaitPageState extends State<GameWaitPage> {
       gameServices.playerLeaderboard.remove(players.keys.toList());
     }
 
-    print("[GAME WAIT] Game status : $gameStatus");
-    print("[GAME WAIT] Game  : $data");
+    logger.i("[GAME WAIT] Game status : $gameStatus && $data");
+
     if (gameStatus == 0) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         router.goToPage(PageName.multiplayerGame);
       });
     }
-    TextStyle textStyle = const TextStyle(
-      color: Colors.black,
-      fontSize: 20,
-      fontFamily: 'Jua',
-      fontWeight: FontWeight.w400,
-    );
 
-    User? user;
-
-    try {
-      user = Provider.of<FirebaseAuth>(context, listen : false).currentUser;
-      if (user == null) {
-        router.goToPage(PageName.login);
-      }
-    } catch (e) {
+    User? user = Provider.of<FirebaseAuth>(context, listen: false).currentUser;
+    if (user == null) {
       router.goToPage(PageName.login);
-    }
-    Widget listView;
-    try {
-      listView = ListView.builder(
-        itemCount: data["players"].length,
-        itemBuilder: (context, index) {
-          try {
-            String key = data["players"].keys.elementAt(index);
-            return PlayerInList(
-              playerName: data["players"][key]["name"],
-              color: index % 2 == 0
-                  ? const Color.fromARGB(255, 89, 150, 194)
-                  : const Color.fromARGB(255, 181, 224, 255),
-            );
-          } catch (e) {
-            return PlayerInList(
-              playerName: "Joueur",
-              color: index % 2 == 0
-                  ? const Color.fromARGB(255, 89, 150, 194)
-                  : const Color.fromARGB(255, 181, 224, 255),
-            );
-          }
-        },
-      );
-    } catch (e) {
-      listView = const SizedBox();
     }
 
     return SizedBox(
@@ -131,23 +109,18 @@ class _GameWaitPageState extends State<GameWaitPage> {
           ),
           ElevatedButton(
             onPressed: () async {
-              await Clipboard.setData(ClipboardData(text: Globals.gameCode));
+              await Clipboard.setData(ClipboardData(text: rm.gameCode));
             },
             style: ButtonStyle(
               backgroundColor: MaterialStateColor.resolveWith(
                   (states) => const Color.fromARGB(255, 89, 150, 194)),
             ),
             child: Text(
-              "Code : ${Globals.gameCode}",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontFamily: 'Jua',
-                fontWeight: FontWeight.w400,
-              ),
+              "Code : ${rm.gameCode}",
+              style: textStyle2,
             ),
           ),
-          Text(
+          const Text(
             "Joueurs présents :",
             style: textStyle,
             textAlign: TextAlign.center,
@@ -174,15 +147,15 @@ class _GameWaitPageState extends State<GameWaitPage> {
                       ),
                     ],
                   ),
-                  child: listView,
+                  child: const PlayerWaitingList(),
                 ),
               ),
             ),
           ),
           if (data == {} &&
-              data["players"]
-                          [Provider.of<FirebaseAuth>(context, listen : false).currentUser!.uid]
-                      ["leader"] ==
+              data["players"][Provider.of<FirebaseAuth>(context, listen: false)
+                      .currentUser!
+                      .uid]["leader"] ==
                   true)
             BtnBoggle(
               // Start game
@@ -190,7 +163,7 @@ class _GameWaitPageState extends State<GameWaitPage> {
                 final rep = await FirebaseFunctions.instance
                     .httpsCallable('StartGame')
                     .call({
-                  "gameId": Globals.gameCode,
+                  "gameId": rm.gameCode,
                   "userId": user!.uid,
                 });
                 int? code = rep.data;
@@ -208,8 +181,7 @@ class _GameWaitPageState extends State<GameWaitPage> {
                 FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
                   "userId": user!.uid,
                 });
-                Provider.of<RealtimeGameProvider>(context, listen: false)
-                    .onDispose();
+
                 router.goToPage(PageName.home);
               },
               text: Globals.getText(gameServices.language, 64),
@@ -218,6 +190,42 @@ class _GameWaitPageState extends State<GameWaitPage> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class PlayerWaitingList extends StatelessWidget {
+  const PlayerWaitingList({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var rm = context.watch<RealtimeGameProvider>();
+    var data = rm.game;
+    if (data == null) {
+      Logger().e("[PLAYER WAITING LIST] Data is null");
+      return const SizedBox();
+    }
+
+    if (data["players"] == null) {
+      Logger().e("[PLAYER WAITING LIST] Data is null");
+
+      return const SizedBox();
+    }
+
+    //const SizedBox();
+    return ListView.builder(
+      itemCount: data["players"].length,
+      itemBuilder: (context, index) {
+        String key = data["players"].keys.elementAt(index);
+        return PlayerInList(
+          playerName: data["players"][key]["name"],
+          color: index % 2 == 0
+              ? const Color.fromARGB(255, 89, 150, 194)
+              : const Color.fromARGB(255, 181, 224, 255),
+        );
+      },
     );
   }
 }
