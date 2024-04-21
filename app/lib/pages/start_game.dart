@@ -29,8 +29,7 @@ class StartGamePage extends StatefulWidget {
 class _StartGamePageState extends State<StartGamePage> {
   late BoggleAccelerometre accelerometre;
 
-  // ignore: non_constant_identifier_names
-  bool PageCharger = false;
+  bool pageCharger = false;
   int nbSecousse = 0;
   int secousseDemander = 10;
   static const _textStyle = TextStyle(
@@ -61,7 +60,7 @@ class _StartGamePageState extends State<StartGamePage> {
 
   Future<void> _surDetectionSecousse() async {
     await Future.delayed(const Duration(milliseconds: 500));
-    if (accelerometre.estSecouer.value && PageCharger) {
+    if (accelerometre.estSecouer.value && pageCharger) {
       Haptics.vibrate(HapticsType.rigid); // retour haptique
       nbSecousse++; // on incrémente le nombre de secousse
       accelerometre.estSecouer.value =
@@ -103,7 +102,7 @@ class _StartGamePageState extends State<StartGamePage> {
     //addPostFrameCallback permet de faire une action après le chargement du widget
     //(_){...} est une fonction anonyme
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      PageCharger = true; // une fois le widget chargé on met à jour la variable
+      pageCharger = true; // une fois le widget chargé on met à jour la variable
     });
 
     final router = Provider.of<NavigationServices>(context, listen: false);

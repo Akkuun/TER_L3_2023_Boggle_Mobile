@@ -163,7 +163,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
                         if (newValue != null) {
                           await GameDataStorage.saveLanguage(newValue.langCode);
-                          // ignore: use_build_context_synchronously
+
                           Provider.of<GameServices>(context, listen: false)
                               .setLanguage(newValue.langCode);
                         }

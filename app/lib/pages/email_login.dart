@@ -4,6 +4,7 @@ import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/game.dart';
@@ -31,17 +32,15 @@ class _EmailLogInState extends State<EmailLogIn> {
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameservices = Provider.of<GameServices>(context, listen: false);
     final auth = Provider.of<FirebaseAuth>(context, listen: false);
-
+    final logger = Logger();
     void requetFireBaseConnexion() async {
       try {
-        // ignore: unused_local_variable
-        final credential = await auth.signInWithEmailAndPassword(
+        await auth.signInWithEmailAndPassword(
             email: email.text, password: mdp.text);
         router.goToPage(PageName.home);
       } on FirebaseAuthException catch (e) {
-        // ignore: avoid_print
-        print(e.message);
-        // ignore: use_build_context_synchronously
+        logger.e(e.message);
+
         showDialog(
             context: context,
             builder: (BuildContext context) {

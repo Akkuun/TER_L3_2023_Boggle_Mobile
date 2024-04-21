@@ -12,6 +12,7 @@ import 'package:bouggr/utils/game_result.dart';
 import 'package:bouggr/utils/player_leaderboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import '../global.dart';
@@ -21,6 +22,7 @@ class EndGameDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final logger = Logger();
     GameServices gameServices =
         Provider.of<GameServices>(context, listen: true);
     TimerServices timerServices =
@@ -54,7 +56,7 @@ class EndGameDetail extends StatelessWidget {
                   uid: player.key),
             );
           } catch (e) {
-            print(e);
+            logger.e("Error while adding player to leaderboard : $e");
           }
         }
         playerLeaderboard.computeRank();
