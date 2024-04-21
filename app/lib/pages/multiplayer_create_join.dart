@@ -49,6 +49,12 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
 
   // Leave game
 
+  @override
+  void dispose() {
+    super.dispose();
+    Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
+  }
+
   Future<int> _joinGame(String playerUID) async {
     final rm = Provider.of<RealtimeGameProvider>(context, listen: false);
     final router = Provider.of<NavigationServices>(context, listen: false);
@@ -139,13 +145,8 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
     Globals.resetMultiplayerData();
     final rm = Provider.of<RealtimeGameProvider>(context, listen: false);
     final router = Provider.of<NavigationServices>(context, listen: false);
-    User? user;
-    try {
-      user = Provider.of<FirebaseAuth>(context, listen: false).currentUser;
-      if (user == null) {
-        router.goToPage(PageName.login);
-      }
-    } catch (e) {
+    User? user = Provider.of<FirebaseAuth>(context, listen: false).currentUser;
+    if (user == null) {
       router.goToPage(PageName.login);
     }
 

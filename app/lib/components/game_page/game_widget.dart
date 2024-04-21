@@ -26,12 +26,8 @@ class GameWidget extends StatelessWidget {
     var gameType = Provider.of<GameServices>(context, listen: false).gameType;
     if (gameType == GameType.multi) {
       final router = Provider.of<NavigationServices>(context, listen: false);
-      try {
-        user = Provider.of<FirebaseAuth>(context, listen: false).currentUser;
-        if (user == null) {
-          router.goToPage(PageName.login);
-        }
-      } catch (e) {
+      user = Provider.of<FirebaseAuth>(context, listen: false).currentUser;
+      if (user == null) {
         router.goToPage(PageName.login);
       }
     }

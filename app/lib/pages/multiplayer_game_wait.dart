@@ -36,6 +36,18 @@ class _GameWaitPageState extends State<GameWaitPage> {
   late GameServices gameServices;
   late NavigationServices router;
   late ListView playerList;
+  static const TextStyle textStyle = TextStyle(
+    color: Colors.black,
+    fontSize: 20,
+    fontFamily: 'Jua',
+    fontWeight: FontWeight.w400,
+  );
+  static const textStyle2 = TextStyle(
+    color: Colors.white,
+    fontSize: 20,
+    fontFamily: 'Jua',
+    fontWeight: FontWeight.w400,
+  );
 
   @override
   void initState() {
@@ -76,21 +88,9 @@ class _GameWaitPageState extends State<GameWaitPage> {
         router.goToPage(PageName.multiplayerGame);
       });
     }
-    TextStyle textStyle = const TextStyle(
-      color: Colors.black,
-      fontSize: 20,
-      fontFamily: 'Jua',
-      fontWeight: FontWeight.w400,
-    );
 
-    User? user;
-
-    try {
-      user = Provider.of<FirebaseAuth>(context, listen: false).currentUser;
-      if (user == null) {
-        router.goToPage(PageName.login);
-      }
-    } catch (e) {
+    User? user = Provider.of<FirebaseAuth>(context, listen: false).currentUser;
+    if (user == null) {
       router.goToPage(PageName.login);
     }
 
@@ -114,15 +114,10 @@ class _GameWaitPageState extends State<GameWaitPage> {
             ),
             child: Text(
               "Code : ${rm.gameCode}",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontFamily: 'Jua',
-                fontWeight: FontWeight.w400,
-              ),
+              style: textStyle2,
             ),
           ),
-          Text(
+          const Text(
             "Joueurs présents :",
             style: textStyle,
             textAlign: TextAlign.center,
@@ -218,22 +213,13 @@ class PlayerWaitingList extends StatelessWidget {
     return ListView.builder(
       itemCount: data["players"].length,
       itemBuilder: (context, index) {
-        try {
-          String key = data["players"].keys.elementAt(index);
-          return PlayerInList(
-            playerName: data["players"][key]["name"],
-            color: index % 2 == 0
-                ? const Color.fromARGB(255, 89, 150, 194)
-                : const Color.fromARGB(255, 181, 224, 255),
-          );
-        } catch (e) {
-          return PlayerInList(
-            playerName: "Joueur",
-            color: index % 2 == 0
-                ? const Color.fromARGB(255, 89, 150, 194)
-                : const Color.fromARGB(255, 181, 224, 255),
-          );
-        }
+        String key = data["players"].keys.elementAt(index);
+        return PlayerInList(
+          playerName: data["players"][key]["name"],
+          color: index % 2 == 0
+              ? const Color.fromARGB(255, 89, 150, 194)
+              : const Color.fromARGB(255, 181, 224, 255),
+        );
       },
     );
   }
