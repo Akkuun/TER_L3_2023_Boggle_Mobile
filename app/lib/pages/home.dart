@@ -21,31 +21,29 @@ class HomePage extends StatelessWidget {
     final gameServices = Provider.of<GameServices>(context, listen: false);
     final firebaseAuth = Provider.of<FirebaseAuth>(context, listen: false);
     Widget welcomeWidget;
-    try {
-      User? user = firebaseAuth.currentUser;
-      if (user != null) {
-        welcomeWidget = Text(
-          "Bienvenue,\n ${user.email}",
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 28,
-            fontFamily: 'Jua',
-            fontWeight: FontWeight.w400,
-          ),
-          textAlign: TextAlign.center,
-        );
-      } else {
-        welcomeWidget = BtnBoggle(
-          onPressed: () {
-            router.goToPage(PageName.login);
-          },
-          btnSize: BtnSize.large,
-          text: Globals.getText(gameServices.language, 6),
-        );
-      }
-    } catch (e) {
-      welcomeWidget = const SizedBox();
+
+    User? user = firebaseAuth.currentUser;
+    if (user != null) {
+      welcomeWidget = Text(
+        "Bienvenue,\n ${user.email}",
+        style: const TextStyle(
+          color: Colors.black,
+          fontSize: 28,
+          fontFamily: 'Jua',
+          fontWeight: FontWeight.w400,
+        ),
+        textAlign: TextAlign.center,
+      );
+    } else {
+      welcomeWidget = BtnBoggle(
+        onPressed: () {
+          router.goToPage(PageName.login);
+        },
+        btnSize: BtnSize.large,
+        text: Globals.getText(gameServices.language, 6),
+      );
     }
+
     return BottomButtons(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
