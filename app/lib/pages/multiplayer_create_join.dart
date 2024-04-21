@@ -7,6 +7,7 @@
 import 'package:bouggr/components/btn.dart';
 import 'package:bouggr/components/title.dart';
 import 'package:bouggr/pages/page_name.dart';
+import 'package:bouggr/providers/realtimegame.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 
 //utils
@@ -49,6 +50,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
   // Leave game
 
   Future<int> _joinGame(String playerUID) async {
+    final rm = Provider.of<RealtimeGameProvider>(context, listen: false);
     final router = Provider.of<NavigationServices>(context, listen: false);
     var result =
         await FirebaseFunctions.instance.httpsCallable('JoinGame').call(
@@ -82,7 +84,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
       response = result.data;
     }
     if (response == JoinGameReturn.success.index) {
-      Globals.gameCode = _gameUID!;
+      rm.gameCode = _gameUID!;
       router.goToPage(PageName.multiplayerGameWait);
     }
     return (response as Map<String, dynamic>)["code"];
@@ -90,6 +92,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
 
   _createGame(String playerUID) async {
     try {
+      final rm = Provider.of<RealtimeGameProvider>(context, listen: false);
       final router = Provider.of<NavigationServices>(context, listen: false);
       final lang = Provider.of<GameServices>(context, listen: false).language;
       final letters = Globals.selectDiceSet(lang).roll();
@@ -123,7 +126,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
         print("Error creating game : ${response["error"]}");
         return;
       }
-      Globals.gameCode = response['gameId'];
+      rm.gameCode = response['gameId'];
       Globals.currentMultiplayerGame = letters.join('');
       router.goToPage(PageName.multiplayerGameWait);
     } catch (e) {
@@ -134,6 +137,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
   @override
   Widget build(BuildContext context) {
     Globals.resetMultiplayerData();
+    final rm = Provider.of<RealtimeGameProvider>(context, listen: false);
     final router = Provider.of<NavigationServices>(context, listen: false);
     User? user;
     try {
@@ -224,7 +228,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
             _joinCode = await _joinGame(user!.uid);
             print("Joining game $_gameUID with code $_joinCode");
             if (_joinCode == 0) {
-              Globals.gameCode = _gameUID!;
+              rm.gameCode = _gameUID!;
               router.goToPage(PageName.multiplayerGameWait);
             } else {
               setState(() {

@@ -1,6 +1,7 @@
 import 'package:bouggr/components/game_page/dices.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/providers/game.dart';
+import 'package:bouggr/providers/realtimegame.dart';
 import 'package:bouggr/utils/dico.dart';
 import 'package:bouggr/utils/word_score.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -116,7 +117,8 @@ class _BoggleGrilleState extends State<BoggleGrille> {
             "y": e.$2
           }).toList()} to server");
       FirebaseFunctions.instance.httpsCallable('SendWord').call({
-        "gameId": Globals.gameCode,
+        "gameId":
+            Provider.of<RealtimeGameProvider>(context, listen: false).gameCode,
         "userId": user!.uid,
         "word": indexes
             .map((e) => {"x": e.$2, "y": e.$1})

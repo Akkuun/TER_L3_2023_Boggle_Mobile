@@ -46,14 +46,15 @@ class _GameWaitPageState extends State<GameWaitPage> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    print("[GAME WAIT] Game code : ${Globals.gameCode}");
-    var data = context.watch<RealtimeGameProvider>().game;
+    var rm = context.watch<RealtimeGameProvider>();
+    print("[GAME WAIT] Game code : ${rm.gameCode}");
+    var data = rm.game;
+    if (data == null) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
     var players = data["players"];
     var gameStatus = data["status"];
     if (players != null && players!.isNotEmpty && gameStatus == 3) {
@@ -85,7 +86,7 @@ class _GameWaitPageState extends State<GameWaitPage> {
     User? user;
 
     try {
-      user = Provider.of<FirebaseAuth>(context, listen : false).currentUser;
+      user = Provider.of<FirebaseAuth>(context, listen: false).currentUser;
       if (user == null) {
         router.goToPage(PageName.login);
       }
@@ -131,14 +132,14 @@ class _GameWaitPageState extends State<GameWaitPage> {
           ),
           ElevatedButton(
             onPressed: () async {
-              await Clipboard.setData(ClipboardData(text: Globals.gameCode));
+              await Clipboard.setData(ClipboardData(text: rm.gameCode));
             },
             style: ButtonStyle(
               backgroundColor: MaterialStateColor.resolveWith(
                   (states) => const Color.fromARGB(255, 89, 150, 194)),
             ),
             child: Text(
-              "Code : ${Globals.gameCode}",
+              "Code : ${rm.gameCode}",
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -180,9 +181,9 @@ class _GameWaitPageState extends State<GameWaitPage> {
             ),
           ),
           if (data == {} &&
-              data["players"]
-                          [Provider.of<FirebaseAuth>(context, listen : false).currentUser!.uid]
-                      ["leader"] ==
+              data["players"][Provider.of<FirebaseAuth>(context, listen: false)
+                      .currentUser!
+                      .uid]["leader"] ==
                   true)
             BtnBoggle(
               // Start game
@@ -190,7 +191,7 @@ class _GameWaitPageState extends State<GameWaitPage> {
                 final rep = await FirebaseFunctions.instance
                     .httpsCallable('StartGame')
                     .call({
-                  "gameId": Globals.gameCode,
+                  "gameId": rm.gameCode,
                   "userId": user!.uid,
                 });
                 int? code = rep.data;
