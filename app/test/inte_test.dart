@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:bouggr/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
@@ -52,6 +53,7 @@ class MockFirebaseAuth extends Mock implements FirebaseAuth {
 }
 
 void main() {
+  final logger = Logger();
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   testWidgets("Lance une partie", (WidgetTester tester) async {
@@ -65,23 +67,23 @@ void main() {
         child: const App(),
       ),
     );
-    
+
     // Trouvez le bouton
     final soloButtonFinder = find.text('Partie solo');
-    print('Bouton Partie solo trouvé');
+    logger.i('Bouton Partie solo trouvé');
 
     // Appuyez sur bouton
     await tester.tap(soloButtonFinder);
     await tester.pumpAndSettle(Durations
         .long1); //obliger de mettre le test en premier avec une durée pour que le test fonctionne dans une battrie de test, car la page créé des éléments gourment
-    print('Bouton Partie solo appuyé');
+    logger.i('Bouton Partie solo appuyé');
 
     final cpButtonFinder = find.text('Commencer une partie');
-    print('Bouton Commencer une partie trouvé');
+    logger.i('Bouton Commencer une partie trouvé');
 
     await tester.tap(cpButtonFinder);
     await tester.pumpAndSettle();
-    print('Bouton Commencer une partie appuyé');
+    logger.i('Bouton Commencer une partie appuyé');
 
     // Maitenant on essayer de trouver le nombre de mots restant sur la page pour être sur d'avoir lancer une partie
     expect(
@@ -91,8 +93,8 @@ void main() {
               widget.data?.contains('Nombre de mots restant') == true,
         ),
         findsOneWidget);
-    print('Nombre de mots restant affiché');
-    print('Test Lance une partie terminé');
+    logger.i('Nombre de mots restant affiché');
+    logger.i('Test Lance une partie terminé');
   });
 
   testWidgets("naviguer vers la page Rules depuis la page d'accueil",
@@ -109,17 +111,18 @@ void main() {
     );
     // Trouvez le bouton Rules par son texte
     final rulesButtonFinder = find.text('lire');
-    print('Bouton Rules trouvé');
+    logger.i('Bouton Rules trouvé');
 
     // Appuyez sur le bouton Rules
     await tester.tap(rulesButtonFinder);
     await tester.pumpAndSettle();
-    print('Bouton Rules appuyé');
+    logger.i('Bouton Rules appuyé');
 
     // Vérifiez que la page Rules est affichée
     expect(find.text('Rules'), findsOneWidget);
-    print('Page Rules affichée');
-    print('Test naviguer vers la page Rules depuis la page d\'accueil terminé');
+    logger.i('Page Rules affichée');
+    logger.i(
+        'Test naviguer vers la page Rules depuis la page d\'accueil terminé');
   });
 
   testWidgets("creation d'un compte", (WidgetTester tester) async {
@@ -136,43 +139,43 @@ void main() {
 
     // Trouvez le bouton
     final connexionButtonFinder = find.text('Connexion');
-    print('Bouton Connexion trouvé');
+    logger.i('Bouton Connexion trouvé');
 
     // Appuyez sur bouton
     await tester.tap(connexionButtonFinder);
     await tester.pumpAndSettle();
-    print('Bouton Connexion appuyé');
+    logger.i('Bouton Connexion appuyé');
 
     final ccButtonFinder = find.text('Créer un compte');
-    print('Bouton Créer un compte trouvé');
+    logger.i('Bouton Créer un compte trouvé');
 
     await tester.tap(ccButtonFinder);
     await tester.pumpAndSettle();
-    print('Bouton Créer un compte appuyé');
+    logger.i('Bouton Créer un compte appuyé');
 
     // Trouvez le champ email et écrivez dedans
     final emailField = find.byKey(const Key('emailField'));
     await tester.enterText(emailField, 'test@test.test');
-    print('Email écrit');
+    logger.i('Email écrit');
     expect(find.text('test@test.test'), findsOneWidget);
-    print('Email bien écrit');
+    logger.i('Email bien écrit');
 
     // Trouvez le champ mot de passe et écrivez dedans
     final passwordField = find.byKey(const Key('passwordField'));
     await tester.enterText(passwordField, 'password');
-    print('Mot de passe écrit');
+    logger.i('Mot de passe écrit');
 
     // Trouvez le champ de vérification de mot de passe et écrivez dedans
     final passwordField2 = find.byKey(const Key('passwordField2'));
     await tester.enterText(passwordField2, 'password');
-    print('Vérification du mot de passe écrit');
+    logger.i('Vérification du mot de passe écrit');
 
     final envButtonFinder = find.text('Envoi');
-    print('Bouton Envoi trouvé');
+    logger.i('Bouton Envoi trouvé');
 
     await tester.tap(envButtonFinder);
     await tester.pumpAndSettle();
-    print('Bouton Envoi appuyé');
+    logger.i('Bouton Envoi appuyé');
 
     // Maitenant que l'on est connecte, on doit voir la page d'accueil avec le message de bienvenue
     expect(
@@ -181,8 +184,8 @@ void main() {
               widget is Text && widget.data?.contains('Bienvenue') == true,
         ),
         findsOneWidget);
-    print('Bienvenue affiché');
-    print('Test création d\'un compte terminé');
+    logger.i('Bienvenue affiché');
+    logger.i('Test création d\'un compte terminé');
   });
 
   testWidgets("connection a un compte", (WidgetTester tester) async {
@@ -199,38 +202,38 @@ void main() {
 
     // Trouvez le bouton
     final connexionButtonFinder = find.text('Connexion');
-    print('Bouton Connexion trouvé');
+    logger.i('Bouton Connexion trouvé');
 
     // Appuyez sur bouton
     await tester.tap(connexionButtonFinder);
     await tester.pumpAndSettle();
-    print('Bouton Connexion appuyé');
+    logger.i('Bouton Connexion appuyé');
 
     final cpeButtonFinder = find.text('Connexion par email');
-    print('Bouton Connexion par email trouvé');
+    logger.i('Bouton Connexion par email trouvé');
 
     await tester.tap(cpeButtonFinder);
     await tester.pumpAndSettle();
-    print('Bouton Connexion par email appuyé');
+    logger.i('Bouton Connexion par email appuyé');
 
     // Trouvez le champ email et écrivez dedans
     final emailField = find.byKey(const Key('emailField'));
     await tester.enterText(emailField, 'test@test.test');
-    print('Email écrit');
+    logger.i('Email écrit');
     expect(find.text('test@test.test'), findsOneWidget);
-    print('Email bien écrit');
+    logger.i('Email bien écrit');
 
     // Trouvez le champ mot de passe et écrivez dedans
     final passwordField = find.byKey(const Key('passwordField'));
     await tester.enterText(passwordField, 'password');
-    print('Mot de passe écrit');
+    logger.i('Mot de passe écrit');
 
     final envButtonFinder = find.text('Envoi');
-    print('Bouton Envoi trouvé');
+    logger.i('Bouton Envoi trouvé');
 
     await tester.tap(envButtonFinder);
     await tester.pumpAndSettle();
-    print('Bouton Envoi appuyé');
+    logger.i('Bouton Envoi appuyé');
 
     // Maitenant que l'on est connecte, on doit voir la page d'accueil avec le message de bienvenue
     expect(
@@ -239,8 +242,8 @@ void main() {
               widget is Text && widget.data?.contains('Bienvenue') == true,
         ),
         findsOneWidget);
-    print('Bienvenue affiché');
-    print('Test connection a un compte terminé');
+    logger.i('Bienvenue affiché');
+    logger.i('Test connection a un compte terminé');
   });
 
   testWidgets("deconnection d'un compte", (WidgetTester tester) async {
@@ -258,31 +261,31 @@ void main() {
 
     // Trouvez le bouton
     final settingButton = find.byKey(const Key('settingsButton'));
-    print('Bouton settingsButton trouvé');
+    logger.i('Bouton settingsButton trouvé');
 
     // Appuyez sur bouton
     await tester.tap(settingButton);
     await tester.pumpAndSettle(Durations.extralong4);
-    print('Bouton settingsButton appuyé');
+    logger.i('Bouton settingsButton appuyé');
 
     // Trouvez le bouton
     final singoutButton = find.text('Deconnexion');
-    print('Bouton Deconnexion trouvé');
+    logger.i('Bouton Deconnexion trouvé');
 
     // Appuyez sur bouton
     await tester.tap(singoutButton);
     await tester.pumpAndSettle();
-    print('Bouton Deconnexion appuyé');
+    logger.i('Bouton Deconnexion appuyé');
 
     // Maitenant que l'on est deconnecte, on doit voir le bouton Connexion
     expect(find.text('Connexion'), findsOneWidget);
-    print('Bouton Connexion affiché');
-    print('Test deconnection d\'un compte terminé');
+    logger.i('Bouton Connexion affiché');
+    logger.i('Test deconnection d\'un compte terminé');
   });
 
   //Fermer l'application car les tests se sont effectuer
   tearDownAll(() {
-    print('Fermeture de l\'application');
+    logger.i('Fermeture de l\'application');
     SystemNavigator.pop();
   });
 }

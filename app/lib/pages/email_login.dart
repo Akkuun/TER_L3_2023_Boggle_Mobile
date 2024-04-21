@@ -33,11 +33,11 @@ class _EmailLogInState extends State<EmailLogIn> {
     final gameservices = Provider.of<GameServices>(context, listen: false);
     final auth = Provider.of<FirebaseAuth>(context, listen: false);
     final logger = Logger();
-    void requetFireBaseConnexion() async {
+    void requetFireBaseConnexion() {
       try {
-        await auth.signInWithEmailAndPassword(
-            email: email.text, password: mdp.text);
-        router.goToPage(PageName.home);
+        auth
+            .signInWithEmailAndPassword(email: email.text, password: mdp.text)
+            .then((value) => router.goToPage(PageName.home));
       } on FirebaseAuthException catch (e) {
         logger.e(e.message);
 

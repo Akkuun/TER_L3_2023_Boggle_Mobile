@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:bouggr/pages/multiplayer_gamealed.dart';
 import 'package:bouggr/providers/navigation.dart';
@@ -36,18 +37,19 @@ class FirebaseService {
 }
 
 void main() {
+  final logger = Logger();
   group('MultiplayerGamePage', () {
     //group permet de regrouper les tests afin de les exécuter ensemble mais aussi de les organiser par catégories/thèmes
     testWidgets('Construction de la page sans erreur',
         (WidgetTester tester) async {
-      print('Initialisation de Firebase...');
+      logger.i('Initialisation de Firebase...');
       // Créer un mock de FirebaseService
       final mockFirebaseService = MockFirebaseService();
 
       // Utiliser le mock de Firebase lors de l'initialisation
       when(mockFirebaseService.initializeApp())
           .thenAnswer((_) => Future.value(MockFirebaseApp()));
-      print('Firebase initialisé.');
+      logger.i('Firebase initialisé.');
 
       // Initialiser le ChangeNotifier
       final navigationServices = NavigationServices();

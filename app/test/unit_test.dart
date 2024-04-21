@@ -4,6 +4,7 @@ import 'package:bouggr/utils/dice_set.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:bouggr/providers/navigation.dart';
+import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
 import 'package:bouggr/utils/decode.dart';
 
@@ -52,6 +53,8 @@ int countLetterInDiceSet(DiceSet diceSet, String letter) {
 }
 
 void main() {
+  final logger = Logger();
+
   DiceSet listeDe = DiceSet(dices: [
     ["E", "T", "U", "K", "N", "O"],
     ["E", "V", "G", "T", "I", "N"],
@@ -152,20 +155,20 @@ void main() {
           decoder: Decoded(lang: generateLangCode()));
       await dictionary.load();
       while (dictionary.dictionary == null) {
-        print('loading dictionary');
+        logger.i('loading dictionary');
         sleep(Durations.extralong1);
-        print('dictionary loaded');
+        logger.i('dictionary loaded');
       }
       List<Word>? words;
 
       await getAllWords2(grid, dictionary).then((value) => {words = value});
       while (words == null) {
-        print('loading words');
+        logger.i('loading words');
         sleep(Durations.extralong1);
-        print('words loaded');
+        logger.i('words loaded');
       }
 
-      print(words!.length);
+      logger.i(words!.length);
 
       expect(words!.length, 10);
     });*/
@@ -179,7 +182,7 @@ void main() {
         }
       }
 
-      print('Nombre de E: $count');
+      logger.i('Nombre de E: $count');
       //au maximum 12 fois la lettre E
       expect(count, lessThanOrEqualTo(countLetterInDiceSet(listeDe, 'E')));
     });
@@ -188,7 +191,7 @@ void main() {
         'vérification que TOUTE les lettres sont en bon nombre dans une grille aléatoire',
         () {
       List<String> letters = listeDe.roll();
-      print(letters);
+      logger.i(letters);
       Map<String, int> count = <String,
           int>{}; //Map<lettre, nombre de fois que la lettre est présente>
       for (String letter in letters) {
@@ -199,10 +202,10 @@ void main() {
         }
       }
 
-      print(count);
+      logger.i(count);
       //chaque lettre doit être présente 1 fois
       for (String letter in count.keys) {
-        print('Nombre de $letter: ${count[letter]}');
+        logger.i('Nombre de $letter: ${count[letter]}');
         expect(count[letter],
             lessThanOrEqualTo(countLetterInDiceSet(listeDe, letter)));
       }
@@ -211,7 +214,7 @@ void main() {
 
   //Fermer l'application car les tests se sont effectuer
   /*tearDownAll(() {
-    print('Fermeture de l\'application');
+    logger.i('Fermeture de l\'application');
     SystemNavigator.pop();
   });*/
 }
