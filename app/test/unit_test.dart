@@ -12,7 +12,7 @@ class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 // Créez une classe Mock pour simuler le comportement du NavigationServices
 class MockGameServices extends Mock implements GameServices {
   MockGameServices() {
-    when(this.language).thenReturn(LangCode.FR);
+    when(language).thenReturn(LangCode.FR);
   }
 
   @override
