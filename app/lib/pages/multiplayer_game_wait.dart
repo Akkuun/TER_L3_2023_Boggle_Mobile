@@ -93,32 +93,6 @@ class _GameWaitPageState extends State<GameWaitPage> {
     } catch (e) {
       router.goToPage(PageName.login);
     }
-    Widget listView;
-    try {
-      listView = ListView.builder(
-        itemCount: data["players"].length,
-        itemBuilder: (context, index) {
-          try {
-            String key = data["players"].keys.elementAt(index);
-            return PlayerInList(
-              playerName: data["players"][key]["name"],
-              color: index % 2 == 0
-                  ? const Color.fromARGB(255, 89, 150, 194)
-                  : const Color.fromARGB(255, 181, 224, 255),
-            );
-          } catch (e) {
-            return PlayerInList(
-              playerName: "Joueur",
-              color: index % 2 == 0
-                  ? const Color.fromARGB(255, 89, 150, 194)
-                  : const Color.fromARGB(255, 181, 224, 255),
-            );
-          }
-        },
-      );
-    } catch (e) {
-      listView = const SizedBox();
-    }
 
     return SizedBox(
       height: MediaQuery.of(context).size.height,
@@ -175,7 +149,7 @@ class _GameWaitPageState extends State<GameWaitPage> {
                       ),
                     ],
                   ),
-                  child: listView,
+                  child: const PlayerWaitingList(),
                 ),
               ),
             ),
@@ -219,6 +193,48 @@ class _GameWaitPageState extends State<GameWaitPage> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class PlayerWaitingList extends StatelessWidget {
+  const PlayerWaitingList({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var rm = context.watch<RealtimeGameProvider>();
+    var data = rm.game;
+    if (data == null) {
+      return const SizedBox();
+    }
+
+    if (data["players"] == null) {
+      return const SizedBox();
+    }
+
+    //const SizedBox();
+    return ListView.builder(
+      itemCount: data["players"].length,
+      itemBuilder: (context, index) {
+        try {
+          String key = data["players"].keys.elementAt(index);
+          return PlayerInList(
+            playerName: data["players"][key]["name"],
+            color: index % 2 == 0
+                ? const Color.fromARGB(255, 89, 150, 194)
+                : const Color.fromARGB(255, 181, 224, 255),
+          );
+        } catch (e) {
+          return PlayerInList(
+            playerName: "Joueur",
+            color: index % 2 == 0
+                ? const Color.fromARGB(255, 89, 150, 194)
+                : const Color.fromARGB(255, 181, 224, 255),
+          );
+        }
+      },
     );
   }
 }
