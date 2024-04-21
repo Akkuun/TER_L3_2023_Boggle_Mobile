@@ -150,13 +150,15 @@ class LocalTranslate {
 
   LocalTranslate({required this.path});
 
-  load() {
-    rootBundle.loadString(path).then((value) {
-      _localMap = jsonDecode(value);
+  load() async {
+    String data = await rootBundle.loadString(path);
+    _localMap = json.decode(data).map<LocalEntries, String>((key, value) {
+      return MapEntry(
+          LocalEntries.values.firstWhere((e) => e.toString() == key), value);
     });
   }
 
   unload() {
-    _localMap = {};
+    _localMap.clear();
   }
 }
