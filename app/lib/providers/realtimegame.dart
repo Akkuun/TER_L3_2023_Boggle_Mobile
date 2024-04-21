@@ -23,7 +23,7 @@ class RealtimeGameProvider extends ChangeNotifier {
     // Ici on va initialiser les listeners pour écouter les changements
     // dans la base de données
 
-    dbRef = FirebaseDatabase.instance.ref('games/${_gameCode}');
+    dbRef = FirebaseDatabase.instance.ref('games/$_gameCode');
     dbRef!.onValue.listen((DatabaseEvent event) {
       final data =
           HashMap<String, dynamic>.from(event.snapshot.value as Map? ?? {});

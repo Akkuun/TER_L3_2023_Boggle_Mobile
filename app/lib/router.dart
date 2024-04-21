@@ -62,8 +62,7 @@ class _BouggrRouter extends State<BouggrRouter> {
   Widget build(BuildContext context) {
     var router = context
         .watch<NavigationServices>(); //écoute du listener de NavigationServices
-    var rm =
-        Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
+    Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
     return LayoutBuilder(
       builder: (context, constraints) {
         return Scaffold(
