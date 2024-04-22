@@ -27,6 +27,23 @@ class _EmailLogInState extends State<EmailLogIn> {
   final RegExp validationEmail =
       RegExp(r'^[a-zA-Z0-9.a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$');
 
+  void requetFireBaseConnexion(
+      BuildContext context,
+      Logger logger,
+      FirebaseAuth auth,
+      NavigationServices router,
+      GameServices gameservices) async {
+    logger.i('requetFireBaseConnexion');
+    try {
+      await auth.signInWithEmailAndPassword(
+          email: email.text, password: mdp.text);
+      router.goToPage(PageName.home);
+    } on FirebaseAuthException catch (e) {
+      logger.w(e.message);
+      showErrorDialog(context, gameservices);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final router = Provider.of<NavigationServices>(context, listen: false);
@@ -35,18 +52,6 @@ class _EmailLogInState extends State<EmailLogIn> {
     final logger = Logger();
 
     logger.i('EmailLogIn build');
-
-    void requetFireBaseConnexion() async {
-      logger.i('requetFireBaseConnexion');
-      try {
-        await auth.signInWithEmailAndPassword(
-            email: email.text, password: mdp.text);
-        router.goToPage(PageName.home);
-      } on FirebaseAuthException catch (e) {
-        logger.w(e.message);
-        showErrorDialog(context, gameservices);
-      }
-    }
 
     return Form(
         key: _key,
@@ -109,7 +114,8 @@ class _EmailLogInState extends State<EmailLogIn> {
                             setState(() {
                               isLoading = true;
                             });
-                            requetFireBaseConnexion();
+                            requetFireBaseConnexion(
+                                context, logger, auth, router, gameservices);
                           }
                         },
                         child: Text(Globals.getText(gameservices.language, 39)),
