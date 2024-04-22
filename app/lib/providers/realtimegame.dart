@@ -14,7 +14,8 @@ class RealtimeGameProvider extends ChangeNotifier {
     return _gameCode;
   }
 
-  set gameCode(String code) {
+  setGameCode(String code) {
+    Logger().d("[PROVIDER] Setting game code to $code");
     _gameCode = code;
     notifyListeners();
   }
@@ -39,11 +40,10 @@ class RealtimeGameProvider extends ChangeNotifier {
     if (dbRef == null) {
       return;
     }
-    logger.d("[PROVIDER] Disposing of the game");
 
     await dbRef!.onValue.listen((DatabaseEvent event) {}).cancel();
     _lastGameCode = _gameCode;
-    gameCode = '';
+    setGameCode('');
     _game = HashMap<String, dynamic>();
     dbRef!.onDisconnect();
     logger.d("[PROVIDER] game disposed");

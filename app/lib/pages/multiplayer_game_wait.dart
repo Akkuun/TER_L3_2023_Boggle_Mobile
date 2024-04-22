@@ -167,6 +167,8 @@ class _GameWaitPageState extends State<GameWaitPage> {
             child: BtnBoggle(
               // Leave game
               onPressed: () {
+                Provider.of<RealtimeGameProvider>(context, listen: false)
+                    .onDispose();
                 FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
                   "userId": user!.uid,
                 });

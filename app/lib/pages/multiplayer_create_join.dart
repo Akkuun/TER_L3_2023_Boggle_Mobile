@@ -89,6 +89,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
   _createGame(String playerUID, User? user, RealtimeGameProvider rm,
       NavigationServices router, LangCode lang) async {
     final logger = Logger();
+    logger.w("Creating game");
     final letters = Globals.selectDiceSet(lang).roll();
     final result =
         await FirebaseFunctions.instance.httpsCallable('CreateGame').call(
@@ -129,9 +130,10 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
       logger.e("Error creating game : ${response["error"]}");
       return;
     }
-    rm.gameCode = response['gameId'];
+    rm.setGameCode(response["gameId"]);
     Globals.currentMultiplayerGame = letters.join('');
     router.goToPage(PageName.multiplayerGameWait);
+    logger.w("Game created with code ${rm.gameCode} ${response["gameId"]}");
   }
 
   @override
@@ -219,7 +221,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
                 });
                 return;
               }
-              rm.gameCode = value;
+              rm.setGameCode(value);
               setState(() {
                 _btnType = BtnType.primary;
               });
