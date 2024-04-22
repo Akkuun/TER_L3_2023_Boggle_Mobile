@@ -124,7 +124,7 @@ describe('Test JoinGame', () => {
     it('should join a game', (done) => {
 
         admin.database().ref("/games").push({
-            status: 0,
+            status: 3,
             players: {
                 test_join_game: {
                     name: 'test_2_join_game',
