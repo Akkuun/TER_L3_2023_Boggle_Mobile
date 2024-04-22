@@ -136,11 +136,41 @@ describe('Test CreateGame', () => {
     });
 
     it("can't create a game if the last one is in progress", (done) => {
-        //TODO
-        expect(false).toBe(true);
 
-        //should return the game id
-        done();
+        admin.database().ref("/games").push({
+            status: 0,
+            players: {
+                test_4: {
+                    name: 'test_4',
+                    email: 'email',
+                    score: 0,
+                    leader: true
+                }
+            },
+            letters: 'test',
+            lang: 0,
+            end_time: Date.now() + 5000
+        }).then(async (game) => {
+            admin.database().ref(`/player_ingame/test_4`).set(game.key);
+            const wrapped_create = test.wrap(create_game);
+            const data = {
+                data: {
+                    lang: 0,
+                    letters: 'test',
+                    name: 'test',
+                    email: 'email',
+                    userId: 'test_4',
+                }
+            };
+
+            wrapped_create(data).then(async (result: { gameId: string }) => {
+                expect(result.gameId).toBeNull();
+            }).finally(() => {
+                admin.database().ref(`/player_ingame/test_4`).remove();
+                game.ref.remove();
+                done();
+            });
+        });
     });
 
 
