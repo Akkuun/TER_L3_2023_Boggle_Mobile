@@ -35,7 +35,7 @@ export async function start_game(req: any) {
         return StartGameReturn.GAME_NOT_FOUND;
     }
 
-    const players = await game.child("players");
+    const players = game.child("players");
     const targetPlayer = players.child(data.userId);
     if (!(await targetPlayer.get()).exists()) { // if player does not exist
         return StartGameReturn.NOT_IN_GAME;

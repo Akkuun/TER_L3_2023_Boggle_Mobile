@@ -57,15 +57,82 @@ describe('Test CreateGame', () => {
 
 
     it("can create a game if the last one is finished", (done) => {
-        //TODO
-        expect(false).toBe(true);
-        done();
+
+        admin.database().ref("/games").push({
+            status: 4,
+            players: {
+                test_2: {
+                    name: 'test_2',
+                    email: 'email',
+                    score: 0,
+                    leader: true
+                }
+            },
+            letters: 'test',
+            lang: 0,
+            end_time: Date.now() - 1000
+        }).then(async (game) => {
+            await admin.database().ref(`/player_ingame/test_2`).set(game.key);
+            const wrapped_create = test.wrap(create_game);
+            const data = {
+                data: {
+                    lang: 0,
+                    letters: 'test',
+                    name: 'test',
+                    email: 'email',
+                    userId: 'test_2',
+                }
+            };
+
+            wrapped_create(data).then(async (result: { gameId: string }) => {
+                expect(result.gameId).not.toBeNull();
+                const game = admin.database().ref("/games").child(result.gameId);
+                const gm = await game.get()
+                expect(gm.exists()).toBe(true);
+                gm.ref.remove();
+                const player_in_game = admin.database().ref(`/player_ingame/${data.data.userId}`);
+                const pg = await player_in_game.get()
+                expect(pg.exists()).toBe(true);
+                pg.ref.remove();
+            }).finally(() => {
+                game.ref.remove();
+                done();
+            });
+        });
+
+
     });
 
     it("can create a game if the last one is not found", (done) => {
-        //TODO
-        expect(false).toBe(true);
-        done();
+
+        admin.database().ref("/player_ingame/test_3").set(
+            "aoizngaoizaz"
+        ).then(async (user) => {
+            const wrapped_create = test.wrap(create_game);
+            const data = {
+                data: {
+                    lang: 0,
+                    letters: 'test',
+                    name: 'test',
+                    email: 'email',
+                    userId: 'test_3',
+                }
+            };
+
+            wrapped_create(data).then(async (result: { gameId: string }) => {
+                expect(result.gameId).not.toBeNull();
+                const game = admin.database().ref("/games").child(result.gameId);
+                const gm = await game.get()
+                expect(gm.exists()).toBe(true);
+                gm.ref.remove();
+                const player_in_game = admin.database().ref(`/player_ingame/${data.data.userId}`);
+                const pg = await player_in_game.get()
+                expect(pg.exists()).toBe(true);
+                pg.ref.remove();
+            }).finally(() => {
+                done();
+            });
+        });
     });
 
     it("can't create a game if the last one is in progress", (done) => {
