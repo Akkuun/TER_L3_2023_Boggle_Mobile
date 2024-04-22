@@ -141,7 +141,9 @@ class _GameWaitPageState extends State<GameWaitPage> {
               ),
             ),
           ),
-          if (data == {} &&
+          if (data != null &&
+              data["players"] != null &&
+              data["players"].length > 1 &&
               data["players"][Provider.of<FirebaseAuth>(context, listen: false)
                       .currentUser!
                       .uid]["leader"] ==
