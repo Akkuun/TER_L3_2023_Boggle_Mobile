@@ -33,36 +33,18 @@ class _EmailLogInState extends State<EmailLogIn> {
     final gameservices = Provider.of<GameServices>(context, listen: false);
     final auth = Provider.of<FirebaseAuth>(context, listen: false);
     final logger = Logger();
-    void requetFireBaseConnexion() {
-      try {
-        auth
-            .signInWithEmailAndPassword(email: email.text, password: mdp.text)
-            .then((value) => router.goToPage(PageName.home));
-      } on FirebaseAuthException catch (e) {
-        logger.e(e.message);
 
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                //pop up
-                title: Text(Globals.getText(gameservices.language, 28)),
-                content: Text(Globals.getText(gameservices.language, 29)),
-                actions: [
-                  ElevatedButton(
-                    child: Text(Globals.getText(gameservices.language, 30)),
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Ferme la a pop up
-                    },
-                  )
-                ],
-              );
-            });
-        setState(() {
-          //on utilise le setState pour changer l'état de la variable isLoading sinon elle ne changera pas
-          isLoading = false;
-          FocusScope.of(context).unfocus(); // force le clavier à se fermer
-        });
+    logger.i('EmailLogIn build');
+
+    void requetFireBaseConnexion() async {
+      logger.i('requetFireBaseConnexion');
+      try {
+        await auth.signInWithEmailAndPassword(
+            email: email.text, password: mdp.text);
+        router.goToPage(PageName.home);
+      } on FirebaseAuthException catch (e) {
+        logger.w(e.message);
+        showErrorDialog(context, gameservices);
       }
     }
 
@@ -141,5 +123,34 @@ class _EmailLogInState extends State<EmailLogIn> {
               btnSize: BtnSize.small,
               text: Globals.getText(gameservices.language, 14)),
         ]));
+  }
+
+  void showErrorDialog(BuildContext context, GameServices gameservices) {
+    if (mounted) {
+      //si la page n'est pas montée on ne fait rien
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              //pop up
+              title: Text(Globals.getText(gameservices.language, 28)),
+              content: Text(Globals.getText(gameservices.language, 29)),
+              actions: [
+                ElevatedButton(
+                  child: Text(Globals.getText(gameservices.language, 30)),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Ferme la a pop up
+                  },
+                )
+              ],
+            );
+          });
+
+      setState(() {
+        //on utilise le setState pour changer l'état de la variable isLoading sinon elle ne changera pas
+        isLoading = false;
+        FocusScope.of(context).unfocus(); // force le clavier à se fermer
+      });
+    }
   }
 }
