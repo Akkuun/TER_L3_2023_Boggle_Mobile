@@ -7,6 +7,7 @@ const create_game = require('../../src/index').CreateGame;
 const join_game = require('../../src/index').JoinGame;
 const start_game = require('../../src/index').StartGame;
 const check_word = require('../../src/index').SendWord;
+const leave_game = require('../../src/index').LeaveGame;
 
 // Initialize test environment
 const test = testInit(
@@ -144,6 +145,21 @@ describe('Test JoinGame', () => {
             done();
         });
     });
+
+    it("should not be able to join a game if the game is not in waiting", (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+
+
+    it("should join back a game if he disconnect ", (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+
+
 });
 
 
@@ -218,6 +234,20 @@ describe('Test StartGame', () => {
         expect(false).toBe(true);
         done();
     });
+
+    it("should be able to start a game if the leader cancels", (done) => {
+        expect(false).toBe(true);
+        done();
+    });
+
+    it("should not be able to start a game if the game is already started", (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+
+
+
 });
 
 
@@ -305,12 +335,102 @@ describe('Test CheckWord', () => {
             });
         })
     }, 10000);
+
+    it("should not be able to check a word if the game is not started", (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+
+    it("should not be able to check a word if the game is finished", (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+
 });
 
 
+describe('Test Cancel Game', () => {
+    it('should cancel a game', (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+
+    it('should not cancel a game if not the leader', (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+})
+
+describe('Test Leave Game', () => {
+
+    it('should leave a game', (done) => {
+        const warpped_leave = test.wrap(leave_game);
+        //create a fake game and fake player
+        let gameId: string = '';
+        admin.database().ref("/games").push({
+            status: 3,
+            players: {
+                test_2_leave_game: {
+                    name: 'test_2_leave_game',
+                    email: 'email',
+                    score: 0,
+                    leader: true
+                },
+                dump: {
+                    name: 'test_dump_leave_game',
+                    email: 'email',
+                    score: 0,
+                    leader: true
+                }
+            },
+            letters: 'test',
+            lang: 0
+        }).then(async (game) => {
+            expect(game.key).not.toBeNull();
+            admin.database().ref(`/player_ingame/test_2_leave_game`).set(game.key);
+            const data = {
+                data: {
+                    userId: 'test_2_leave_game',
+                    email: 'email'
+                }
+            };
+            gameId = game.key ?? '';
+            warpped_leave(data).then(async (result: any) => {
+                expect(result.result).toBe("success");
+                const game = admin.database().ref("/games").child(gameId);
+                const gm = await game.get()
+                expect(gm.exists()).toBe(true); // not last player
+                gm.ref.remove();
+                const player_in_game = admin.database().ref(`/player_ingame/${data.data.userId}`);
+                const pg = await player_in_game.get()
+                expect(pg.exists()).toBe(false);
+            }).finally(() => {
+                done();
+            });
+        });
 
 
 
+    });
+
+    it("should delete the game if the last player leaves", (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+
+    it("should change the leader if the leader leaves", (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+
+
+});
 
 
 test.cleanup();
