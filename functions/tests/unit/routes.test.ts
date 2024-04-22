@@ -54,42 +54,28 @@ describe('Test CreateGame', () => {
 
     });
 
-    it('should fail to create 2 identical games', (done) => {
 
-        const wrapped_create = test.wrap(create_game);
-        const data = {
-            data: {
-                lang: 0,
-                letters: 'OVERFCEANAEBRUAS',
-                name: 'test_d',
-                email: 'test@testd.test',
-                userId: 'test_d',
-            }
-        };
-        let saveGameId: string = '';
-        wrapped_create(data).then(async (result: { gameId: string }) => {
-            expect(result.gameId).not.toBeNull();
-            saveGameId = result.gameId;
-            wrapped_create(data).then(async (result: { gameId: string }) => {
-                expect(result.gameId).toBeNull();
-                const game = admin.database().ref("/games").child(data.data.userId);
-                const gm = await game.get()
-
-                expect(gm.exists()).toBe(false);
-                const player_in_game = admin.database().ref(`/player_ingame/${data.data.userId}`);
-                const pg = await player_in_game.get()
-                expect(pg.exists()).toBe(false);
-
-
-            })
-        }).finally(() => {
-            const firstGame = admin.database().ref("/games").child(saveGameId);
-            firstGame.remove();
-            const firstPlayer = admin.database().ref(`/player_ingame/${data.data.userId}`);
-            firstPlayer.remove();
-            done();
-        });
+    it("can create a game if the last one is finished", (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
     });
+
+    it("can create a game if the last one is not found", (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+
+    it("can't create a game if the last one is in progress", (done) => {
+        //TODO
+        expect(false).toBe(true);
+
+        //should return the game id
+        done();
+    });
+
+
 });
 
 describe('Test JoinGame', () => {
@@ -126,7 +112,7 @@ describe('Test JoinGame', () => {
         admin.database().ref("/games").push({
             status: 3,
             players: {
-                test_join_game: {
+                test_2_join_game: {
                     name: 'test_2_join_game',
                     email: 'email',
                     score: 0,
@@ -145,7 +131,7 @@ describe('Test JoinGame', () => {
                     gameId: game.key,
                     name: 'test_2_join_game_2',
                     email: 'email',
-                    userId: 'test_2_join_game',
+                    userId: 'test_2_join_game_2',
                 }
             };
 
@@ -226,7 +212,14 @@ describe('Test StartGame', () => {
         });
     });
 
+
+    it("should be able to start a game if the leader leaves", (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
 });
+
 
 
 describe('Test CheckWord', () => {
