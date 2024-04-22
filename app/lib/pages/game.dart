@@ -10,6 +10,7 @@ import 'package:firebase_database/firebase_database.dart';
 
 //flutter
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import '../components/game_page/game_widget.dart';
@@ -29,24 +30,6 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> {
   late GameServices gameServices;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    if (widget.mode == GameType.multi) {
-      User? user =
-          Provider.of<FirebaseAuth>(context, listen: false).currentUser;
-      FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
-        "userId": user!.uid,
-      });
-      //Provider.of<RealtimeGameProvider>(_navigator.context, listen: false).onDispose();
-    }
-    super.dispose();
-  }
 
   @override
   void initState() {
