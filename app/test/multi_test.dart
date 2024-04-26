@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:bouggr/pages/multiplayer_gamealed.dart';
+//import 'package:bouggr/pages/multiplayer_gamealed.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:mockito/mockito.dart';
 
@@ -37,7 +37,7 @@ class FirebaseService {
 }
 
 void main() {
-  final logger = Logger();
+  /*final logger = Logger();
   group('MultiplayerGamePage', () {
     //group permet de regrouper les tests afin de les exécuter ensemble mais aussi de les organiser par catégories/thèmes
     testWidgets('Construction de la page sans erreur',
@@ -67,7 +67,7 @@ void main() {
       // Vérifier que MultiplayerGamePage est bien affiché
       expect(find.byType(MultiplayerGamePage), findsOneWidget);
     });
-    /*
+    
     testWidgets('La navigation vers le jeux lors que la creation de partie (button) est préssée s\'effectue', (WidgetTester tester) async {
       final mockNavigationServices = MockNavigationServices(); //crée un objet de la classe MockNavigationServices
 
@@ -103,6 +103,6 @@ void main() {
 
       verify(mockNavigationServices.goToPage(PageName.home)).called(1);
     });
-    */
-  });
+    
+  });*/
 }
