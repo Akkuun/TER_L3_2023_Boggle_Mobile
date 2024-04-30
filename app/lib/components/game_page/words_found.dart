@@ -3,6 +3,7 @@ import 'package:bouggr/providers/end_game_service.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/utils/get_all_word.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -42,6 +43,7 @@ class WordsFound extends StatelessWidget {
             if (snapshot.hasData) {
               var words = snapshot.data;
               if (words == null) {
+                Logger().w('No words found');
                 return Text(Globals.getText(gameServices.language, 55));
               }
               return Padding(
@@ -60,6 +62,36 @@ class WordsFound extends StatelessWidget {
                           ? Text(
                               "${Globals.getText(gameServices.language, 22)}  ${words.reduce((Word value, Word element) => value.txt.length > element.txt.length ? !gameServices.words.contains(value.txt) ? value : Word("", []) : !gameServices.words.contains(element.txt) ? element : Word("", [])).txt.length}")
                           : Text(Globals.getText(gameServices.language, 23)),
+                      SizedBox.fromSize(
+                          size: const Size(0, 16), child: Container()),
+                      Expanded(
+                        child: ListView.builder(
+                          itemCount: gameServices.words.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Container(
+                                height: 64,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Color(0x3F000000),
+                                      blurRadius: 4,
+                                      offset: Offset(0, 4),
+                                      spreadRadius: 0,
+                                    )
+                                  ],
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(gameServices.words[index]),
+                                  ],
+                                ));
+                          },
+                        ),
+                      ),
                     ]),
               );
             }

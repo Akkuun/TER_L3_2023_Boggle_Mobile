@@ -76,103 +76,18 @@ class EndGameDetail extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               if (gameServices.gameType == GameType.multi)
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      decoration: ShapeDecoration(
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        shadows: const [
-                          BoxShadow(
-                            color: Color(0x3F000000),
-                            blurRadius: 4,
-                            offset: Offset(0, 4),
-                            spreadRadius: 0,
-                          )
-                        ],
-                      ),
-                      width: size.width * 0.9,
-                      child: const LeaderBoard()),
-                ),
-              Padding(
-                padding: EdgeInsets.all(
-                    (gameServices.gameType == GameType.multi) ? 2.0 : 8.0),
-                child: Container(
-                  decoration: ShapeDecoration(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    shadows: const [
-                      BoxShadow(
-                        color: Color(0x3F000000),
-                        blurRadius: 4,
-                        offset: Offset(0, 4),
-                        spreadRadius: 0,
-                      )
-                    ],
-                  ),
-                  width: size.width * 0.9,
-                  height: size.height * 0.3,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          if (gameServices.gameType == GameType.multi)
-                            Text(
-                                "${Globals.getText(gameServices.language, 18)} $rank"),
-                          Text(
-                              "${Globals.getText(gameServices.language, 61)} ${gameServices.score}"),
-                          Text(Globals.getText(gameServices.language, 62)),
-                        ],
-                      ),
-                      Text(
-                          "${Globals.getText(gameServices.language, 60)} ${gameServices.longestWord}"),
-                      Text(Globals.getText(gameServices.language, 59)),
-                      BtnBoggle(
-                        onPressed: () {
-                          endGameService.showPopUp();
-                        },
-                        text: Globals.getText(gameServices.language, 58),
-                        btnType: BtnType.third,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      decoration: ShapeDecoration(
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        shadows: const [
-                          BoxShadow(
-                            color: Color(0x3F000000),
-                            blurRadius: 4,
-                            offset: Offset(0, 4),
-                            spreadRadius: 0,
-                          )
-                        ],
-                      ),
-                      width: size.width * 0.9,
-                      child: const Padding(
-                          padding: EdgeInsets.all(8.0), child: WordsFound())),
-                ),
-              ),
-              if (!Provider.of<EndGameService>(context).triggerPopUp)
+                multi_leader_board(size: size),
+              header_end_game_detail(
+                  gameServices: gameServices,
+                  size: size,
+                  rank: rank,
+                  endGameService: endGameService),
+              WordsFoundIngame(size: size),
+              if (!endGameService.triggerPopUp)
                 BtnBoggle(
                   onPressed: () {
                     gameServices.stop();
-                    Provider.of<EndGameService>(context, listen: false)
-                        .hidePopUp();
+                    endGameService.hidePopUp();
                     GameDataStorage.saveGameResult(gameResult);
 
                     timerServices.resetProgress();
@@ -181,12 +96,11 @@ class EndGameDetail extends StatelessWidget {
                   },
                   text: Globals.getText(gameServices.language, 25),
                 ),
-              if (!Provider.of<EndGameService>(context).triggerPopUp)
+              if (!endGameService.triggerPopUp)
                 BtnBoggle(
                     onPressed: () {
                       gameServices.stop();
-                      Provider.of<EndGameService>(context, listen: false)
-                          .hidePopUp();
+                      endGameService.hidePopUp();
                       GameDataStorage.saveGameResult(gameResult);
                       gameServices.reset();
                       timerServices.resetProgress();
@@ -199,6 +113,141 @@ class EndGameDetail extends StatelessWidget {
         ),
         const PopUpWordList(),
       ],
+    );
+  }
+}
+
+class WordsFoundIngame extends StatelessWidget {
+  const WordsFoundIngame({
+    super.key,
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+            decoration: ShapeDecoration(
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              shadows: const [
+                BoxShadow(
+                  color: Color(0x3F000000),
+                  blurRadius: 4,
+                  offset: Offset(0, 4),
+                  spreadRadius: 0,
+                )
+              ],
+            ),
+            width: size.width * 0.9,
+            child: const Padding(
+                padding: EdgeInsets.all(8.0), child: WordsFound())),
+      ),
+    );
+  }
+}
+
+class header_end_game_detail extends StatelessWidget {
+  const header_end_game_detail({
+    super.key,
+    required this.gameServices,
+    required this.size,
+    required this.rank,
+    required this.endGameService,
+  });
+
+  final GameServices gameServices;
+  final Size size;
+  final int rank;
+  final EndGameService endGameService;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding:
+          EdgeInsets.all((gameServices.gameType == GameType.multi) ? 2.0 : 8.0),
+      child: Container(
+        decoration: ShapeDecoration(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          shadows: const [
+            BoxShadow(
+              color: Color(0x3F000000),
+              blurRadius: 4,
+              offset: Offset(0, 4),
+              spreadRadius: 0,
+            )
+          ],
+        ),
+        width: size.width * 0.9,
+        height: size.height * 0.3,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                if (gameServices.gameType == GameType.multi)
+                  Text("${Globals.getText(gameServices.language, 18)} $rank"),
+                Text(
+                    "${Globals.getText(gameServices.language, 61)} ${gameServices.score}"),
+                Text(Globals.getText(gameServices.language, 62)),
+              ],
+            ),
+            Text(
+                "${Globals.getText(gameServices.language, 60)} ${gameServices.longestWord}"),
+            Text(Globals.getText(gameServices.language, 59)),
+            BtnBoggle(
+              onPressed: () {
+                endGameService.showPopUp();
+              },
+              text: Globals.getText(gameServices.language, 58),
+              btnType: BtnType.third,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class multi_leader_board extends StatelessWidget {
+  const multi_leader_board({
+    super.key,
+    required this.size,
+  });
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+          decoration: ShapeDecoration(
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            shadows: const [
+              BoxShadow(
+                color: Color(0x3F000000),
+                blurRadius: 4,
+                offset: Offset(0, 4),
+                spreadRadius: 0,
+              )
+            ],
+          ),
+          width: size.width * 0.9,
+          child: const LeaderBoard()),
     );
   }
 }

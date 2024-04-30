@@ -129,10 +129,8 @@ class PopUpWordList extends StatelessWidget {
                 BtnBoggle(
                     btnType: BtnType.secondary,
                     onPressed: () {
-                      Provider.of<EndGameService>(context, listen: false)
-                          .hidePopUp();
-                      Provider.of<EndGameService>(context, listen: false)
-                          .resetSelectedWord();
+                      endGameServices.hidePopUp();
+                      endGameServices.resetSelectedWord();
                     },
                     text: Globals.getText(gameServices.language, 56)),
               ],
