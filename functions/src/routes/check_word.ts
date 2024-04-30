@@ -60,7 +60,7 @@ export const check_word = (dictionariesHandler: { ptr: DictionariesHandler }, Di
     //const checkWord = await game.child("players/" + data.userId + "/words").orderByChild("word").equalTo(wordStr).get();
     try {
         if (dico.contain(wordStr)) {
-            await game.child("players/" + data.userId).push({ word: wordStr });
+            await game.child("players/" + data.userId + "/words").push(wordStr);
             //update score
             const score = (await player.child("score").get()).val();
             player.update({ score: score + wordScore(wordStr) });

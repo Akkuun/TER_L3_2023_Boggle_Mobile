@@ -327,9 +327,69 @@ describe('Test StartGame', () => {
 
 
     it("should be able to start a game if the leader leaves", (done) => {
-        //TODO
-        expect(false).toBe(true);
-        done();
+
+        //create a fake game and 2 fake players
+        let gameId: string = '';
+
+        admin.database().ref("/games").push({
+            status: 3,
+            players: {
+                test_2_start_game: {
+                    name: 'test_2_start_game',
+                    email: 'email',
+                    score: 0,
+                    leader: false
+                },
+                dump2: {
+                    name: 'test_dump_start_game',
+                    email: 'email',
+                    score: 0,
+                    leader: true
+                },
+                dump: {
+                    name: 'test_dump_start_game',
+                    email: 'email',
+                    score: 0,
+                    leader: true
+                }
+            },
+            letters: 'test',
+            lang: 0
+        }).then(async (game) => {
+            //dump is the leader and is leaving
+            const warpped_leave = test.wrap(leave_game);
+            const data = {
+                data: {
+                    userId: 'dump',
+                    email: 'email'
+                }
+            };
+
+            warpped_leave(data).then(async (result: any) => {
+                const wrapped_start = test.wrap(start_game);
+                const start_data = {
+                    data: {
+                        gameId: game.key ?? '',
+                        userId: 'test_2_start_game:'
+                    }
+                };
+                gameId = game.key ?? '';
+
+                wrapped_start(start_data).then(async (result: any) => {
+                    expect(result).toBe(0);
+                    const game = admin.database().ref("/games").child(gameId);
+                    const gm = await game.get()
+                    expect(gm.exists()).toBe(true);
+                    expect(gm.val().status).toBe(0);
+                    gm.ref.remove();
+                }).finally(() => {
+                    done();
+                });
+            })
+        });
+
+
+
     });
 
     it("should be able to start a game if the leader cancels", (done) => {
@@ -445,7 +505,14 @@ describe('Test CheckWord', () => {
         done();
     });
 
+    it("should not be able to validate a word if he was already validated", (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+
 });
+
 
 
 describe('Test Cancel Game', () => {

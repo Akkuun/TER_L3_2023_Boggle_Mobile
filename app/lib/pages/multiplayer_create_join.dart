@@ -73,6 +73,8 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
           "name": user?.email ?? "",
         },
       );
+      Logger().w(result.data);
+
       response = result.data["code"];
     }
     if (response == JoinGameReturn.success.index) {

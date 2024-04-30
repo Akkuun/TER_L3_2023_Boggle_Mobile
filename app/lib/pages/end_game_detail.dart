@@ -167,31 +167,33 @@ class EndGameDetail extends StatelessWidget {
                           padding: EdgeInsets.all(8.0), child: WordsFound())),
                 ),
               ),
-              BtnBoggle(
-                onPressed: () {
-                  gameServices.stop();
-                  Provider.of<EndGameService>(context, listen: false)
-                      .toggle(false);
-                  GameDataStorage.saveGameResult(gameResult);
-
-                  timerServices.resetProgress();
-                  gameServices.reset();
-                  navigationServices.goToPage(PageName.home);
-                },
-                text: Globals.getText(gameServices.language, 25),
-              ),
-              BtnBoggle(
+              if (!Provider.of<EndGameService>(context).triggerPopUp)
+                BtnBoggle(
                   onPressed: () {
                     gameServices.stop();
                     Provider.of<EndGameService>(context, listen: false)
-                        .toggle(true);
+                        .hidePopUp();
                     GameDataStorage.saveGameResult(gameResult);
-                    gameServices.reset();
+
                     timerServices.resetProgress();
+                    gameServices.reset();
                     navigationServices.goToPage(PageName.home);
                   },
-                  text: Globals.getText(gameServices.language, 56),
-                  btnType: BtnType.secondary),
+                  text: Globals.getText(gameServices.language, 25),
+                ),
+              if (!Provider.of<EndGameService>(context).triggerPopUp)
+                BtnBoggle(
+                    onPressed: () {
+                      gameServices.stop();
+                      Provider.of<EndGameService>(context, listen: false)
+                          .hidePopUp();
+                      GameDataStorage.saveGameResult(gameResult);
+                      gameServices.reset();
+                      timerServices.resetProgress();
+                      navigationServices.goToPage(PageName.home);
+                    },
+                    text: Globals.getText(gameServices.language, 56),
+                    btnType: BtnType.secondary),
             ],
           ),
         ),
