@@ -1,4 +1,4 @@
-import 'package:bouggr/components/game_page/leaderboard_row.dart';
+import 'package:bouggr/components/game_page/only_multi/leaderboard_row.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/realtimegame.dart';
 import 'package:flutter/material.dart';

@@ -36,8 +36,8 @@ class WordsFound extends StatelessWidget {
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox(
-                height: 100,
-                width: 100,
+                height: 116,
+                width: 116,
                 child: CircularProgressIndicator(),
               );
             }
