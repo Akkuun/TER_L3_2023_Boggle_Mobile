@@ -14,5 +14,6 @@ enum PageName {
   settings,
   startGame,
   detail,
+  detailMulti,
   ;
 }

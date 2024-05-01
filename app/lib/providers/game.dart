@@ -1,5 +1,7 @@
 import 'package:bouggr/components/popup.dart';
 import 'package:bouggr/global.dart';
+import 'package:bouggr/pages/page_name.dart';
+import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/realtimegame.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:bouggr/utils/dico.dart';
@@ -199,5 +201,15 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
     _longestWord = null;
     multiResult = {};
     notifyListeners();
+  }
+
+  void checkDetails(BuildContext context) {
+    if (_gameType == GameType.multi) {
+      Provider.of<NavigationServices>(context, listen: false)
+          .goToPage(PageName.detailMulti);
+    } else {
+      Provider.of<NavigationServices>(context, listen: false)
+          .goToPage(PageName.detail);
+    }
   }
 }

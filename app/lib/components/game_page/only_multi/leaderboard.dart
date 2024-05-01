@@ -10,14 +10,14 @@ class LeaderBoard extends StatelessWidget {
     super.key,
   });
 
+  static const List<Color> colors = [
+    Color(0xFFFFD700), // gold
+    Color(0xFFC0C0C0), // silver
+    Color(0xFFFF7D1E), // bronze
+  ];
+
   @override
   Widget build(BuildContext context) {
-    List<Color> colors = [
-      const Color(0xFFFFD700), // gold
-      const Color(0xFFC0C0C0), // silver
-      const Color(0xFFFF7D1E), // bronze
-    ];
-
     var gameServices = Provider.of<GameServices>(context);
 
     var game = Provider.of<RealtimeGameProvider>(context).game;

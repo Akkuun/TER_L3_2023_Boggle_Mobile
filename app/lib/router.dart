@@ -1,6 +1,7 @@
 import 'package:bouggr/pages/email_create.dart';
 import 'package:bouggr/pages/email_login.dart';
 import 'package:bouggr/pages/end_game_detail.dart';
+import 'package:bouggr/pages/end_game_detail_multi.dart';
 import 'package:bouggr/pages/home.dart';
 import 'package:bouggr/pages/login.dart';
 import 'package:bouggr/pages/page_name.dart';
@@ -56,6 +57,7 @@ class _BouggrRouter extends State<BouggrRouter> {
     PageName.settings: () => const SettingsPage(),
     PageName.startGame: () => const StartGamePage(),
     PageName.detail: () => const EndGameDetail(),
+    PageName.detailMulti: () => const EndGameDetailMulti(),
   };
   @override
   Widget build(BuildContext context) {

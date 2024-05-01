@@ -17,8 +17,8 @@ import 'package:provider/provider.dart';
 
 import '../global.dart';
 
-class EndGameDetail extends StatelessWidget {
-  const EndGameDetail({super.key});
+class EndGameDetailMulti extends StatelessWidget {
+  const EndGameDetailMulti({super.key});
 
   @override
   Widget build(BuildContext context) {

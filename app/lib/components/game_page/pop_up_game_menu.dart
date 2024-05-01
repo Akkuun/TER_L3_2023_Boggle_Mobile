@@ -102,7 +102,7 @@ class PopUpGameMenu extends StatelessWidget {
 
                       timerServices.resetProgress();
 
-                      navigationServices.goToPage(PageName.detail);
+                      gameServices.checkDetails(context);
                     },
                     text: Globals.getText(gameServices.language, 27),
                   ),
