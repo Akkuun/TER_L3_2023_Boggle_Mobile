@@ -7,8 +7,6 @@ import 'package:bouggr/providers/end_game_service.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/timer.dart';
-import 'package:bouggr/utils/game_data.dart';
-import 'package:bouggr/utils/game_result.dart';
 import 'package:bouggr/utils/player_leaderboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,12 +30,6 @@ class EndGameDetailMulti extends StatelessWidget {
     EndGameService endGameService =
         Provider.of<EndGameService>(context, listen: true);
 
-    GameResult gameResult = GameResult(
-      score: gameServices.score,
-      grid: gameServices.letters.join(),
-      words: [],
-    );
-
     var size = MediaQuery.of(context).size;
     return Stack(
       children: [
@@ -55,7 +47,6 @@ class EndGameDetailMulti extends StatelessWidget {
                 BtnBoggle(
                   onPressed: () {
                     endGameService.hidePopUp();
-
                     timerServices.resetProgress();
                     gameServices.reset();
                     navigationServices.goToPage(PageName.home);
@@ -66,7 +57,6 @@ class EndGameDetailMulti extends StatelessWidget {
                 BtnBoggle(
                     onPressed: () {
                       endGameService.hidePopUp();
-
                       gameServices.reset();
                       timerServices.resetProgress();
                       navigationServices.goToPage(PageName.home);

@@ -6,8 +6,6 @@ import 'package:bouggr/providers/end_game_service.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/timer.dart';
-import 'package:bouggr/utils/game_data.dart';
-import 'package:bouggr/utils/game_result.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,11 +25,6 @@ class EndGameDetail extends StatelessWidget {
 
     EndGameService endGameService =
         Provider.of<EndGameService>(context, listen: true);
-
-    GameResult gameResult = GameResult(
-        score: gameServices.score,
-        grid: gameServices.letters.join(),
-        words: []);
 
     var size = MediaQuery.of(context).size;
     return Stack(
