@@ -169,7 +169,7 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
       }).then((result) {
         if (result.data == 0) {
           _addWord(word.txt);
-          _addScore(word.txt.length);
+          _addScore(wordScore(word.txt));
           return true;
         } else {
           addStrike();
@@ -194,6 +194,11 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
   }
 
   Future<void> _displayValid(Word word) async {
+    if (validWords.isNotEmpty) {
+      validWords.clear();
+      notifyListeners();
+    }
+
     for (var coord in word.coords) {
       validWords.add(coord);
     }
