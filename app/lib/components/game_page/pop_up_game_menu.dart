@@ -8,17 +8,11 @@ import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/timer.dart';
-import 'package:bouggr/utils/game_data.dart';
+import 'package:bouggr/utils/background_music_player.dart';
 import 'package:bouggr/utils/game_result.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../providers/realtimegame.dart';
-import '../../utils/background_music_player.dart';
-
-BackgroundMusicPlayer backgroundMusicPlayer = BackgroundMusicPlayer.instance;
 
 class PopUpGameMenu extends StatelessWidget {
   const PopUpGameMenu({
@@ -83,7 +77,7 @@ class PopUpGameMenu extends StatelessWidget {
                       IconBtnBoggle(
                         icon: const Icon(Icons.close_rounded),
                         onPressed: () {
-                          backgroundMusicPlayer.resume();
+                          BackgroundMusicPlayer.instance.resume();
                           gameServices.toggle(false);
                           timerServices.start();
                         },
@@ -99,67 +93,23 @@ class PopUpGameMenu extends StatelessWidget {
                       style: const TextStyle(fontSize: 20)),
                   BtnBoggle(
                     onPressed: () {
-                      gameServices.stop();
-                      GameDataStorage.saveGameResult(gameResult);
-
-                      timerServices.resetProgress();
-
-                      if (gameServices.gameType == GameType.multi) {
-                        gameServices.multiResult =
-                            Provider.of<RealtimeGameProvider>(context,
-                                    listen: false)
-                                .game;
-                        Provider.of<RealtimeGameProvider>(context,
-                                listen: false)
-                            .onDispose();
-                      }
-                      navigationServices.goToPage(PageName.detail);
+                      gameServices.leaveGame(context, uid, gameResult);
+                      gameServices.checkDetails(context);
                     },
                     text: Globals.getText(gameServices.language, 27),
                   ),
                   BtnBoggle(
                     onPressed: () {
-                      gameServices.stop();
-
-                      GameDataStorage.saveGameResult(gameResult);
-
-                      timerServices.resetProgress();
+                      gameServices.leaveGame(context, uid, gameResult);
                       gameServices.reset();
-
-                      if (gameServices.gameType == GameType.multi) {
-                        Globals.resetMultiplayerData();
-                        FirebaseFunctions.instance
-                            .httpsCallable('LeaveGame')
-                            .call({
-                          "userId": uid,
-                        });
-                        Provider.of<RealtimeGameProvider>(context,
-                                listen: false)
-                            .onDispose();
-                      }
                       navigationServices.goToPage(PageName.home);
                     },
                     text: Globals.getText(gameServices.language, 25),
                   ),
                   BtnBoggle(
                       onPressed: () {
-                        gameServices.stop();
-
-                        GameDataStorage.saveGameResult(gameResult);
+                        gameServices.leaveGame(context, uid, gameResult);
                         gameServices.reset();
-                        timerServices.resetProgress();
-
-                        if (gameServices.gameType == GameType.multi) {
-                          Globals.resetMultiplayerData();
-                          FirebaseFunctions.instance
-                              .httpsCallable('LeaveGame')
-                              .call({
-                            "userId": uid,
-                          });
-                          Provider.of<RealtimeGameProvider>(context,
-                                  listen: false)
-                              .onDispose();
-                        }
                         navigationServices.goToPage(PageName.home);
                       },
                       text: Globals.getText(gameServices.language, 26),

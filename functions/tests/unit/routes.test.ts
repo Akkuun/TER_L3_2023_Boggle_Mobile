@@ -7,6 +7,7 @@ const create_game = require('../../src/index').CreateGame;
 const join_game = require('../../src/index').JoinGame;
 const start_game = require('../../src/index').StartGame;
 const check_word = require('../../src/index').SendWord;
+const leave_game = require('../../src/index').LeaveGame;
 
 // Initialize test environment
 const test = testInit(
@@ -54,42 +55,125 @@ describe('Test CreateGame', () => {
 
     });
 
-    it('should fail to create 2 identical games', (done) => {
 
-        const wrapped_create = test.wrap(create_game);
-        const data = {
-            data: {
-                lang: 0,
-                letters: 'OVERFCEANAEBRUAS',
-                name: 'test_d',
-                email: 'test@testd.test',
-                userId: 'test_d',
-            }
-        };
-        let saveGameId: string = '';
-        wrapped_create(data).then(async (result: { gameId: string }) => {
-            expect(result.gameId).not.toBeNull();
-            saveGameId = result.gameId;
+    it("can create a game if the last one is finished", (done) => {
+
+        admin.database().ref("/games").push({
+            status: 4,
+            players: {
+                test_2: {
+                    name: 'test_2',
+                    email: 'email',
+                    score: 0,
+                    leader: true
+                }
+            },
+            letters: 'test',
+            lang: 0,
+            end_time: Date.now() - 1000
+        }).then(async (game) => {
+            await admin.database().ref(`/player_ingame/test_2`).set(game.key);
+            const wrapped_create = test.wrap(create_game);
+            const data = {
+                data: {
+                    lang: 0,
+                    letters: 'test',
+                    name: 'test',
+                    email: 'email',
+                    userId: 'test_2',
+                }
+            };
+
             wrapped_create(data).then(async (result: { gameId: string }) => {
-                expect(result.gameId).toBeNull();
-                const game = admin.database().ref("/games").child(data.data.userId);
+                expect(result.gameId).not.toBeNull();
+                const game = admin.database().ref("/games").child(result.gameId);
                 const gm = await game.get()
-
-                expect(gm.exists()).toBe(false);
+                expect(gm.exists()).toBe(true);
+                gm.ref.remove();
                 const player_in_game = admin.database().ref(`/player_ingame/${data.data.userId}`);
                 const pg = await player_in_game.get()
-                expect(pg.exists()).toBe(false);
+                expect(pg.exists()).toBe(true);
+                pg.ref.remove();
+            }).finally(() => {
+                game.ref.remove();
+                done();
+            });
+        });
 
 
-            })
-        }).finally(() => {
-            const firstGame = admin.database().ref("/games").child(saveGameId);
-            firstGame.remove();
-            const firstPlayer = admin.database().ref(`/player_ingame/${data.data.userId}`);
-            firstPlayer.remove();
-            done();
+    });
+
+    it("can create a game if the last one is not found", (done) => {
+
+        admin.database().ref("/player_ingame/test_3").set(
+            "aoizngaoizaz"
+        ).then(async (user) => {
+            const wrapped_create = test.wrap(create_game);
+            const data = {
+                data: {
+                    lang: 0,
+                    letters: 'test',
+                    name: 'test',
+                    email: 'email',
+                    userId: 'test_3',
+                }
+            };
+
+            wrapped_create(data).then(async (result: { gameId: string }) => {
+                expect(result.gameId).not.toBeNull();
+                const game = admin.database().ref("/games").child(result.gameId);
+                const gm = await game.get()
+                expect(gm.exists()).toBe(true);
+                gm.ref.remove();
+                const player_in_game = admin.database().ref(`/player_ingame/${data.data.userId}`);
+                const pg = await player_in_game.get()
+                expect(pg.exists()).toBe(true);
+                pg.ref.remove();
+            }).finally(() => {
+                done();
+            });
         });
     });
+
+    it("can't create a game if the last one is in progress", (done) => {
+
+        admin.database().ref("/games").push({
+            status: 0,
+            players: {
+                test_4: {
+                    name: 'test_4',
+                    email: 'email',
+                    score: 0,
+                    leader: true
+                }
+            },
+            letters: 'test',
+            lang: 0,
+            end_time: Date.now() + 5000
+        }).then(async (game) => {
+            admin.database().ref(`/player_ingame/test_4`).set(game.key);
+            const wrapped_create = test.wrap(create_game);
+            const data = {
+                data: {
+                    lang: 0,
+                    letters: 'test',
+                    name: 'test',
+                    email: 'email',
+                    userId: 'test_4',
+                }
+            };
+
+            wrapped_create(data).then(async (result: { gameId: string }) => {
+                expect(result.gameId).toBeNull();
+            }).finally(() => {
+                admin.database().ref(`/player_ingame/test_4`).remove();
+                game.ref.remove();
+                done();
+            });
+        });
+    });
+
+
 });
 
 describe('Test JoinGame', () => {
@@ -124,9 +208,9 @@ describe('Test JoinGame', () => {
     it('should join a game', (done) => {
 
         admin.database().ref("/games").push({
-            status: 0,
+            status: 3,
             players: {
-                test_join_game: {
+                test_2_join_game: {
                     name: 'test_2_join_game',
                     email: 'email',
                     score: 0,
@@ -145,7 +229,7 @@ describe('Test JoinGame', () => {
                     gameId: game.key,
                     name: 'test_2_join_game_2',
                     email: 'email',
-                    userId: 'test_2_join_game',
+                    userId: 'test_2_join_game_2',
                 }
             };
 
@@ -158,6 +242,21 @@ describe('Test JoinGame', () => {
             done();
         });
     });
+
+    it("should not be able to join a game if the game is not in waiting", (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+
+
+    it("should join back a game if he disconnect ", (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+
+
 });
 
 
@@ -226,7 +325,88 @@ describe('Test StartGame', () => {
         });
     });
 
+
+    it("should be able to start a game if the leader leaves", (done) => {
+
+        //create a fake game and 2 fake players
+        let gameId: string = '';
+
+        admin.database().ref("/games").push({
+            status: 3,
+            players: {
+                test_2_start_game: {
+                    name: 'test_2_start_game',
+                    email: 'email',
+                    score: 0,
+                    leader: false
+                },
+                dump2: {
+                    name: 'test_dump_start_game',
+                    email: 'email',
+                    score: 0,
+                    leader: true
+                },
+                dump: {
+                    name: 'test_dump_start_game',
+                    email: 'email',
+                    score: 0,
+                    leader: true
+                }
+            },
+            letters: 'test',
+            lang: 0
+        }).then(async (game) => {
+            //dump is the leader and is leaving
+            const warpped_leave = test.wrap(leave_game);
+            const data = {
+                data: {
+                    userId: 'dump',
+                    email: 'email'
+                }
+            };
+
+            warpped_leave(data).then(async (result: any) => {
+                const wrapped_start = test.wrap(start_game);
+                const start_data = {
+                    data: {
+                        gameId: game.key ?? '',
+                        userId: 'test_2_start_game:'
+                    }
+                };
+                gameId = game.key ?? '';
+
+                wrapped_start(start_data).then(async (result: any) => {
+                    expect(result).toBe(0);
+                    const game = admin.database().ref("/games").child(gameId);
+                    const gm = await game.get()
+                    expect(gm.exists()).toBe(true);
+                    expect(gm.val().status).toBe(0);
+                    gm.ref.remove();
+                }).finally(() => {
+                    done();
+                });
+            })
+        });
+
+
+
+    });
+
+    it("should be able to start a game if the leader cancels", (done) => {
+        expect(false).toBe(true);
+        done();
+    });
+
+    it("should not be able to start a game if the game is already started", (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+
+
+
 });
+
 
 
 describe('Test CheckWord', () => {
@@ -312,12 +492,109 @@ describe('Test CheckWord', () => {
             });
         })
     }, 10000);
+
+    it("should not be able to check a word if the game is not started", (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+
+    it("should not be able to check a word if the game is finished", (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+
+    it("should not be able to validate a word if he was already validated", (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+
 });
 
 
 
+describe('Test Cancel Game', () => {
+    it('should cancel a game', (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+
+    it('should not cancel a game if not the leader', (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+})
+
+describe('Test Leave Game', () => {
+
+    it('should leave a game', (done) => {
+        const warpped_leave = test.wrap(leave_game);
+        //create a fake game and fake player
+        let gameId: string = '';
+        admin.database().ref("/games").push({
+            status: 3,
+            players: {
+                test_2_leave_game: {
+                    name: 'test_2_leave_game',
+                    email: 'email',
+                    score: 0,
+                    leader: true
+                },
+                dump: {
+                    name: 'test_dump_leave_game',
+                    email: 'email',
+                    score: 0,
+                    leader: true
+                }
+            },
+            letters: 'test',
+            lang: 0
+        }).then(async (game) => {
+            expect(game.key).not.toBeNull();
+            admin.database().ref(`/player_ingame/test_2_leave_game`).set(game.key);
+            const data = {
+                data: {
+                    userId: 'test_2_leave_game',
+                    email: 'email'
+                }
+            };
+            gameId = game.key ?? '';
+            warpped_leave(data).then(async (result: any) => {
+                expect(result.result).toBe("success");
+                const game = admin.database().ref("/games").child(gameId);
+                const gm = await game.get()
+                expect(gm.exists()).toBe(true); // not last player
+                gm.ref.remove();
+                const player_in_game = admin.database().ref(`/player_ingame/${data.data.userId}`);
+                const pg = await player_in_game.get()
+                expect(pg.exists()).toBe(false);
+            }).finally(() => {
+                done();
+            });
+        });
 
 
+
+    });
+
+    it("should delete the game if the last player leaves", (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+
+    it("should change the leader if the leader leaves", (done) => {
+        //TODO
+        expect(false).toBe(true);
+        done();
+    });
+
+
+});
 
 
 test.cleanup();

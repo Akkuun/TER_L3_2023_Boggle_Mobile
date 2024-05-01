@@ -1,39 +1,38 @@
-import 'package:bouggr/components/game_page/leaderboard_row.dart';
+import 'package:bouggr/components/game_page/only_multi/leaderboard_row.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/realtimegame.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class LeaderBoard extends StatelessWidget {
+  //only used in multiplayer mode
   const LeaderBoard({
     super.key,
   });
 
+  static const List<Color> colors = [
+    Color(0xFFFFD700), // gold
+    Color(0xFFC0C0C0), // silver
+    Color(0xFFFF7D1E), // bronze
+  ];
+
   @override
   Widget build(BuildContext context) {
-    List<Color> colors = [
-      const Color(0xFFFFD700), // gold
-      const Color(0xFFC0C0C0), // silver
-      const Color(0xFFFF7D1E), // bronze
-    ];
-
     var gameServices = Provider.of<GameServices>(context);
-    var gameType = gameServices.gameType;
 
     var game = Provider.of<RealtimeGameProvider>(context).game;
     var players = game['players'];
-    if (gameType == GameType.multi) {
-      if (players != null) {
-        for (var player in players!.entries) {
-          gameServices.playerLeaderboard
-              .updatePlayer(player.key, player.value['score']);
-        }
+
+    if (players != null) {
+      for (var player in players!.entries) {
+        gameServices.playerLeaderboard
+            .updatePlayer(player.key, player.value['score']);
       }
-
-      gameServices.playerLeaderboard.computeRank();
-
-      players = gameServices.playerLeaderboard.players;
     }
+
+    gameServices.playerLeaderboard.computeRank();
+
+    players = gameServices.playerLeaderboard.players;
 
     return Container(
       decoration: const BoxDecoration(

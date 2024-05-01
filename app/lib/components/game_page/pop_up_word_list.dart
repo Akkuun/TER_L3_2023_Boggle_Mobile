@@ -20,7 +20,7 @@ class PopUpWordList extends StatelessWidget {
     var w = MediaQuery.of(context).size.width;
     return PopUp<EndGameService>(
       child: Positioned(
-        top: h * 0.05 + 36,
+        top: h * 0.04,
         left: w * 0.01,
         child: Container(
             decoration: ShapeDecoration(
@@ -37,7 +37,7 @@ class PopUpWordList extends StatelessWidget {
                 )
               ],
             ),
-            height: h * 0.7 + 72,
+            height: h * .92,
             width: w * 0.98,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -126,17 +126,13 @@ class PopUpWordList extends StatelessWidget {
                       ),
                       child: const AllWordsFound()),
                 ),
-
                 BtnBoggle(
                     btnType: BtnType.secondary,
                     onPressed: () {
-                      Provider.of<EndGameService>(context, listen: false)
-                          .toggle(false);
-                      Provider.of<EndGameService>(context, listen: false)
-                          .resetSelectedWord();
+                      endGameServices.hidePopUp();
+                      endGameServices.resetSelectedWord();
                     },
-                    text:  Globals.getText(gameServices.language, 56)),
-
+                    text: Globals.getText(gameServices.language, 56)),
               ],
             )),
       ),

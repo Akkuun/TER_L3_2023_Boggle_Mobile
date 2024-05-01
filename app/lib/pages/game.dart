@@ -3,14 +3,11 @@ import 'package:bouggr/global.dart';
 
 //services
 import 'package:bouggr/providers/game.dart';
-import 'package:cloud_functions/cloud_functions.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:firebase_database/firebase_database.dart';
 
 //flutter
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import '../components/game_page/game_widget.dart';
@@ -18,7 +15,6 @@ import '../providers/realtimegame.dart';
 
 class GamePage extends StatefulWidget {
   final GameType mode;
-
   const GamePage({
     super.key,
     this.mode = GameType.solo,
@@ -67,7 +63,7 @@ class _GamePageState extends State<GamePage> {
         gameServices.letters =
             Globals.selectDiceSet(gameServices.language).roll();
         return Globals(child: Builder(builder: (BuildContext innerContext) {
-          return const GameWidget();
+          return const GameWidget(isMulti: false);
         }));
       case GameType.multi:
         final letters = _fetchLetters();
@@ -78,7 +74,7 @@ class _GamePageState extends State<GamePage> {
               if (snapshot.hasData) {
                 gameServices.letters = snapshot.data!;
                 gameServices.gameType = GameType.multi;
-                return const GameWidget();
+                return const GameWidget(isMulti: true);
               } else {
                 return const CircularProgressIndicator();
               }

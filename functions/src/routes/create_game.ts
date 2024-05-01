@@ -26,7 +26,25 @@ export async function create_game(req: any) {
 
 
     if ((await player_ingame.get()).exists()) {
-        return { error: "User is already in a game", gameId: null };
+        //if the game is not found in the database
+        const game = admin.database().ref(`/games/${(await player_ingame.get()).val()}`);
+        if (!(await game.get()).exists()) {
+            await player_ingame.remove();
+
+        } else if ((await game.child("status").get()).val() == GameState.Finished) {
+            await player_ingame.remove();
+        } else if ((await game.child("end_time").get()).val() < Date.now()) {
+
+            await game.remove();
+            await player_ingame.remove();
+        } else {
+            return { gameId: null, error: "Player already in game" };
+
+        }
+
+
+
+
     }
 
     const game = admin.database().ref("/games").push();

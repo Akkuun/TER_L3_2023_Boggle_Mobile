@@ -47,6 +47,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
   // Leave game
   BtnType _btnType = BtnType.secondary;
   String error = '';
+  bool _isCreating = false;
 
   Future<int> _joinGame(String playerUID, RealtimeGameProvider rm,
       NavigationServices router, User? user) async {
@@ -73,6 +74,8 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
           "name": user?.email ?? "",
         },
       );
+      Logger().w(result.data);
+
       response = result.data["code"];
     }
     if (response == JoinGameReturn.success.index) {
@@ -88,6 +91,13 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
 
   _createGame(String playerUID, User? user, RealtimeGameProvider rm,
       NavigationServices router, LangCode lang) async {
+    if (_isCreating) {
+      return;
+    }
+    setState(() {
+      _isCreating = true;
+    });
+
     final logger = Logger();
     logger.w("Creating game");
     final letters = Globals.selectDiceSet(lang).roll();
@@ -101,9 +111,12 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
         "name": user?.email ?? "",
       },
     );
-
+    setState(() {
+      _isCreating = false;
+    });
     if (result.data == null) {
       logger.e("Error creating game : response is null");
+
       return;
     }
 
