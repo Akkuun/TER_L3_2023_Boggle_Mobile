@@ -8,15 +8,11 @@ import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/timer.dart';
-import 'package:bouggr/utils/game_data.dart';
+import 'package:bouggr/utils/background_music_player.dart';
 import 'package:bouggr/utils/game_result.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../utils/background_music_player.dart';
-
-BackgroundMusicPlayer backgroundMusicPlayer = BackgroundMusicPlayer.instance;
 
 class PopUpGameMenu extends StatelessWidget {
   const PopUpGameMenu({
@@ -81,7 +77,7 @@ class PopUpGameMenu extends StatelessWidget {
                       IconBtnBoggle(
                         icon: const Icon(Icons.close_rounded),
                         onPressed: () {
-                          backgroundMusicPlayer.resume();
+                          BackgroundMusicPlayer.instance.resume();
                           gameServices.toggle(false);
                           timerServices.start();
                         },
