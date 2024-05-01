@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class LeaderBoard extends StatelessWidget {
+  //only used in multiplayer mode
   const LeaderBoard({
     super.key,
   });
@@ -18,22 +19,20 @@ class LeaderBoard extends StatelessWidget {
     ];
 
     var gameServices = Provider.of<GameServices>(context);
-    var gameType = gameServices.gameType;
 
     var game = Provider.of<RealtimeGameProvider>(context).game;
     var players = game['players'];
-    if (gameType == GameType.multi) {
-      if (players != null) {
-        for (var player in players!.entries) {
-          gameServices.playerLeaderboard
-              .updatePlayer(player.key, player.value['score']);
-        }
+
+    if (players != null) {
+      for (var player in players!.entries) {
+        gameServices.playerLeaderboard
+            .updatePlayer(player.key, player.value['score']);
       }
-
-      gameServices.playerLeaderboard.computeRank();
-
-      players = gameServices.playerLeaderboard.players;
     }
+
+    gameServices.playerLeaderboard.computeRank();
+
+    players = gameServices.playerLeaderboard.players;
 
     return Container(
       decoration: const BoxDecoration(

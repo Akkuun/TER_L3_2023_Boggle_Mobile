@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:bouggr/global.dart';
 
 class ScoreBoard extends StatelessWidget {
+  final GameType gameType = GameType.multi;
   const ScoreBoard({
     super.key,
   });
@@ -18,7 +19,7 @@ class ScoreBoard extends StatelessWidget {
     PlayerLeaderboard playerLeaderboard = PlayerLeaderboard();
 
     int rank = 1;
-    var gameType = gameServices.gameType;
+
     var players = Provider.of<RealtimeGameProvider>(context).game['players'];
     if (gameType == GameType.multi) {
       if (players != null) {

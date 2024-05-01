@@ -1,4 +1,5 @@
 import 'package:bouggr/components/btn.dart';
+import 'package:bouggr/components/game_page/only_multi/leaderboard.dart';
 import 'package:bouggr/components/game_page/pop_up_word_list.dart';
 import 'package:bouggr/components/game_page/words_found.dart';
 import 'package:bouggr/pages/page_name.dart';
@@ -8,7 +9,10 @@ import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/timer.dart';
 import 'package:bouggr/utils/game_data.dart';
 import 'package:bouggr/utils/game_result.dart';
+import 'package:bouggr/utils/player_leaderboard.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import '../global.dart';
@@ -19,7 +23,7 @@ class EndGameDetail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     GameServices gameServices =
-        Provider.of<GameServices>(context, listen: true);
+        Provider.of<GameServices>(context, listen: false);
     TimerServices timerServices =
         Provider.of<TimerServices>(context, listen: false);
     NavigationServices navigationServices =
@@ -29,9 +33,10 @@ class EndGameDetail extends StatelessWidget {
         Provider.of<EndGameService>(context, listen: true);
 
     GameResult gameResult = GameResult(
-        score: gameServices.score,
-        grid: gameServices.letters.join(),
-        words: []);
+      score: gameServices.score,
+      grid: gameServices.letters.join(),
+      words: [],
+    );
 
     var size = MediaQuery.of(context).size;
     return Stack(
@@ -43,7 +48,8 @@ class EndGameDetail extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              const HeaderEndGameDetail(),
+              const MultiLeaderBoard(),
+              const HeaderEndGameDetailMulti(),
               WordsFoundIngame(size: size),
               if (!endGameService.triggerPopUp)
                 BtnBoggle(
@@ -115,20 +121,46 @@ class WordsFoundIngame extends StatelessWidget {
   }
 }
 
-class HeaderEndGameDetail extends StatelessWidget {
-  const HeaderEndGameDetail({
+class HeaderEndGameDetailMulti extends StatelessWidget {
+  const HeaderEndGameDetailMulti({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final playerLeaderboard = PlayerLeaderboard();
+
     var size = MediaQuery.of(context).size;
     EndGameService endGameService =
         Provider.of<EndGameService>(context, listen: true);
     GameServices gameServices =
         Provider.of<GameServices>(context, listen: true);
+    int rank = -1;
+
+    final players = gameServices.multiResult.isEmpty
+        ? null
+        : Map<String, dynamic>.from(gameServices.multiResult["players"])
+            .entries
+            .toList();
+    if (players != null) {
+      for (var player in players) {
+        try {
+          playerLeaderboard.addPlayer(
+            PlayerStats(
+                name: player.value['email'],
+                score: player.value['score'],
+                uid: player.key),
+          );
+        } catch (e) {
+          Logger().e("Error while adding player to leaderboard : $e");
+        }
+      }
+      playerLeaderboard.computeRank();
+      rank = playerLeaderboard.getRank(
+          Provider.of<FirebaseAuth>(context, listen: false).currentUser!.uid);
+    }
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(2.0),
       child: Container(
         decoration: ShapeDecoration(
           color: Colors.white,
@@ -152,6 +184,7 @@ class HeaderEndGameDetail extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                Text("${Globals.getText(gameServices.language, 18)} $rank"),
                 Text(
                     "${Globals.getText(gameServices.language, 61)} ${gameServices.score}"),
                 Text(Globals.getText(gameServices.language, 62)),
@@ -170,6 +203,37 @@ class HeaderEndGameDetail extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class MultiLeaderBoard extends StatelessWidget {
+  const MultiLeaderBoard({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+          decoration: ShapeDecoration(
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            shadows: const [
+              BoxShadow(
+                color: Color(0x3F000000),
+                blurRadius: 4,
+                offset: Offset(0, 4),
+                spreadRadius: 0,
+              )
+            ],
+          ),
+          width: size.width * 0.9,
+          child: const LeaderBoard()),
     );
   }
 }

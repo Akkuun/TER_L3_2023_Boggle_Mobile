@@ -1,20 +1,17 @@
 import 'package:bouggr/components/game_page/action_and_timer.dart';
 import 'package:bouggr/components/game_page/grille.dart';
 import 'package:bouggr/components/game_page/scoreboard.dart';
-import 'package:bouggr/components/game_page/leaderboard.dart';
+import 'package:bouggr/components/game_page/only_multi/leaderboard.dart';
 import 'package:bouggr/components/title.dart';
 import 'package:bouggr/components/game_page/words_found.dart';
 import 'package:flutter/material.dart';
-import 'package:bouggr/providers/game.dart';
-
-import 'package:provider/provider.dart';
 
 class GameFront extends StatelessWidget {
-  const GameFront({super.key});
+  final bool isMulti;
+  const GameFront({super.key, required this.isMulti});
 
   @override
   Widget build(BuildContext context) {
-    final GameServices gameServices = Provider.of<GameServices>(context);
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       child: Padding(
@@ -23,9 +20,8 @@ class GameFront extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            AppTitle(
-                fontSize: gameServices.gameType == GameType.multi ? 46 : 56),
-            if (gameServices.gameType == GameType.multi) const LeaderBoard(),
+            AppTitle(fontSize: isMulti ? 46 : 56),
+            if (isMulti) const LeaderBoard(),
             const ScoreBoard(),
             const BoggleGrille(),
             const WordsFound(),

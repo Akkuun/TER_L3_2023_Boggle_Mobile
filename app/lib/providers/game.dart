@@ -1,10 +1,16 @@
 import 'package:bouggr/components/popup.dart';
 import 'package:bouggr/global.dart';
+import 'package:bouggr/providers/realtimegame.dart';
 import 'package:bouggr/utils/decode.dart';
+import 'package:bouggr/utils/dico.dart';
 import 'package:bouggr/utils/game_data.dart';
 import 'package:bouggr/utils/get_all_word.dart';
 import 'package:bouggr/utils/player_leaderboard.dart';
+import 'package:bouggr/utils/word_score.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 
 enum GameType { solo, multi }
 
@@ -20,6 +26,8 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
   List<String>? _letters;
   String? _longestWord;
   Coord? _tipsIndex;
+  Dictionary? _dictionary;
+  List<Coord> validWords = [];
 
   // Recuper la langue à partir des shared preferences
   Future<void> _initLanguage() async {
@@ -59,12 +67,19 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
     _gameType = gameType;
   }
 
-  GameType get gameType {
-    return _gameType!;
-  }
-
   void stop() {
     super.toggle(true);
+  }
+
+  void leaveGame(BuildContext context, String uid) {
+    if (_gameType == GameType.multi) {
+      Globals.resetMultiplayerData();
+      FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
+        "userId": uid,
+      });
+      Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
+    }
+    stop();
   }
 
   bool start() {
@@ -81,11 +96,11 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
     return _words;
   }
 
-  bool isInWordList(String word) {
+  bool _isInWordList(String word) {
     return _words.contains(word);
   }
 
-  void addWord(String word) {
+  void _addWord(String word) {
     if (_words.contains(word)) {
       return;
     }
@@ -96,7 +111,7 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
     notifyListeners();
   }
 
-  void addScore(int score) {
+  void _addScore(int score) {
     _score += score;
     notifyListeners();
   }
@@ -117,6 +132,63 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
   void setTipsIndex(Coord index) {
     _tipsIndex = index;
     notifyListeners();
+  }
+
+  bool _checkWordSolo(String word) {
+    if (_isInWordList(word)) {
+      return false;
+    }
+    if (_dictionary!.contain(word)) {
+      _addWord(word);
+      _addScore(wordScore(word));
+      return true;
+    } else {
+      addStrike();
+      return false;
+    }
+  }
+
+  Future<bool> _checkWordMulti(Word word) async {
+    return FirebaseFunctions.instance.httpsCallable('checkWord').call({
+      'word': word.txt,
+      'language': language.toString(),
+      'gameId': multiResult['gameId'],
+      'playerId': multiResult['playerId'],
+    }).then((result) {
+      if (result.data['result']) {
+        _addWord(word.txt);
+        _addScore(word.txt.length);
+        return true;
+      } else {
+        addStrike();
+        return false;
+      }
+    });
+  }
+
+  /// Fonction qui permet de vérifier si le mot est dans le dictionnaire
+  Future<void> chechWord(Word word) async {
+    if (_gameType == GameType.solo) {
+      if (_checkWordSolo(word.txt)) {
+        for (var coord in word.coords) {
+          validWords.add(coord);
+        }
+        Logger().i('validWords: $validWords');
+        notifyListeners();
+
+        await Future.delayed(const Duration(seconds: 1), () {
+          validWords.clear();
+          notifyListeners();
+        });
+      }
+    } else {
+      _checkWordMulti(word);
+    }
+  }
+
+  void loadDictionary() async {
+    _dictionary = Globals.selectDictionary(language);
+    await _dictionary!.ayncLoad();
   }
 
   void reset() {

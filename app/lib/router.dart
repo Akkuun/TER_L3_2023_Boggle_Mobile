@@ -13,7 +13,6 @@ import 'package:bouggr/pages/start_game.dart';
 import 'package:bouggr/pages/stats.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/game.dart';
-import 'package:bouggr/providers/realtimegame.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

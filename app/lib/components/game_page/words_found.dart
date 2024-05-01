@@ -14,7 +14,7 @@ class WordsFound extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gameServices = Provider.of<GameServices>(context);
+    final gameServices = Provider.of<GameServices>(context, listen: false);
 
     return SizedBox(
       child: Container(
@@ -35,7 +35,11 @@ class WordsFound extends StatelessWidget {
         child: FutureBuilder(
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
+              return const SizedBox(
+                height: 100,
+                width: 100,
+                child: CircularProgressIndicator(),
+              );
             }
             if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
@@ -48,51 +52,7 @@ class WordsFound extends StatelessWidget {
               }
               return Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                          "${Globals.getText(gameServices.language, 21)} ${words.length - gameServices.words.length}"),
-                      words.firstWhere(
-                                  (element) =>
-                                      !gameServices.words.contains(element.txt),
-                                  orElse: () => Word("", [])) !=
-                              null
-                          ? Text(
-                              "${Globals.getText(gameServices.language, 22)}  ${words.reduce((Word value, Word element) => value.txt.length > element.txt.length ? !gameServices.words.contains(value.txt) ? value : Word("", []) : !gameServices.words.contains(element.txt) ? element : Word("", [])).txt.length}")
-                          : Text(Globals.getText(gameServices.language, 23)),
-                      SizedBox.fromSize(
-                          size: const Size(0, 16), child: Container()),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: gameServices.words.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Container(
-                                height: 64,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Color(0x3F000000),
-                                      blurRadius: 4,
-                                      offset: Offset(0, 4),
-                                      spreadRadius: 0,
-                                    )
-                                  ],
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(gameServices.words[index]),
-                                  ],
-                                ));
-                          },
-                        ),
-                      ),
-                    ]),
+                child: GameInfo(words: words),
               );
             }
             return Text(Globals.getText(gameServices.language, 54));
@@ -102,6 +62,63 @@ class WordsFound extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class GameInfo extends StatelessWidget {
+  const GameInfo({
+    super.key,
+    required this.words,
+  });
+
+  final List<Word> words;
+
+  @override
+  Widget build(BuildContext context) {
+    var gameServices = Provider.of<GameServices>(context);
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+              "${Globals.getText(gameServices.language, 21)} ${words.length - gameServices.words.length}"),
+          words.firstWhere(
+                      (element) => !gameServices.words.contains(element.txt),
+                      orElse: () => Word("", [])) !=
+                  null
+              ? Text(
+                  "${Globals.getText(gameServices.language, 22)}  ${words.reduce((Word value, Word element) => value.txt.length > element.txt.length ? !gameServices.words.contains(value.txt) ? value : Word("", []) : !gameServices.words.contains(element.txt) ? element : Word("", [])).txt.length}")
+              : Text(Globals.getText(gameServices.language, 23)),
+          SizedBox.fromSize(size: const Size(0, 16), child: Container()),
+          Expanded(
+            child: ListView.builder(
+              itemCount: gameServices.words.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Container(
+                    height: 64,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color(0x3F000000),
+                          blurRadius: 4,
+                          offset: Offset(0, 4),
+                          spreadRadius: 0,
+                        )
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(gameServices.words[index]),
+                      ],
+                    ));
+              },
+            ),
+          ),
+        ]);
   }
 }
 
