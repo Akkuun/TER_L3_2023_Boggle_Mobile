@@ -160,7 +160,7 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
     }
 
     if (_dictionary!.contain(word.txt)) {
-      FirebaseFunctions.instance.httpsCallable('SendWord').call({
+      return FirebaseFunctions.instance.httpsCallable('SendWord').call({
         "gameId": gameId,
         "userId": FirebaseAuth.instance.currentUser!.uid,
         "word": word.coords
