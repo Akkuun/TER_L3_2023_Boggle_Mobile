@@ -99,9 +99,6 @@ class PopUpGameMenu extends StatelessWidget {
                     onPressed: () {
                       gameServices.leaveGame(context, uid);
                       GameDataStorage.saveGameResult(gameResult);
-
-                      timerServices.resetProgress();
-
                       gameServices.checkDetails(context);
                     },
                     text: Globals.getText(gameServices.language, 27),
@@ -109,12 +106,8 @@ class PopUpGameMenu extends StatelessWidget {
                   BtnBoggle(
                     onPressed: () {
                       gameServices.leaveGame(context, uid);
-
                       GameDataStorage.saveGameResult(gameResult);
-
-                      timerServices.resetProgress();
                       gameServices.reset();
-
                       navigationServices.goToPage(PageName.home);
                     },
                     text: Globals.getText(gameServices.language, 25),
@@ -122,11 +115,8 @@ class PopUpGameMenu extends StatelessWidget {
                   BtnBoggle(
                       onPressed: () {
                         gameServices.leaveGame(context, uid);
-
                         GameDataStorage.saveGameResult(gameResult);
                         gameServices.reset();
-                        timerServices.resetProgress();
-
                         navigationServices.goToPage(PageName.home);
                       },
                       text: Globals.getText(gameServices.language, 26),

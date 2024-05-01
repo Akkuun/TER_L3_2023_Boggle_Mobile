@@ -3,6 +3,7 @@ import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/realtimegame.dart';
+import 'package:bouggr/providers/timer.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:bouggr/utils/dico.dart';
 import 'package:bouggr/utils/game_data.dart';
@@ -82,6 +83,7 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
       Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
     }
     stop();
+    Provider.of<TimerServices>(context, listen: false).resetProgress();
   }
 
   bool start() {
