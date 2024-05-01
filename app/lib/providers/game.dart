@@ -12,8 +12,8 @@ import 'package:bouggr/utils/get_all_word.dart';
 import 'package:bouggr/utils/player_leaderboard.dart';
 import 'package:bouggr/utils/word_score.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 enum GameType { solo, multi }
@@ -154,17 +154,18 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
     }
   }
 
-  Future<bool> _checkWordMulti(Word word) async {
+  Future<bool> _checkWordMulti(Word word, String gameId) async {
     if (_isInWordList(word.txt)) {
       return false;
     }
 
     if (_dictionary!.contain(word.txt)) {
-      return FirebaseFunctions.instance.httpsCallable('SendWord').call({
-        'word': word.txt,
-        'language': language.toString(),
-        'gameId': multiResult['gameId'],
-        'playerId': multiResult['playerId'],
+      FirebaseFunctions.instance.httpsCallable('SendWord').call({
+        "gameId": gameId,
+        "userId": FirebaseAuth.instance.currentUser!.uid,
+        "word": word.coords
+            .map((e) => {"x": e.y, "y": e.x})
+            .toList(), // Coordonnées inversées pour le serveur
       }).then((result) {
         if (result.data == 0) {
           _addWord(word.txt);
@@ -180,13 +181,13 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
   }
 
   /// Fonction qui permet de vérifier si le mot est dans le dictionnaire
-  Future<void> chechWord(Word word) async {
+  Future<void> chechWord(Word word, String gameId) async {
     if (_gameType == GameType.solo) {
       if (_checkWordSolo(word.txt)) {
         await _displayValid(word);
       }
     } else {
-      if (await _checkWordMulti(word)) {
+      if (await _checkWordMulti(word, gameId)) {
         _displayValid(word);
       }
     }

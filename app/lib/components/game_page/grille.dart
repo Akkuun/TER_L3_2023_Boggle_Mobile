@@ -1,5 +1,6 @@
 import 'package:bouggr/components/game_page/dices.dart';
 import 'package:bouggr/providers/game.dart';
+import 'package:bouggr/providers/realtimegame.dart';
 import 'package:bouggr/utils/get_all_word.dart';
 
 import 'package:flutter/material.dart';
@@ -90,7 +91,8 @@ class _BoggleGrilleState extends State<BoggleGrille> {
 
   void _endWordSelection(String word, List<(int, int)> indexes) {
     var coords = indexes.map((e) => Coord(e.$1, e.$2)).toList();
-    gameServices.chechWord(Word(word, coords));
+    gameServices.chechWord(Word(word, coords),
+        Provider.of<RealtimeGameProvider>(context, listen: false).gameCode);
   }
 
   void _sendWordToGameLogicAndClear(PointerUpEvent event) {
