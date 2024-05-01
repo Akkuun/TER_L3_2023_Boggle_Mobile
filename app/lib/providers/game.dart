@@ -166,7 +166,7 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
         'gameId': multiResult['gameId'],
         'playerId': multiResult['playerId'],
       }).then((result) {
-        if (result.data['result']) {
+        if (result.data == 0) {
           _addWord(word.txt);
           _addScore(word.txt.length);
           return true;
@@ -183,19 +183,25 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
   Future<void> chechWord(Word word) async {
     if (_gameType == GameType.solo) {
       if (_checkWordSolo(word.txt)) {
-        for (var coord in word.coords) {
-          validWords.add(coord);
-        }
-        notifyListeners();
-
-        await Future.delayed(const Duration(seconds: 1), () {
-          validWords.clear();
-          notifyListeners();
-        });
+        await _displayValid(word);
       }
     } else {
-      _checkWordMulti(word);
+      if (await _checkWordMulti(word)) {
+        _displayValid(word);
+      }
     }
+  }
+
+  Future<void> _displayValid(Word word) async {
+    for (var coord in word.coords) {
+      validWords.add(coord);
+    }
+    notifyListeners();
+
+    await Future.delayed(const Duration(seconds: 1), () {
+      validWords.clear();
+      notifyListeners();
+    });
   }
 
   void loadDictionary() async {
