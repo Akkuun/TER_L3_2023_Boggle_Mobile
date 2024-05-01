@@ -188,7 +188,7 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
       }
     } else {
       if (await _checkWordMulti(word, gameId)) {
-        _displayValid(word);
+        await _displayValid(word);
       }
     }
   }
