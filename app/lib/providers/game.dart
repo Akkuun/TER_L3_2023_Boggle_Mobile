@@ -82,6 +82,8 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
       FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
         "userId": uid,
       });
+      multiResult =
+          Provider.of<RealtimeGameProvider>(context, listen: false).game;
       Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
     }
     stop();
