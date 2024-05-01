@@ -207,6 +207,7 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
     notifyListeners();
   }
 
+  /// Go to the detail page of the game
   void checkDetails(BuildContext context) {
     if (_gameType == GameType.multi) {
       Provider.of<NavigationServices>(context, listen: false)
