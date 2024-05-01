@@ -122,7 +122,6 @@ class HeaderEndGameDetailMulti extends StatelessWidget {
         Provider.of<EndGameService>(context, listen: true);
     GameServices gameServices =
         Provider.of<GameServices>(context, listen: true);
-    int rank = -1;
 
     final players = gameServices.multiResult.isEmpty
         ? null
@@ -142,10 +141,11 @@ class HeaderEndGameDetailMulti extends StatelessWidget {
           Logger().e("Error while adding player to leaderboard : $e");
         }
       }
-      playerLeaderboard.computeRank();
-      rank = playerLeaderboard.getRank(
-          Provider.of<FirebaseAuth>(context, listen: false).currentUser!.uid);
     }
+    playerLeaderboard.computeRank();
+    int rank = playerLeaderboard.getRank(
+        Provider.of<FirebaseAuth>(context, listen: false).currentUser!.uid);
+
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: Container(
