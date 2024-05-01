@@ -54,9 +54,7 @@ class EndGameDetailMulti extends StatelessWidget {
               if (!endGameService.triggerPopUp)
                 BtnBoggle(
                   onPressed: () {
-                    gameServices.stop();
                     endGameService.hidePopUp();
-                    GameDataStorage.saveGameResult(gameResult);
 
                     timerServices.resetProgress();
                     gameServices.reset();
@@ -67,9 +65,8 @@ class EndGameDetailMulti extends StatelessWidget {
               if (!endGameService.triggerPopUp)
                 BtnBoggle(
                     onPressed: () {
-                      gameServices.stop();
                       endGameService.hidePopUp();
-                      GameDataStorage.saveGameResult(gameResult);
+
                       gameServices.reset();
                       timerServices.resetProgress();
                       navigationServices.goToPage(PageName.home);

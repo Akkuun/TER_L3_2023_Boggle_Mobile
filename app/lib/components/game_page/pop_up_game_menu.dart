@@ -97,16 +97,14 @@ class PopUpGameMenu extends StatelessWidget {
                       style: const TextStyle(fontSize: 20)),
                   BtnBoggle(
                     onPressed: () {
-                      gameServices.leaveGame(context, uid);
-                      GameDataStorage.saveGameResult(gameResult);
+                      gameServices.leaveGame(context, uid, gameResult);
                       gameServices.checkDetails(context);
                     },
                     text: Globals.getText(gameServices.language, 27),
                   ),
                   BtnBoggle(
                     onPressed: () {
-                      gameServices.leaveGame(context, uid);
-                      GameDataStorage.saveGameResult(gameResult);
+                      gameServices.leaveGame(context, uid, gameResult);
                       gameServices.reset();
                       navigationServices.goToPage(PageName.home);
                     },
@@ -114,8 +112,7 @@ class PopUpGameMenu extends StatelessWidget {
                   ),
                   BtnBoggle(
                       onPressed: () {
-                        gameServices.leaveGame(context, uid);
-                        GameDataStorage.saveGameResult(gameResult);
+                        gameServices.leaveGame(context, uid, gameResult);
                         gameServices.reset();
                         navigationServices.goToPage(PageName.home);
                       },

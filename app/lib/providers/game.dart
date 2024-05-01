@@ -7,6 +7,7 @@ import 'package:bouggr/providers/timer.dart';
 import 'package:bouggr/utils/decode.dart';
 import 'package:bouggr/utils/dico.dart';
 import 'package:bouggr/utils/game_data.dart';
+import 'package:bouggr/utils/game_result.dart';
 import 'package:bouggr/utils/get_all_word.dart';
 import 'package:bouggr/utils/player_leaderboard.dart';
 import 'package:bouggr/utils/word_score.dart';
@@ -74,7 +75,8 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
     super.toggle(true);
   }
 
-  void leaveGame(BuildContext context, String uid) {
+  void leaveGame(BuildContext context, String uid, GameResult gameResult) {
+    GameDataStorage.saveGameResult(gameResult);
     if (_gameType == GameType.multi) {
       Globals.resetMultiplayerData();
       FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
