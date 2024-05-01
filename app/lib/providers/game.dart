@@ -155,21 +155,28 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
   }
 
   Future<bool> _checkWordMulti(Word word) async {
-    return FirebaseFunctions.instance.httpsCallable('checkWord').call({
-      'word': word.txt,
-      'language': language.toString(),
-      'gameId': multiResult['gameId'],
-      'playerId': multiResult['playerId'],
-    }).then((result) {
-      if (result.data['result']) {
-        _addWord(word.txt);
-        _addScore(word.txt.length);
-        return true;
-      } else {
-        addStrike();
-        return false;
-      }
-    });
+    if (_isInWordList(word.txt)) {
+      return false;
+    }
+
+    if (_dictionary!.contain(word.txt)) {
+      return FirebaseFunctions.instance.httpsCallable('checkWord').call({
+        'word': word.txt,
+        'language': language.toString(),
+        'gameId': multiResult['gameId'],
+        'playerId': multiResult['playerId'],
+      }).then((result) {
+        if (result.data['result']) {
+          _addWord(word.txt);
+          _addScore(word.txt.length);
+          return true;
+        } else {
+          addStrike();
+          return false;
+        }
+      });
+    }
+    return false;
   }
 
   /// Fonction qui permet de vérifier si le mot est dans le dictionnaire
@@ -179,7 +186,6 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
         for (var coord in word.coords) {
           validWords.add(coord);
         }
-        Logger().i('validWords: $validWords');
         notifyListeners();
 
         await Future.delayed(const Duration(seconds: 1), () {
