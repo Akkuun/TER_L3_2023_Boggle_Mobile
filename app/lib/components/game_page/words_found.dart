@@ -65,6 +65,88 @@ class WordsFound extends StatelessWidget {
   }
 }
 
+class LiveGameInfoBuilder extends StatelessWidget {
+  const LiveGameInfoBuilder({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final gameServices = Provider.of<GameServices>(context, listen: false);
+
+    return SizedBox(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x3F000000),
+              blurRadius: 4,
+              offset: Offset(0, 4),
+              spreadRadius: 0,
+            )
+          ],
+        ),
+        height: MediaQuery.of(context).size.height * 0.1,
+        width: MediaQuery.of(context).size.width,
+        child: FutureBuilder(
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const SizedBox(
+                height: 116,
+                width: 116,
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
+            if (snapshot.hasData) {
+              var words = snapshot.data;
+              if (words == null) {
+                Logger().w('No words found');
+                return Text(Globals.getText(gameServices.language, 55));
+              }
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: LiveGameInfo(words: words),
+              );
+            }
+            return Text(Globals.getText(gameServices.language, 54));
+          },
+          future: getAllWords2(gameServices.letters,
+              Globals.selectDictionary(gameServices.language)),
+        ),
+      ),
+    );
+  }
+}
+
+class LiveGameInfo extends StatelessWidget {
+  const LiveGameInfo({
+    super.key,
+    required this.words,
+  });
+
+  final List<Word> words;
+
+  @override
+  Widget build(BuildContext context) {
+    var gameServices = Provider.of<GameServices>(context);
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+              "${Globals.getText(gameServices.language, 21)} ${words.length - gameServices.words.length}"),
+          Text(
+              "${Globals.getText(gameServices.language, 22)}  ${words.reduce((Word value, Word element) => value.txt.length > element.txt.length ? !gameServices.words.contains(value.txt) ? value : Word("", []) : !gameServices.words.contains(element.txt) ? element : Word("", [])).txt.length}"),
+        ]);
+
+  }
+}
+
 class GameInfo extends StatelessWidget {
   const GameInfo({
     super.key,

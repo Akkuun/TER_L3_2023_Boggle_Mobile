@@ -24,7 +24,7 @@ class GameFront extends StatelessWidget {
             if (isMulti) const LeaderBoard(),
             const ScoreBoard(),
             const BoggleGrille(),
-            const WordsFound(),
+            const LiveGameInfoBuilder(),
             const ActionAndTimer()
           ],
         ),
