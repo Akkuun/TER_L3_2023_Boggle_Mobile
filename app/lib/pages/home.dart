@@ -26,15 +26,18 @@ class HomePage extends StatelessWidget {
 
     User? user = firebaseAuth.currentUser;
     if (user != null) {
-      welcomeWidget = Text(
-        "Bienvenue,\n ${user.email}",
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 28,
-          fontFamily: 'Jua',
-          fontWeight: FontWeight.w400,
+      welcomeWidget = Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(
+          "${user.email}",
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 28,
+            fontFamily: 'Jua',
+            fontWeight: FontWeight.w400,
+          ),
+          textAlign: TextAlign.center,
         ),
-        textAlign: TextAlign.center,
       );
     } else {
       welcomeWidget = BtnBoggle(
