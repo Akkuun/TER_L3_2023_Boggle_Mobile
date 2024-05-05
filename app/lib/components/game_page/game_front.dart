@@ -2,7 +2,7 @@ import 'package:bouggr/components/game_page/action_and_timer.dart';
 import 'package:bouggr/components/game_page/grille.dart';
 import 'package:bouggr/components/game_page/scoreboard.dart';
 import 'package:bouggr/components/game_page/only_multi/leaderboard.dart';
-import 'package:bouggr/components/title.dart';
+import 'package:bouggr/components/global/title.dart';
 import 'package:bouggr/components/game_page/words_found.dart';
 import 'package:flutter/material.dart';
 

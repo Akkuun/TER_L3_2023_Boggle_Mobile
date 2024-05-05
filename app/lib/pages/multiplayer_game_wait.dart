@@ -1,7 +1,7 @@
 //globals
 
-import 'package:bouggr/components/btn.dart';
-import 'package:bouggr/components/player_in_list.dart';
+import 'package:bouggr/components/global/btn.dart';
+import 'package:bouggr/components/game_page/only_multi/player_in_list.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/utils/player_leaderboard.dart';
@@ -17,7 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
-import '../components/title.dart';
+import '../components/global/title.dart';
 import '../providers/navigation.dart';
 import '../providers/realtimegame.dart';
 

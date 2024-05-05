@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:bouggr/components/accelerometre.dart';
-import 'package:bouggr/components/btn.dart';
+import 'package:bouggr/components/global/btn.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';

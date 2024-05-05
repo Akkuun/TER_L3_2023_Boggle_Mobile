@@ -1,4 +1,4 @@
-import 'package:bouggr/components/btn.dart';
+import 'package:bouggr/components/global/btn.dart';
 import 'package:flutter/material.dart';
 
 class BoggleCard extends StatelessWidget {

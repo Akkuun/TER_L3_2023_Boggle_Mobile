@@ -3,7 +3,7 @@ import 'package:bouggr/providers/realtimegame.dart';
 import 'package:bouggr/utils/player_leaderboard.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:bouggr/components/game_stat.dart';
+import 'package:bouggr/components/stats_page/game_stat.dart';
 import 'package:provider/provider.dart';
 import 'package:bouggr/global.dart';
 

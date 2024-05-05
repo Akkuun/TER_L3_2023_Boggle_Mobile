@@ -1,5 +1,5 @@
 import 'package:bouggr/components/accelerometre.dart';
-import 'package:bouggr/components/popup.dart';
+import 'package:bouggr/components/global/popup.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:flutter/material.dart';
 

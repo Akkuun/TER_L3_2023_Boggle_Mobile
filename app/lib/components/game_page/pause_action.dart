@@ -1,6 +1,6 @@
 //components
 
-import 'package:bouggr/components/btn.dart';
+import 'package:bouggr/components/global/btn.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/timer.dart';
 import 'package:bouggr/utils/background_music_player.dart';

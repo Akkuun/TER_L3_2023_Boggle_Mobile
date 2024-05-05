@@ -4,8 +4,8 @@
 
 //services
 
-import 'package:bouggr/components/btn.dart';
-import 'package:bouggr/components/title.dart';
+import 'package:bouggr/components/global/btn.dart';
+import 'package:bouggr/components/global/title.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/realtimegame.dart';
 import 'package:bouggr/utils/decode.dart';

@@ -7,7 +7,7 @@ import 'package:bouggr/utils/lang.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
-import 'package:bouggr/components/btn.dart';
+import 'package:bouggr/components/global/btn.dart';
 import 'package:bouggr/components/bottom_buttons.dart';
 import 'package:bouggr/pages/page_name.dart';
 
