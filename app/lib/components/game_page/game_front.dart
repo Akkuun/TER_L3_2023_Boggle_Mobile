@@ -25,7 +25,7 @@ class GameFront extends StatelessWidget {
             const ScoreBoard(),
             const BoggleGrille(),
             const LiveGameInfoBuilder(),
-            const ActionAndTimer()
+            ActionAndTimer(isMulti: isMulti),
           ],
         ),
       ),
