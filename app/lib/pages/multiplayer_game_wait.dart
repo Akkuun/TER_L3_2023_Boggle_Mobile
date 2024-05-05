@@ -146,8 +146,11 @@ class _GameWaitPageState extends State<GameWaitPage> {
               data["players"].length > 1 &&
               data["players"][Provider.of<FirebaseAuth>(context, listen: false)
                       .currentUser!
-                      .uid]["leader"] ==
-                  true)
+                      .uid]
+                  .containsKey("leader") &&
+              data["players"][Provider.of<FirebaseAuth>(context, listen: false)
+                  .currentUser!
+                  .uid]["leader"])
             BtnBoggle(
               // Start game
               onPressed: () async {
