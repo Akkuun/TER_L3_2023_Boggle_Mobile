@@ -52,7 +52,7 @@ export async function create_game(req: any) {
 
 
 
-    let gameId = (Math.random() * 100000000000000000) % 999999
+    let gameId: any = (Math.random() * 100000000000000000) % 999999
 
     const game = admin.database().ref("/games").child(gameId.toString());
     let count = 0;
@@ -63,6 +63,8 @@ export async function create_game(req: any) {
             return { gameId: null, error: "Could not generate gameId" };
         }
     }
+
+    gameId = gameId.toString();
 
 
 
