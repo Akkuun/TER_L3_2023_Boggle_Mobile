@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class RealtimeGameProvider extends ChangeNotifier {
-  dynamic _game = HashMap<String, dynamic>();
+  Map<String, dynamic> _game = {};
 
   DatabaseReference? dbRef;
   String _gameCode = '';
@@ -40,7 +40,7 @@ class RealtimeGameProvider extends ChangeNotifier {
       dbRef!.onDisconnect();
     }
     _gameCode = '';
-    _game = HashMap<String, dynamic>();
+    _game.clear();
     dbRef = null;
 
     logger.d("[PROVIDER] game disposed");
