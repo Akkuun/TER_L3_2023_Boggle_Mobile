@@ -1,6 +1,5 @@
 
 import * as admin from 'firebase-admin';
-import { Game } from 'fivem-js';
 import { GameState } from '../enums/gameState';
 
 
@@ -60,6 +59,8 @@ export async function ready(req: any) {
             });
         }
     }
+
+    return -1;
 
 
     // set the game state to 'started'
