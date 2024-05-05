@@ -62,7 +62,7 @@ class _GameWaitPageState extends State<GameWaitPage> {
 
   @override
   Widget build(BuildContext context) {
-    var rm = context.watch<RealtimeGameProvider>();
+    var rm = Provider.of<RealtimeGameProvider>(context);
     logger.i("[GAME WAIT] Game code : ${rm.gameCode}");
     var data = rm.game;
     if (data == null) {
