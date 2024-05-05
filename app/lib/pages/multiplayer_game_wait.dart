@@ -65,7 +65,7 @@ class _GameWaitPageState extends State<GameWaitPage> {
     var rm = Provider.of<RealtimeGameProvider>(context);
     logger.i("[GAME WAIT] Game code : ${rm.gameCode}");
     var data = rm.game;
-    if (data == null) {
+    if (data.isEmpty) {
       return const Center(
         child: CircularProgressIndicator(),
       );
@@ -146,8 +146,8 @@ class _GameWaitPageState extends State<GameWaitPage> {
               data["players"].length > 1 &&
               data["players"][Provider.of<FirebaseAuth>(context, listen: false)
                       .currentUser!
-                      .uid]
-                  .containsKey("leader") &&
+                      .uid] !=
+                  null &&
               data["players"][Provider.of<FirebaseAuth>(context, listen: false)
                   .currentUser!
                   .uid]["leader"])
