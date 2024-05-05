@@ -91,6 +91,7 @@ class _GameWaitPageState extends State<GameWaitPage> {
       logger.w("[GAME WAIT] Game is starting");
 
       router.goToPage(PageName.multiplayerGame);
+      return const SizedBox();
     }
 
     User? user = Provider.of<FirebaseAuth>(context, listen: false).currentUser;
