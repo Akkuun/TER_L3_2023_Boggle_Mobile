@@ -242,6 +242,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
             decoration: const InputDecoration(
               labelText: 'Game code',
             ),
+            keyboardType: TextInputType.number,
           ),
         ),
         BtnBoggle(
