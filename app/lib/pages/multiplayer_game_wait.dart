@@ -21,23 +21,7 @@ import '../components/global/title.dart';
 import '../providers/navigation.dart';
 import '../providers/realtimegame.dart';
 
-class GameWaitPage extends StatefulWidget {
-  final GameType mode;
-
-  const GameWaitPage({
-    super.key,
-    this.mode = GameType.solo,
-  });
-
-  @override
-  State<GameWaitPage> createState() => _GameWaitPageState();
-}
-
-class _GameWaitPageState extends State<GameWaitPage> {
-  final logger = Logger();
-  late GameServices gameServices;
-  late NavigationServices router;
-  late ListView playerList;
+class GameWaitPage extends StatelessWidget {
   static const TextStyle textStyle = TextStyle(
     color: Colors.black,
     fontSize: 20,
@@ -51,20 +35,15 @@ class _GameWaitPageState extends State<GameWaitPage> {
     fontWeight: FontWeight.w400,
   );
 
-  @override
-  void initState() {
-    super.initState();
-    logger.d("[GAME WAIT] Init");
-    router = Provider.of<NavigationServices>(context, listen: false);
-    gameServices = Provider.of<GameServices>(context, listen: false);
-
-    Provider.of<RealtimeGameProvider>(context, listen: false).initListeners();
-  }
+  const GameWaitPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final logger = Logger();
     var rm = Provider.of<RealtimeGameProvider>(context);
     logger.i("[GAME WAIT] Game code : ${rm.gameCode}");
+    var router = Provider.of<NavigationServices>(context, listen: false);
+    var gameServices = Provider.of<GameServices>(context, listen: false);
     var data = rm.game;
     if (data.isEmpty) {
       return const Center(
@@ -97,9 +76,6 @@ class _GameWaitPageState extends State<GameWaitPage> {
     }
 
     User? user = Provider.of<FirebaseAuth>(context, listen: false).currentUser;
-    if (user == null) {
-      router.goToPage(PageName.login);
-    }
 
     return SizedBox(
       height: MediaQuery.of(context).size.height,

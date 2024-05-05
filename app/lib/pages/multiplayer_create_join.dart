@@ -146,6 +146,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
 
     Globals.currentMultiplayerGame = letters.join('');
     rm.initRealtimeService(response["gameId"]);
+
     router.goToPage(PageName.multiplayerGameWait);
     logger.w("Game created with code ${rm.gameCode} ${response["gameId"]}");
   }
@@ -209,6 +210,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
               router.goToPage(PageName.login);
               return;
             }
+
             await _createGame(user.uid, fireAuth.currentUser, rm, router,
                 Provider.of<GameServices>(context, listen: false).language);
           },
