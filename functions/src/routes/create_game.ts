@@ -47,8 +47,23 @@ export async function create_game(req: any) {
 
     }
 
-    const game = admin.database().ref("/games").push();
-    const gameId = game.key as string;
+
+    //generate gameId
+
+
+
+    let gameId = (Math.random() * 100000000000000000) % 999999
+
+    const game = admin.database().ref("/games").child(gameId.toString());
+    let count = 0;
+    while ((await game.get()).exists() && count < 10) {
+        gameId = (Math.random() * 100000000000000000) % 999999
+        count++;
+        if (count == 10) {
+            return { gameId: null, error: "Could not generate gameId" };
+        }
+    }
+
 
 
     const payload: GameInterface = {
