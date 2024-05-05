@@ -46,7 +46,10 @@ class BottomButtons extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       IconBtnBoggleRouter(
-                        icon: const Icon(Icons.home),
+                        icon: Icon(Icons.home,
+                            color: index == PageName.home
+                                ? Colors.white
+                                : const Color.fromARGB(255, 21, 75, 105)),
                         onPressed: () {
                           router.goToPage(PageName.home);
                         },
@@ -55,12 +58,18 @@ class BottomButtons extends StatelessWidget {
                             : BtnType.secondary,
                       ),
                       IconBtnBoggleRouter(
-                        icon: const Icon(Icons.extension),
+                        icon: Icon(Icons.extension,
+                            color: index == PageName.game
+                                ? Colors.white
+                                : const Color.fromARGB(255, 21, 75, 105)),
                         onPressed: () {},
                         btnType: BtnType.secondary,
                       ),
                       IconBtnBoggleRouter(
-                        icon: const Icon(Icons.insights),
+                        icon: Icon(Icons.insights,
+                            color: index == PageName.stats
+                                ? Colors.white
+                                : const Color.fromARGB(255, 21, 75, 105)),
                         onPressed: () {
                           router.goToPage(PageName.stats);
                         },

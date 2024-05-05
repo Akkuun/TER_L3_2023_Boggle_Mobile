@@ -141,7 +141,8 @@ class IconBtnBoggleRouter extends StatelessWidget {
               BtnType.primary == btnType
                   ? const Color.fromARGB(255, 89, 150, 194)
                   : Colors.white),
-          borderRadius: BorderRadius.circular(24),
+          borderRadius:
+              BorderRadius.circular(MediaQuery.of(context).size.width * 0.05),
           boxShadow: const [
             BoxShadow(
               color: Color(0x3F000000),
@@ -152,6 +153,7 @@ class IconBtnBoggleRouter extends StatelessWidget {
           ]),
       child: IconButton(
         icon: icon,
+        iconSize: MediaQuery.of(context).size.width * 0.1,
         onPressed: onPressed,
       ),
     );
