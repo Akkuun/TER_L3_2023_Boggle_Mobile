@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/components/global/btn.dart';
-import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 class BottomButtons extends StatelessWidget {

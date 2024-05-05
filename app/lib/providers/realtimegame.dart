@@ -39,8 +39,9 @@ class RealtimeGameProvider extends ChangeNotifier {
       await dbRef!.onValue.listen((DatabaseEvent event) {}).cancel();
       dbRef!.onDisconnect();
     }
-    setGameCode('');
+    _gameCode = '';
     _game = HashMap<String, dynamic>();
+    dbRef = null;
 
     logger.d("[PROVIDER] game disposed");
   }
