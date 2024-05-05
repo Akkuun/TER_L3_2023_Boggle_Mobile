@@ -89,9 +89,11 @@ class _GameWaitPageState extends State<GameWaitPage> {
 
     if (gameStatus == 0) {
       logger.w("[GAME WAIT] Game is starting");
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        router.goToPage(PageName.multiplayerGame);
 
-      router.goToPage(PageName.multiplayerGame);
-      return const SizedBox();
+        // remove the post frame callback
+      });
     }
 
     User? user = Provider.of<FirebaseAuth>(context, listen: false).currentUser;
