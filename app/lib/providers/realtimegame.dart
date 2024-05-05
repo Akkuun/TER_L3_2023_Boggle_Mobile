@@ -6,7 +6,7 @@ import 'package:logger/logger.dart';
 
 class RealtimeGameProvider extends ChangeNotifier {
   dynamic _game = HashMap<String, dynamic>();
-  String _lastGameCode = "";
+
   DatabaseReference? dbRef;
   String _gameCode = '';
   final logger = Logger();
@@ -29,20 +29,15 @@ class RealtimeGameProvider extends ChangeNotifier {
       final data =
           HashMap<String, dynamic>.from(event.snapshot.value as Map? ?? {});
       logger.d("[PROVIDER] Data of game : $data");
-      if (_lastGameCode == _gameCode) {
-        return;
-      }
+
       _updateGame(Map<String, dynamic>.from(data));
     });
   }
 
   Future<void> onDispose() async {
-    if (dbRef == null) {
-      return;
+    if (dbRef != null) {
+      await dbRef!.onValue.listen((DatabaseEvent event) {}).cancel();
     }
-
-    await dbRef!.onValue.listen((DatabaseEvent event) {}).cancel();
-    _lastGameCode = _gameCode;
     setGameCode('');
     _game = HashMap<String, dynamic>();
     dbRef!.onDisconnect();
