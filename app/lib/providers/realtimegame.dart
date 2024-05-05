@@ -38,10 +38,6 @@ class RealtimeGameProvider extends ChangeNotifier {
   }
 
   Future<void> onDispose() async {
-    if (dbRef != null) {
-      await dbRef!.remove();
-    }
-
     if (dbRefSub != null) {
       await dbRefSub!.cancel();
     }
