@@ -58,8 +58,6 @@ class _GameWaitPageState extends State<GameWaitPage> {
     router = Provider.of<NavigationServices>(context, listen: false);
     gameServices = Provider.of<GameServices>(context, listen: false);
 
-    Provider.of<RealtimeGameProvider>(context, listen: false).onDispose();
-
     Provider.of<RealtimeGameProvider>(context, listen: false).initListeners();
   }
 

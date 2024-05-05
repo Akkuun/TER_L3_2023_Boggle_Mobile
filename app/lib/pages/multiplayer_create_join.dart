@@ -130,7 +130,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
     logger.i("Response : $response");
     logger.i("Succesfully created game $response server-side");
     if (response["gameId"] == null) {
-      logger.e("${response["error"]}. Trying to leave it and create a new one");
+      logger.e("${response["error"]}. Trying to leave it");
       FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
         "userId": playerUID,
       }).then((value) {
@@ -143,8 +143,9 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
       logger.e("Error creating game : ${response["error"]}");
       return;
     }
-    rm.setGameCode(response["gameId"]);
+
     Globals.currentMultiplayerGame = letters.join('');
+    rm.initRealtimeService(response["gameId"]);
     router.goToPage(PageName.multiplayerGameWait);
     logger.w("Game created with code ${rm.gameCode} ${response["gameId"]}");
   }

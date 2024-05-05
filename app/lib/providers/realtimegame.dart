@@ -55,4 +55,10 @@ class RealtimeGameProvider extends ChangeNotifier {
   get game {
     return _game;
   }
+
+  void initRealtimeService(gameId) {
+    _gameCode = gameId;
+    _game = {};
+    notifyListeners();
+  }
 }
