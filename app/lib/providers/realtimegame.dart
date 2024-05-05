@@ -42,7 +42,7 @@ class RealtimeGameProvider extends ChangeNotifier {
     _gameCode = '';
     _game.clear();
     dbRef = null;
-
+    notifyListeners();
     logger.d("[PROVIDER] game disposed");
   }
 
