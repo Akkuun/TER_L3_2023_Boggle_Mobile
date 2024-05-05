@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 
 import 'package:firebase_database/firebase_database.dart';
@@ -14,6 +15,8 @@ class RealtimeGameProvider extends ChangeNotifier {
     return _gameCode;
   }
 
+  StreamSubscription? dbRefSub;
+
   setGameCode(String code) {
     Logger().d("[PROVIDER] Setting game code to $code");
     _gameCode = code;
@@ -25,7 +28,7 @@ class RealtimeGameProvider extends ChangeNotifier {
     // dans la base de données
 
     dbRef = FirebaseDatabase.instance.ref('games/$_gameCode');
-    dbRef!.onValue.listen((DatabaseEvent event) {
+    dbRefSub = dbRef!.onValue.listen((DatabaseEvent event) {
       final data =
           Map<String, dynamic>.from(event.snapshot.value as Map? ?? {});
       logger.d("[PROVIDER] Data of game : $data");
@@ -36,8 +39,11 @@ class RealtimeGameProvider extends ChangeNotifier {
 
   Future<void> onDispose() async {
     if (dbRef != null) {
-      await dbRef!.onValue.listen((DatabaseEvent event) {}).cancel();
-      dbRef!.onDisconnect();
+      await dbRef!.remove();
+    }
+
+    if (dbRefSub != null) {
+      await dbRefSub!.cancel();
     }
     _gameCode = '';
     _game.clear();
