@@ -78,13 +78,6 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
 
       response = result.data["code"];
     }
-    if (response == JoinGameReturn.success.index) {
-      router.goToPage(PageName.multiplayerGameWait);
-    }
-
-    if (response.runtimeType == int) {
-      return response;
-    }
 
     return (response as Map<String, dynamic>)["code"];
   }
@@ -258,7 +251,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
                 logger.e("Error joining game : game code is null");
                 return;
               }
-
+              rm.initRealtimeService(rm.gameCode);
               router.goToPage(PageName.multiplayerGameWait);
             } else {
               setState(() {
