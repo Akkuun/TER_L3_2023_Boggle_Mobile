@@ -118,3 +118,44 @@ class IconBtnBoggle extends StatelessWidget {
     );
   }
 }
+
+class IconBtnBoggleRouter extends StatelessWidget {
+  final Icon icon;
+  final GestureTapCallback onPressed;
+  final BtnType btnType;
+
+  const IconBtnBoggleRouter({
+    super.key,
+    required this.icon,
+    required this.btnType,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.width * 0.15,
+      width: MediaQuery.of(context).size.width * 0.3,
+      decoration: BoxDecoration(
+          color: MaterialStateColor.resolveWith((states) =>
+              BtnType.primary == btnType
+                  ? const Color.fromARGB(255, 89, 150, 194)
+                  : Colors.white),
+          borderRadius:
+              BorderRadius.circular(MediaQuery.of(context).size.width * 0.05),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x3F000000),
+              blurRadius: 4,
+              offset: Offset(0, 4),
+              spreadRadius: 0,
+            ),
+          ]),
+      child: IconButton(
+        icon: icon,
+        iconSize: MediaQuery.of(context).size.width * 0.1,
+        onPressed: onPressed,
+      ),
+    );
+  }
+}

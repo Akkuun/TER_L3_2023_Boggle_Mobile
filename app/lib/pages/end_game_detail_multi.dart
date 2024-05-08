@@ -1,4 +1,4 @@
-import 'package:bouggr/components/btn.dart';
+import 'package:bouggr/components/global/btn.dart';
 import 'package:bouggr/components/game_page/only_multi/leaderboard.dart';
 import 'package:bouggr/components/game_page/pop_up_word_list.dart';
 import 'package:bouggr/components/game_page/words_found.dart';

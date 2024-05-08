@@ -4,7 +4,7 @@ import 'package:bouggr/components/bottom_buttons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:bouggr/components/stat.dart';
+import 'package:bouggr/components/stats_page/stat.dart';
 import 'package:bouggr/utils/game_data.dart';
 
 class StatsPage extends StatefulWidget {

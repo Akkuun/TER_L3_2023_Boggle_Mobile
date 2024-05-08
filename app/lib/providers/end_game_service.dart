@@ -1,4 +1,4 @@
-import 'package:bouggr/components/popup.dart';
+import 'package:bouggr/components/global/popup.dart';
 import 'package:bouggr/utils/get_all_word.dart';
 
 import 'package:flutter/material.dart';

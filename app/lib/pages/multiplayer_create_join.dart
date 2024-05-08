@@ -4,8 +4,8 @@
 
 //services
 
-import 'package:bouggr/components/btn.dart';
-import 'package:bouggr/components/title.dart';
+import 'package:bouggr/components/global/btn.dart';
+import 'package:bouggr/components/global/title.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/realtimegame.dart';
 import 'package:bouggr/utils/decode.dart';
@@ -78,13 +78,6 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
 
       response = result.data["code"];
     }
-    if (response == JoinGameReturn.success.index) {
-      router.goToPage(PageName.multiplayerGameWait);
-    }
-
-    if (response.runtimeType == int) {
-      return response;
-    }
 
     return (response as Map<String, dynamic>)["code"];
   }
@@ -130,7 +123,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
     logger.i("Response : $response");
     logger.i("Succesfully created game $response server-side");
     if (response["gameId"] == null) {
-      logger.e("${response["error"]}. Trying to leave it and create a new one");
+      logger.e("${response["error"]}. Trying to leave it");
       FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
         "userId": playerUID,
       }).then((value) {
@@ -143,8 +136,10 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
       logger.e("Error creating game : ${response["error"]}");
       return;
     }
-    rm.setGameCode(response["gameId"]);
+
     Globals.currentMultiplayerGame = letters.join('');
+    rm.initRealtimeService(response["gameId"]);
+
     router.goToPage(PageName.multiplayerGameWait);
     logger.w("Game created with code ${rm.gameCode} ${response["gameId"]}");
   }
@@ -208,6 +203,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
               router.goToPage(PageName.login);
               return;
             }
+
             await _createGame(user.uid, fireAuth.currentUser, rm, router,
                 Provider.of<GameServices>(context, listen: false).language);
           },
@@ -242,6 +238,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
             decoration: const InputDecoration(
               labelText: 'Game code',
             ),
+            keyboardType: TextInputType.number,
           ),
         ),
         BtnBoggle(
@@ -254,7 +251,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
                 logger.e("Error joining game : game code is null");
                 return;
               }
-
+              rm.initRealtimeService(rm.gameCode);
               router.goToPage(PageName.multiplayerGameWait);
             } else {
               setState(() {

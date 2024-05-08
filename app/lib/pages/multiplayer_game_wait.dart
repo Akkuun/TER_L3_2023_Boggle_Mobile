@@ -1,7 +1,7 @@
 //globals
 
-import 'package:bouggr/components/btn.dart';
-import 'package:bouggr/components/player_in_list.dart';
+import 'package:bouggr/components/global/btn.dart';
+import 'package:bouggr/components/game_page/only_multi/player_in_list.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/utils/player_leaderboard.dart';
@@ -17,27 +17,11 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
-import '../components/title.dart';
+import '../components/global/title.dart';
 import '../providers/navigation.dart';
 import '../providers/realtimegame.dart';
 
-class GameWaitPage extends StatefulWidget {
-  final GameType mode;
-
-  const GameWaitPage({
-    super.key,
-    this.mode = GameType.solo,
-  });
-
-  @override
-  State<GameWaitPage> createState() => _GameWaitPageState();
-}
-
-class _GameWaitPageState extends State<GameWaitPage> {
-  final logger = Logger();
-  late GameServices gameServices;
-  late NavigationServices router;
-  late ListView playerList;
+class GameWaitPage extends StatelessWidget {
   static const TextStyle textStyle = TextStyle(
     color: Colors.black,
     fontSize: 20,
@@ -51,21 +35,17 @@ class _GameWaitPageState extends State<GameWaitPage> {
     fontWeight: FontWeight.w400,
   );
 
-  @override
-  void initState() {
-    super.initState();
-    logger.d("[GAME WAIT] Init");
-    router = Provider.of<NavigationServices>(context, listen: false);
-    gameServices = Provider.of<GameServices>(context, listen: false);
-    Provider.of<RealtimeGameProvider>(context, listen: false).initListeners();
-  }
+  const GameWaitPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var rm = context.watch<RealtimeGameProvider>();
+    final logger = Logger();
+    var rm = Provider.of<RealtimeGameProvider>(context);
     logger.i("[GAME WAIT] Game code : ${rm.gameCode}");
+    var router = Provider.of<NavigationServices>(context, listen: false);
+    var gameServices = Provider.of<GameServices>(context, listen: false);
     var data = rm.game;
-    if (data == null) {
+    if (data.isEmpty) {
       return const Center(
         child: CircularProgressIndicator(),
       );
@@ -87,15 +67,15 @@ class _GameWaitPageState extends State<GameWaitPage> {
     logger.i("[GAME WAIT] Game status : $gameStatus && $data");
 
     if (gameStatus == 0) {
+      logger.w("[GAME WAIT] Game is starting");
       WidgetsBinding.instance.addPostFrameCallback((_) {
         router.goToPage(PageName.multiplayerGame);
+
+        // remove the post frame callback
       });
     }
 
     User? user = Provider.of<FirebaseAuth>(context, listen: false).currentUser;
-    if (user == null) {
-      router.goToPage(PageName.login);
-    }
 
     return SizedBox(
       height: MediaQuery.of(context).size.height,
@@ -146,8 +126,11 @@ class _GameWaitPageState extends State<GameWaitPage> {
               data["players"].length > 1 &&
               data["players"][Provider.of<FirebaseAuth>(context, listen: false)
                       .currentUser!
-                      .uid]["leader"] ==
-                  true)
+                      .uid] !=
+                  null &&
+              data["players"][Provider.of<FirebaseAuth>(context, listen: false)
+                  .currentUser!
+                  .uid]["leader"])
             BtnBoggle(
               // Start game
               onPressed: () async {

@@ -78,7 +78,7 @@ class MiniGrid extends StatelessWidget {
       height: height,
       width: width,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color.fromRGBO(48, 108, 164, 1),
         borderRadius: BorderRadius.circular(5),
         boxShadow: const [
           BoxShadow(
@@ -103,7 +103,8 @@ class MiniGrid extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(5),
-                border: Border.all(color: Colors.black),
+                border:
+                    Border.all(color: const Color.fromRGBO(48, 108, 164, 1)),
               ),
               child: Center(
                 child: Text(

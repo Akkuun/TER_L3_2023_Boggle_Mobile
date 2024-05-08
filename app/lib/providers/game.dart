@@ -1,4 +1,4 @@
-import 'package:bouggr/components/popup.dart';
+import 'package:bouggr/components/global/popup.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/navigation.dart';
