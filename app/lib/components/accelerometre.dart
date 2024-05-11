@@ -2,17 +2,18 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:collection';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 class BoggleAccelerometre extends StatefulWidget {
-
   final ValueNotifier<bool> estSecouer = ValueNotifier<bool>(
       false); // cela permet de récupérer si une secousse a été détectée dans n'importe quelle partie de l'application (car c'est publique dans cette partie de la classe)
 
   final int fileTaille;
   final double seuilDetection;
 
-  BoggleAccelerometre({super.key, this.fileTaille = 6, this.seuilDetection = 20});
+  BoggleAccelerometre(
+      {super.key, this.fileTaille = 6, this.seuilDetection = 20});
 
   @override
   BoggleAccelerometreState createState() => BoggleAccelerometreState();
@@ -106,10 +107,7 @@ class BoggleAccelerometreState extends State<BoggleAccelerometre> {
       return false;
     }
 
-    if (debug) {
-      // ignore: avoid_print
-      print('magnitude moyenne: $moyMagnitude');
-    }
+    Logger().i('magnitude moyenne: $moyMagnitude');
 
     return moyMagnitude > seuilDetection;
   }

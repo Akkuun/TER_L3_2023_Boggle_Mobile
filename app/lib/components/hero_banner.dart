@@ -1,4 +1,4 @@
-import 'package:bouggr/components/card.dart';
+import 'package:bouggr/components/global/card.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:flutter/material.dart';

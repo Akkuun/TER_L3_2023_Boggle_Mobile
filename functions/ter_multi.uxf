@@ -1,0 +1,163 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>320</x><y>350</y><w>100</w><h>30</h></coordinates><panel_attributes>client
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>510</x><y>350</y><w>100</w><h>40</h></coordinates><panel_attributes>google cloud
+fire functions
+bg=red</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>510</x><y>220</y><w>100</w><h>30</h></coordinates><panel_attributes>realtime db
+fg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>510</x><y>490</y><w>100</w><h>40</h></coordinates><panel_attributes>firestore
+fg=green</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>360</x><y>230</y><w>170</w><h>140</h></coordinates><panel_attributes>lt=&lt;&lt;-&gt;&gt;
+read-only (update game)</panel_attributes><additional_attributes>10;120;150;10</additional_attributes></element><element><id>Relation</id><coordinates><x>410</x><y>350</y><w>120</w><h>50</h></coordinates><panel_attributes>lt=&lt;&lt;-
+send data
+(multi)</panel_attributes><additional_attributes>100;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>560</x><y>240</y><w>100</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;-
+update data</panel_attributes><additional_attributes>10;10;10;110</additional_attributes></element><element><id>Relation</id><coordinates><x>560</x><y>380</y><w>90</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;-
+save game</panel_attributes><additional_attributes>10;110;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>680</x><y>130</y><w>160</w><h>100</h></coordinates><panel_attributes>client
+--
+create game
+--
+update client state</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>880</x><y>130</y><w>150</w><h>100</h></coordinates><panel_attributes>client
+--
+join game
+--
+update client state</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1060</x><y>130</y><w>190</w><h>100</h></coordinates><panel_attributes>client
+--
+send word
+--
+handle valide queue
+no more direct validation 
+anim</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>800</x><y>1210</y><w>160</w><h>100</h></coordinates><panel_attributes>client
+--
+cancel game</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>520</x><y>1210</y><w>150</w><h>100</h></coordinates><panel_attributes>client
+--
+leave game</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>680</x><y>400</y><w>160</w><h>100</h></coordinates><panel_attributes>functions create_game
+--
+check player status
+ through db
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>690</x><y>220</y><w>90</w><h>200</h></coordinates><panel_attributes>lt=&lt;&lt;-
+request
+game
+creation
+(lang,user)</panel_attributes><additional_attributes>10;180;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>760</x><y>220</y><w>50</w><h>200</h></coordinates><panel_attributes>lt=&lt;&lt;-
+false</panel_attributes><additional_attributes>10;10;10;180</additional_attributes></element><element><id>Relation</id><coordinates><x>800</x><y>220</y><w>80</w><h>200</h></coordinates><panel_attributes>lt=&lt;&lt;-
+true
+send
+game_id</panel_attributes><additional_attributes>10;10;10;180</additional_attributes></element><element><id>UMLClass</id><coordinates><x>740</x><y>680</y><w>450</w><h>100</h></coordinates><panel_attributes>real-time db
+--
+party available list
+fg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>750</x><y>490</y><w>60</w><h>210</h></coordinates><panel_attributes>lt=&lt;&lt;-
+create
+game
+(grid)</panel_attributes><additional_attributes>10;190;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>800</x><y>490</y><w>80</w><h>210</h></coordinates><panel_attributes>lt=-&gt;&gt;
+confirm 
+action</panel_attributes><additional_attributes>10;190;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>690</x><y>490</y><w>60</w><h>210</h></coordinates><panel_attributes>lt=&lt;&lt;-&gt;&gt;
+check
+player
+</panel_attributes><additional_attributes>10;190;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>330</x><y>680</y><w>400</w><h>100</h></coordinates><panel_attributes>real-time db
+--
+player in game list
+fg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>880</x><y>220</y><w>90</w><h>200</h></coordinates><panel_attributes>lt=&lt;&lt;-
+requesti
+join_game
+(game_id,
+user)</panel_attributes><additional_attributes>10;180;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>950</x><y>220</y><w>50</w><h>200</h></coordinates><panel_attributes>lt=&lt;&lt;-
+false</panel_attributes><additional_attributes>10;10;10;180</additional_attributes></element><element><id>Relation</id><coordinates><x>990</x><y>220</y><w>50</w><h>200</h></coordinates><panel_attributes>lt=&lt;&lt;-
+true
+</panel_attributes><additional_attributes>10;10;10;180</additional_attributes></element><element><id>UMLClass</id><coordinates><x>870</x><y>400</y><w>160</w><h>100</h></coordinates><panel_attributes>functions join_game
+--
+check player status
+through db
+check game existance</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>650</x><y>490</y><w>290</w><h>210</h></coordinates><panel_attributes>lt=&lt;&lt;-&gt;&gt;
+check
+player
+</panel_attributes><additional_attributes>10;190;10;150;270;150;270;10</additional_attributes></element><element><id>Relation</id><coordinates><x>940</x><y>490</y><w>70</w><h>210</h></coordinates><panel_attributes>lt=&lt;&lt;-
+updage
+game
+with
+p_id</panel_attributes><additional_attributes>10;190;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>990</x><y>490</y><w>80</w><h>210</h></coordinates><panel_attributes>lt=-&gt;&gt;
+confirm 
+action</panel_attributes><additional_attributes>10;190;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1060</x><y>400</y><w>140</w><h>100</h></coordinates><panel_attributes>functions send_word
+--
+check player status
+through db
+check game existance
+recreate word form grid
+check if word is valid</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1070</x><y>220</y><w>90</w><h>200</h></coordinates><panel_attributes>lt=&lt;&lt;-
+request
+join_game
+(word as 
+coords,
+user)</panel_attributes><additional_attributes>10;180;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1140</x><y>220</y><w>50</w><h>200</h></coordinates><panel_attributes>lt=&lt;&lt;-
+false</panel_attributes><additional_attributes>10;10;10;180</additional_attributes></element><element><id>Relation</id><coordinates><x>1180</x><y>220</y><w>60</w><h>200</h></coordinates><panel_attributes>lt=&lt;&lt;-
+true
+send
+word</panel_attributes><additional_attributes>10;10;10;180</additional_attributes></element><element><id>Relation</id><coordinates><x>1090</x><y>490</y><w>70</w><h>210</h></coordinates><panel_attributes>lt=&lt;&lt;-
+updage
+game
+with
+p_id</panel_attributes><additional_attributes>10;190;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1130</x><y>220</y><w>170</w><h>480</h></coordinates><panel_attributes>lt=-&gt;&gt;
+get score</panel_attributes><additional_attributes>100;10;100;430;10;430;10;460</additional_attributes></element><element><id>UMLClass</id><coordinates><x>800</x><y>1000</y><w>160</w><h>140</h></coordinates><panel_attributes>functions cancel_game
+--
+check player status
+ through db
+check game status
+check player count</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>910</x><y>1130</y><w>70</w><h>100</h></coordinates><panel_attributes>lt=-&gt;&gt;
+request</panel_attributes><additional_attributes>10;80;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>930</x><y>770</y><w>70</w><h>250</h></coordinates><panel_attributes>lt=-&gt;&gt;
+consult</panel_attributes><additional_attributes>10;230;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>850</x><y>770</y><w>100</w><h>250</h></coordinates><panel_attributes>lt=-&gt;&gt;
+if (not 
+started) {
+if 
+{last
+player
+delete
+partie}
+else
+{
+set in delete
+}
+}</panel_attributes><additional_attributes>10;230;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>710</x><y>770</y><w>130</w><h>320</h></coordinates><panel_attributes>lt=-&gt;&gt;
+if (not 
+started) {
+remove 
+from list
+}</panel_attributes><additional_attributes>90;300;60;300;60;60;10;60;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>890</x><y>710</y><w>210</w><h>60</h></coordinates><panel_attributes>cron
+--
+delete all partyif timer is done 
+(gc)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>510</x><y>710</y><w>100</w><h>60</h></coordinates><panel_attributes>cron
+--
+delete all player
+(gc)</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>520</x><y>1000</y><w>160</w><h>140</h></coordinates><panel_attributes>functions leave_game
+--
+check player status
+ through db
+check game status
+check player count</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>430</x><y>770</y><w>120</w><h>320</h></coordinates><panel_attributes>lt=-&gt;&gt;
+
+remove from list
+</panel_attributes><additional_attributes>90;300;10;300;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>570</x><y>770</y><w>230</w><h>250</h></coordinates><panel_attributes>lt=-&gt;&gt;
+
+
+remove player
+delete if last
+</panel_attributes><additional_attributes>10;230;10;50;210;50;210;10</additional_attributes></element><element><id>Relation</id><coordinates><x>650</x><y>770</y><w>200</w><h>250</h></coordinates><panel_attributes>lt=-&gt;&gt;
+consult</panel_attributes><additional_attributes>10;230;10;90;180;90;180;10</additional_attributes></element><element><id>Relation</id><coordinates><x>630</x><y>1130</y><w>70</w><h>100</h></coordinates><panel_attributes>lt=-&gt;&gt;
+request</panel_attributes><additional_attributes>10;80;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>180</x><y>1000</y><w>160</w><h>140</h></coordinates><panel_attributes>storage
+--
+db static
+fg=green</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>330</x><y>1070</y><w>210</w><h>50</h></coordinates><panel_attributes>lt=-&gt;&gt;
+save
+</panel_attributes><additional_attributes>190;20;10;20</additional_attributes></element><element><id>Relation</id><coordinates><x>400</x><y>370</y><w>160</w><h>140</h></coordinates><panel_attributes>lt=&lt;&lt;-
+send data (solo)</panel_attributes><additional_attributes>140;120;140;60;60;60;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>320</x><y>490</y><w>100</w><h>40</h></coordinates><panel_attributes>storage
+offline
+fg=blue</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>350</x><y>370</y><w>30</w><h>140</h></coordinates><panel_attributes>lt=&lt;&lt;-
+</panel_attributes><additional_attributes>10;120;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>370</x><y>370</y><w>200</w><h>170</h></coordinates><panel_attributes>lt=-&gt;&gt;
+get game histories</panel_attributes><additional_attributes>140;150;80;150;80;90;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1380</x><y>170</y><w>360</w><h>600</h></coordinates><panel_attributes>functions_services
+--
+fg=red</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1410</x><y>210</y><w>140</w><h>100</h></coordinates><panel_attributes>dico
+--
+contains : bool</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1290</x><y>390</y><w>230</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;-
+coord_word
+grid</panel_attributes><additional_attributes>210;10;210;80;10;80</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1430</x><y>370</y><w>120</w><h>30</h></coordinates><panel_attributes>recreate_word
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1470</x><y>300</y><w>60</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-
+word</panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>Relation</id><coordinates><x>1190</x><y>300</y><w>270</w><h>190</h></coordinates><panel_attributes>lt=&lt;&lt;-
+lang</panel_attributes><additional_attributes>250;10;110;170;10;170</additional_attributes></element><element><id>Relation</id><coordinates><x>1190</x><y>260</y><w>240</w><h>200</h></coordinates><panel_attributes>lt=-&gt;&gt;
+true+word//false</panel_attributes><additional_attributes>220;10;90;10;90;180;10;180</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1570</x><y>210</y><w>140</w><h>100</h></coordinates><panel_attributes>get_point</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1320</x><y>100</y><w>330</w><h>190</h></coordinates><panel_attributes>lt=-&gt;&gt;
+len(word)</panel_attributes><additional_attributes>90;170;10;170;10;20;310;20;310;110</additional_attributes></element><element><id>Relation</id><coordinates><x>1190</x><y>60</y><w>490</w><h>380</h></coordinates><panel_attributes>lt=&lt;&lt;-
+score</panel_attributes><additional_attributes>10;360;70;360;70;20;470;20;470;150</additional_attributes></element><element><id>UMLClass</id><coordinates><x>1440</x><y>610</y><w>250</w><h>130</h></coordinates><panel_attributes>dico_handler</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>1530</x><y>300</y><w>90</w><h>330</h></coordinates><panel_attributes>lt=-&gt;&gt;
+look</panel_attributes><additional_attributes>10;10;10;50;50;50;50;310</additional_attributes></element></diagram>

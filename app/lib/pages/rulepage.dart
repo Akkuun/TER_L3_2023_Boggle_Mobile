@@ -1,4 +1,4 @@
-import 'package:bouggr/components/btn.dart';
+import 'package:bouggr/components/global/btn.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,14 +24,12 @@ class RulePage extends StatelessWidget {
         const _RulesTitle(),
         const _RulesInstruction(),
         BtnBoggle(
-          onPressed: () {
-            router.goToPage(PageName.home);
-          },
-          btnType: BtnType.secondary,
-          btnSize: BtnSize.large,
-          text: Globals.getText(
-              gameServices.language, 14)
-        ),
+            onPressed: () {
+              router.goToPage(PageName.home);
+            },
+            btnType: BtnType.secondary,
+            btnSize: BtnSize.large,
+            text: Globals.getText(gameServices.language, 14)),
       ],
     );
   }
@@ -66,18 +64,16 @@ class _RulesInstruction extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               child: Text.rich(
                 TextSpan(
                   children: [
                     TextSpan(
-                        text:
-                       Globals.getText(gameServices.language, 11),
+                        text: Globals.getText(gameServices.language, 11),
                         style: textStyleIBM),
                     TextSpan(
-                        text:
-                        Globals.getText(gameServices.language, 12),
-                            style: textStyleIBM),
+                        text: Globals.getText(gameServices.language, 12),
+                        style: textStyleIBM),
                   ],
                 ),
                 textAlign: TextAlign.justify,
@@ -94,13 +90,13 @@ class _RulesInstruction extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Padding(
-              padding: EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
               child: Text.rich(
                 TextSpan(
                   children: [
                     TextSpan(
-                        text:
-                        Globals.getText(gameServices.language, 13),  style: textStyleIBM),
+                        text: Globals.getText(gameServices.language, 13),
+                        style: textStyleIBM),
                   ],
                 ),
                 textAlign: TextAlign.justify,

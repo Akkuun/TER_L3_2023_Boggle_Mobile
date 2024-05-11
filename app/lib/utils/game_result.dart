@@ -35,7 +35,7 @@ class GameResult {
     return GameResult(
       score: json['score'],
       grid: json['grid'],
-      words: json['words'].cast<String>(),
+      words: List<int>.from(json['words']),
     );
   }
 }

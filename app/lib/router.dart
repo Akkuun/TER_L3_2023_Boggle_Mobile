@@ -1,12 +1,14 @@
 import 'package:bouggr/pages/email_create.dart';
 import 'package:bouggr/pages/email_login.dart';
 import 'package:bouggr/pages/end_game_detail.dart';
+import 'package:bouggr/pages/end_game_detail_multi.dart';
 import 'package:bouggr/pages/home.dart';
 import 'package:bouggr/pages/login.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/pages/rulepage.dart';
 import 'package:bouggr/pages/multiplayer_create_join.dart';
 import 'package:bouggr/pages/game.dart';
+import 'package:bouggr/pages/multiplayer_game_wait.dart';
 import 'package:bouggr/pages/start_game.dart';
 
 import 'package:bouggr/pages/stats.dart';
@@ -30,14 +32,10 @@ class JoinMulti extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    try {
-      User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        return const MultiplayerCreateJoinPage();
-      } else {
-        return const LoginPage();
-      }
-    } catch (e) {
+    User? user = Provider.of<FirebaseAuth>(context, listen: false).currentUser;
+    if (user != null) {
+      return const MultiplayerCreateJoinPage();
+    } else {
       return const LoginPage();
     }
   }
@@ -50,6 +48,7 @@ class _BouggrRouter extends State<BouggrRouter> {
     PageName.rules: () => const RulePage(),
     PageName.multiplayerCreateJoin: () => const JoinMulti(),
     PageName.multiplayerGame: () => const GamePage(mode: GameType.multi),
+    PageName.multiplayerGameWait: () => const GameWaitPage(),
     PageName.login: () => const LoginPage(),
     PageName.stats: () => const StatsPage(),
     PageName.emailLogin: () => const EmailLogIn(),
@@ -58,6 +57,7 @@ class _BouggrRouter extends State<BouggrRouter> {
     PageName.settings: () => const SettingsPage(),
     PageName.startGame: () => const StartGamePage(),
     PageName.detail: () => const EndGameDetail(),
+    PageName.detailMulti: () => const EndGameDetailMulti(),
   };
   @override
   Widget build(BuildContext context) {

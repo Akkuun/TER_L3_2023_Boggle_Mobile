@@ -1,6 +1,6 @@
 //components
 
-import 'package:bouggr/components/btn.dart';
+import 'package:bouggr/components/global/btn.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/timer.dart';
 import 'package:bouggr/utils/background_music_player.dart';
@@ -18,8 +18,8 @@ class PauseAction extends StatelessWidget {
   Widget build(BuildContext context) {
     TimerServices timerServices =
         Provider.of<TimerServices>(context, listen: false);
-    GameServices gameServices =
-        Provider.of<GameServices>(context, listen: true);
+    GameServices gameServices = Provider.of<GameServices>(
+        context); // is in listen: true because we need to update the score
     return IconBtnBoggle(
       onPressed: () async {
         if (gameServices.triggerPopUp) {

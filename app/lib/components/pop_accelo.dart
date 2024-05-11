@@ -1,9 +1,10 @@
 import 'package:bouggr/components/accelerometre.dart';
-import 'package:bouggr/components/popup.dart';
+import 'package:bouggr/components/global/popup.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:flutter/material.dart';
 
 import 'package:haptic_feedback/haptic_feedback.dart';
+import 'package:logger/logger.dart';
 
 class ReStartGamePage extends StatefulWidget {
   ReStartGamePage({super.key});
@@ -25,8 +26,7 @@ class ReStartGamePage extends StatefulWidget {
 class _ReStartGamePageState extends State<ReStartGamePage> {
   late BoggleAccelerometre accelerometre;
 
-  // ignore: non_constant_identifier_names
-  bool PageCharger = false;
+  bool pageCharger = false;
   int nbSecousse = 0;
   int secousseDemander = 10;
 
@@ -50,7 +50,7 @@ class _ReStartGamePageState extends State<ReStartGamePage> {
 
   Future<void> _surDetectionSecousse() async {
     await Future.delayed(const Duration(milliseconds: 500));
-    if (accelerometre.estSecouer.value && PageCharger) {
+    if (accelerometre.estSecouer.value && pageCharger) {
       Haptics.vibrate(HapticsType.rigid); // retour haptique
       nbSecousse++; // on incrémente le nombre de secousse
       accelerometre.estSecouer.value =
@@ -73,7 +73,7 @@ class _ReStartGamePageState extends State<ReStartGamePage> {
   }
 
   void _restartGame() {
-    print("restart pop");
+    Logger().i('Restart Game');
     widget.setRestart(true);
   }
 
@@ -85,7 +85,7 @@ class _ReStartGamePageState extends State<ReStartGamePage> {
     //addPostFrameCallback permet de faire une action après le chargement du widget
     //(_){...} est une fonction anonyme
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      PageCharger = true; // une fois le widget chargé on met à jour la variable
+      pageCharger = true; // une fois le widget chargé on met à jour la variable
     });
 
     return accelerometre;

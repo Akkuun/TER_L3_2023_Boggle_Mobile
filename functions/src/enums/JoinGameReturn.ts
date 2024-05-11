@@ -5,4 +5,5 @@ export enum JoinGameReturn {
     GAME_NOT_FOUND = 3,
     ALREADY_IN_GAME = 4,
     INVALID_PASSWORD = 5,
+    WRONG_GAME_ID = 6
 }

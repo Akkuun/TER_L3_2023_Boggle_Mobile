@@ -2,37 +2,13 @@ import 'dart:async';
 import 'dart:collection';
 import 'package:bouggr/utils/dico.dart';
 import 'package:native_ffi/native_ffi.dart';
-/*
-Future<List<Word>> getAllWords(List<String> grid, Dictionary dico) async {
-  HashMap<String, Word> resMap = HashMap<String, Word>();
-
-  _start(grid, dico, resMap);
-
-  var res = resMap.values.toList();
-  res.sort((a, b) => b.txt.length - a.txt.length);
-  return res;
-}
-*/
-/*
-void _start(List<String> grid, dynamic dico, HashMap<String, Word> rp) {
-  for (var i in const {0, 1, 2, 3}) {
-    for (var j in const {0, 1, 2, 3}) {
-      _init(grid, i, j, dico, grid[i * 4 + j], rp);
-    }
-  }
-}*/
-/*
-void _init(List<String> grid, int i, int j, Dictionary dico, String point,
-    HashMap<String, Word> sp) {
-  var used = List.generate(16, (index) => false);
-  used[i * 4 + j] = true;
-
-  _appendFromPoint(sp, grid, Word(point, [Coord(i, j)]), i, j, used, dico);
-  //_getChild(dico.dictionary[1], point));
-}*/
 
 Future<List<Word>> getAllWords2(List<String> grid, Dictionary dico) async {
   HashMap<String, Word> resMap = HashMap<String, Word>();
+
+  while (dico.dictionary == null) {
+    await dico.ayncLoad();
+  }
 
   _start2(grid, dico, resMap);
 
@@ -59,45 +35,7 @@ void _init2(List<String> grid, int i, int j, Dictionary dico, String point,
 }
 
 const move = {-1, 0, 1};
-/*
-Future<void> _appendFromPoint(HashMap<String, Word> sp, List<String> grid,
-    Word word, int i, int j, List<bool> used, Dictionary dico) async {
-  if (dico.contain(word.txt)) {
-    sp[word.txt] = word;
-  }
 
-  if (!dico.canCreate(word.txt)) {
-    return;
-  }
-
-  int ix, jy, index;
-
-  for (var a in move) {
-    for (var b in move) {
-      ix = a + i;
-      jy = b + j;
-
-      if (ix < 0 || jy < 0 || ix > 3 || jy > 3) {
-        //out of range
-        continue;
-      }
-      index = ix * 4 + jy;
-      if (used[index]) {
-        // can't use the same letter twice
-        continue;
-      }
-
-      var newLetter = grid[index];
-
-      used[index] = true;
-
-      _appendFromPoint(
-          sp, grid, word.append(newLetter, Coord(ix, jy)), ix, jy, used, dico);
-      used[index] = false;
-    }
-  }
-}
-*/
 Future<void> _appendFromPoint2(HashMap<String, Word> sp, List<String> grid,
     Word word, int i, int j, List<bool> used, dynamic node) async {
   var val = node.runtimeType == (List<dynamic>) ? node[0] : node;

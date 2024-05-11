@@ -1,9 +1,10 @@
-import 'package:bouggr/components/btn.dart';
+import 'package:bouggr/components/global/btn.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/game.dart';
@@ -26,61 +27,48 @@ class _EmailLogInState extends State<EmailLogIn> {
   final RegExp validationEmail =
       RegExp(r'^[a-zA-Z0-9.a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$');
 
+  void requetFireBaseConnexion(
+      BuildContext context,
+      Logger logger,
+      FirebaseAuth auth,
+      NavigationServices router,
+      GameServices gameservices) async {
+    logger.i('requetFireBaseConnexion');
+    try {
+      await auth.signInWithEmailAndPassword(
+          email: email.text, password: mdp.text);
+      router.goToPage(PageName.home);
+    } on FirebaseAuthException catch (e) {
+      logger.w(e.message);
+      showErrorDialog(context, gameservices);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameservices = Provider.of<GameServices>(context, listen: false);
-    void requetFireBaseConnexion() async {
-      try {
-        // ignore: unused_local_variable
-        final credential = await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email.text, password: mdp.text);
-        router.goToPage(PageName.home);
-      } on FirebaseAuthException catch (e) {
-        // ignore: avoid_print
-        print(e.message);
-        // ignore: use_build_context_synchronously
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                //pop up
-                title:  Text(Globals.getText(gameservices.language, 28)),
-                content:  Text(
-                    Globals.getText(gameservices.language, 29)),
-                actions: [
-                  ElevatedButton(
-                    child:  Text(Globals.getText(gameservices.language, 30)),
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Ferme la a pop up
-                    },
-                  )
-                ],
-              );
-            });
-        setState(() {
-          //on utilise le setState pour changer l'état de la variable isLoading sinon elle ne changera pas
-          isLoading = false;
-          FocusScope.of(context).unfocus();// force le clavier à se fermer
-        });
-      }
-    }
+    final auth = Provider.of<FirebaseAuth>(context, listen: false);
+    final logger = Logger();
+
+    logger.i('EmailLogIn build');
 
     return Form(
         key: _key,
         child: Column(children: [
           BtnBoggle(
-            onPressed: () {
-              router.goToPage(PageName.emailCreate);
-            },
-            btnSize: BtnSize.large,
-            text: Globals.getText(gameservices.language, 32)
-          ),
+              onPressed: () {
+                router.goToPage(PageName.emailCreate);
+              },
+              btnSize: BtnSize.large,
+              text: Globals.getText(gameservices.language, 32)),
           Padding(
             padding: const EdgeInsets.all(8.0), //cela cert a définir la marge
             child: TextFormField(
+              key: const Key('emailField'),
               controller: email,
-              decoration:  InputDecoration(labelText: Globals.getText(gameservices.language, 34)),
+              decoration: InputDecoration(
+                  labelText: Globals.getText(gameservices.language, 34)),
               keyboardType: TextInputType.emailAddress,
               //c'est pour être sur que l'entrer soit un email fonctionnel ou non
               validator: (value) {
@@ -96,10 +84,11 @@ class _EmailLogInState extends State<EmailLogIn> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
+              key: const Key('passwordField'),
               obscureText: true,
               controller: mdp,
-              decoration:  InputDecoration(
-                labelText:Globals.getText(gameservices.language, 35),
+              decoration: InputDecoration(
+                labelText: Globals.getText(gameservices.language, 35),
               ),
               validator: (value) {
                 if (value!.isEmpty) {
@@ -125,20 +114,49 @@ class _EmailLogInState extends State<EmailLogIn> {
                             setState(() {
                               isLoading = true;
                             });
-                            requetFireBaseConnexion();
+                            requetFireBaseConnexion(
+                                context, logger, auth, router, gameservices);
                           }
                         },
-                        child:  Text(Globals.getText(gameservices.language, 39)),
+                        child: Text(Globals.getText(gameservices.language, 39)),
                       ),
-
-          ),BtnBoggle(
-            onPressed: () {
-              router.goToPage(PageName.login);
-            },
-            btnType: BtnType.secondary,
-            btnSize: BtnSize.small,
-            text: Globals.getText(gameservices.language, 14)
           ),
+          BtnBoggle(
+              onPressed: () {
+                router.goToPage(PageName.login);
+              },
+              btnType: BtnType.secondary,
+              btnSize: BtnSize.small,
+              text: Globals.getText(gameservices.language, 14)),
         ]));
+  }
+
+  void showErrorDialog(BuildContext context, GameServices gameservices) {
+    if (mounted) {
+      //si la page n'est pas montée on ne fait rien
+      showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              //pop up
+              title: Text(Globals.getText(gameservices.language, 28)),
+              content: Text(Globals.getText(gameservices.language, 29)),
+              actions: [
+                ElevatedButton(
+                  child: Text(Globals.getText(gameservices.language, 30)),
+                  onPressed: () {
+                    Navigator.of(context).pop(); // Ferme la a pop up
+                  },
+                )
+              ],
+            );
+          });
+
+      setState(() {
+        //on utilise le setState pour changer l'état de la variable isLoading sinon elle ne changera pas
+        isLoading = false;
+        FocusScope.of(context).unfocus(); // force le clavier à se fermer
+      });
+    }
   }
 }

@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:bouggr/components/accelerometre.dart';
-import 'package:bouggr/components/btn.dart';
+import 'package:bouggr/components/global/btn.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
@@ -29,8 +29,7 @@ class StartGamePage extends StatefulWidget {
 class _StartGamePageState extends State<StartGamePage> {
   late BoggleAccelerometre accelerometre;
 
-  // ignore: non_constant_identifier_names
-  bool PageCharger = false;
+  bool pageCharger = false;
   int nbSecousse = 0;
   int secousseDemander = 10;
   static const _textStyle = TextStyle(
@@ -61,7 +60,7 @@ class _StartGamePageState extends State<StartGamePage> {
 
   Future<void> _surDetectionSecousse() async {
     await Future.delayed(const Duration(milliseconds: 500));
-    if (accelerometre.estSecouer.value && PageCharger) {
+    if (accelerometre.estSecouer.value && pageCharger) {
       Haptics.vibrate(HapticsType.rigid); // retour haptique
       nbSecousse++; // on incrémente le nombre de secousse
       accelerometre.estSecouer.value =
@@ -103,7 +102,7 @@ class _StartGamePageState extends State<StartGamePage> {
     //addPostFrameCallback permet de faire une action après le chargement du widget
     //(_){...} est une fonction anonyme
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      PageCharger = true; // une fois le widget chargé on met à jour la variable
+      pageCharger = true; // une fois le widget chargé on met à jour la variable
     });
 
     final router = Provider.of<NavigationServices>(context, listen: false);
@@ -114,7 +113,7 @@ class _StartGamePageState extends State<StartGamePage> {
       child: Column(
         children: [
           accelerometre,
-           Text(
+          Text(
             Globals.getText(gameServices.language, 15),
             textAlign: TextAlign.center,
             style: _textStyle,
@@ -136,27 +135,26 @@ class _StartGamePageState extends State<StartGamePage> {
             ),
           ),
           SizedBox(height: h * 0.05),
-           Text( Globals.getText(gameServices.language, 16), textAlign: TextAlign.center, style: _textStyle),
+          Text(Globals.getText(gameServices.language, 16),
+              textAlign: TextAlign.center, style: _textStyle),
           SizedBox(height: h * 0.1),
           BtnBoggle(
-            onPressed: () {
-              if (gameServices.start()) {
-                playSoundBegin();
-                backgroundMusicPlayer.playOST();
-                router.goToPage(PageName.game);
-              }
-            },
-            btnSize: BtnSize.large,
-            text: Globals.getText(gameServices.language, 17)
-          ),
+              onPressed: () {
+                if (gameServices.start()) {
+                  playSoundBegin();
+                  backgroundMusicPlayer.playOST();
+                  router.goToPage(PageName.game);
+                }
+              },
+              btnSize: BtnSize.large,
+              text: Globals.getText(gameServices.language, 17)),
           BtnBoggle(
-            onPressed: () {
-              router.goToPage(PageName.home);
-            },
-            btnType: BtnType.secondary,
-            btnSize: BtnSize.small,
-            text: Globals.getText(gameServices.language, 14)
-          ),
+              onPressed: () {
+                router.goToPage(PageName.home);
+              },
+              btnType: BtnType.secondary,
+              btnSize: BtnSize.small,
+              text: Globals.getText(gameServices.language, 14)),
         ],
       ),
     );
@@ -168,6 +166,5 @@ void playSoundBegin() async {
 
   String path =
       "audio/Melange$i.mp3"; // recupère le chemin du fichier audio associé en fonction de i (Melange 1 ou Melange 2)
-  print("sound play \n\n");
   await player.play(AssetSource(path));
 }

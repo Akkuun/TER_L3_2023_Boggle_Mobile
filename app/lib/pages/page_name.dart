@@ -3,6 +3,7 @@ enum PageName {
   game,
   multiplayerGame,
   multiplayerCreateJoin,
+  multiplayerGameWait,
   rules,
   stats,
   login,
@@ -13,5 +14,6 @@ enum PageName {
   settings,
   startGame,
   detail,
+  detailMulti,
   ;
 }

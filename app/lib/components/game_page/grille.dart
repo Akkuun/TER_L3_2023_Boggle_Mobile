@@ -1,8 +1,7 @@
 import 'package:bouggr/components/game_page/dices.dart';
-import 'package:bouggr/global.dart';
 import 'package:bouggr/providers/game.dart';
-import 'package:bouggr/utils/dico.dart';
-import 'package:bouggr/utils/word_score.dart';
+import 'package:bouggr/providers/realtimegame.dart';
+import 'package:bouggr/utils/get_all_word.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -24,18 +23,15 @@ class _BoggleGrilleState extends State<BoggleGrille> {
   final key = GlobalKey();
   final Set<BoggleDiceRender> _trackTaped = <BoggleDiceRender>{};
   String currentWord = "";
-  bool isCurrentWordValid = false;
+
   bool lock = false;
   late GameServices gameServices;
-  late Dictionary _dictionary;
 
   @override
   void initState() {
     super.initState();
     gameServices = Provider.of<GameServices>(context, listen: false);
-
-    _dictionary = Globals.selectDictionary(gameServices.language);
-    _dictionary.load();
+    gameServices.loadDictionary();
   }
 
   _detectTapedItem(PointerEvent event) {
@@ -64,7 +60,6 @@ class _BoggleGrilleState extends State<BoggleGrille> {
     if (_trackTaped.isNotEmpty) {
       final last = _trackTaped.last;
       if (_isAdjacent(target, last)) {
-        isCurrentWordValid = _isWordValid(newWord);
         _trackTaped.add(target);
         _selectIndex(target.index);
       } else {
@@ -94,21 +89,10 @@ class _BoggleGrilleState extends State<BoggleGrille> {
     });
   }
 
-  bool _isWordValid(String word) {
-    if (word.length < 3) {
-      return false;
-    }
-    return _dictionary.contain(word);
-  }
-
-  bool _endWordSelection(String word, List<(int, int)> indexes) {
-    if (gameServices.isInWordList(word) || !_isWordValid(word)) {
-      gameServices.addStrike();
-      return false;
-    }
-    gameServices.addScore(wordScore(word));
-    gameServices.addWord(word);
-    return true;
+  void _endWordSelection(String word, List<(int, int)> indexes) {
+    var coords = indexes.map((e) => Coord(e.$1, e.$2)).toList();
+    gameServices.chechWord(Word(word, coords),
+        Provider.of<RealtimeGameProvider>(context, listen: false).gameCode);
   }
 
   void _sendWordToGameLogicAndClear(PointerUpEvent event) {
@@ -128,73 +112,78 @@ class _BoggleGrilleState extends State<BoggleGrille> {
       selectedIndexes.clear();
       lock = false;
       currentWord = "";
-      isCurrentWordValid = false;
     });
   }
 
+  static var boxShadow = BoxShadow(
+    color: Colors.black.withOpacity(0.25),
+    blurRadius: 4,
+    offset: const Offset(4, 4),
+  );
+
   @override
   Widget build(BuildContext context) {
-    GameServices gameServices = context.watch<GameServices>();
+    GameServices game = context.watch<GameServices>();
 
-    setState(() {
-      _dictionary = Globals.selectDictionary(gameServices.language);
-    });
     var width = MediaQuery.of(context).size.width;
+
     return Center(
-      child: Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Theme.of(context).secondaryHeaderColor,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.25),
-                blurRadius: 4,
-                offset: const Offset(4, 4),
-              ),
-            ]),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-          child: SizedBox(
-            height: width,
-            width: width - 50,
-            child: Listener(
-              onPointerDown:
-                  !gameServices.triggerPopUp ? _detectTapedItem : null,
-              onPointerMove:
-                  !gameServices.triggerPopUp ? _detectTapedItem : null,
-              onPointerUp: _sendWordToGameLogicAndClear,
-              child: GridView.builder(
-                key: key,
-                itemCount: 16,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  childAspectRatio: 1.0,
-                  crossAxisSpacing: 16.0,
-                  mainAxisSpacing: 16.0,
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Theme.of(context).secondaryHeaderColor,
+              boxShadow: [
+                boxShadow,
+              ]),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            child: SizedBox(
+              height: width,
+              width: width - 50,
+              child: Listener(
+                onPointerDown: !game.triggerPopUp ? _detectTapedItem : null,
+                onPointerMove: !game.triggerPopUp ? _detectTapedItem : null,
+                onPointerUp: _sendWordToGameLogicAndClear,
+                child: GridView.builder(
+                  key: key,
+                  itemCount: 16,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    childAspectRatio: 1.0,
+                    crossAxisSpacing: 16.0,
+                    mainAxisSpacing: 16.0,
+                  ),
+                  itemBuilder: (context, index) {
+                    return BoggleDice(
+                      index: index,
+                      letter: gameServices.letters[index],
+                      color: _colorForIndex(index, game),
+                    );
+                  },
                 ),
-                itemBuilder: (context, index) {
-                  return BoggleDice(
-                    index: index,
-                    letter: gameServices.letters[index],
-                    color: selectedIndexes.contains(index)
-                        ? isCurrentWordValid
-                            ? Theme.of(context).primaryColor
-                            : Colors.red
-                        : gameServices.tipsIndex != null
-                            ? gameServices.tipsIndex!.x * 4 +
-                                        gameServices.tipsIndex!.y ==
-                                    index
-                                ? Colors.green
-                                : Colors.white
-                            : Colors.white,
-                  );
-                },
               ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  Color _colorForIndex(int index, GameServices gm) {
+    if (selectedIndexes.contains(index)) {
+      return Theme.of(context).primaryColor;
+    }
+    if (gm.tipsIndex != null) {
+      if (gm.tipsIndex!.x * 4 + gm.tipsIndex!.y == index) {
+        return const Color.fromARGB(255, 78, 76, 175);
+      }
+    }
+    if (gm.validWords.map((e) => e.x * 4 + e.y).contains(index)) {
+      return Colors.green;
+    }
+    return Colors.white;
   }
 }

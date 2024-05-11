@@ -1,24 +1,23 @@
 //components
 
 import 'dart:math';
-import 'package:bouggr/components/btn.dart';
-import 'package:bouggr/components/popup.dart';
+import 'package:bouggr/components/global/btn.dart';
+import 'package:bouggr/components/global/popup.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/timer.dart';
-import 'package:bouggr/utils/game_data.dart';
+import 'package:bouggr/utils/background_music_player.dart';
 import 'package:bouggr/utils/game_result.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../utils/background_music_player.dart';
-
-BackgroundMusicPlayer backgroundMusicPlayer = BackgroundMusicPlayer.instance;
-
 class PopUpGameMenu extends StatelessWidget {
-  const PopUpGameMenu({super.key});
+  const PopUpGameMenu({
+    super.key,
+  });
 
   /// Count the number of words found by length in the current game
   List<int> _countWordsByLength(GameServices gameServices) {
@@ -36,6 +35,9 @@ class PopUpGameMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var uid =
+        Provider.of<FirebaseAuth>(context, listen: false).currentUser?.uid ??
+            "";
     // is in listen: false because we don't need to get the update from the navigation action
     NavigationServices navigationServices =
         Provider.of<NavigationServices>(context, listen: false);
@@ -75,7 +77,7 @@ class PopUpGameMenu extends StatelessWidget {
                       IconBtnBoggle(
                         icon: const Icon(Icons.close_rounded),
                         onPressed: () {
-                          backgroundMusicPlayer.resume();
+                          BackgroundMusicPlayer.instance.resume();
                           gameServices.toggle(false);
                           timerServices.start();
                         },
@@ -84,27 +86,21 @@ class PopUpGameMenu extends StatelessWidget {
                       ),
                     ],
                   ),
-                   Text(Globals.getText(gameServices.language, 24), style: TextStyle(fontSize: 30)),
-                  Text("${gameServices.score} ${Globals.getText(gameServices.language, 57)}",
+                  Text(Globals.getText(gameServices.language, 24),
+                      style: const TextStyle(fontSize: 30)),
+                  Text(
+                      "${gameServices.score} ${Globals.getText(gameServices.language, 57)}",
                       style: const TextStyle(fontSize: 20)),
                   BtnBoggle(
                     onPressed: () {
-                      gameServices.stop();
-                      GameDataStorage.saveGameResult(gameResult);
-
-                      timerServices.resetProgress();
-
-                      navigationServices.goToPage(PageName.detail);
+                      gameServices.leaveGame(context, uid, gameResult);
+                      gameServices.checkDetails(context);
                     },
                     text: Globals.getText(gameServices.language, 27),
                   ),
                   BtnBoggle(
                     onPressed: () {
-                      gameServices.stop();
-
-                      GameDataStorage.saveGameResult(gameResult);
-
-                      timerServices.resetProgress();
+                      gameServices.leaveGame(context, uid, gameResult);
                       gameServices.reset();
                       navigationServices.goToPage(PageName.home);
                     },
@@ -112,11 +108,8 @@ class PopUpGameMenu extends StatelessWidget {
                   ),
                   BtnBoggle(
                       onPressed: () {
-                        gameServices.stop();
-
-                        GameDataStorage.saveGameResult(gameResult);
+                        gameServices.leaveGame(context, uid, gameResult);
                         gameServices.reset();
-                        timerServices.resetProgress();
                         navigationServices.goToPage(PageName.home);
                       },
                       text: Globals.getText(gameServices.language, 26),

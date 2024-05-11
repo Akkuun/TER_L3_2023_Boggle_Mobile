@@ -23,36 +23,40 @@ class Stat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          height: 128,
-          padding: const EdgeInsets.all(4),
-          decoration: BoxDecoration(
-            color: Colors.lightBlue[isDarker ? 100 : 50],
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        height: 128,
+        padding: const EdgeInsets.all(4),
+        decoration: BoxDecoration(
+          color: Colors.lightBlue[isDarker ? 100 : 50],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            const SizedBox(width: 8),
+            MiniGrid(grid: grid, height: 102, width: 102),
+            const SizedBox(width: 8),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                MiniGrid(grid: grid, height: 102, width: 102),
+                Text(
+                  'Score : $statValue',
+                  style: TextStyle(
+                      fontSize: fontSize, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
                 Text(
                   statName,
-                  style: TextStyle(fontSize: fontSize),
+                  style: TextStyle(
+                      fontSize: fontSize - 2, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox.shrink(),
-                Text(
-                  statValue,
-                  style: TextStyle(fontSize: fontSize),
-                  textAlign: TextAlign.right,
-                ),
-                const SizedBox.shrink(),
               ],
             ),
-          ),
-        ));
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -74,7 +78,7 @@ class MiniGrid extends StatelessWidget {
       height: height,
       width: width,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color.fromRGBO(48, 108, 164, 1),
         borderRadius: BorderRadius.circular(5),
         boxShadow: const [
           BoxShadow(
@@ -99,7 +103,8 @@ class MiniGrid extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(5),
-                border: Border.all(color: Colors.black),
+                border:
+                    Border.all(color: const Color.fromRGBO(48, 108, 164, 1)),
               ),
               child: Center(
                 child: Text(
