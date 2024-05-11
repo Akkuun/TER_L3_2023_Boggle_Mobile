@@ -35,19 +35,12 @@ jobs:
 
       - name: Install Dependencies
         run: flutter pub get
-      
-      - name : go to app directory
-        run: |
-          cd app
-          ls -l 
-          pwd
-
-      - name : Install dependencies
-        run: |
-          flutter pub get
 
       - name: Run Tests
-        run: flutter test
+        run: |
+          cd app
+          flutter pub get
+          flutter test
 
   build_apk:
     name: Build the APK Version
