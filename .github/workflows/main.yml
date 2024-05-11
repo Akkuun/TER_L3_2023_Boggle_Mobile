@@ -39,6 +39,8 @@ jobs:
       - name : go to app directory
         run: |
           cd app
+          ls -l 
+          pwd
 
       - name : Install dependencies
         run: |
