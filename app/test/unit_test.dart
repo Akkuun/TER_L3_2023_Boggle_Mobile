@@ -212,9 +212,4 @@ void main() {
     });
   });
 
-  //Fermer l'application car les tests se sont effectuer
-  /*tearDownAll(() {
-    logger.i('Fermeture de l\'application');
-    SystemNavigator.pop();
-  });*/
 }

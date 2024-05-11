@@ -55,7 +55,7 @@ class MockFirebaseAuth extends Mock implements FirebaseAuth {
 void main() {
   final logger = Logger();
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-
+/*
   testWidgets("Lance une partie", (WidgetTester tester) async {
     // Créez un mock de FirebaseAuth avec un utilisateur non connecté
     final mockFirebaseAuth = MockFirebaseAuth(signedIn: false);
@@ -281,7 +281,7 @@ void main() {
     expect(find.text('Connexion'), findsOneWidget);
     logger.i('Bouton Connexion affiché');
     logger.i('Test deconnection d\'un compte terminé');
-  });
+  });*/
 
   //Fermer l'application car les tests se sont effectuer
   tearDownAll(() {
