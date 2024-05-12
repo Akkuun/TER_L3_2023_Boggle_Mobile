@@ -1,3 +1,4 @@
+import 'package:bouggr/components/stats_page/post_game_detail.dart';
 import 'package:flutter/material.dart';
 
 class Stat extends StatelessWidget {
@@ -46,11 +47,12 @@ class Stat extends StatelessWidget {
                       fontSize: fontSize, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),
-                Text(
-                  statName,
-                  style: TextStyle(
-                      fontSize: fontSize - 2, fontWeight: FontWeight.bold),
-                ),
+                PostGameDetail(grid: grid),
+                //Text(
+                //  statName,
+                //  style: TextStyle(
+                //      fontScaize: fontSize - 2, fontWeight: FontWeight.bold),
+                //),
               ],
             ),
           ],

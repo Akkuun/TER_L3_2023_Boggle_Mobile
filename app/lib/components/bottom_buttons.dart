@@ -1,3 +1,4 @@
+import 'package:bouggr/providers/post_game_services.dart';
 import 'package:flutter/material.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/navigation.dart';
@@ -50,6 +51,11 @@ class BottomButtons extends StatelessWidget {
                                 ? Colors.white
                                 : const Color.fromARGB(255, 21, 75, 105)),
                         onPressed: () {
+                          Provider.of<PostGameServices>(context, listen: false)
+                              .resetSelectedWord();
+                          Provider.of<PostGameServices>(context, listen: false)
+                              .hidePopUp();
+
                           router.goToPage(PageName.home);
                         },
                         btnType: index == PageName.home
@@ -70,6 +76,11 @@ class BottomButtons extends StatelessWidget {
                                 ? Colors.white
                                 : const Color.fromARGB(255, 21, 75, 105)),
                         onPressed: () {
+                          Provider.of<PostGameServices>(context, listen: false)
+                              .resetSelectedWord();
+                          Provider.of<PostGameServices>(context, listen: false)
+                              .hidePopUp();
+
                           router.goToPage(PageName.stats);
                         },
                         btnType: index == PageName.stats
