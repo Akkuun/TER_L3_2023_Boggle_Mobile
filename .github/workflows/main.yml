@@ -94,7 +94,6 @@ jobs:
           app/build/app/outputs/flutter-apk/*.apk
         token: ${{ secrets.PIPELINE_SECRET_BOOGLE_L3 }}
         tag_name: v1.0.${{ github.run_number }}
-        release_name: Release v1.0.${{ github.run_number }}
       env:
         GITHUB_TOKEN: ${{ secrets.PIPELINE_SECRET_BOOGLE_L3 }}
 
