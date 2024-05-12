@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:bouggr/components/stats_page/post_game_detail_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:bouggr/components/bottom_buttons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,113 +32,120 @@ class _StatsPageState extends State<StatsPage> {
         titleHeight -
         paginationButtonsHeight;
 
-    return BottomButtons(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: SizedBox(
-              height: titleHeight,
-              child: Center(
-                child: Text.rich(
-                  TextSpan(
-                    children: [
+    return Stack(
+      children: [
+        BottomButtons(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(16),
+                child: SizedBox(
+                  height: titleHeight,
+                  child: Center(
+                    child: Text.rich(
                       TextSpan(
-                        text: 'St',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 64,
-                          fontFamily: 'Jua',
-                          fontWeight: FontWeight.w400,
-                          height: 0,
-                        ),
+                        children: [
+                          TextSpan(
+                            text: 'St',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 64,
+                              fontFamily: 'Jua',
+                              fontWeight: FontWeight.w400,
+                              height: 0,
+                            ),
+                          ),
+                          TextSpan(
+                            text: 'a',
+                            style: TextStyle(
+                              color: Color(0xFF1F87B3),
+                              fontSize: 64,
+                              fontFamily: 'Jua',
+                              fontWeight: FontWeight.w400,
+                              height: 0,
+                            ),
+                          ),
+                          TextSpan(
+                            text: 'ts',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 64,
+                              fontFamily: 'Jua',
+                              fontWeight: FontWeight.w400,
+                              height: 0,
+                            ),
+                          ),
+                        ],
                       ),
-                      TextSpan(
-                        text: 'a',
-                        style: TextStyle(
-                          color: Color(0xFF1F87B3),
-                          fontSize: 64,
-                          fontFamily: 'Jua',
-                          fontWeight: FontWeight.w400,
-                          height: 0,
-                        ),
-                      ),
-                      TextSpan(
-                        text: 'ts',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 64,
-                          fontFamily: 'Jua',
-                          fontWeight: FontWeight.w400,
-                          height: 0,
-                        ),
-                      ),
-                    ],
+                      textAlign: TextAlign.center,
+                    ),
                   ),
-                  textAlign: TextAlign.center,
                 ),
               ),
-            ),
-          ),
-          Container(
-            height: statContainerHeight,
-            decoration: ShapeDecoration(
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+              Container(
+                height: statContainerHeight,
+                decoration: ShapeDecoration(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  shadows: const [
+                    BoxShadow(
+                      color: Color(0x3F000000),
+                      blurRadius: 4,
+                      offset: Offset(0, 4),
+                      spreadRadius: 0,
+                    )
+                  ],
+                ),
+                child: FutureBuilder<List<String>>(
+                  future: _fetchGameResults(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    } else if (snapshot.hasData) {
+                      allResults = snapshot.data!;
+                      final currentPageResults =
+                          _getCurrentPageResults(allResults);
+                      List<Widget> statWidgets =
+                          currentPageResults.map((party) {
+                        return Stat(
+                          key: UniqueKey(),
+                          grid: jsonDecode(party)['grid'],
+                          statName: 'mot',
+                          statValue: jsonDecode(party)['score'].toString(),
+                        );
+                      }).toList();
+                      return Column(
+                        children: [
+                          Expanded(
+                            child: ListView(
+                              children: statWidgets,
+                            ),
+                          ),
+                          _buildPaginationButtons(),
+                        ],
+                      );
+                    } else {
+                      return const Center(
+                        child: Text('No data'),
+                      );
+                    }
+                  },
+                ),
               ),
-              shadows: const [
-                BoxShadow(
-                  color: Color(0x3F000000),
-                  blurRadius: 4,
-                  offset: Offset(0, 4),
-                  spreadRadius: 0,
-                )
-              ],
-            ),
-            child: FutureBuilder<List<String>>(
-              future: _fetchGameResults(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  );
-                } else if (snapshot.hasData) {
-                  allResults = snapshot.data!;
-                  final currentPageResults = _getCurrentPageResults(allResults);
-                  List<Widget> statWidgets = currentPageResults.map((party) {
-                    return Stat(
-                      key: UniqueKey(),
-                      grid: jsonDecode(party)['grid'],
-                      statName: 'mot',
-                      statValue: jsonDecode(party)['score'].toString(),
-                    );
-                  }).toList();
-                  return Column(
-                    children: [
-                      Expanded(
-                        child: ListView(
-                          children: statWidgets,
-                        ),
-                      ),
-                      _buildPaginationButtons(),
-                    ],
-                  );
-                } else {
-                  return const Center(
-                    child: Text('No data'),
-                  );
-                }
-              },
-            ),
+            ],
           ),
-        ],
-      ),
+        ),
+        const PostGameDetailPopUp()
+      ],
     );
   }
 
