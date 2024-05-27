@@ -22,11 +22,13 @@ class RealtimeGameProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void initListeners() {
+  void initListeners(
+    FirebaseDatabase database,
+  ) {
     // Ici on va initialiser les listeners pour écouter les changements
     // dans la base de données
 
-    dbRef = FirebaseDatabase.instance.ref('games/$_gameCode');
+    dbRef = database.ref('games/$_gameCode');
     dbRefSub = dbRef!.onValue.listen((DatabaseEvent event) {
       final data =
           Map<String, dynamic>.from(event.snapshot.value as Map? ?? {});
@@ -57,10 +59,10 @@ class RealtimeGameProvider extends ChangeNotifier {
     return _game;
   }
 
-  void initRealtimeService(gameId) {
+  void initRealtimeService(gameId, FirebaseDatabase database) {
     _gameCode = gameId;
     _game = {};
-    initListeners();
+    initListeners(database);
     notifyListeners();
   }
 }

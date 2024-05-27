@@ -134,9 +134,10 @@ class GameWaitPage extends StatelessWidget {
             BtnBoggle(
               // Start game
               onPressed: () async {
-                final rep = await FirebaseFunctions.instance
-                    .httpsCallable('StartGame')
-                    .call({
+                final rep =
+                    await Provider.of<FirebaseFunctions>(context, listen: false)
+                        .httpsCallable('StartGame')
+                        .call({
                   "gameId": rm.gameCode,
                   "userId": user!.uid,
                 });
@@ -154,7 +155,10 @@ class GameWaitPage extends StatelessWidget {
               onPressed: () {
                 Provider.of<RealtimeGameProvider>(context, listen: false)
                     .onDispose();
-                FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
+
+                Provider.of<FirebaseFunctions>(context, listen: false)
+                    .httpsCallable('LeaveGame')
+                    .call({
                   "userId": user!.uid,
                 });
 

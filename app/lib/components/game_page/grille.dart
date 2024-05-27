@@ -1,4 +1,5 @@
 import 'package:bouggr/components/game_page/dices.dart';
+import 'package:bouggr/providers/firebase.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/realtimegame.dart';
 import 'package:bouggr/utils/get_all_word.dart';
@@ -91,8 +92,11 @@ class _BoggleGrilleState extends State<BoggleGrille> {
 
   void _endWordSelection(String word, List<(int, int)> indexes) {
     var coords = indexes.map((e) => Coord(e.$1, e.$2)).toList();
-    gameServices.chechWord(Word(word, coords),
-        Provider.of<RealtimeGameProvider>(context, listen: false).gameCode);
+    gameServices.chechWord(
+        Word(word, coords),
+        Provider.of<RealtimeGameProvider>(context, listen: false).gameCode,
+        Provider.of<FirebaseProvider>(context, listen: false).firebaseFunctions,
+        Provider.of<FirebaseProvider>(context, listen: false).firebaseAuth);
   }
 
   void _sendWordToGameLogicAndClear(PointerUpEvent event) {

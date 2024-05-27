@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:bouggr/components/stats_page/post_game_detail_popup.dart';
+import 'package:bouggr/providers/firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:bouggr/components/bottom_buttons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:bouggr/components/stats_page/stat.dart';
 import 'package:bouggr/utils/game_data.dart';
+import 'package:provider/provider.dart';
 
 class StatsPage extends StatefulWidget {
   const StatsPage({super.key});
@@ -100,7 +102,13 @@ class _StatsPageState extends State<StatsPage> {
                   ],
                 ),
                 child: FutureBuilder<List<String>>(
-                  future: _fetchGameResults(),
+                  future: _fetchGameResults(
+                      Provider.of<FirebaseProvider>(
+                        context,
+                        listen: true,
+                      ).user,
+                      Provider.of<FirebaseProvider>(context, listen: false)
+                          .firebaseFirestore),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
@@ -189,36 +197,32 @@ class _StatsPageState extends State<StatsPage> {
     return (allResults.length / 4).ceil();
   }
 
-  static Future<List<String>> _fetchGameResults() async {
-    final user = FirebaseAuth.instance.currentUser;
+  static Future<List<String>> _fetchGameResults(
+      User? user, FirebaseFirestore firestore) async {
     if (user != null) {
       // récupérer les données depuis Firebase
-      return _fetchFirebaseGameResults();
+      return _fetchFirebaseGameResults(user, firestore);
     } else {
       // récupérer les données depuis le stockage local
       return GameDataStorage.loadGameResults();
     }
   }
 
-  static Future<List<String>> _fetchFirebaseGameResults() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final List<String> results = [];
-      final querySnapshot = await FirebaseFirestore.instance
-          .collection('user_solo_games')
-          .doc(user.uid)
-          .collection('gameResults')
-          .orderBy('score', descending: true) // Tri par score décroissant
-          .limit(20)
-          .get();
+  static Future<List<String>> _fetchFirebaseGameResults(
+      User user, FirebaseFirestore firestore) async {
+    final List<String> results = [];
+    final querySnapshot = await firestore
+        .collection('user_solo_games')
+        .doc(user.uid)
+        .collection('gameResults')
+        .orderBy('score', descending: true) // Tri par score décroissant
+        .limit(20)
+        .get();
 
-      for (final doc in querySnapshot.docs) {
-        results.add(jsonEncode(doc.data()));
-      }
-
-      return results;
-    } else {
-      return [];
+    for (final doc in querySnapshot.docs) {
+      results.add(jsonEncode(doc.data()));
     }
+
+    return results;
   }
 }

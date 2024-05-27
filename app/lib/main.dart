@@ -1,10 +1,15 @@
 import 'package:bouggr/providers/end_game_service.dart';
+import 'package:bouggr/providers/firebase.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/post_game_services.dart';
 import 'package:bouggr/providers/realtimegame.dart';
 import 'package:bouggr/providers/timer.dart';
 import 'package:bouggr/router.dart';
+import 'package:bouggr/utils/game_data.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,8 +27,13 @@ void main() async {
   );
 
   runApp(
-    Provider<FirebaseAuth>(
-      create: (_) => FirebaseAuth.instance,
+    Provider<FirebaseProvider>(
+      create: (_) => FirebaseProvider(
+        FirebaseAuth.instance,
+        FirebaseFirestore.instance,
+        FirebaseDatabase.instance,
+        FirebaseFunctions.instance,
+      ),
       child: const App(),
     ),
   );
@@ -37,6 +47,10 @@ class App extends StatelessWidget {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp]); // Force portrait mode
+    GameDataStorage.init(
+      Provider.of<FirebaseProvider>(context, listen: false).firebaseFirestore,
+    );
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => NavigationServices()),
