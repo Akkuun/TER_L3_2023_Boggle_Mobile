@@ -5,6 +5,7 @@ import 'package:bouggr/components/global/title.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/end_game_service.dart';
+import 'package:bouggr/providers/firebase.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,7 +21,8 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
-    final firebaseAuth = Provider.of<FirebaseAuth>(context, listen: false);
+    final firebaseAuth =
+        Provider.of<FirebaseProvider>(context, listen: false).firebaseAuth;
     Widget welcomeWidget;
     var logger = Logger();
 

@@ -3,6 +3,7 @@
 import 'package:bouggr/components/game_page/game_front.dart';
 import 'package:bouggr/components/game_page/pop_up_game_menu.dart';
 import 'package:bouggr/components/game_page/wave.dart';
+import 'package:bouggr/providers/firebase.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
@@ -24,8 +25,7 @@ class GameWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isMulti) {
-      if (Provider.of<FirebaseAuth>(context, listen: false).currentUser ==
-          null) {
+      if (Provider.of<FirebaseProvider>(context, listen: true).user == null) {
         Provider.of<NavigationServices>(context, listen: false)
             .goToPage(PageName.login);
       }

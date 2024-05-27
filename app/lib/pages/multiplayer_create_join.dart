@@ -154,7 +154,8 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
   @override
   Widget build(BuildContext context) {
     Globals.resetMultiplayerData();
-    final fireAuth = Provider.of<FirebaseAuth>(context, listen: false);
+    final fireAuth =
+        Provider.of<FirebaseProvider>(context, listen: false).firebaseAuth;
     final rm = Provider.of<RealtimeGameProvider>(context, listen: false);
     final router = Provider.of<NavigationServices>(context, listen: false);
     final realtimeDatabase =

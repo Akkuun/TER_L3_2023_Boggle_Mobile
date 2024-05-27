@@ -5,6 +5,7 @@ import 'package:bouggr/components/global/btn.dart';
 import 'package:bouggr/components/global/popup.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
+import 'package:bouggr/providers/firebase.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/timer.dart';
@@ -36,8 +37,7 @@ class PopUpGameMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var uid =
-        Provider.of<FirebaseAuth>(context, listen: false).currentUser?.uid ??
-            "";
+        Provider.of<FirebaseProvider>(context, listen: true).user?.uid ?? "";
     // is in listen: false because we don't need to get the update from the navigation action
     NavigationServices navigationServices =
         Provider.of<NavigationServices>(context, listen: false);

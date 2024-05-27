@@ -1,3 +1,4 @@
+import 'package:bouggr/providers/firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
@@ -36,7 +37,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _changePassword() async {
     final gameservices = Provider.of<GameServices>(context, listen: false);
-    final auth = Provider.of<FirebaseAuth>(context, listen: false);
+    final auth =
+        Provider.of<FirebaseProvider>(context, listen: false).firebaseAuth;
     try {
       User? user = auth.currentUser;
       if (user != null && _password != null && _confirmPassword != null) {
@@ -82,7 +84,8 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     var router = Provider.of<NavigationServices>(context, listen: false);
     final gameservices = Provider.of<GameServices>(context, listen: false);
-    final auth = Provider.of<FirebaseAuth>(context, listen: false);
+    final auth =
+        Provider.of<FirebaseProvider>(context, listen: false).firebaseAuth;
 
     const textStyleJUA = TextStyle(
       color: Colors.black,

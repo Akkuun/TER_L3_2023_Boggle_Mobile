@@ -4,6 +4,7 @@ import 'package:bouggr/components/global/btn.dart';
 import 'package:bouggr/components/game_page/only_multi/player_in_list.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
+import 'package:bouggr/providers/firebase.dart';
 import 'package:bouggr/utils/player_leaderboard.dart';
 import 'package:flutter/services.dart';
 
@@ -75,7 +76,7 @@ class GameWaitPage extends StatelessWidget {
       });
     }
 
-    User? user = Provider.of<FirebaseAuth>(context, listen: false).currentUser;
+    User? user = Provider.of<FirebaseProvider>(context, listen: false).user;
 
     return SizedBox(
       height: MediaQuery.of(context).size.height,
@@ -124,13 +125,15 @@ class GameWaitPage extends StatelessWidget {
           if (data != null &&
               data["players"] != null &&
               data["players"].length > 1 &&
-              data["players"][Provider.of<FirebaseAuth>(context, listen: false)
-                      .currentUser!
-                      .uid] !=
+              data["players"][
+                      Provider.of<FirebaseProvider>(context, listen: false)
+                          .user!
+                          .uid] !=
                   null &&
-              data["players"][Provider.of<FirebaseAuth>(context, listen: false)
-                  .currentUser!
-                  .uid]["leader"])
+              data["players"][
+                  Provider.of<FirebaseProvider>(context, listen: false)
+                      .user!
+                      .uid]["leader"])
             BtnBoggle(
               // Start game
               onPressed: () async {
