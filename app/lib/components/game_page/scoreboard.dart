@@ -34,7 +34,8 @@ class ScoreBoard extends StatelessWidget {
       }
       playerLeaderboard.computeRank();
       rank = playerLeaderboard.getRank(
-          Provider.of<FirebaseProvider>(context, listen: false).user!.uid);
+          Provider.of<FirebaseProvider>(context, listen: false).user?.uid ??
+              '');
     }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
