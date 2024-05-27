@@ -11,7 +11,6 @@ import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/timer.dart';
 import 'package:bouggr/utils/background_music_player.dart';
 import 'package:bouggr/utils/game_result.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

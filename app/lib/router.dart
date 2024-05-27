@@ -15,7 +15,7 @@ import 'package:bouggr/pages/stats.dart';
 import 'package:bouggr/providers/firebase.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/game.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -33,7 +33,7 @@ class JoinMulti extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User? user = Provider.of<FirebaseProvider>(context, listen: false).user;
+    var user = Provider.of<FirebaseProvider>(context, listen: false).user;
     if (user != null) {
       return const MultiplayerCreateJoinPage();
     } else {

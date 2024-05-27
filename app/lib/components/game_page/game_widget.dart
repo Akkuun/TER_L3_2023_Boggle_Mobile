@@ -4,7 +4,6 @@ import 'package:bouggr/components/game_page/game_front.dart';
 import 'package:bouggr/components/game_page/pop_up_game_menu.dart';
 import 'package:bouggr/components/game_page/wave.dart';
 import 'package:bouggr/providers/firebase.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:bouggr/pages/page_name.dart';

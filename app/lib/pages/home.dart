@@ -8,7 +8,6 @@ import 'package:bouggr/providers/end_game_service.dart';
 import 'package:bouggr/providers/firebase.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:logger/logger.dart';
@@ -21,12 +20,10 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
-    final firebaseAuth =
-        Provider.of<FirebaseProvider>(context, listen: false).firebaseAuth;
     Widget welcomeWidget;
     var logger = Logger();
 
-    User? user = firebaseAuth.currentUser;
+    var user = Provider.of<FirebaseProvider>(context, listen: true).user;
     if (user != null) {
       welcomeWidget = Padding(
         padding: const EdgeInsets.all(8.0),
