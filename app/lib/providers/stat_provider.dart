@@ -1,6 +1,8 @@
 import 'package:bouggr/providers/firebase.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class StatProvider extends ChangeNotifier {
   int _pageCount = 0;
@@ -130,35 +132,34 @@ class StatProvider extends ChangeNotifier {
         notifyListeners();
       });
     } else {
-      lastPage = fb.firebaseFirestore
+      var q1 = fb.firebaseFirestore
           .collection('user_solo_games')
           .doc(fb.user?.uid)
           .collection('gameResults')
           .orderBy('score', descending: false)
-          .limit(pageCount * 10 - currentPage * 10)
-          .get()
-          .then((value) {
-        _cache.addEntries([MapEntry(currentPage, value.docs)]);
+          .limitToLast(currentPage * 10)
+          .snapshots()
+          .first;
 
-        lastPage = value.docs[value.docs.length - 1];
-        notifyListeners();
-      });
+      q1.then((value) {
+        lastPage = value.docs.first;
+        Logger().i("fin de la page précédente ${value.docs.length}");
+        fb.firebaseFirestore
+            .collection('user_solo_games')
+            .doc(fb.user?.uid)
+            .collection('gameResults')
+            .limit(10)
+            .orderBy("score", descending: true)
+            .startAtDocument(lastPage)
+            .get()
+            .then((value) {
+          //rezize the cache to the current page
 
-      fb.firebaseFirestore
-          .collection('user_solo_games')
-          .doc(fb.user?.uid)
-          .collection('gameResults')
-          .limit(10)
-          .orderBy("score", descending: true)
-          .startAfterDocument(lastPage)
-          .get()
-          .then((value) {
-        //rezize the cache to the current page
+          _cache.addEntries([MapEntry(currentPage, value.docs)]);
 
-        _cache.addEntries([MapEntry(currentPage, value.docs)]);
-
-        lastPage = value.docs[value.docs.length - 1];
-        notifyListeners();
+          lastPage = value.docs[value.docs.length - 1];
+          notifyListeners();
+        });
       });
     }
   }
