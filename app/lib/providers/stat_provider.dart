@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:bouggr/providers/firebase.dart';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StatProvider extends ChangeNotifier {
-  int _pageCount = 0;
+  int _pageCount = 1;
   Map<int, dynamic> _cache = {};
   int _currentPage = 0;
 
@@ -24,7 +27,11 @@ class StatProvider extends ChangeNotifier {
     FirebaseProvider fb,
   ) {
     if (fb.firebaseAuth.currentUser == null) {
-      return [];
+      var res = (_cache[currentPage] ?? []).map((e) {
+        return jsonDecode(e);
+      }).toList();
+
+      return res;
     }
 
     if (_cache.containsKey(currentPage)) {
@@ -38,7 +45,7 @@ class StatProvider extends ChangeNotifier {
   clear() {
     _cache.clear();
 
-    _pageCount = 0;
+    _pageCount = 1;
     _currentPage = 0;
     notifyListeners();
   }
@@ -55,7 +62,7 @@ class StatProvider extends ChangeNotifier {
         .count()
         .get()
         .then((value) {
-      _pageCount = ((value.count ?? 0) / 10).ceil();
+      _pageCount = ((value.count ?? 1) / 10).ceil();
 
       notifyListeners();
     });
@@ -63,6 +70,14 @@ class StatProvider extends ChangeNotifier {
 
   void loadInitPage(FirebaseProvider fb) {
     if (fb.firebaseAuth.currentUser == null) {
+      SharedPreferences.getInstance().then((prefs) {
+        final List<String>? jsonList = prefs.getStringList(
+            'gameResults'); // convertit les resultats en une liste dobjets GameResult
+
+        _cache.addEntries([MapEntry(0, jsonList ?? [])]);
+        notifyListeners();
+      });
+
       return;
     }
 
@@ -136,6 +151,17 @@ class StatProvider extends ChangeNotifier {
 
   void _loadData(FirebaseProvider fb, int page) {
     if (fb.firebaseAuth.currentUser == null) {
+      SharedPreferences.getInstance().then((prefs) {
+        final List<String>? jsonList = prefs.getStringList(
+            'gameResults'); // convertit les resultats en une liste dobjets GameResult
+        if (jsonList == null) {
+          return [];
+        }
+
+        _cache.addEntries([MapEntry(page, jsonList)]);
+        notifyListeners();
+      });
+
       return;
     }
 
