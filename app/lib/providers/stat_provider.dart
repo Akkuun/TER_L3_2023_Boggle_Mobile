@@ -7,11 +7,6 @@ class StatProvider extends ChangeNotifier {
   Map<int, dynamic> _cache = {};
   int _currentPage = 0;
 
-  void setPageCount(int pageCount) {
-    _pageCount = pageCount;
-    notifyListeners();
-  }
-
   void goToPage(int page) {
     _currentPage = page;
     notifyListeners();
@@ -28,6 +23,10 @@ class StatProvider extends ChangeNotifier {
   List<dynamic> getPageStats(
     FirebaseProvider fb,
   ) {
+    if (fb.firebaseAuth.currentUser == null) {
+      return [];
+    }
+
     if (_cache.containsKey(currentPage)) {
       return _cache[currentPage];
     } else {
@@ -45,6 +44,10 @@ class StatProvider extends ChangeNotifier {
   }
 
   void loadStatsPageCount(FirebaseProvider fb) {
+    if (fb.firebaseAuth.currentUser == null) {
+      return;
+    }
+
     fb.firebaseFirestore
         .collection('user_solo_games')
         .doc(fb.user?.uid)
@@ -59,6 +62,10 @@ class StatProvider extends ChangeNotifier {
   }
 
   void loadInitPage(FirebaseProvider fb) {
+    if (fb.firebaseAuth.currentUser == null) {
+      return;
+    }
+
     _cache = {};
     fb.firebaseFirestore
         .collection('user_solo_games')
@@ -68,7 +75,7 @@ class StatProvider extends ChangeNotifier {
         .limit(10)
         .get()
         .then((value) {
-      _cache[0] = value.docs;
+      _cache.addEntries([MapEntry(currentPage, value.docs)]);
 
       _currentPage = 0;
 
@@ -77,6 +84,10 @@ class StatProvider extends ChangeNotifier {
   }
 
   void nextPage(FirebaseProvider fb) {
+    if (fb.firebaseAuth.currentUser == null) {
+      return;
+    }
+
     if (_currentPage < _pageCount - 1) {
       _currentPage++;
 
@@ -89,6 +100,10 @@ class StatProvider extends ChangeNotifier {
   }
 
   void previousPage(FirebaseProvider fb) {
+    if (fb.firebaseAuth.currentUser == null) {
+      return;
+    }
+
     if (_currentPage > 0) {
       _currentPage--;
       if (!_cache.containsKey(currentPage)) {
@@ -102,7 +117,11 @@ class StatProvider extends ChangeNotifier {
   }
 
   void setPage(int i, FirebaseProvider fb) {
-    if (i == _currentPage) {
+    if (fb.firebaseAuth.currentUser == null) {
+      return;
+    }
+
+    if (i == currentPage) {
       return;
     }
 
@@ -116,6 +135,10 @@ class StatProvider extends ChangeNotifier {
   }
 
   void _loadData(FirebaseProvider fb) {
+    if (fb.firebaseAuth.currentUser == null) {
+      return;
+    }
+
     if (currentPage == 0) {
       fb.firebaseFirestore
           .collection('user_solo_games')
