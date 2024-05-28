@@ -146,7 +146,7 @@ class StatProvider extends ChangeNotifier {
             .collection('gameResults')
             .limit(10)
             .orderBy("score", descending: true)
-            .startAtDocument(value.docs.first)
+            .startAfterDocument(value.docs.first)
             .get()
             .then((value) {
           //rezize the cache to the current page
