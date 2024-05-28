@@ -1,15 +1,11 @@
 import 'package:bouggr/providers/firebase.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 
 class StatProvider extends ChangeNotifier {
   int _pageCount = 0;
   Map<int, dynamic> _cache = {};
   int _currentPage = 0;
-
-  dynamic lastPage;
 
   void setPageCount(int pageCount) {
     _pageCount = pageCount;
@@ -41,9 +37,11 @@ class StatProvider extends ChangeNotifier {
   }
 
   clear() {
-    _cache = {};
+    _cache.clear();
+
     _pageCount = 0;
     _currentPage = 0;
+    notifyListeners();
   }
 
   void loadStatsPageCount(FirebaseProvider fb) {
@@ -55,6 +53,7 @@ class StatProvider extends ChangeNotifier {
         .get()
         .then((value) {
       _pageCount = ((value.count ?? 0) / 10).ceil();
+
       notifyListeners();
     });
   }
@@ -72,7 +71,7 @@ class StatProvider extends ChangeNotifier {
       _cache[0] = value.docs;
 
       _currentPage = 0;
-      lastPage = value.docs[value.docs.length - 1];
+
       notifyListeners();
     });
   }
@@ -128,7 +127,6 @@ class StatProvider extends ChangeNotifier {
           .then((value) {
         _cache.addEntries([MapEntry(currentPage, value.docs)]);
 
-        lastPage = value.docs[value.docs.length - 1];
         notifyListeners();
       });
     } else {
@@ -142,22 +140,19 @@ class StatProvider extends ChangeNotifier {
           .first;
 
       q1.then((value) {
-        lastPage = value.docs.first;
-
         fb.firebaseFirestore
             .collection('user_solo_games')
             .doc(fb.user?.uid)
             .collection('gameResults')
             .limit(10)
             .orderBy("score", descending: true)
-            .startAtDocument(lastPage)
+            .startAtDocument(value.docs.first)
             .get()
             .then((value) {
           //rezize the cache to the current page
 
           _cache.addEntries([MapEntry(currentPage, value.docs)]);
 
-          lastPage = value.docs[value.docs.length - 1];
           notifyListeners();
         });
       });

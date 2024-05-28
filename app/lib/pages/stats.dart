@@ -28,6 +28,17 @@ class _StatsPageState extends State<StatsPage> {
 
   @override
   Widget build(BuildContext context) {
+    var list = Provider.of<StatProvider>(context, listen: true)
+        .getPageStats(Provider.of<FirebaseProvider>(context, listen: false))
+        .map(
+          (data) => Stat(
+            key: UniqueKey(),
+            grid: data['grid'],
+            statName: 'mot',
+            statValue: data['score'].toString(),
+          ),
+        )
+        .toList();
     return Stack(
       children: [
         BottomButtons(
@@ -53,26 +64,16 @@ class _StatsPageState extends State<StatsPage> {
                       )
                     ],
                   ),
-                  child: Column(children: [
-                    Expanded(
-                      child: ListView(
-                        children:
-                            Provider.of<StatProvider>(context, listen: true)
-                                .getPageStats(Provider.of<FirebaseProvider>(
-                                    context,
-                                    listen: false))
-                                .map(
-                                  (data) => Stat(
-                                    key: UniqueKey(),
-                                    grid: data['grid'],
-                                    statName: 'mot',
-                                    statValue: data['score'].toString(),
-                                  ),
-                                )
-                                .toList(),
-                      ),
-                    ),
-                  ])),
+                  child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        list.isEmpty
+                            ? const CircularProgressIndicator()
+                            : Expanded(
+                                child: ListView(children: list),
+                              ),
+                      ])),
               const StatFooter()
             ],
           ),
