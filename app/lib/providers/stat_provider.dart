@@ -30,7 +30,7 @@ class StatProvider extends ChangeNotifier {
     if (_cache.containsKey(currentPage)) {
       return _cache[currentPage];
     } else {
-      _loadData(fb);
+      _loadData(fb, currentPage);
       return [];
     }
   }
@@ -75,7 +75,7 @@ class StatProvider extends ChangeNotifier {
         .limit(10)
         .get()
         .then((value) {
-      _cache.addEntries([MapEntry(currentPage, value.docs)]);
+      _cache.addEntries([MapEntry(0, value.docs)]);
 
       _currentPage = 0;
 
@@ -92,7 +92,7 @@ class StatProvider extends ChangeNotifier {
       _currentPage++;
 
       if (!_cache.containsKey(currentPage)) {
-        _loadData(fb);
+        _loadData(fb, currentPage);
       } else {
         notifyListeners();
       }
@@ -107,7 +107,7 @@ class StatProvider extends ChangeNotifier {
     if (_currentPage > 0) {
       _currentPage--;
       if (!_cache.containsKey(currentPage)) {
-        _loadData(fb);
+        _loadData(fb, currentPage);
       } else {
         notifyListeners();
       }
@@ -128,18 +128,18 @@ class StatProvider extends ChangeNotifier {
     _currentPage = i;
 
     if (!_cache.containsKey(currentPage)) {
-      _loadData(fb);
+      _loadData(fb, currentPage);
     } else {
       notifyListeners();
     }
   }
 
-  void _loadData(FirebaseProvider fb) {
+  void _loadData(FirebaseProvider fb, int page) {
     if (fb.firebaseAuth.currentUser == null) {
       return;
     }
 
-    if (currentPage == 0) {
+    if (page == 0) {
       fb.firebaseFirestore
           .collection('user_solo_games')
           .doc(fb.user?.uid)
@@ -148,7 +148,7 @@ class StatProvider extends ChangeNotifier {
           .limit(10)
           .get()
           .then((value) {
-        _cache.addEntries([MapEntry(currentPage, value.docs)]);
+        _cache.addEntries([MapEntry(page, value.docs)]);
 
         notifyListeners();
       });
@@ -158,7 +158,7 @@ class StatProvider extends ChangeNotifier {
           .doc(fb.user?.uid)
           .collection('gameResults')
           .orderBy('score', descending: false)
-          .limitToLast(currentPage * 10)
+          .limitToLast(page * 10)
           .snapshots()
           .first;
 
@@ -174,7 +174,7 @@ class StatProvider extends ChangeNotifier {
             .then((value) {
           //rezize the cache to the current page
 
-          _cache.addEntries([MapEntry(currentPage, value.docs)]);
+          _cache.addEntries([MapEntry(page, value.docs)]);
 
           notifyListeners();
         });
