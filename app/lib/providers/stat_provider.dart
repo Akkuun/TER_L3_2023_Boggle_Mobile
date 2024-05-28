@@ -143,7 +143,7 @@ class StatProvider extends ChangeNotifier {
 
       q1.then((value) {
         lastPage = value.docs.first;
-        Logger().i("fin de la page précédente ${value.docs.length}");
+
         fb.firebaseFirestore
             .collection('user_solo_games')
             .doc(fb.user?.uid)
