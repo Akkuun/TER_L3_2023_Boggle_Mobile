@@ -27,9 +27,11 @@ class StatProvider extends ChangeNotifier {
     FirebaseProvider fb,
   ) {
     if (fb.firebaseAuth.currentUser == null) {
-      var res = (_cache[currentPage] ?? []).map((e) {
+      List<dynamic> res = (_cache[currentPage] ?? []).map((e) {
         return jsonDecode(e);
       }).toList();
+
+      res.sort((a, b) => b['score'] - (a['score']));
 
       return res;
     }
