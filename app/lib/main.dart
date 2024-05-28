@@ -4,6 +4,7 @@ import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/post_game_services.dart';
 import 'package:bouggr/providers/realtimegame.dart';
+import 'package:bouggr/providers/stat_provider.dart';
 import 'package:bouggr/providers/timer.dart';
 import 'package:bouggr/router.dart';
 import 'package:bouggr/utils/game_data.dart';
@@ -59,6 +60,7 @@ class App extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => EndGameService()),
         ChangeNotifierProvider(create: (context) => RealtimeGameProvider()),
         ChangeNotifierProvider(create: (context) => PostGameServices()),
+        ChangeNotifierProvider(create: (context) => StatProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

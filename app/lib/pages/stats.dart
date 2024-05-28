@@ -1,13 +1,10 @@
-import 'dart:convert';
 import 'package:bouggr/components/stats_page/post_game_detail_popup.dart';
+import 'package:bouggr/components/stats_page/stat.dart';
 import 'package:bouggr/providers/firebase.dart';
+import 'package:bouggr/providers/stat_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:bouggr/components/bottom_buttons.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:bouggr/components/stats_page/stat.dart';
-import 'package:bouggr/utils/game_data.dart';
 import 'package:provider/provider.dart';
 
 class StatsPage extends StatefulWidget {
@@ -19,136 +16,64 @@ class StatsPage extends StatefulWidget {
 
 class _StatsPageState extends State<StatsPage> {
   late List<String> allResults;
-  int currentPageIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<StatProvider>(context, listen: false).loadStatsPageCount(
+        Provider.of<FirebaseProvider>(context, listen: false));
+    Provider.of<StatProvider>(context, listen: false)
+        .loadInitPage(Provider.of<FirebaseProvider>(context, listen: false));
+  }
 
   @override
   Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double appBarHeight = AppBar().preferredSize.height;
-    const double bottomButtonHeight = 40.0;
-    const double titleHeight = 60.0;
-    const double paginationButtonsHeight = 50.0;
-    final double statContainerHeight = screenHeight -
-        appBarHeight -
-        bottomButtonHeight -
-        titleHeight -
-        paginationButtonsHeight;
-
     return Stack(
       children: [
         BottomButtons(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const Padding(
-                padding: EdgeInsets.all(16),
-                child: SizedBox(
-                  height: titleHeight,
-                  child: Center(
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'St',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 64,
-                              fontFamily: 'Jua',
-                              fontWeight: FontWeight.w400,
-                              height: 0,
-                            ),
-                          ),
-                          TextSpan(
-                            text: 'a',
-                            style: TextStyle(
-                              color: Color(0xFF1F87B3),
-                              fontSize: 64,
-                              fontFamily: 'Jua',
-                              fontWeight: FontWeight.w400,
-                              height: 0,
-                            ),
-                          ),
-                          TextSpan(
-                            text: 'ts',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 64,
-                              fontFamily: 'Jua',
-                              fontWeight: FontWeight.w400,
-                              height: 0,
-                            ),
-                          ),
-                        ],
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-              ),
+              const StatTitle(),
               Container(
-                height: statContainerHeight,
-                decoration: ShapeDecoration(
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                  height: MediaQuery.of(context).size.height * 0.72,
+                  width: MediaQuery.of(context).size.width * 0.96,
+                  decoration: ShapeDecoration(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    shadows: const [
+                      BoxShadow(
+                        color: Color(0x3F000000),
+                        blurRadius: 4,
+                        offset: Offset(0, 4),
+                        spreadRadius: 0,
+                      )
+                    ],
                   ),
-                  shadows: const [
-                    BoxShadow(
-                      color: Color(0x3F000000),
-                      blurRadius: 4,
-                      offset: Offset(0, 4),
-                      spreadRadius: 0,
-                    )
-                  ],
-                ),
-                child: FutureBuilder<List<String>>(
-                  future: _fetchGameResults(
-                      Provider.of<FirebaseProvider>(
-                        context,
-                        listen: true,
-                      ).user,
-                      Provider.of<FirebaseProvider>(context, listen: false)
-                          .firebaseFirestore),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: Text('Error: ${snapshot.error}'),
-                      );
-                    } else if (snapshot.hasData) {
-                      allResults = snapshot.data!;
-                      final currentPageResults =
-                          _getCurrentPageResults(allResults);
-                      List<Widget> statWidgets =
-                          currentPageResults.map((party) {
-                        return Stat(
-                          key: UniqueKey(),
-                          grid: jsonDecode(party)['grid'],
-                          statName: 'mot',
-                          statValue: jsonDecode(party)['score'].toString(),
-                        );
-                      }).toList();
-                      return Column(
-                        children: [
-                          Expanded(
-                            child: ListView(
-                              children: statWidgets,
-                            ),
-                          ),
-                          _buildPaginationButtons(),
-                        ],
-                      );
-                    } else {
-                      return const Center(
-                        child: Text('No data'),
-                      );
-                    }
-                  },
-                ),
-              ),
+                  child: Column(children: [
+                    Expanded(
+                      child: ListView(
+                        children:
+                            Provider.of<StatProvider>(context, listen: true)
+                                .getPageStats(Provider.of<FirebaseProvider>(
+                                    context,
+                                    listen: false))
+                                .map(
+                                  (data) => Stat(
+                                    key: UniqueKey(),
+                                    grid: data['grid'],
+                                    statName: 'mot',
+                                    statValue: data['score'].toString(),
+                                  ),
+                                )
+                                .toList(),
+                      ),
+                    ),
+                  ])),
+              const StatFooter()
             ],
           ),
         ),
@@ -156,73 +81,150 @@ class _StatsPageState extends State<StatsPage> {
       ],
     );
   }
+}
 
-  List<String> _getCurrentPageResults(List<String> allResults) {
-    final int startIndex = currentPageIndex * 4;
-    final int endIndex = startIndex + 4;
-    return allResults.sublist(startIndex, endIndex.clamp(0, allResults.length));
-  }
+class StatFooter extends StatelessWidget {
+  const StatFooter({super.key});
 
-  Widget _buildPaginationButtons() {
-    List<Widget> pageButtons = [];
+  @override
+  Widget build(BuildContext context) {
+    var statProvider = Provider.of<StatProvider>(context, listen: true);
 
-    for (int i = 0; i < _totalPages(); i++) {
-      pageButtons.add(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
         ElevatedButton(
           onPressed: () {
-            setState(() {
-              currentPageIndex = i;
-            });
+            statProvider.previousPage(
+                Provider.of<FirebaseProvider>(context, listen: false));
           },
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(
-              i == currentPageIndex ? const Color(0xFF1F87B3) : Colors.white,
+              Colors.white,
             ),
             foregroundColor: MaterialStateProperty.all<Color>(
-              i == currentPageIndex ? Colors.white : const Color(0xFF1F87B3),
+              const Color(0xFF1F87B3),
             ),
           ),
-          child: Text((i + 1).toString()),
+          child: const Text("<"),
         ),
-      );
-    }
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: pageButtons,
+        ElevatedButton(
+            onPressed: () {
+              statProvider.setPage(
+                  0, Provider.of<FirebaseProvider>(context, listen: false));
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              foregroundColor: MaterialStateProperty.all<Color>(
+                const Color(0xFF1F87B3),
+              ),
+            ),
+            child: Text(statProvider.currentPage == 0 ? "..." : "1")),
+        ElevatedButton(
+            onPressed: () {},
+            style: ButtonStyle(
+              backgroundColor:
+                  MaterialStateProperty.all<Color>(const Color(0xFF1F87B3)),
+              foregroundColor: MaterialStateProperty.all<Color>(
+                Colors.white,
+              ),
+            ),
+            child: Text(
+              (statProvider.currentPage + 1).toString(),
+            )),
+        ElevatedButton(
+            onPressed: () {
+              statProvider.setPage(statProvider.pageCount - 1,
+                  Provider.of<FirebaseProvider>(context, listen: false));
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              foregroundColor: MaterialStateProperty.all<Color>(
+                const Color(0xFF1F87B3),
+              ),
+            ),
+            child: Text(statProvider.currentPage == statProvider.pageCount - 1
+                ? "..."
+                : statProvider.pageCount.toString())),
+        ElevatedButton(
+          onPressed: () {
+            statProvider.nextPage(
+                Provider.of<FirebaseProvider>(context, listen: false));
+          },
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all<Color>(
+              Colors.white,
+            ),
+            foregroundColor: MaterialStateProperty.all<Color>(
+              const Color(0xFF1F87B3),
+            ),
+          ),
+          child: const Text(">"),
+        ),
+      ],
     );
   }
+}
 
-  int _totalPages() {
-    return (allResults.length / 4).ceil();
-  }
+class StatTitle extends StatelessWidget {
+  const StatTitle({
+    super.key,
+  });
 
-  static Future<List<String>> _fetchGameResults(
-      User? user, FirebaseFirestore firestore) async {
-    if (user != null) {
-      // récupérer les données depuis Firebase
-      return _fetchFirebaseGameResults(user, firestore);
-    } else {
-      // récupérer les données depuis le stockage local
-      return GameDataStorage.loadGameResults();
-    }
-  }
+  static const double titleHeight = 60.0;
 
-  static Future<List<String>> _fetchFirebaseGameResults(
-      User user, FirebaseFirestore firestore) async {
-    final List<String> results = [];
-    final querySnapshot = await firestore
-        .collection('user_solo_games')
-        .doc(user.uid)
-        .collection('gameResults')
-        .orderBy('score', descending: true) // Tri par score décroissant
-        .limit(20)
-        .get();
-
-    for (final doc in querySnapshot.docs) {
-      results.add(jsonEncode(doc.data()));
-    }
-
-    return results;
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.all(16),
+      child: SizedBox(
+        height: titleHeight,
+        child: Center(
+          child: Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: 'St',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 64,
+                    fontFamily: 'Jua',
+                    fontWeight: FontWeight.w400,
+                    height: 0,
+                  ),
+                ),
+                TextSpan(
+                  text: 'a',
+                  style: TextStyle(
+                    color: Color(0xFF1F87B3),
+                    fontSize: 64,
+                    fontFamily: 'Jua',
+                    fontWeight: FontWeight.w400,
+                    height: 0,
+                  ),
+                ),
+                TextSpan(
+                  text: 'ts',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 64,
+                    fontFamily: 'Jua',
+                    fontWeight: FontWeight.w400,
+                    height: 0,
+                  ),
+                ),
+              ],
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ),
+    );
   }
 }
+
+
+/**
+ * 
+ * 
+ */
