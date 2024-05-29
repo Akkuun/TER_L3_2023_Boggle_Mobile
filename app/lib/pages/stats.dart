@@ -186,7 +186,7 @@ class StatTitle extends StatelessWidget {
       child: SizedBox(
         height: (MediaQuery.of(context).size.height -
                 MediaQuery.of(context).size.width * 0.15) *
-            0.12,
+            0.1,
         child: const Center(
           child: Text.rich(
             TextSpan(
