@@ -24,7 +24,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.7'
+          flutter-version: '3.22.1'
 
       - name: Cache Flutter packages
         uses: actions/cache@v2
@@ -37,7 +37,10 @@ jobs:
         run: flutter pub get
 
       - name: Run Tests
-        run: flutter test app/test/test_multi.dart
+        run: |
+          cd app
+          flutter pub get
+          flutter test
 
   build_apk:
     name: Build the APK Version
@@ -56,7 +59,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.7'
+          flutter-version: '3.22.1'
 
       - name: Change to app directory
         run: |
@@ -91,7 +94,6 @@ jobs:
           app/build/app/outputs/flutter-apk/*.apk
         token: ${{ secrets.PIPELINE_SECRET_BOOGLE_L3 }}
         tag_name: v1.0.${{ github.run_number }}
-        release_name: Release v1.0.${{ github.run_number }}
       env:
         GITHUB_TOKEN: ${{ secrets.PIPELINE_SECRET_BOOGLE_L3 }}
 
