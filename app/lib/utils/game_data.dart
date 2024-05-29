@@ -1,15 +1,21 @@
 import 'dart:convert';
+import 'package:bouggr/providers/firebase.dart';
 import 'package:bouggr/utils/game_result.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bouggr/utils/decode.dart';
 
 class GameDataStorage {
-  static final _auth = FirebaseAuth.instance;
-  static final _db = FirebaseFirestore.instance;
+  static FirebaseFirestore? _db;
 
   static const _key = 'gameResults';
+
+  static init(FirebaseFirestore db) {
+    _db = db;
+  }
 
   static Future<void> saveLanguage(LangCode language) async {
     final prefs = await SharedPreferences.getInstance();
@@ -24,12 +30,15 @@ class GameDataStorage {
   }
 
   // Méthode pour sauvegarder les résultats du jeu
-  static Future<void> saveGameResult(GameResult gameResult) async {
+  static Future<void> saveGameResult(
+      GameResult gameResult, FirebaseAuth auth, BuildContext context) async {
+    final connected =
+        Provider.of<FirebaseProvider>(context, listen: false).isConnected;
     final prefs = await SharedPreferences.getInstance();
     final List<String> gameResults = prefs.getStringList(_key) ?? [];
-    if (_auth.currentUser != null) {
-      final user = _auth.currentUser;
-      final userDoc = _db.collection('user_solo_games').doc(user!.uid);
+    if (connected) {
+      final user = auth.currentUser;
+      final userDoc = _db!.collection('user_solo_games').doc(user!.uid);
       userDoc.set({'uid': user.uid, 'email': user.email});
       final userResults = userDoc.collection('gameResults');
       await userResults.add(gameResult.toJsonOnline());

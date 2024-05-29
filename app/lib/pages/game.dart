@@ -1,10 +1,9 @@
 //globals
 import 'package:bouggr/global.dart';
+import 'package:bouggr/providers/firebase.dart';
 
 //services
 import 'package:bouggr/providers/game.dart';
-
-import 'package:firebase_database/firebase_database.dart';
 
 //flutter
 import 'package:flutter/material.dart';
@@ -32,7 +31,9 @@ class _GamePageState extends State<GamePage> {
     super.initState();
     gameServices = Provider.of<GameServices>(context, listen: false);
     if (widget.mode == GameType.multi) {
-      Provider.of<RealtimeGameProvider>(context, listen: false).initListeners();
+      Provider.of<RealtimeGameProvider>(context, listen: false).initListeners(
+        Provider.of<FirebaseProvider>(context, listen: false).realtimeDatabase,
+      );
     }
   }
 
@@ -42,7 +43,8 @@ class _GamePageState extends State<GamePage> {
     if (Globals.currentMultiplayerGame.isNotEmpty) {
       return Globals.currentMultiplayerGame.split('');
     }
-    final database = FirebaseDatabase.instance;
+    final database =
+        Provider.of<FirebaseProvider>(context, listen: false).realtimeDatabase;
     final gameUID = rm.gameCode;
     final gameRef = database.ref('games/$gameUID');
     final snapshot = await gameRef.child('letters').get();

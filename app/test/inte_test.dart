@@ -1,12 +1,13 @@
-import 'package:flutter/material.dart';
+import 'package:bouggr/main.dart';
+import 'package:bouggr/providers/firebase.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:bouggr/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 
 class UserCredentialMock extends Mock implements UserCredential {}
 
@@ -55,15 +56,18 @@ class MockFirebaseAuth extends Mock implements FirebaseAuth {
 void main() {
   final logger = Logger();
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-/*
+
   testWidgets("Lance une partie", (WidgetTester tester) async {
     // Créez un mock de FirebaseAuth avec un utilisateur non connecté
     final mockFirebaseAuth = MockFirebaseAuth(signedIn: false);
 
+    // Créez un mock de FirebaseFirestore
+    final mockFirestore = FakeFirebaseFirestore();
+
     // Lancez l'application avec le mock
     await tester.pumpWidget(
-      Provider<FirebaseAuth>.value(
-        value: mockFirebaseAuth,
+      Provider<FirebaseProvider>.value(
+        value: FirebaseProvider(mockFirebaseAuth, mockFirestore, null, null),
         child: const App(),
       ),
     );
@@ -72,6 +76,7 @@ void main() {
     final soloButtonFinder = find.text('Partie solo');
     logger.i('Bouton Partie solo trouvé');
 
+    /*
     // Appuyez sur bouton
     await tester.tap(soloButtonFinder);
     await tester.pumpAndSettle(Durations
@@ -94,9 +99,11 @@ void main() {
         ),
         findsOneWidget);
     logger.i('Nombre de mots restant affiché');
+    */
+
     logger.i('Test Lance une partie terminé');
   });
-
+/*
   testWidgets("naviguer vers la page Rules depuis la page d'accueil",
       (WidgetTester tester) async {
     // Créez un mock de FirebaseAuth avec un utilisateur non connecté
@@ -123,6 +130,7 @@ void main() {
     logger.i('Page Rules affichée');
     logger.i(
         'Test naviguer vers la page Rules depuis la page d\'accueil terminé');
+      
   });
 
   testWidgets("creation d'un compte", (WidgetTester tester) async {

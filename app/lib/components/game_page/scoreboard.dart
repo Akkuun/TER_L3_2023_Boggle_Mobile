@@ -1,7 +1,7 @@
+import 'package:bouggr/providers/firebase.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/realtimegame.dart';
 import 'package:bouggr/utils/player_leaderboard.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:bouggr/components/stats_page/game_stat.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +34,8 @@ class ScoreBoard extends StatelessWidget {
       }
       playerLeaderboard.computeRank();
       rank = playerLeaderboard.getRank(
-          Provider.of<FirebaseAuth>(context, listen: false).currentUser!.uid);
+          Provider.of<FirebaseProvider>(context, listen: false).user?.uid ??
+              '');
     }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

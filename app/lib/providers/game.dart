@@ -1,6 +1,7 @@
 import 'package:bouggr/components/global/popup.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
+import 'package:bouggr/providers/firebase.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/realtimegame.dart';
 import 'package:bouggr/providers/timer.dart';
@@ -76,10 +77,16 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
   }
 
   void leaveGame(BuildContext context, String uid, GameResult gameResult) {
-    GameDataStorage.saveGameResult(gameResult);
+    GameDataStorage.saveGameResult(
+        gameResult,
+        Provider.of<FirebaseProvider>(context, listen: false).firebaseAuth,
+        context);
     if (_gameType == GameType.multi) {
       Globals.resetMultiplayerData();
-      FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
+      Provider.of<FirebaseProvider>(context, listen: false)
+          .firebaseFunctions
+          .httpsCallable('LeaveGame')
+          .call({
         "userId": uid,
       });
       multiResult =
@@ -156,15 +163,16 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
     }
   }
 
-  Future<bool> _checkWordMulti(Word word, String gameId) async {
+  Future<bool> _checkWordMulti(Word word, String gameId,
+      FirebaseFunctions firebaseFunctions, FirebaseAuth firebaseAuth) async {
     if (_isInWordList(word.txt)) {
       return false;
     }
 
     if (_dictionary!.contain(word.txt)) {
-      return FirebaseFunctions.instance.httpsCallable('SendWord').call({
+      return firebaseFunctions.httpsCallable('SendWord').call({
         "gameId": gameId,
-        "userId": FirebaseAuth.instance.currentUser!.uid,
+        "userId": firebaseAuth.currentUser!.uid,
         "word": word.coords
             .map((e) => {"x": e.y, "y": e.x})
             .toList(), // Coordonnées inversées pour le serveur
@@ -183,13 +191,19 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
   }
 
   /// Fonction qui permet de vérifier si le mot est dans le dictionnaire
-  Future<void> chechWord(Word word, String gameId) async {
+  Future<void> chechWord(Word word, String gameId,
+      FirebaseFunctions firebaseFunctions, FirebaseAuth firebaseAuth) async {
     if (_gameType == GameType.solo) {
       if (_checkWordSolo(word.txt)) {
         await _displayValid(word);
       }
     } else {
-      if (await _checkWordMulti(word, gameId)) {
+      if (await _checkWordMulti(
+        word,
+        gameId,
+        firebaseFunctions,
+        firebaseAuth,
+      )) {
         await _displayValid(word);
       }
     }
