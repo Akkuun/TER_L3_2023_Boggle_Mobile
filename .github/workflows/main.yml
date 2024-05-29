@@ -24,7 +24,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.4.1'
+          flutter-version: '3.22.1'
 
       - name: Cache Flutter packages
         uses: actions/cache@v2
@@ -59,7 +59,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.16.7'
+          flutter-version: '3.22.1'
 
       - name: Change to app directory
         run: |
