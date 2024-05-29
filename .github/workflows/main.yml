@@ -17,9 +17,10 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Java
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v2
         with:
           java-version: '21.x'
+          distribution: 'adopt'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -52,9 +53,10 @@ jobs:
 
 
       - name: Set up Java
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v2
         with:
           java-version: '21.x'
+          distribution: 'adopt'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
