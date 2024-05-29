@@ -48,7 +48,7 @@ class _StatsPageState extends State<StatsPage> {
             children: [
               const StatTitle(),
               Container(
-                  height: MediaQuery.of(context).size.height * 0.72,
+                  height: MediaQuery.of(context).size.height * 0.71,
                   width: MediaQuery.of(context).size.width * 0.96,
                   decoration: ShapeDecoration(
                     color: Colors.white,
@@ -172,14 +172,11 @@ class StatTitle extends StatelessWidget {
     super.key,
   });
 
-  static const double titleHeight = 60.0;
-
   @override
   Widget build(BuildContext context) {
     return const Padding(
       padding: EdgeInsets.all(16),
       child: SizedBox(
-        height: titleHeight,
         child: Center(
           child: Text.rich(
             TextSpan(
@@ -223,9 +220,3 @@ class StatTitle extends StatelessWidget {
     );
   }
 }
-
-
-/**
- * 
- * 
- */
