@@ -19,7 +19,7 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v2
         with:
-          java-version: '21.x'
+          java-version: '17'
           distribution: 'adopt'
 
       - name: Set up Flutter
@@ -55,7 +55,7 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v2
         with:
-          java-version: '21.x'
+          java-version: '17'
           distribution: 'adopt'
 
       - name: Set up Flutter
@@ -65,8 +65,8 @@ jobs:
 
       - name: Change to app directory
         run: |
-          cd app 
-          ls -l 
+          cd app
+          ls -l
           pwd
 
       - name: Accept Android SDK licenses
