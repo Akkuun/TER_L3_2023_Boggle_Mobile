@@ -67,10 +67,11 @@ jobs:
           ls -l 
           pwd
 
+      - name: Accept Android SDK licenses
+        run: yes | flutter doctor --android-licenses
+
       - name: Build APK
         run: |
-          flutter doctor --verbose
-          flutter doctor --android-licenses
           flutter build apk --release
         working-directory: app
         # Archive the APK as an artifact
