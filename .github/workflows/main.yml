@@ -68,7 +68,7 @@ jobs:
           pwd
 
       - name: Build APK
-        run: flutter build apk --release --stacktrace
+        run: flutter build apk --release
         working-directory: app
         # Archive the APK as an artifact
       - name: Archive APK
