@@ -48,7 +48,9 @@ class _StatsPageState extends State<StatsPage> {
             children: [
               const StatTitle(),
               Container(
-                  height: MediaQuery.of(context).size.height * 0.71,
+                  height: (MediaQuery.of(context).size.height -
+                          MediaQuery.of(context).size.width * 0.15) *
+                      0.7,
                   width: MediaQuery.of(context).size.width * 0.96,
                   decoration: ShapeDecoration(
                     color: Colors.white,
@@ -91,78 +93,83 @@ class StatFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     var statProvider = Provider.of<StatProvider>(context, listen: true);
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            statProvider.previousPage(
-                Provider.of<FirebaseProvider>(context, listen: false));
-          },
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(
-              Colors.white,
-            ),
-            foregroundColor: MaterialStateProperty.all<Color>(
-              const Color(0xFF1F87B3),
-            ),
-          ),
-          child: const Text("<"),
-        ),
-        ElevatedButton(
+    return SizedBox(
+      height: (MediaQuery.of(context).size.height -
+              MediaQuery.of(context).size.width * 0.15) *
+          0.10,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(
             onPressed: () {
-              statProvider.setPage(
-                  0, Provider.of<FirebaseProvider>(context, listen: false));
-            },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-              foregroundColor: MaterialStateProperty.all<Color>(
-                const Color(0xFF1F87B3),
-              ),
-            ),
-            child: Text(statProvider.currentPage == 0 ? "..." : "1")),
-        ElevatedButton(
-            onPressed: () {},
-            style: ButtonStyle(
-              backgroundColor:
-                  MaterialStateProperty.all<Color>(const Color(0xFF1F87B3)),
-              foregroundColor: MaterialStateProperty.all<Color>(
-                Colors.white,
-              ),
-            ),
-            child: Text(
-              (statProvider.currentPage + 1).toString(),
-            )),
-        ElevatedButton(
-            onPressed: () {
-              statProvider.setPage(statProvider.pageCount - 1,
+              statProvider.previousPage(
                   Provider.of<FirebaseProvider>(context, listen: false));
             },
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+              backgroundColor: MaterialStateProperty.all<Color>(
+                Colors.white,
+              ),
               foregroundColor: MaterialStateProperty.all<Color>(
                 const Color(0xFF1F87B3),
               ),
             ),
-            child: Text(statProvider.currentPage == statProvider.pageCount - 1
-                ? "..."
-                : statProvider.pageCount.toString())),
-        ElevatedButton(
-          onPressed: () {
-            statProvider.nextPage(
-                Provider.of<FirebaseProvider>(context, listen: false));
-          },
-          style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(
-              Colors.white,
-            ),
-            foregroundColor: MaterialStateProperty.all<Color>(
-              const Color(0xFF1F87B3),
-            ),
+            child: const Text("<"),
           ),
-          child: const Text(">"),
-        ),
-      ],
+          ElevatedButton(
+              onPressed: () {
+                statProvider.setPage(
+                    0, Provider.of<FirebaseProvider>(context, listen: false));
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                foregroundColor: MaterialStateProperty.all<Color>(
+                  const Color(0xFF1F87B3),
+                ),
+              ),
+              child: Text(statProvider.currentPage == 0 ? "..." : "1")),
+          ElevatedButton(
+              onPressed: () {},
+              style: ButtonStyle(
+                backgroundColor:
+                    MaterialStateProperty.all<Color>(const Color(0xFF1F87B3)),
+                foregroundColor: MaterialStateProperty.all<Color>(
+                  Colors.white,
+                ),
+              ),
+              child: Text(
+                (statProvider.currentPage + 1).toString(),
+              )),
+          ElevatedButton(
+              onPressed: () {
+                statProvider.setPage(statProvider.pageCount - 1,
+                    Provider.of<FirebaseProvider>(context, listen: false));
+              },
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                foregroundColor: MaterialStateProperty.all<Color>(
+                  const Color(0xFF1F87B3),
+                ),
+              ),
+              child: Text(statProvider.currentPage == statProvider.pageCount - 1
+                  ? "..."
+                  : statProvider.pageCount.toString())),
+          ElevatedButton(
+            onPressed: () {
+              statProvider.nextPage(
+                  Provider.of<FirebaseProvider>(context, listen: false));
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(
+                Colors.white,
+              ),
+              foregroundColor: MaterialStateProperty.all<Color>(
+                const Color(0xFF1F87B3),
+              ),
+            ),
+            child: const Text(">"),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -174,10 +181,13 @@ class StatTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(16),
+    return Padding(
+      padding: const EdgeInsets.all(16),
       child: SizedBox(
-        child: Center(
+        height: (MediaQuery.of(context).size.height -
+                MediaQuery.of(context).size.width * 0.15) *
+            0.12,
+        child: const Center(
           child: Text.rich(
             TextSpan(
               children: [
