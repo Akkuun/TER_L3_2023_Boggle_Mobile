@@ -60,6 +60,7 @@ dependencies:
     sdk: flutter
   logger: ^2.2.0
   fake_cloud_firestore: ^2.5.1
+  connectivity_plus: ^6.0.3
 
 dev_dependencies:
   flutter_test:

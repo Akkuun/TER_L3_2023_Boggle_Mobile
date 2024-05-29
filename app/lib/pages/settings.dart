@@ -37,14 +37,15 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _changePassword() async {
     final gameservices = Provider.of<GameServices>(context, listen: false);
-    final auth =
-        Provider.of<FirebaseProvider>(context, listen: false).firebaseAuth;
+    final firebaseProvider = Provider.of<FirebaseProvider>(context);
     try {
-      User? user = auth.currentUser;
-      if (user != null && _password != null && _confirmPassword != null) {
+      User? user = firebaseProvider.user;
+      if (firebaseProvider.isConnected &&
+          _password != null &&
+          _confirmPassword != null) {
         if (_password == _confirmPassword) {
           if (_password!.length >= 6) {
-            await user.updatePassword(_password!);
+            await user!.updatePassword(_password!);
             setState(() {
               errorText = null;
               changeSuccess = true;
@@ -86,6 +87,8 @@ class _SettingsPageState extends State<SettingsPage> {
     final gameservices = Provider.of<GameServices>(context, listen: false);
     final auth =
         Provider.of<FirebaseProvider>(context, listen: false).firebaseAuth;
+
+    final firebaseProvider = Provider.of<FirebaseProvider>(context);
 
     const textStyleJUA = TextStyle(
       color: Colors.black,
@@ -181,18 +184,17 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     const SizedBox(height: 20),
                     TextField(
-                      onChanged: (value) {
-                        setState(() {
-                          _password = value;
-                        });
-                      },
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        labelText: Globals.getText(gameservices.language, 35),
-                      ),
-                      obscureText: true,
-                      enabled: auth.currentUser != null,
-                    ),
+                        onChanged: (value) {
+                          setState(() {
+                            _password = value;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          labelText: Globals.getText(gameservices.language, 35),
+                        ),
+                        obscureText: true,
+                        enabled: firebaseProvider.isConnected),
                     const SizedBox(height: 20),
                     TextField(
                       onChanged: (value) {
@@ -206,7 +208,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         errorText: errorText,
                       ),
                       obscureText: true,
-                      enabled: auth.currentUser != null,
+                      enabled: firebaseProvider.isConnected,
                     ),
                     ElevatedButton(
                       onPressed: () {

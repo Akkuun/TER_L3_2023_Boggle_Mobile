@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'package:bouggr/providers/firebase.dart';
 import 'package:bouggr/utils/game_result.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:bouggr/utils/decode.dart';
 
@@ -28,10 +31,12 @@ class GameDataStorage {
 
   // Méthode pour sauvegarder les résultats du jeu
   static Future<void> saveGameResult(
-      GameResult gameResult, FirebaseAuth auth) async {
+      GameResult gameResult, FirebaseAuth auth, BuildContext context) async {
+    final connected =
+        Provider.of<FirebaseProvider>(context, listen: false).isConnected;
     final prefs = await SharedPreferences.getInstance();
     final List<String> gameResults = prefs.getStringList(_key) ?? [];
-    if (auth.currentUser != null) {
+    if (connected) {
       final user = auth.currentUser;
       final userDoc = _db!.collection('user_solo_games').doc(user!.uid);
       userDoc.set({'uid': user.uid, 'email': user.email});

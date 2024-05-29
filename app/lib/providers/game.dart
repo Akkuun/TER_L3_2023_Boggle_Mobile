@@ -77,8 +77,10 @@ class GameServices extends ChangeNotifier with TriggerPopUp {
   }
 
   void leaveGame(BuildContext context, String uid, GameResult gameResult) {
-    GameDataStorage.saveGameResult(gameResult,
-        Provider.of<FirebaseProvider>(context, listen: false).firebaseAuth);
+    GameDataStorage.saveGameResult(
+        gameResult,
+        Provider.of<FirebaseProvider>(context, listen: false).firebaseAuth,
+        context);
     if (_gameType == GameType.multi) {
       Globals.resetMultiplayerData();
       Provider.of<FirebaseProvider>(context, listen: false)

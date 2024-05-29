@@ -33,8 +33,7 @@ class JoinMulti extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var user = Provider.of<FirebaseProvider>(context, listen: false).user;
-    if (user != null) {
+    if (Provider.of<FirebaseProvider>(context).isConnected) {
       return const MultiplayerCreateJoinPage();
     } else {
       return const LoginPage();

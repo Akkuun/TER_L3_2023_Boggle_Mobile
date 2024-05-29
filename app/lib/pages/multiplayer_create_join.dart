@@ -154,16 +154,17 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
   @override
   Widget build(BuildContext context) {
     Globals.resetMultiplayerData();
-    final fireAuth =
-        Provider.of<FirebaseProvider>(context, listen: false).firebaseAuth;
+    final FirebaseProvider firebaseProvider =
+        Provider.of<FirebaseProvider>(context);
     final rm = Provider.of<RealtimeGameProvider>(context, listen: false);
     final router = Provider.of<NavigationServices>(context, listen: false);
-    final realtimeDatabase =
-        Provider.of<FirebaseProvider>(context, listen: false).realtimeDatabase;
-    User? user = fireAuth.currentUser;
-    if (user == null) {
+    final realtimeDatabase = firebaseProvider.realtimeDatabase;
+
+    if (!firebaseProvider.isConnected) {
       router.goToPage(PageName.login);
     }
+
+    User user = firebaseProvider.user!;
 
     final size = MediaQuery.of(context).size;
     return BottomButtons(
@@ -209,12 +210,12 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
         ),
         BtnBoggle(
           onPressed: () async {
-            if (user == null) {
+            if (!firebaseProvider.isConnected) {
               router.goToPage(PageName.login);
               return;
             }
 
-            await _createGame(user.uid, fireAuth.currentUser, rm, router,
+            await _createGame(user.uid, user, rm, router,
                 Provider.of<GameServices>(context, listen: false).language);
           },
           btnSize: BtnSize.large,
@@ -254,7 +255,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
         BtnBoggle(
           onPressed: () async {
             var logger = Logger();
-            var joinCode = await _joinGame(user!.uid, rm, router, user);
+            var joinCode = await _joinGame(user.uid, rm, router, user);
             logger.i("Joining game ${rm.gameCode} with code $joinCode");
             if (joinCode == 0) {
               if (rm.gameCode == '') {

@@ -1,21 +1,40 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class FirebaseProvider {
+class FirebaseProvider extends ChangeNotifier {
   final FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firebaseFirestore;
   final FirebaseDatabase? _realtimeDatabase;
   final FirebaseFunctions? _firebaseFunctions;
+  static StreamSubscription? _listener;
+
+  bool _isConnected = true;
 
   FirebaseProvider(
     this._firebaseAuth,
     this._firebaseFirestore,
     this._realtimeDatabase,
     this._firebaseFunctions,
-  );
+  ) {
+    if (_listener != null) {
+      _listener!.cancel();
+    }
+
+    _firebaseAuth.authStateChanges().listen((User? user) {
+      if ((user != null) != _isConnected) {
+        _isConnected = user != null;
+        notifyListeners();
+      }
+    });
+  }
+
+  bool get isConnected => _isConnected;
 
   User? get user => _firebaseAuth.currentUser;
 
@@ -28,7 +47,7 @@ class FirebaseProvider {
   FirebaseFunctions get firebaseFunctions => _firebaseFunctions!;
 
   void syncStats() async {
-    if (_firebaseAuth.currentUser != null) {
+    if (isConnected) {
       var prefs = await SharedPreferences.getInstance();
 
       var data = prefs.get("stats-unsynced");
@@ -53,7 +72,7 @@ class FirebaseProvider {
 
     if (page > 5) {
       //online only
-      if (_firebaseAuth.currentUser != null) {
+      if (isConnected) {
         //get 20 stats at a time
         var stats = await _firebaseFirestore
             .doc(user!.uid)

@@ -28,7 +28,7 @@ void main() async {
   );
 
   runApp(
-    Provider<FirebaseProvider>(
+    ChangeNotifierProvider<FirebaseProvider>(
       create: (_) => FirebaseProvider(
         FirebaseAuth.instance,
         FirebaseFirestore.instance,

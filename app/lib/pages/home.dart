@@ -24,11 +24,11 @@ class HomePage extends StatelessWidget {
     var logger = Logger();
 
     var user = Provider.of<FirebaseProvider>(context, listen: true).user;
-    if (user != null) {
+    if (Provider.of<FirebaseProvider>(context).isConnected) {
       welcomeWidget = Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          "${user.email}",
+          "${user!.email}",
           style: const TextStyle(
             color: Colors.black,
             fontSize: 28,

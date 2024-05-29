@@ -24,7 +24,7 @@ class GameWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isMulti) {
-      if (Provider.of<FirebaseProvider>(context, listen: true).user == null) {
+      if (!Provider.of<FirebaseProvider>(context, listen: true).isConnected) {
         Provider.of<NavigationServices>(context, listen: false)
             .goToPage(PageName.login);
       }
