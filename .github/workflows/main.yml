@@ -69,7 +69,7 @@ jobs:
 
       - name: Build APK
         run: |
-          flutter doctor --verbos
+          flutter doctor --verbose
           flutter build apk --release
         working-directory: app
         # Archive the APK as an artifact
