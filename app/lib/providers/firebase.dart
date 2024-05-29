@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -29,7 +30,11 @@ class FirebaseProvider extends ChangeNotifier {
     _firebaseAuth.authStateChanges().listen((User? user) {
       if ((user != null) != _isConnected) {
         _isConnected = user != null;
+
         notifyListeners();
+        if (_isConnected) {
+          _syncStats();
+        }
       }
     });
   }
@@ -46,53 +51,37 @@ class FirebaseProvider extends ChangeNotifier {
 
   FirebaseFunctions get firebaseFunctions => _firebaseFunctions!;
 
-  void syncStats() async {
+  void _syncStats() async {
     if (isConnected) {
       var prefs = await SharedPreferences.getInstance();
 
-      var data = prefs.get("stats-unsynced");
+      var data = prefs.getStringList("gameResults");
 
       if (data != null) {
-        if (data is List) {
-          for (var i = 0; i < data.length; i++) {
-            await _firebaseFirestore
-                .collection("stats")
-                .doc(_firebaseAuth.currentUser!.uid)
-                .update({"$i": data[i]});
-          }
+        for (var i = 0; i < data.length; i++) {
+          await firebaseFirestore
+              .collection('user_solo_games')
+              .doc(user!.uid)
+              .collection('gameResults')
+              .add(jsonDecode(data[i]));
         }
 
-        prefs.remove("stats-unsynced");
-      }
-    }
-  }
+        prefs.remove("gameResults");
 
-  Future<dynamic> getStats(int page) async {
-    var prefs = await SharedPreferences.getInstance();
-
-    if (page > 5) {
-      //online only
-      if (isConnected) {
-        //get 20 stats at a time
-        var stats = await _firebaseFirestore
+        var stats = await firebaseFirestore
+            .collection('user_solo_games')
             .doc(user!.uid)
-            .collection("stats")
-            .limit(20)
-            .orderBy("score", descending: true)
-            .startAfter([page * 20]).get();
+            .collection('gameResults')
+            .orderBy('score', descending: true)
+            .limit(30)
+            .get();
 
-        return stats;
-      } else {
-        var data = prefs.get("stats-unsynced");
-        if (data != null) {
-          if (data is List) {
-            return data;
-          }
-        } else {
-          if (_firebaseAuth.currentUser == null) {
-            return prefs.get("stats-$page");
-          }
-        }
+        var statsList = stats.docs.map((e) => e.data()).toList();
+
+        // divide the stats into 3 pages
+
+        prefs.setStringList(
+            "local_stat_sync", statsList.map((e) => jsonEncode(e)).toList());
       }
     }
   }

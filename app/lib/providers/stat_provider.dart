@@ -26,12 +26,8 @@ class StatProvider extends ChangeNotifier {
   List<dynamic> getPageStats(
     FirebaseProvider fb,
   ) {
-    if (fb.firebaseAuth.currentUser == null) {
-      List<dynamic> res = (_cache[currentPage] ?? []).map((e) {
-        return jsonDecode(e);
-      }).toList();
-
-      res.sort((a, b) => b['score'] - (a['score']));
+    if (!fb.isConnected) {
+      List<dynamic> res = _cache[currentPage] ?? [];
 
       return res;
     }
@@ -53,7 +49,7 @@ class StatProvider extends ChangeNotifier {
   }
 
   void loadStatsPageCount(FirebaseProvider fb) {
-    if (fb.firebaseAuth.currentUser == null) {
+    if (!fb.isConnected) {
       return;
     }
 
@@ -71,12 +67,32 @@ class StatProvider extends ChangeNotifier {
   }
 
   void loadInitPage(FirebaseProvider fb) {
-    if (fb.firebaseAuth.currentUser == null) {
+    if (!fb.isConnected) {
       SharedPreferences.getInstance().then((prefs) {
-        final List<String>? jsonList = prefs.getStringList(
-            'gameResults'); // convertit les resultats en une liste dobjets GameResult
+        final List<String> jsonList = prefs.getStringList('local_stat_sync') ??
+            []; // convertit les resultats en une liste dobjets GameResult
 
-        _cache.addEntries([MapEntry(0, jsonList ?? [])]);
+        jsonList.addAll(prefs.getStringList('gameResults') ??
+            []); // convertit les resultats en une liste dobjets GameResult
+
+        var decoded = jsonList.map((e) => jsonDecode(e)).toList();
+
+        decoded.sort((a, b) => b['score'] - (a['score']));
+
+        _pageCount = (decoded.length / 10).ceil();
+
+        for (var i = 0; i < _pageCount; i++) {
+          _cache.addEntries([
+            MapEntry(
+                i,
+                decoded.sublist(
+                    i * 10,
+                    (i + 1) * 10 > decoded.length
+                        ? decoded.length
+                        : (i + 1) * 10))
+          ]);
+        }
+
         notifyListeners();
       });
 
@@ -101,10 +117,6 @@ class StatProvider extends ChangeNotifier {
   }
 
   void nextPage(FirebaseProvider fb) {
-    if (fb.firebaseAuth.currentUser == null) {
-      return;
-    }
-
     if (_currentPage < _pageCount - 1) {
       _currentPage++;
 
@@ -117,10 +129,6 @@ class StatProvider extends ChangeNotifier {
   }
 
   void previousPage(FirebaseProvider fb) {
-    if (fb.firebaseAuth.currentUser == null) {
-      return;
-    }
-
     if (_currentPage > 0) {
       _currentPage--;
       if (!_cache.containsKey(currentPage)) {
@@ -134,10 +142,6 @@ class StatProvider extends ChangeNotifier {
   }
 
   void setPage(int i, FirebaseProvider fb) {
-    if (fb.firebaseAuth.currentUser == null) {
-      return;
-    }
-
     if (i == currentPage) {
       return;
     }
@@ -152,15 +156,20 @@ class StatProvider extends ChangeNotifier {
   }
 
   void _loadData(FirebaseProvider fb, int page) {
-    if (fb.firebaseAuth.currentUser == null) {
+    if (!fb.isConnected) {
       SharedPreferences.getInstance().then((prefs) {
-        final List<String>? jsonList = prefs.getStringList(
-            'gameResults'); // convertit les resultats en une liste dobjets GameResult
-        if (jsonList == null) {
-          return [];
-        }
+        final List<String> jsonList = prefs.getStringList('local_stat_sync') ??
+            []; // convertit les resultats en une liste dobjets GameResult
 
-        _cache.addEntries([MapEntry(page, jsonList)]);
+        jsonList.addAll(prefs.getStringList('gameResults') ??
+            []); // convertit les resultats en une liste dobjets GameResult
+
+        var decoded = jsonList.map((e) => jsonDecode(e)).toList();
+
+        decoded.sort((a, b) => b['score'] - (a['score']));
+
+        _cache.addEntries(
+            [MapEntry(page, decoded.sublist(page * 10, (page + 1) * 10))]);
         notifyListeners();
       });
 

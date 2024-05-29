@@ -10,7 +10,6 @@ import 'package:flutter/services.dart';
 
 //services
 import 'package:bouggr/providers/game.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 //flutter
