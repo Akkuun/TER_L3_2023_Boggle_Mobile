@@ -1,6 +1,7 @@
 import 'package:bouggr/components/global/btn.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
+import 'package:bouggr/providers/firebase.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,8 @@ class _EmailCreateState extends State<EmailCreate> {
   Widget build(BuildContext context) {
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameservices = Provider.of<GameServices>(context, listen: false);
-    final auth = Provider.of<FirebaseAuth>(context, listen: false);
+    final auth =
+        Provider.of<FirebaseProvider>(context, listen: false).firebaseAuth;
 
     void requetFireBaseCreation() {
       if (mdp.text != mdp2.text) {

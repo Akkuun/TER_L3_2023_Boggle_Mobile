@@ -5,9 +5,9 @@ import 'package:bouggr/components/global/title.dart';
 import 'package:bouggr/global.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/end_game_service.dart';
+import 'package:bouggr/providers/firebase.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:logger/logger.dart';
@@ -20,16 +20,15 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final router = Provider.of<NavigationServices>(context, listen: false);
     final gameServices = Provider.of<GameServices>(context, listen: false);
-    final firebaseAuth = Provider.of<FirebaseAuth>(context, listen: false);
     Widget welcomeWidget;
     var logger = Logger();
 
-    User? user = firebaseAuth.currentUser;
-    if (user != null) {
+    var user = Provider.of<FirebaseProvider>(context, listen: true).user;
+    if (Provider.of<FirebaseProvider>(context).isConnected) {
       welcomeWidget = Padding(
         padding: const EdgeInsets.all(8.0),
         child: Text(
-          "${user.email}",
+          "${user!.email}",
           style: const TextStyle(
             color: Colors.black,
             fontSize: 28,

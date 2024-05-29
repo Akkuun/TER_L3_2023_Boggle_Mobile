@@ -7,9 +7,9 @@
 import 'package:bouggr/components/global/btn.dart';
 import 'package:bouggr/components/global/title.dart';
 import 'package:bouggr/pages/page_name.dart';
+import 'package:bouggr/providers/firebase.dart';
 import 'package:bouggr/providers/realtimegame.dart';
 import 'package:bouggr/utils/decode.dart';
-import 'package:cloud_functions/cloud_functions.dart';
 
 //utils
 import 'package:firebase_auth/firebase_auth.dart';
@@ -51,9 +51,10 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
 
   Future<int> _joinGame(String playerUID, RealtimeGameProvider rm,
       NavigationServices router, User? user) async {
+    var functions =
+        Provider.of<FirebaseProvider>(context, listen: false).firebaseFunctions;
     var logger = Logger();
-    var result =
-        await FirebaseFunctions.instance.httpsCallable('JoinGame').call(
+    var result = await functions.httpsCallable('JoinGame').call(
       {
         "gameId": rm.gameCode,
         "userId": playerUID,
@@ -66,7 +67,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
     logger.i("Trting to join game ${rm.gameCode} . Return code : $response");
     if (response["error"] != null) {
       logger.e("${response["error"]}. Trying to leave it and join again");
-      result = await FirebaseFunctions.instance.httpsCallable('JoinGame').call(
+      result = await functions.httpsCallable('JoinGame').call(
         {
           "gameId": rm.gameCode,
           "userId": playerUID,
@@ -84,6 +85,10 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
 
   _createGame(String playerUID, User? user, RealtimeGameProvider rm,
       NavigationServices router, LangCode lang) async {
+    var functions =
+        Provider.of<FirebaseProvider>(context, listen: false).firebaseFunctions;
+    var realTimeDb =
+        Provider.of<FirebaseProvider>(context, listen: false).realtimeDatabase;
     if (_isCreating) {
       return;
     }
@@ -94,8 +99,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
     final logger = Logger();
     logger.w("Creating game");
     final letters = Globals.selectDiceSet(lang).roll();
-    final result =
-        await FirebaseFunctions.instance.httpsCallable('CreateGame').call(
+    final result = await functions.httpsCallable('CreateGame').call(
       {
         "letters": letters.join(''),
         "lang": lang.index,
@@ -124,7 +128,7 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
     logger.i("Succesfully created game $response server-side");
     if (response["gameId"] == null) {
       logger.e("${response["error"]}. Trying to leave it");
-      FirebaseFunctions.instance.httpsCallable('LeaveGame').call({
+      functions.httpsCallable('LeaveGame').call({
         "userId": playerUID,
       }).then((value) {
         //should not be recursive
@@ -138,7 +142,10 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
     }
 
     Globals.currentMultiplayerGame = letters.join('');
-    rm.initRealtimeService(response["gameId"]);
+    rm.initRealtimeService(
+      response["gameId"],
+      realTimeDb,
+    );
 
     router.goToPage(PageName.multiplayerGameWait);
     logger.w("Game created with code ${rm.gameCode} ${response["gameId"]}");
@@ -147,13 +154,17 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
   @override
   Widget build(BuildContext context) {
     Globals.resetMultiplayerData();
-    final fireAuth = Provider.of<FirebaseAuth>(context, listen: false);
+    final FirebaseProvider firebaseProvider =
+        Provider.of<FirebaseProvider>(context);
     final rm = Provider.of<RealtimeGameProvider>(context, listen: false);
     final router = Provider.of<NavigationServices>(context, listen: false);
-    User? user = fireAuth.currentUser;
-    if (user == null) {
+    final realtimeDatabase = firebaseProvider.realtimeDatabase;
+
+    if (!firebaseProvider.isConnected) {
       router.goToPage(PageName.login);
     }
+
+    User user = firebaseProvider.user!;
 
     final size = MediaQuery.of(context).size;
     return BottomButtons(
@@ -199,12 +210,12 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
         ),
         BtnBoggle(
           onPressed: () async {
-            if (user == null) {
+            if (!firebaseProvider.isConnected) {
               router.goToPage(PageName.login);
               return;
             }
 
-            await _createGame(user.uid, fireAuth.currentUser, rm, router,
+            await _createGame(user.uid, user, rm, router,
                 Provider.of<GameServices>(context, listen: false).language);
           },
           btnSize: BtnSize.large,
@@ -244,14 +255,15 @@ class _MultiplayerCreateJoinPageState extends State<MultiplayerCreateJoinPage> {
         BtnBoggle(
           onPressed: () async {
             var logger = Logger();
-            var joinCode = await _joinGame(user!.uid, rm, router, user);
+            var joinCode = await _joinGame(user.uid, rm, router, user);
             logger.i("Joining game ${rm.gameCode} with code $joinCode");
             if (joinCode == 0) {
               if (rm.gameCode == '') {
                 logger.e("Error joining game : game code is null");
                 return;
               }
-              rm.initRealtimeService(rm.gameCode);
+              rm.initRealtimeService(rm.gameCode, realtimeDatabase);
+
               router.goToPage(PageName.multiplayerGameWait);
             } else {
               setState(() {

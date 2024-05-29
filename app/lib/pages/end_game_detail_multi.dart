@@ -4,11 +4,11 @@ import 'package:bouggr/components/game_page/pop_up_word_list.dart';
 import 'package:bouggr/components/game_page/words_found.dart';
 import 'package:bouggr/pages/page_name.dart';
 import 'package:bouggr/providers/end_game_service.dart';
+import 'package:bouggr/providers/firebase.dart';
 import 'package:bouggr/providers/game.dart';
 import 'package:bouggr/providers/navigation.dart';
 import 'package:bouggr/providers/timer.dart';
 import 'package:bouggr/utils/player_leaderboard.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
@@ -144,7 +144,7 @@ class HeaderEndGameDetailMulti extends StatelessWidget {
     }
     playerLeaderboard.computeRank();
     int rank = playerLeaderboard.getRank(
-        Provider.of<FirebaseAuth>(context, listen: false).currentUser!.uid);
+        Provider.of<FirebaseProvider>(context, listen: false).user!.uid);
 
     return Padding(
       padding: const EdgeInsets.all(2.0),
